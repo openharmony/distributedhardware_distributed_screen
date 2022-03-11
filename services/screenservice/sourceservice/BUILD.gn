@@ -59,8 +59,8 @@ ohos_shared_library("distributed_screen_source") {
         "//utils/native/base:utils",
         "${common_path}:distributed_screen_utils",
         "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
+        "//foundation/graphic/standard/rosen/modules/render_service_client:librender_service_client",
         "//foundation/graphic/standard/frameworks/surface:surface",
-        "${windowmanager_path}/interfaces/innerkits:wm_interface",
         "${windowmanager_path}/dm:libdm",
     ]
 

@@ -35,7 +35,8 @@ ohos_shared_library("distributed_screen_handler") {
     deps = [
         "//utils/native/base:utils",
         "${mediastandard_path}/interfaces/innerkits/native/media:media_client",
-        "${windowmanager_path}/interfaces/innerkits:wm_interface",
+        "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
+        "//foundation/graphic/standard/rosen/modules/render_service_client:librender_service_client",
         "${windowmanager_path}/dm:libdm",
         "${common_path}:distributed_screen_utils",
     ]

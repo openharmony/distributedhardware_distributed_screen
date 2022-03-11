@@ -16,6 +16,8 @@
 #ifndef OHOS_SCREEN_TRANS_TEST_UTILS_H
 #define OHOS_SCREEN_TRANS_TEST_UTILS_H
 
+#include <stddef.h>
+
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
 #include "iimage_sink_processor_listener.h"

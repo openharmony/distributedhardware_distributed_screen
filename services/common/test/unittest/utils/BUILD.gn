@@ -54,7 +54,6 @@ ohos_unittest("UtilsTest") {
     "${fwk_utils_path}:distributedhardwareutils",
     "${graphicstandard_path}/frameworks/surface:surface",
     "${graphicstandard_path}/rosen/modules/render_service_client:librender_service_client",
-    "${windowmanager_path}/interfaces/innerkits:wm_interface",
     "${windowmanager_path}/wm:libwm",
     "//foundation/distributedhardware/distributedscreen/services/screenservice/sinkservice:distributed_screen_sink",
   ]
