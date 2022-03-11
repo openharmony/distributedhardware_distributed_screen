@@ -59,7 +59,6 @@ ohos_shared_library("distributed_screen_sink") {
         "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
         "${services_path}/screenclient:distributed_screen_client",
         "//foundation/graphic/standard/frameworks/surface:surface",
-        "${windowmanager_path}/interfaces/innerkits:wm_interface",
         "${windowmanager_path}/dm:libdm",
     ]
 

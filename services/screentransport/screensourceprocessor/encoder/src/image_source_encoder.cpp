@@ -16,6 +16,7 @@
 #include "image_source_encoder.h"
 
 #include <securec.h>
+#include <stddef.h>
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"

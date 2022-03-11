@@ -20,6 +20,7 @@
 #include <mutex>
 #include <queue>
 #include <condition_variable>
+#include <stddef.h>
 
 #include "avsharedmemory.h"
 #include "avcodec_common.h"

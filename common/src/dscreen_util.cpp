@@ -18,6 +18,7 @@
 #include <iomanip>
 #include <random>
 #include <sstream>
+#include <stddef.h>
 #include <sys/time.h>
 
 #include "softbus_bus_center.h"
