@@ -58,6 +58,7 @@ ohos_unittest("ScreenClientTest") {
 
  external_deps = [
     "hiviewdfx_hilog_native:libhilog",
+    "multimodalinput_base:libmmi-client",
   ]
 }
 
