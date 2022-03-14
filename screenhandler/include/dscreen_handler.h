@@ -23,25 +23,32 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-class DScreenHandler : public IHardwareHandler, public Rosen::ScreenManager::IScreenListener {
-DECLARE_SINGLE_INSTANCE_BASE(DScreenHandler);
+class ScreenListener : public Rosen::ScreenManager::IScreenListener {
 public:
     void OnConnect(uint64_t screenId) override;
     void OnDisconnect(uint64_t screenId) override;
     void OnChange(uint64_t screenId) override {};
+};
+
+class DScreenHandler : public IHardwareHandler {
+DECLARE_SINGLE_INSTANCE_BASE(DScreenHandler);
+public:
     int32_t Initialize() override;
     std::vector<DHItem> Query() override;
     std::map<std::string, std::string> QueryExtraInfo() override;
     bool IsSupportPlugin() override;
     void RegisterPluginListener(std::shared_ptr<PluginListener> listener) override;
+    void PluginHardware(const std::string &dhId, const std::string &attr);
+    void UnPluginHardware(const std::string &dhId);
+    std::string QueryCodecInfo();
 
 private:
     DScreenHandler();
     ~DScreenHandler();
-    std::string QueryCodecInfo();
 
     std::shared_ptr<PluginListener> listener_ = nullptr;
     std::string codecInfoStr_;
+    sptr<ScreenListener> screenListener_ = nullptr;
 };
 
 #ifdef __cplusplus

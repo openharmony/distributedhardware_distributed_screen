@@ -44,7 +44,10 @@ DScreenManager::~DScreenManager()
 int32_t DScreenManager::Init()
 {
     DHLOGI("DScreenManager::Init");
-    int32_t ret = ScreenMgrAdapter::GetInstance().RegisterScreenGroupListener(this);
+    if (dScreenGroupListener_ == nullptr) {
+        dScreenGroupListener_ = new DScreenGroupListener();
+    }
+    int32_t ret = ScreenMgrAdapter::GetInstance().RegisterScreenGroupListener(dScreenGroupListener_);
     if (ret != DH_SUCCESS) {
         DHLOGE("DScreenManager Init failed, err: %d", ret);
     }
@@ -57,11 +60,17 @@ int32_t DScreenManager::Init()
 int32_t DScreenManager::UnInit()
 {
     DHLOGI("DScreenManager::UnInit");
-    int32_t ret = ScreenMgrAdapter::GetInstance().UnregisterScreenGroupListener(this);
+    int32_t ret = DH_SUCCESS;
+    if (dScreenGroupListener_ != nullptr) {
+        ret = ScreenMgrAdapter::GetInstance().UnregisterScreenGroupListener(dScreenGroupListener_);
+    }
+
     if (ret != DH_SUCCESS) {
         DHLOGE("DScreenManager UnInit failed, err: %d", ret);
     }
     dScreenCallback_ = nullptr;
+    dScreenSourceCallbackProxy_ = nullptr;
+    dScreenGroupListener_ = nullptr;
 
     {
         std::lock_guard<std::mutex> lock(dScreenMapMtx_);
@@ -76,17 +85,17 @@ int32_t DScreenManager::UnInit()
     return ret;
 }
 
-void DScreenManager::OnChange(const std::vector<uint64_t> &screenIds, Rosen::ScreenGroupChangeEvent event)
+void DScreenGroupListener::OnChange(const std::vector<uint64_t> &screenIds, Rosen::ScreenGroupChangeEvent event)
 {
     DHLOGI("On Screen change, screenIds size: %d", screenIds.size());
     for (uint64_t screenId : screenIds) {
         std::shared_ptr<DScreen> changedScreen = nullptr;
-        changedScreen = FindDScreenByScreenId(screenId);
+        changedScreen = DScreenManager::GetInstance().FindDScreenByScreenId(screenId);
         if (!changedScreen) {
             DHLOGD("screen change not about remote screen, screenId: %ulld", screenId);
             continue;
         }
-        HandleScreenChange(changedScreen, event);
+        DScreenManager::GetInstance().HandleScreenChange(changedScreen, event);
     }
 }
 
