@@ -49,7 +49,6 @@ protected:
 private:
     bool Init();
 
-    sptr<IDScreenSourceCallback> dScreenSourceCallbackProxy_ = nullptr;
     bool registerToService_ = false;
 };
 } // namespace DistributedHardware

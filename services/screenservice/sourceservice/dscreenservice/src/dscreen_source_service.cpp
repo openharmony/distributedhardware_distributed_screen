@@ -50,7 +50,10 @@ void DScreenSourceService::OnStart()
 void DScreenSourceService::OnStop()
 {
     DHLOGI("dscreen source service stop.");
-    dScreenSourceCallbackProxy_ = nullptr;
+    int32_t ret = DScreenManager::GetInstance().UnInit();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("UnInit DScreenManager failed. err: %d", ret);
+    }
     registerToService_ = false;
 }
 
@@ -72,7 +75,6 @@ bool DScreenSourceService::Init()
 int32_t DScreenSourceService::InitSource(const std::string &params, const sptr<IDScreenSourceCallback> &callback)
 {
     DHLOGI("InitSource");
-    dScreenSourceCallbackProxy_ = callback;
     int32_t ret = DScreenManager::GetInstance().Init();
     if (ret != DH_SUCCESS) {
         DHLOGE("Init DScreenManager failed. err: %d", ret);
@@ -86,7 +88,6 @@ int32_t DScreenSourceService::InitSource(const std::string &params, const sptr<I
 int32_t DScreenSourceService::ReleaseSource()
 {
     DHLOGI("ReleaseSource");
-    dScreenSourceCallbackProxy_ = nullptr;
     int32_t ret = DScreenManager::GetInstance().UnInit();
     if (ret != DH_SUCCESS) {
         DHLOGE("UnInit DScreenManager failed. err: %d", ret);

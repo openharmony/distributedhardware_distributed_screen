@@ -39,26 +39,36 @@ DScreenHandler::DScreenHandler()
 DScreenHandler::~DScreenHandler()
 {
     DHLOGI("~DScreenHandler");
+    Rosen::ScreenManager::GetInstance().UnregisterScreenListener(screenListener_);
 }
 
 int32_t DScreenHandler::Initialize()
 {
     DHLOGI("DScreenHandler Initialize");
-    bool ret = Rosen::ScreenManager::GetInstance().RegisterScreenListener(this);
+    if (!screenListener_) {
+        screenListener_ = new ScreenListener();
+    }
+    bool ret = Rosen::ScreenManager::GetInstance().RegisterScreenListener(screenListener_);
     if (!ret) {
         DHLOGE("register screen listener failed.");
     }
     return DH_SUCCESS;
 }
 
-void DScreenHandler::OnConnect(uint64_t screenId)
+void ScreenListener::OnConnect(uint64_t screenId)
 {
     DHLOGI("on screen connect");
     if (screenId != SCREEN_ID_DEFAULT) {
         return;
     }
-    std::string dhId = DSCREEN_PREFIX + SEPERATOR + std::to_string(screenId);
     sptr<Rosen::Screen> screen = Rosen::ScreenManager::GetInstance().GetScreenById(screenId);
+    if (screen == nullptr) {
+        DHLOGE("screen not found, screenId: %ulld", screenId);
+        return;
+    }
+
+    std::string dhId = DSCREEN_PREFIX + SEPERATOR + std::to_string(screenId);
+
     uint32_t screenWidth = screen->GetWidth();
     uint32_t screenHeight = screen->GetHeight();
 
@@ -66,17 +76,27 @@ void DScreenHandler::OnConnect(uint64_t screenId)
     attrJson[KEY_VERSION] = DSCREEN_VERSION;
     attrJson[KEY_SCREEN_WIDTH] = screenWidth;
     attrJson[KEY_SCREEN_HEIGHT] = screenHeight;
-    attrJson[KEY_CODECTYPE] = QueryCodecInfo();
+    attrJson[KEY_CODECTYPE] = DScreenHandler::GetInstance().QueryCodecInfo();
 
-    if (listener_ != nullptr) {
-        listener_->PluginHardware(dhId, attrJson.dump());
-    }
+    DScreenHandler::GetInstance().PluginHardware(dhId, attrJson.dump());
 }
 
-void DScreenHandler::OnDisconnect(uint64_t screenId)
+void ScreenListener::OnDisconnect(uint64_t screenId)
 {
     DHLOGI("on screen disconnect");
     std::string dhId = DSCREEN_PREFIX + SEPERATOR + std::to_string(screenId);
+    DScreenHandler::GetInstance().UnPluginHardware(dhId);
+}
+
+void DScreenHandler::PluginHardware(const std::string &dhId, const std::string &attr)
+{
+    if (listener_ != nullptr) {
+        listener_->PluginHardware(dhId, attr);
+    }
+}
+
+void DScreenHandler::UnPluginHardware(const std::string &dhId)
+{
     if (listener_ != nullptr) {
         listener_->UnPluginHardware(dhId);
     }
