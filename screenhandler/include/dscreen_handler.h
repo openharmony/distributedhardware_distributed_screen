@@ -30,7 +30,7 @@ public:
     void OnChange(uint64_t screenId) override {};
 };
 
-class DScreenHandler : public IHardwareHandler, public Rosen::ScreenManager::IScreenListener {
+class DScreenHandler : public IHardwareHandler {
 DECLARE_SINGLE_INSTANCE_BASE(DScreenHandler);
 public:
     int32_t Initialize() override;
