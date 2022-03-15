@@ -16,8 +16,8 @@
 #ifndef OHOS_ISCREEN_CHANNEL_LISTENER_H
 #define OHOS_ISCREEN_CHANNEL_LISTENER_H
 
-#include "data_buffer.h"
 #include <memory>
+#include "data_buffer.h"
 
 namespace OHOS {
 namespace DistributedHardware {

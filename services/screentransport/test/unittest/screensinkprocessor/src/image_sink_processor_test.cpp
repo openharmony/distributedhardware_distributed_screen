@@ -42,7 +42,7 @@ void ImageSinkProcessorTest::SetUp(void)
     processor_ = std::make_shared<ImageSinkProcessor>();
     imageListener_ = std::make_shared<MockIImageSinkProcessorListener>();
     processor_->imageDecoder_ = std::make_shared<ImageSinkDecoder>(imageListener_);
-    processor_->imageDecoder_->videoDecoder_ = Media::VideoDecoderFactory::CreateByName("OMX_hisi_video_decoder_avc");
+    processor_->imageDecoder_->videoDecoder_ = Media::VideoDecoderFactory::CreateByMime("video/avc");
 }
 
 void ImageSinkProcessorTest::TearDown(void) {}
