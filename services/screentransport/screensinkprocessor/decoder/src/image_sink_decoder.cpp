@@ -114,7 +114,7 @@ int32_t ImageSinkDecoder::InitVideoDecoder(const VideoParam &configParam)
     DHLOGI("%s: InitVideoDecoder.", LOG_TAG);
     switch (configParam.GetCodecType()) {
         case VIDEO_CODEC_TYPE_VIDEO_H264:
-            videoDecoder_ = Media::VideoDecoderFactory::CreateByName("OMX_hisi_video_decoder_avc");
+            videoDecoder_ = Media::VideoDecoderFactory::CreateByMime("video/avc");
             break;
         case VIDEO_CODEC_TYPE_VIDEO_H265:
             videoDecoder_ = Media::VideoDecoderFactory::CreateByMime("video/hevc");

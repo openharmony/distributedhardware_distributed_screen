@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Huawei Device Co., Ltd.
+# Copyright (c) 2022 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,7 +12,8 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
 
 module_out_path = "distributed_screen/screen_client_test"
 
@@ -47,16 +48,16 @@ ohos_unittest("ScreenClientTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest_main",
     "${fwk_utils_path}:distributedhardwareutils",
     "${graphicstandard_path}/frameworks/surface:surface",
     "${graphicstandard_path}/rosen/modules/render_service_client:librender_service_client",
     "${windowmanager_path}/wm:libwm",
     "//foundation/distributedhardware/distributedscreen/services/screenclient:distributed_screen_client",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest_main",
   ]
 
- external_deps = [
+  external_deps = [
     "hiviewdfx_hilog_native:libhilog",
     "multimodalinput_base:libmmi-client",
   ]
@@ -66,4 +67,3 @@ group("screen_client_test") {
   testonly = true
   deps = [ ":ScreenClientTest" ]
 }
-

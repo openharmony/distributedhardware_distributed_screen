@@ -117,7 +117,7 @@ int32_t ImageSourceEncoder::InitVideoEncoder(const VideoParam &configParam)
     DHLOGI("%s: InitVideoEncoder.", LOG_TAG);
     switch (configParam.GetCodecType()) {
         case VIDEO_CODEC_TYPE_VIDEO_H264:
-            videoEncoder_ = Media::VideoEncoderFactory::CreateByName("OMX_hisi_video_encoder_avc");
+            videoEncoder_ = Media::VideoEncoderFactory::CreateByMime("video/avc");
             break;
         case VIDEO_CODEC_TYPE_VIDEO_H265:
             videoEncoder_ = Media::VideoEncoderFactory::CreateByMime("video/hevc");

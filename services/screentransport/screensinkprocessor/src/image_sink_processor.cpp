@@ -54,7 +54,7 @@ int32_t ImageSinkProcessor::ReleaseImageProcessor()
     int32_t ret = imageDecoder_->ReleaseDecoder();
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: ReleaseDecoder failed.", LOG_TAG);
-        return ERR_DH_SCREEN_TRANS_ERROR;
+        return ret;
     }
 
     return DH_SUCCESS;
