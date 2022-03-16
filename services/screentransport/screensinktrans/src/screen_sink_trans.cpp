@@ -140,14 +140,16 @@ int32_t ScreenSinkTrans::SetImageSurface(const sptr<Surface> &surface)
 int32_t ScreenSinkTrans::CheckVideoParam(const VideoParam &param)
 {
     if ((param.GetCodecType() != VIDEO_CODEC_TYPE_VIDEO_H264) &&
-        (param.GetCodecType() != VIDEO_CODEC_TYPE_VIDEO_H265)) {
+        (param.GetCodecType() != VIDEO_CODEC_TYPE_VIDEO_H265) &&
+        (param.GetCodecType() != VIDEO_CODEC_TYPE_VIDEO_MPEG4)) {
         DHLOGE("%s: Invalid codec type.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM;
     }
 
     if ((param.GetVideoFormat() != VIDEO_DATA_FORMAT_YUVI420) &&
         (param.GetVideoFormat() != VIDEO_DATA_FORMAT_NV12) &&
-        (param.GetVideoFormat() != VIDEO_DATA_FORMAT_NV21)) {
+        (param.GetVideoFormat() != VIDEO_DATA_FORMAT_NV21) &&
+        (param.GetVideoFormat() != VIDEO_DATA_FORMAT_RGBA8888)) {
         DHLOGE("%s: Invalid video data format.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM;
     }

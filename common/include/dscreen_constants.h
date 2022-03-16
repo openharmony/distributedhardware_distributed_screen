@@ -47,12 +47,14 @@ enum TaskType {
 enum CodecType : uint8_t {
     VIDEO_CODEC_TYPE_VIDEO_H264 = 0,
     VIDEO_CODEC_TYPE_VIDEO_H265 = 1,
+    VIDEO_CODEC_TYPE_VIDEO_MPEG4 = 2,
 };
 
 enum VideoFormat : uint8_t {
     VIDEO_DATA_FORMAT_YUVI420 = 0,
     VIDEO_DATA_FORMAT_NV12 = 1,
     VIDEO_DATA_FORMAT_NV21 = 2,
+    VIDEO_DATA_FORMAT_RGBA8888 = 3,
 };
 
 /* Screen package name */
@@ -112,6 +114,8 @@ const std::string KEY_ERR_CODE = "errCode";
 const std::string KEY_ERR_CONTENT = "errContent";
 const std::string KEY_VIDEO_PARAM = "videoParam";
 const std::string KEY_MAPRELATION = "mapRelation";
+const std::string CODEC_NAME_H264 = "OMX_hisi_video_encoder_avc";
+const std::string CODEC_NAME_MPEG4 = "avenc_mpeg4";
 constexpr float DEFAULT_DENSITY = 2.0;
 constexpr int32_t DEFAULT_SCREEN_FLAGS = 0;
 constexpr uint32_t DEFAULT_FPS = 30;

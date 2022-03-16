@@ -23,6 +23,7 @@ ohos_shared_library("distributed_screen_source") {
         "//utils/system/safwk/native/include",
         "//foundation/graphic/standard/interfaces/innerkits/surface",
         "${fwk_common_path}/utils/include",
+        "${mediastandard_path}/interfaces/innerkits/native/media/include",
     ]
 
     include_dirs += [
@@ -57,6 +58,7 @@ ohos_shared_library("distributed_screen_source") {
 
     deps = [
         "//utils/native/base:utils",
+        "${mediastandard_path}/interfaces/innerkits/native/media:media_client",
         "${common_path}:distributed_screen_utils",
         "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
         "//foundation/graphic/standard/rosen/modules/render_service_client:librender_service_client",

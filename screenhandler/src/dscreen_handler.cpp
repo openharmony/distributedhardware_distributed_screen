@@ -156,11 +156,14 @@ std::string DScreenHandler::QueryCodecInfo()
     // query codec info
     std::shared_ptr<Media::AVCodecList> codecList = Media::AVCodecListFactory::CreateAVCodecList();
     std::vector<std::shared_ptr<Media::VideoCaps>> caps = codecList->GetVideoEncoderCaps();
+    json codecTypeArray = json::array();
+    
     for (const auto &cap : caps) {
         std::shared_ptr<Media::AVCodecInfo> codecInfo = cap->GetCodecInfo();
-        codecInfoStr_.append(codecInfo->GetName());
-        codecInfoStr_.append(SEPERATOR);
+        codecTypeArray.push_back(codecInfo->GetName());
     }
+
+    codecInfoStr_ = codecTypeArray.dump();
     return codecInfoStr_;
 }
 
