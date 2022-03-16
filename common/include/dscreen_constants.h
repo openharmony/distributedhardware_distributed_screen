@@ -56,10 +56,10 @@ enum VideoFormat : uint8_t {
 };
 
 /* Screen package name */
-const std::string PKG_NAME = "DBinderBus_" + std::to_string(getpid());
+const std::string PKG_NAME = "ohos.dhardware";
 
 /* Screen data session name */
-const std::string DATA_SESSION_NAME = "DBinder.ohos.dhardware.dscreen.data";
+const std::string DATA_SESSION_NAME = "ohos.dhardware.dscreen.data";
 
 /* Screen session name max len */
 constexpr uint32_t DSCREEN_MAX_SESSION_NAME_LEN = 50;
