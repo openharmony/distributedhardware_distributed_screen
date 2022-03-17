@@ -326,6 +326,7 @@ void SoftbusAdapter::OnStreamReceived(int32_t sessionId, const StreamData *data,
     std::shared_ptr<ISoftbusListener> &listener = GetSoftbusListenerByName(sessionId);
     if (!listener) {
         DHLOGE("Get softbus listener failed.");
+        return;
     }
     listener->OnStreamReceived(sessionId, data, ext, frameInfo);
 }
