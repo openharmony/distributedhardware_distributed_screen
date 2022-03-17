@@ -97,6 +97,7 @@ private:
     void HandleDisable(const std::string &taskId);
     void HandleConnect();
     void HandleDisconnect();
+    int32_t NegotiateCodecType(const std::string &remoteCodecInfoStr);
     int32_t SetUp();
     int32_t Start();
     int32_t Stop();

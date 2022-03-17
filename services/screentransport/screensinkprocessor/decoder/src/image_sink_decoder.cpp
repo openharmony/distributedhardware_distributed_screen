@@ -119,6 +119,9 @@ int32_t ImageSinkDecoder::InitVideoDecoder(const VideoParam &configParam)
         case VIDEO_CODEC_TYPE_VIDEO_H265:
             videoDecoder_ = Media::VideoDecoderFactory::CreateByMime("video/hevc");
             break;
+        case VIDEO_CODEC_TYPE_VIDEO_MPEG4:
+            videoDecoder_ = Media::VideoDecoderFactory::CreateByMime("video/mp4v-es");
+            break;
         default:
             DHLOGE("%s: codecType is invalid!", LOG_TAG);
             videoDecoder_ = nullptr;
@@ -154,6 +157,9 @@ int32_t ImageSinkDecoder::SetDecoderFormat(const VideoParam &configParam)
         case VIDEO_CODEC_TYPE_VIDEO_H265:
             imageFormat_.PutStringValue("codec_mime", "video/hevc");
             break;
+        case VIDEO_CODEC_TYPE_VIDEO_MPEG4:
+            imageFormat_.PutStringValue("codec_mime", "video/mp4v-es");
+            break;
         default:
             DHLOGE("The current codec type does not support decoding.");
             return ERR_DH_SCREEN_TRANS_ILLEGAL_OPERATION;
@@ -167,6 +173,9 @@ int32_t ImageSinkDecoder::SetDecoderFormat(const VideoParam &configParam)
             break;
         case VIDEO_DATA_FORMAT_NV21:
             imageFormat_.PutIntValue("pixel_format", Media::VideoPixelFormat::NV21);
+            break;
+        case VIDEO_DATA_FORMAT_RGBA8888:
+            imageFormat_.PutIntValue("pixel_format", Media::VideoPixelFormat::RGBA);
             break;
         default:
             DHLOGE("The current pixel format does not support decoding.");

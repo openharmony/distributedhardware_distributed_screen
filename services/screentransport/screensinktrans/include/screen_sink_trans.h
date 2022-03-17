@@ -50,8 +50,8 @@ private:
     int32_t CheckVideoParam(const VideoParam &param);
     int32_t CheckTransParam(const VideoParam &localParam, const VideoParam &remoteParam, const std::string &peerDevId);
     int32_t InitScreenTrans(const VideoParam &localParam, const VideoParam &remoteParam, const std::string &peerDevId);
-    int32_t RegisterChannelListner();
-    int32_t RegisterProcessorListner(const VideoParam &localParam, const VideoParam &remoteParam,
+    int32_t RegisterChannelListener();
+    int32_t RegisterProcessorListener(const VideoParam &localParam, const VideoParam &remoteParam,
         const std::string &peerDevId);
 
 private:

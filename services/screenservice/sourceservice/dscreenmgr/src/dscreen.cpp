@@ -15,6 +15,9 @@
 
 #include "dscreen.h"
 
+#include "avcodec_info.h"
+#include "avcodec_list.h"
+
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
@@ -209,18 +212,67 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
 
     videoParam_->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH]);
     videoParam_->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT]);
-    videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV21);
-    videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
+
+    // negotiate codecType
+    int32_t ret = NegotiateCodecType(attrJson[KEY_CODECTYPE]);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("negotiate codec type failed.");
+        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
+            "negotiate codec type failed.");
+        return;
+    }
 
     uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId_, dhId_, videoParam_);
     if (screenId == SCREEN_ID_INVALID) {
         DHLOGE("create virtual screen failed.");
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
             "create virtual screen failed.");
+        return;
     }
     screenId_ = screenId;
     SetState(ENABLED);
     dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "");
+}
+
+int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
+{
+    json remoteCodecArray = json::parse(remoteCodecInfoStr, nullptr, false);
+    if (remoteCodecArray.is_discarded() || !remoteCodecArray.is_array()) {
+        DHLOGE("remoteCodecInfoStrjson is invalid.");
+        return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
+    }
+
+    std::vector<std::string> localCodecArray;
+    // query local support encoder type
+    std::shared_ptr<Media::AVCodecList> codecList = Media::AVCodecListFactory::CreateAVCodecList();
+    std::vector<std::shared_ptr<Media::VideoCaps>> caps = codecList->GetVideoEncoderCaps();
+    for (const auto &cap : caps) {
+        std::shared_ptr<Media::AVCodecInfo> codecInfo = cap->GetCodecInfo();
+        localCodecArray.push_back(codecInfo->GetName());
+    }
+    
+    std::vector<std::string> codecTypeCandidates;
+    for (const auto &remoteCodecType : remoteCodecArray) {
+        if (std::find(localCodecArray.begin(), localCodecArray.end(),
+            remoteCodecType) != localCodecArray.end()) {
+            codecTypeCandidates.push_back(remoteCodecType);
+        }
+    }
+    
+    if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
+        CODEC_NAME_H264) != codecTypeCandidates.end()) {
+        videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
+        videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV21);
+    } else if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
+        CODEC_NAME_MPEG4) != codecTypeCandidates.end()) {
+        videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_MPEG4);
+        videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_RGBA8888);
+    } else {
+        DHLOGI("codec type not support.");
+        return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
+    }
+
+    return DH_SUCCESS;
 }
 
 void DScreen::HandleDisable(const std::string &taskId)

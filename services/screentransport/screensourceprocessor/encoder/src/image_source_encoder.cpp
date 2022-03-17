@@ -122,6 +122,9 @@ int32_t ImageSourceEncoder::InitVideoEncoder(const VideoParam &configParam)
         case VIDEO_CODEC_TYPE_VIDEO_H265:
             videoEncoder_ = Media::VideoEncoderFactory::CreateByMime("video/hevc");
             break;
+        case VIDEO_CODEC_TYPE_VIDEO_MPEG4:
+            videoEncoder_ = Media::VideoEncoderFactory::CreateByMime("video/mp4v-es");
+            break;
         default:
             DHLOGE("%s: codecType is invalid!", LOG_TAG);
             videoEncoder_ = nullptr;
@@ -157,6 +160,9 @@ int32_t ImageSourceEncoder::SetEncoderFormat(const VideoParam &configParam)
         case VIDEO_CODEC_TYPE_VIDEO_H265:
             imageFormat_.PutStringValue("codec_mime", "video/hevc");
             break;
+        case VIDEO_CODEC_TYPE_VIDEO_MPEG4:
+            imageFormat_.PutStringValue("codec_mime", "video/mp4v-es");
+            break;
         default:
             DHLOGE("%s: Codec type is invalid.", LOG_TAG);
             return ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM;
@@ -170,6 +176,9 @@ int32_t ImageSourceEncoder::SetEncoderFormat(const VideoParam &configParam)
             break;
         case VIDEO_DATA_FORMAT_NV21:
             imageFormat_.PutIntValue("pixel_format", Media::VideoPixelFormat::NV21);
+            break;
+        case VIDEO_DATA_FORMAT_RGBA8888:
+            imageFormat_.PutIntValue("pixel_format", Media::VideoPixelFormat::RGBA);
             break;
         default:
             DHLOGE("%s: Video format is invalid.", LOG_TAG);

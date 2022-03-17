@@ -152,14 +152,16 @@ sptr<Surface> &ScreenSourceTrans::GetImageSurface()
 int32_t ScreenSourceTrans::CheckVideoParam(const VideoParam &param)
 {
     if ((param.GetCodecType() != VIDEO_CODEC_TYPE_VIDEO_H264) &&
-        (param.GetCodecType() != VIDEO_CODEC_TYPE_VIDEO_H265)) {
+        (param.GetCodecType() != VIDEO_CODEC_TYPE_VIDEO_H265) &&
+        (param.GetCodecType() != VIDEO_CODEC_TYPE_VIDEO_MPEG4)) {
         DHLOGE("%s: Invalid codec type.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM;
     }
 
     if ((param.GetVideoFormat() != VIDEO_DATA_FORMAT_YUVI420) &&
         (param.GetVideoFormat() != VIDEO_DATA_FORMAT_NV12) &&
-        (param.GetVideoFormat() != VIDEO_DATA_FORMAT_NV21)) {
+        (param.GetVideoFormat() != VIDEO_DATA_FORMAT_NV21) &&
+        (param.GetVideoFormat() != VIDEO_DATA_FORMAT_RGBA8888)) {
         DHLOGE("%s: Invalid video data format.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM;
     }
@@ -216,7 +218,7 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
         DHLOGE("%s: Create screen data channel failed.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
-    int32_t ret = RegisterChannelListner();
+    int32_t ret = RegisterChannelListener();
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Register channel listener failed ret: %d.", LOG_TAG, ret);
         screenChannel_ = nullptr;
@@ -229,7 +231,7 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
         screenChannel_ = nullptr;
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
-    ret = RegisterProcessorListner(localParam, remoteParam);
+    ret = RegisterProcessorListener(localParam, remoteParam);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Register data processor listener failed ret: %d.", LOG_TAG, ret);
         screenChannel_ = nullptr;
@@ -240,9 +242,9 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
     return DH_SUCCESS;
 }
 
-int32_t ScreenSourceTrans::RegisterChannelListner()
+int32_t ScreenSourceTrans::RegisterChannelListener()
 {
-    DHLOGI("%s: RegisterChannelListner.", LOG_TAG);
+    DHLOGI("%s: RegisterChannelListener.", LOG_TAG);
     std::shared_ptr<IScreenChannelListener> listener = shared_from_this();
     if (!listener) {
         DHLOGE("%s: Channel listener is null", LOG_TAG);
@@ -262,9 +264,9 @@ int32_t ScreenSourceTrans::RegisterChannelListner()
     return DH_SUCCESS;
 }
 
-int32_t ScreenSourceTrans::RegisterProcessorListner(const VideoParam &localParam, const VideoParam &remoteParam)
+int32_t ScreenSourceTrans::RegisterProcessorListener(const VideoParam &localParam, const VideoParam &remoteParam)
 {
-    DHLOGI("%s: RegisterProcessorListner.", LOG_TAG);
+    DHLOGI("%s: RegisterProcessorListener.", LOG_TAG);
     std::shared_ptr<IImageSourceProcessorListener> listener = shared_from_this();
     if (!listener) {
         DHLOGE("%s: Processor listener is null", LOG_TAG);

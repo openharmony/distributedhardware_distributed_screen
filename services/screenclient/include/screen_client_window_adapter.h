@@ -47,7 +47,7 @@ private:
     std::mutex windowIdMapMutex_;
 };
 
-class ScreenClientInputEventListener : public RefBase, public MMI::IInputEventConsumer {
+class ScreenClientInputEventListener : public MMI::IInputEventConsumer {
 public:
     ScreenClientInputEventListener() = default;
     void OnInputEvent(std::shared_ptr<MMI::PointerEvent> pointerEvent) const override;
