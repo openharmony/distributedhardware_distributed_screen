@@ -162,7 +162,7 @@ int32_t ImageSourceEncoder::SetEncoderFormat(const VideoParam &configParam)
             break;
         case VIDEO_CODEC_TYPE_VIDEO_MPEG4:
             imageFormat_.PutStringValue("codec_mime", "video/mp4v-es");
-            break;    
+            break;
         default:
             DHLOGE("%s: Codec type is invalid.", LOG_TAG);
             return ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM;
