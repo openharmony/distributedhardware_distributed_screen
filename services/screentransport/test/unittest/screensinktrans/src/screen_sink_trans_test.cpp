@@ -66,14 +66,14 @@ HWTEST_F(ScreenSinkTransTest, setup_test_001, TestSize.Level1)
 }
 
 /**
- * @tc.name: register_processor_listner_001
- * @tc.desc: Verify the RegisterChannelListner function success.
+ * @tc.name: register_processor_listener_001
+ * @tc.desc: Verify the RegisterChannelListener function success.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenSinkTransTest, register_processor_listner_001, TestSize.Level1)
+HWTEST_F(ScreenSinkTransTest, register_processor_listener_001, TestSize.Level1)
 {
-    EXPECT_EQ(DH_SUCCESS, trans_->RegisterProcessorListner(param_, param_, peerDevId_));
+    EXPECT_EQ(DH_SUCCESS, trans_->RegisterProcessorListener(param_, param_, peerDevId_));
 }
 
 /**
@@ -230,7 +230,7 @@ HWTEST_F(ScreenSinkTransTest, on_data_received_test_001, TestSize.Level1)
 
 /**
  * @tc.name: on_processor_state_notify_test_001
- * @tc.desc: Verify the RegisterChannelListner function.
+ * @tc.desc: Verify the RegisterChannelListener function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
@@ -243,7 +243,7 @@ HWTEST_F(ScreenSinkTransTest, on_processor_state_notify_test_001, TestSize.Level
 
 /**
  * @tc.name: on_processor_state_notify_test_002
- * @tc.desc: Verify the RegisterChannelListner function.
+ * @tc.desc: Verify the RegisterChannelListener function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */

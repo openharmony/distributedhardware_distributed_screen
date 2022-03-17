@@ -206,7 +206,7 @@ int32_t ScreenSinkTrans::InitScreenTrans(const VideoParam &localParam, const Vid
         DHLOGE("%s: Create screen data channel failed.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
-    int32_t ret = RegisterChannelListner();
+    int32_t ret = RegisterChannelListener();
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Register channel listener failed.", LOG_TAG);
         screenChannel_ = nullptr;
@@ -219,7 +219,7 @@ int32_t ScreenSinkTrans::InitScreenTrans(const VideoParam &localParam, const Vid
         screenChannel_ = nullptr;
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
-    ret = RegisterProcessorListner(localParam, remoteParam, peerDevId);
+    ret = RegisterProcessorListener(localParam, remoteParam, peerDevId);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Register processor listener failed.", LOG_TAG);
         screenChannel_ = nullptr;
@@ -230,9 +230,9 @@ int32_t ScreenSinkTrans::InitScreenTrans(const VideoParam &localParam, const Vid
     return DH_SUCCESS;
 }
 
-int32_t ScreenSinkTrans::RegisterChannelListner()
+int32_t ScreenSinkTrans::RegisterChannelListener()
 {
-    DHLOGI("%s: RegisterChannelListner.", LOG_TAG);
+    DHLOGI("%s: RegisterChannelListener.", LOG_TAG);
     std::shared_ptr<IScreenChannelListener> listener = shared_from_this();
     if (!listener) {
         DHLOGE("%s: Channel Listener is null.", LOG_TAG);
@@ -248,10 +248,10 @@ int32_t ScreenSinkTrans::RegisterChannelListner()
     return DH_SUCCESS;
 }
 
-int32_t ScreenSinkTrans::RegisterProcessorListner(const VideoParam &localParam, const VideoParam &remoteParam,
+int32_t ScreenSinkTrans::RegisterProcessorListener(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::string &peerDevId)
 {
-    DHLOGI("%s: RegisterProcessorListner.", LOG_TAG);
+    DHLOGI("%s: RegisterProcessorListener.", LOG_TAG);
     std::shared_ptr<IImageSinkProcessorListener> listener = shared_from_this();
     if (!listener) {
         DHLOGE("%s: Channel listener to null.", LOG_TAG);
