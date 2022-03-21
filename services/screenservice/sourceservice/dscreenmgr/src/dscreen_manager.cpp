@@ -199,6 +199,11 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
 {
     DHLOGI("EnableDistributedScreen, devId: %s, dhId:%s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
+    if (!dScreenCallback_) {
+        DHLOGE("dscreen manager not init.");
+        return ERR_DH_SCREEN_SA_ENABLE_FAILED;
+    }
+
     std::string dScreenIdx = devId + SEPERATOR + dhId;
     std::shared_ptr<DScreen> dScreen = nullptr;
     if (dScreens_.count(dScreenIdx) != 0) {
