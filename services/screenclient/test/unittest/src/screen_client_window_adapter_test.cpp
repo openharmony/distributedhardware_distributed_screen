@@ -59,32 +59,6 @@ HWTEST_F(ScreenClientWindowAdapterTest, CreateWindow_002, TestSize.Level1)
 }
 
 /**
- * @tc.name: ShowWindow_001
- * @tc.desc: Verify the ShowWindow function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ScreenClientWindowAdapterTest, ShowWindow_001, TestSize.Level1)
-{
-    int32_t windowId = 0;
-    int32_t actual = ScreenClientWindowAdapter::GetInstance().ShowWindow(windowId);
-    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR, actual);
-}
-
-/**
- * @tc.name: ShowWindow_002
- * @tc.desc: Verify the ShowWindow function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ScreenClientWindowAdapterTest, ShowWindow_002, TestSize.Level1)
-{
-    int32_t windowId = 1;
-    int32_t actual = ScreenClientWindowAdapter::GetInstance().ShowWindow(windowId);
-    EXPECT_EQ(DH_SUCCESS, actual);
-}
-
-/**
  * @tc.name: MoveWindow_001
  * @tc.desc: Verify the MoveWindow function.
  * @tc.type: FUNC
