@@ -79,7 +79,6 @@
             "test":[
                 "//foundation/distributedhardware/distributedscreen/services/screentransport/test/unittest:screen_transport_test",
                 "//foundation/distributedhardware/distributedscreen/services/softbusadapter/test/unittest:SoftBusAdapterTest",
-                "//foundation/distributedhardware/distributedscreen/services/screenclient/test/unittest:screen_client_test",
                 "//foundation/distributedhardware/distributedscreen/services/common/test/unittest:service_common_test"
             ]
         }
