@@ -86,7 +86,7 @@
 
 ## **涉及仓**
 ****
-分布式硬件子系统：  
+**分布式硬件子系统：**  
 
 设备管理
 [device_manager](https://gitee.com/openharmony/device_manager)
