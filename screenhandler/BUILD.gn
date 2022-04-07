@@ -13,45 +13,42 @@
 
 import("//build/ohos.gni")
 import("//build/ohos_var.gni")
-import("//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
 
 ohos_shared_library("distributed_screen_handler") {
-    include_dirs = [
-        "//third_party/json/include",
-        "${windowmanager_path}/interfaces/innerkits/dm",
-        "${mediastandard_path}/interfaces/innerkits/native/media/include",
-        "${fwk_common_path}/utils/include",
-    ]
+  include_dirs = [
+    "//third_party/json/include",
+    "${windowmanager_path}/interfaces/innerkits/dm",
+    "${mediastandard_path}/interfaces/inner_api/native",
+    "${fwk_common_path}/utils/include",
+  ]
 
-    include_dirs += [
-        "include",
-        "${common_path}/include",
-    ]
+  include_dirs += [
+    "include",
+    "${common_path}/include",
+  ]
 
-    sources = [
-        "src/dscreen_handler.cpp",
-    ]
+  sources = [ "src/dscreen_handler.cpp" ]
 
-    deps = [
-        "//utils/native/base:utils",
-        "${mediastandard_path}/interfaces/innerkits/native/media:media_client",
-        "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
-        "//foundation/graphic/standard/rosen/modules/render_service_client:librender_service_client",
-        "${windowmanager_path}/dm:libdm",
-        "${common_path}:distributed_screen_utils",
-    ]
+  deps = [
+    "${common_path}:distributed_screen_utils",
+    "${mediastandard_path}/interfaces/inner_api/native:media_client",
+    "${windowmanager_path}/dm:libdm",
+    "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
+    "//foundation/graphic/standard/rosen/modules/render_service_client:librender_service_client",
+    "//utils/native/base:utils",
+  ]
 
-    defines = [
-        "HI_LOG_ENABLE",
-        "DH_LOG_TAG=\"dscreenhandler\"",
-        "LOG_DOMAIN=0xD004100",
-    ]
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"dscreenhandler\"",
+    "LOG_DOMAIN=0xD004100",
+  ]
 
-    external_deps = [
-        "hiviewdfx_hilog_native:libhilog",
-    ]
+  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
 
-    subsystem_name = "distributedhardware"
+  subsystem_name = "distributedhardware"
 
-    part_name = "distributed_screen"
+  part_name = "distributed_screen"
 }
