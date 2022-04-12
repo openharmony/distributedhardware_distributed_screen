@@ -30,6 +30,7 @@ namespace DistributedHardware {
 IMPLEMENT_SINGLE_INSTANCE(ScreenMgrAdapter);
 ScreenMgrAdapter::~ScreenMgrAdapter()
 {
+    screenIdMap_.clear();
     DHLOGI("~ScreenMgrAdapter");
 }
 
