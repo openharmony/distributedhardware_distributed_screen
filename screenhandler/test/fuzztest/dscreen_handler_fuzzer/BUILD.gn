@@ -16,26 +16,26 @@ import("//build/config/features.gni")
 import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
+
 ##############################fuzztest##########################################
 ohos_fuzztest("DscreenHandlerFuzzTest") {
   module_out_path = "distributed_screen/dscreen_handler_fuzzer"
 
-   fuzz_config_file =
-     "${distributedscreen_path}/screenhandler/test/fuzztest/dscreen_handler_fuzzer"
+  fuzz_config_file = "${distributedscreen_path}/screenhandler/test/fuzztest/dscreen_handler_fuzzer"
 
   include_dirs = [
-      "//third_party/json/include",
-      "${windowmanager_path}/interfaces/innerkits/dm",
-      "${mediastandard_path}/interfaces/innerkits/native/media/include",
-      "${fwk_common_path}/utils/include",
+    "//third_party/json/include",
+    "${windowmanager_path}/interfaces/innerkits/dm",
+    "${mediastandard_path}/interfaces/innerkits/native/media/include",
+    "${fwk_common_path}/utils/include",
   ]
 
   include_dirs += [
-      "include",
-      "${common_path}/include",
-      "${distributedscreen_path}/screenhandler/include",
-      "${fwk_services_path}/distributedhardwarefwkserviceimpl/include/localhardwaremanager",
-      "//foundation/distributedhardware/distributedhardwarefwk/common/utils/include"
+    "include",
+    "${common_path}/include",
+    "${distributedscreen_path}/screenhandler/include",
+    "${fwk_services_path}/distributedhardwarefwkserviceimpl/include/localhardwaremanager",
+    "//foundation/distributedhardware/distributedhardwarefwk/common/utils/include",
   ]
 
   cflags = [
@@ -43,34 +43,30 @@ ohos_fuzztest("DscreenHandlerFuzzTest") {
     "-O0",
     "-Wno-unused-variable",
     "-fno-omit-frame-pointer",
-    ]
-
-  sources = [
-    "dscreen_handler_fuzzer.cpp",
   ]
 
+  sources = [ "dscreen_handler_fuzzer.cpp" ]
+
   deps = [
-      "//utils/native/base:utils",
-      "${mediastandard_path}/interfaces/inner_api/native:media_client",
-      "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
-      "//foundation/graphic/standard/rosen/modules/render_service_client:librender_service_client",
-      "${windowmanager_path}/dm:libdm",
-      "${common_path}:distributed_screen_utils",
-      "${distributedscreen_path}/screenhandler:distributed_screen_handler",
-      "${fwk_services_path}/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl",
+    "${common_path}:distributed_screen_utils",
+    "${distributedscreen_path}/screenhandler:distributed_screen_handler",
+    "${fwk_services_path}/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl",
+    "${mediastandard_path}/interfaces/inner_api/native:media_client",
+    "${windowmanager_path}/dm:libdm",
+    "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
+    "//foundation/graphic/standard/rosen/modules/render_service_client:librender_service_client",
+    "//utils/native/base:utils",
   ]
 
   defines = [
-      "HI_LOG_ENABLE",
-      "DH_LOG_TAG=\"DscreenHandlerFuzzTest\"",
-      "LOG_DOMAIN=0xD004100",
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"DscreenHandlerFuzzTest\"",
+    "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [
-      "hiviewdfx_hilog_native:libhilog",
-  ]
-
+  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
 }
+
 ###############################################################################
 group("fuzztest") {
   testonly = true
