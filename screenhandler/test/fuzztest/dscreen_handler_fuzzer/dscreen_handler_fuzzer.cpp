@@ -27,7 +27,6 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-
 void DscreenHandlerFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size <= 0)) {

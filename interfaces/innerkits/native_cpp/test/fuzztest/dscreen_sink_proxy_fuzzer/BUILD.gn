@@ -16,22 +16,22 @@ import("//build/config/features.gni")
 import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
+
 ##############################fuzztest##########################################
 ohos_fuzztest("DscreenSinkProxyFuzzTest") {
   module_out_path = "distributed_screen/dscreen_sink_proxy_fuzzer"
 
-  fuzz_config_file = 
-    "${interfaces_path}/innerkits/native_cpp/test/fuzztest/dscreen_sink_proxy_fuzzer"
+  fuzz_config_file = "${interfaces_path}/innerkits/native_cpp/test/fuzztest/dscreen_sink_proxy_fuzzer"
 
   include_dirs = [
-      "//utils/system/safwk/native/include",
-      "${fwk_common_path}/utils/include",
+    "//utils/system/safwk/native/include",
+    "${fwk_common_path}/utils/include",
   ]
 
   include_dirs += [
-      "include",
-      "${common_path}/include",
-      "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
+    "include",
+    "${common_path}/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
   ]
 
   cflags = [
@@ -41,29 +41,28 @@ ohos_fuzztest("DscreenSinkProxyFuzzTest") {
     "-fno-omit-frame-pointer",
   ]
 
-  sources = [
-    "dscreen_sink_proxy_fuzzer.cpp",
-  ]
+  sources = [ "dscreen_sink_proxy_fuzzer.cpp" ]
 
   deps = [
-      "//utils/native/base:utils",
-      "${common_path}:distributed_screen_utils",
-      "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
+    "${common_path}:distributed_screen_utils",
+    "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
+    "//utils/native/base:utils",
   ]
 
   defines = [
-      "HI_LOG_ENABLE",
-      "DH_LOG_TAG=\"DscreenSinkProxyFuzzTest\"",
-      "LOG_DOMAIN=0xD004100",
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"DscreenSinkProxyFuzzTest\"",
+    "LOG_DOMAIN=0xD004100",
   ]
 
   external_deps = [
-      "hiviewdfx_hilog_native:libhilog",
-      "ipc:ipc_core",
-      "safwk:system_ability_fwk",
-      "samgr_standard:samgr_proxy",
+    "hiviewdfx_hilog_native:libhilog",
+    "ipc:ipc_core",
+    "safwk:system_ability_fwk",
+    "samgr_standard:samgr_proxy",
   ]
 }
+
 ###############################################################################
 group("fuzztest") {
   testonly = true

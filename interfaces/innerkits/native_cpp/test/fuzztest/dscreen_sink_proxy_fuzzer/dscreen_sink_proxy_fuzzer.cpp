@@ -25,7 +25,6 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-
 void DscreenSinkProxyHandlerFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size <= sizeof(int32_t))) {

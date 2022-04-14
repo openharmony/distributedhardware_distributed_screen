@@ -27,7 +27,6 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-
 void DscreenSourceHandlerFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size <= 0)) {
@@ -44,7 +43,7 @@ void DscreenSourceHandlerFuzzTest(const uint8_t* data, size_t size)
     param.version = str;
     param.attrs = str;
     std::shared_ptr<RegisterCallback> callback = std::make_shared<ComponentEnable>();
-    std::shared_ptr<UnregisterCallback> uncallback = std::make_shared<ComponentDisable>(); 
+    std::shared_ptr<UnregisterCallback> uncallback = std::make_shared<ComponentDisable>();
 
     sptr<ISystemAbilityManager> samgr =
             SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
