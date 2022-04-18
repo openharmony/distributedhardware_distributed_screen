@@ -58,7 +58,7 @@ enum VideoFormat : uint8_t {
 };
 
 /* Screen package name */
-const std::string PKG_NAME = "ohos.dhardware";
+const std::string PKG_NAME = "ohos.dhardware.dscreen";
 
 /* Screen data session name */
 const std::string DATA_SESSION_NAME = "ohos.dhardware.dscreen.data";
