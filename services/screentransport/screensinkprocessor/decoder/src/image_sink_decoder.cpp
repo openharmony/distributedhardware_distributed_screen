@@ -279,7 +279,9 @@ int32_t ImageSinkDecoder::StopInputThread()
 {
     DHLOGI("%s: StopInputThread.", LOG_TAG);
     isDecoderReady_ = false;
-    decodeThread_.join();
+    if (decodeThread_.joinable()) {
+        decodeThread_.join();
+    }
     std::lock_guard<std::mutex> dataLock(dataMutex_);
     while (!bufferIndexQueue_.empty()) {
         bufferIndexQueue_.pop();
