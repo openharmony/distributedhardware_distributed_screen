@@ -121,7 +121,9 @@ int32_t ScreenSourceTrans::Stop()
         stopStatus = false;
     }
     isChannelReady_ = false;
-    sendDataThread_.join();
+    if (sendDataThread_.joinable()) {
+        sendDataThread_.join();
+    }
 
     if (!stopStatus) {
         DHLOGE("%s: Stop source trans failed.", LOG_TAG);
@@ -309,7 +311,9 @@ void ScreenSourceTrans::OnSessionClosed()
 {
     DHLOGI("%s: OnChannelSessionClosed.", LOG_TAG);
     isChannelReady_ = false;
-    sendDataThread_.join();
+    if (sendDataThread_.joinable()) {
+        sendDataThread_.join();
+    }
 
     std::shared_ptr<IScreenSourceTransCallback> callback = transCallback_.lock();
     if (!callback) {
