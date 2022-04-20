@@ -15,8 +15,8 @@ group("fuzztest") {
   testonly = true
 
   deps = [
-    "dscreen_sink_handler_fuzzer:fuzztest",
-    "dscreen_sink_proxy_fuzzer:fuzztest",
-    "dscreen_source_handler_fuzzer:fuzztest",
+    "dscreensinkhandler_fuzzer:fuzztest",
+    "dscreensinkproxy_fuzzer:fuzztest",
+    "dscreensourcehandler_fuzzer:fuzztest",
   ]
 }

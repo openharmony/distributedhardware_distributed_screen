@@ -19,9 +19,9 @@ import(
 
 ##############################fuzztest##########################################
 ohos_fuzztest("DscreenSinkProxyFuzzTest") {
-  module_out_path = "distributed_screen/dscreen_sink_proxy_fuzzer"
+  module_out_path = "distributed_screen/dscreensinkproxy_fuzzer"
 
-  fuzz_config_file = "${interfaces_path}/innerkits/native_cpp/test/fuzztest/dscreen_sink_proxy_fuzzer"
+  fuzz_config_file = "${interfaces_path}/innerkits/native_cpp/test/fuzztest/dscreensinkproxy_fuzzer"
 
   include_dirs = [
     "//utils/system/safwk/native/include",

@@ -14,5 +14,5 @@
 group("fuzztest") {
   testonly = true
 
-  deps = [ "dscreen_handler_fuzzer:fuzztest" ]
+  deps = [ "dscreenhandler_fuzzer:fuzztest" ]
 }
