@@ -20,7 +20,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 DScreenSourceLoadCallback::DScreenSourceLoadCallback(
-    const std::string params) : params_(params) {}
+    const std::string &params) : params_(params) {}
 
 void DScreenSourceLoadCallback::OnLoadSystemAbilitySuccess(
     int32_t systemAbilityId, const sptr<IRemoteObject> &remoteObject)

@@ -22,7 +22,7 @@ namespace OHOS {
 namespace DistributedHardware {
 class DScreenSinkLoadCallback : public SystemAbilityLoadCallbackStub {
 public:
-    explicit DScreenSinkLoadCallback(const std::string params);
+    explicit DScreenSinkLoadCallback(const std::string &params);
     void OnLoadSystemAbilitySuccess(int32_t systemAbilityId,
         const sptr<IRemoteObject> &remoteObject) override;
     void OnLoadSystemAbilityFail(int32_t systemAbilityId) override;
