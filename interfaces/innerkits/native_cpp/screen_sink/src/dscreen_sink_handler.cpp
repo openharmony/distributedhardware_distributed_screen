@@ -121,7 +121,7 @@ void DScreenSinkHandler::OnRemoteSinkSvrDied(const wptr<IRemoteObject> &remote)
         return;
     }
     std::lock_guard<std::mutex> lock(mutex_);
-    if (!dScreenSinkProxy_) {
+    if (dScreenSinkProxy_ != nullptr) {
         dScreenSinkProxy_->AsObject()->RemoveDeathRecipient(sinkSvrRecipient_);
         dScreenSinkProxy_ = nullptr;
     }

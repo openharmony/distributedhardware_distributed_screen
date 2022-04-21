@@ -37,7 +37,7 @@ ScreenRegion::ScreenRegion(const std::string &remoteDevId, uint64_t screenId, ui
 ScreenRegion::~ScreenRegion()
 {
     DHLOGD("ScreenRegion deConstruct");
-    if (!sinkTrans_) {
+    if (sinkTrans_ != nullptr) {
         sinkTrans_->Release();
     }
 }
