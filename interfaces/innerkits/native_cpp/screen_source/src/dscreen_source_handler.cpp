@@ -151,7 +151,7 @@ void DScreenSourceHandler::OnRemoteSourceSvrDied(const wptr<IRemoteObject> &remo
         return;
     }
     std::lock_guard<std::mutex> lock(mutex_);
-    if (dScreenSourceProxy_) {
+    if (dScreenSourceProxy_ != nullptr) {
         dScreenSourceProxy_->AsObject()->RemoveDeathRecipient(sourceSvrRecipient_);
         dScreenSourceProxy_ = nullptr;
     }
