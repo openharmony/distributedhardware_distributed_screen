@@ -76,7 +76,7 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
     return DH_SUCCESS;
 }
 
-void DScreenSourceHandler::FinishStartSA(const std::string params,
+void DScreenSourceHandler::FinishStartSA(const std::string &params,
     const sptr<IRemoteObject> &remoteObject)
 {
     DHLOGD("FinishStartSA");
@@ -168,7 +168,7 @@ void DScreenSourceHandler::OnRemoteSourceSvrDied(const wptr<IRemoteObject> &remo
         return;
     }
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (!dScreenSourceProxy_) {
+    if (dScreenSinkProxy_ != nullptr) {
         dScreenSourceProxy_->AsObject()->RemoveDeathRecipient(sourceSvrRecipient_);
         dScreenSourceProxy_ = nullptr;
     }

@@ -70,7 +70,7 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
     return DH_SUCCESS;
 }
 
-void DScreenSinkHandler::FinishStartSA(const std::string params,
+void DScreenSinkHandler::FinishStartSA(const std::string &params,
     const sptr<IRemoteObject> &remoteObject)
 {
     DHLOGD("FinishStartSA");
@@ -138,7 +138,7 @@ void DScreenSinkHandler::OnRemoteSinkSvrDied(const wptr<IRemoteObject> &remote)
         return;
     }
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (!dScreenSinkProxy_) {
+    if (dScreenSinkProxy_ != nullptr) {
         dScreenSinkProxy_->AsObject()->RemoveDeathRecipient(sinkSvrRecipient_);
         dScreenSinkProxy_ = nullptr;
     }

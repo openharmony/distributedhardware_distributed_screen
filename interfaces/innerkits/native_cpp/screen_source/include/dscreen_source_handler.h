@@ -38,7 +38,7 @@ public:
     int32_t ConfigDistributedHardware(const std::string &devId, const std::string &dhId,
         const std::string &key, const std::string &value) override;
     void OnRemoteSourceSvrDied(const wptr<IRemoteObject> &remote);
-    void FinishStartSA(const std::string params, const sptr<IRemoteObject> &remoteObject);
+    void FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject);
 private:
     class DScreenSourceSvrRecipient : public IRemoteObject::DeathRecipient {
     public:
