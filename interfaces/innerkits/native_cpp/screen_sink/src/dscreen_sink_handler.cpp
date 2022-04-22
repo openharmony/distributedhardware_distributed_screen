@@ -44,8 +44,6 @@ DScreenSinkHandler::~DScreenSinkHandler()
 int32_t DScreenSinkHandler::InitSink(const std::string &params)
 {
     DHLOGD("InitSink");
-
-
     if (!dScreenSinkProxy_) {
         sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
         if (!samgr) {
