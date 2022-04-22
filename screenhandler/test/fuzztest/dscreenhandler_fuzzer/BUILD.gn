@@ -19,7 +19,7 @@ import(
 
 ##############################fuzztest##########################################
 ohos_fuzztest("DscreenHandlerFuzzTest") {
-  module_out_path = "distributed_screen/dscreenhandler_fuzzer"
+  module_out_path = "distributed_screen/dscreenhandler"
 
   fuzz_config_file = "${distributedscreen_path}/screenhandler/test/fuzztest/dscreenhandler_fuzzer"
 
