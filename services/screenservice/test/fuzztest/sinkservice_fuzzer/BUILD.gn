@@ -21,34 +21,35 @@ import(
 ohos_fuzztest("SinkServiceFuzzTest") {
   module_out_path = "distributed_screen/sinkservice"
 
-  fuzz_config_file = "${services_path}/screenservice/test/fuzztest/sinkservice_fuzzer"
+  fuzz_config_file =
+      "${services_path}/screenservice/test/fuzztest/sinkservice_fuzzer"
 
   include_dirs = [
-      "//third_party/json/include",
-      "//utils/native/base/include",
-      "//utils/system/safwk/native/include",
-      "//foundation/graphic/standard/interfaces/innerkits/surface",
-      "${windowmanager_path}/interfaces/innerkits/dm",
-      "${fwk_common_path}/utils/include",
+    "//third_party/json/include",
+    "//utils/native/base/include",
+    "//utils/system/safwk/native/include",
+    "//foundation/graphic/standard/interfaces/innerkits/surface",
+    "${windowmanager_path}/interfaces/innerkits/dm",
+    "${fwk_common_path}/utils/include",
   ]
 
   include_dirs += [
-      "./dscreenservice/include",
-      "./screenregionmgr/include",
-      "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
-      "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
-      "${interfaces_path}/innerkits/native_cpp/screen_source/include",
-      "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
-      "${common_path}/include",
-      "${services_path}/common/utils/include",
-      "${services_path}/common/databuffer/include",
-      "${services_path}/common/screen_channel/include",
-      "${services_path}/screentransport/screensinktrans/include",
-      "${services_path}/screentransport/screensinkprocessor/include",
-      "${services_path}/screentransport/screensinkprocessor/decoder/include",
-      "${services_path}/screenclient/include",
-      "${services_path}/screenservice/sinkservice/dscreenservice/include",
-      "${services_path}/screenservice/sinkservice/screenregionmgr/include",
+    "./dscreenservice/include",
+    "./screenregionmgr/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
+    "${interfaces_path}/innerkits/native_cpp/screen_source/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
+    "${common_path}/include",
+    "${services_path}/common/utils/include",
+    "${services_path}/common/databuffer/include",
+    "${services_path}/common/screen_channel/include",
+    "${services_path}/screentransport/screensinktrans/include",
+    "${services_path}/screentransport/screensinkprocessor/include",
+    "${services_path}/screentransport/screensinkprocessor/decoder/include",
+    "${services_path}/screenclient/include",
+    "${services_path}/screenservice/sinkservice/dscreenservice/include",
+    "${services_path}/screenservice/sinkservice/screenregionmgr/include",
   ]
 
   cflags = [
@@ -58,35 +59,33 @@ ohos_fuzztest("SinkServiceFuzzTest") {
     "-fno-omit-frame-pointer",
   ]
 
-  sources = [
-    "sink_service_fuzzer.cpp",
-  ]
+  sources = [ "sink_service_fuzzer.cpp" ]
 
   deps = [
-      "//utils/native/base:utils",
-      "${common_path}:distributed_screen_utils",
-      "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
-      "${services_path}/screenclient:distributed_screen_client",
-      "//foundation/graphic/standard/frameworks/surface:surface",
-      "//foundation/distributedhardware/distributedscreen/services/screenservice/sinkservice:distributed_screen_sink",
-      "${windowmanager_path}/dm:libdm",
+    "${common_path}:distributed_screen_utils",
+    "${services_path}/screenclient:distributed_screen_client",
+    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
+    "${windowmanager_path}/dm:libdm",
+    "//foundation/distributedhardware/distributedscreen/services/screenservice/sinkservice:distributed_screen_sink",
+    "//foundation/graphic/standard/frameworks/surface:surface",
+    "//utils/native/base:utils",
   ]
 
   defines = [
-      "HI_LOG_ENABLE",
-      "DH_LOG_TAG=\"SinkServiceFuzzTest\"",
-      "LOG_DOMAIN=0xD004100",
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"SinkServiceFuzzTest\"",
+    "LOG_DOMAIN=0xD004100",
   ]
 
   external_deps = [
-      "hiviewdfx_hilog_native:libhilog",
-      "ipc:ipc_core",
-      "safwk:system_ability_fwk",
-      "samgr_standard:samgr_proxy",
-      "multimedia_media_standard:media_client",
+    "hiviewdfx_hilog_native:libhilog",
+    "ipc:ipc_core",
+    "multimedia_media_standard:media_client",
+    "safwk:system_ability_fwk",
+    "samgr_standard:samgr_proxy",
   ]
-
 }
+
 ###############################################################################
 group("fuzztest") {
   testonly = true
