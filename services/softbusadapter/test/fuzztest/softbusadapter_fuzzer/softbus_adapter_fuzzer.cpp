@@ -30,37 +30,38 @@ void SoftbusAdapterFuzzTest(const uint8_t* data, size_t size)
     if ((data == nullptr) || (size < sizeof(int32_t))) {
         return;
     }
+
     std::string pkgname(reinterpret_cast<const char*>(data), size);
     std::string sessionName(reinterpret_cast<const char*>(data), size);
     std::string peerDevId(reinterpret_cast<const char*>(data), size);
     std::string mySessionName(reinterpret_cast<const char*>(data), size);
     std::string peerSessionName(reinterpret_cast<const char*>(data), size);
     int32_t sessionId = *(reinterpret_cast<const int32_t*>(data));
-    void *data1 = const_cast<uint8_t*>(data);
-    int32_t dataLen = (int32_t)size;
-    StreamData streamdata = {reinterpret_cast<char*>(const_cast<uint8_t*>(data)), (int)size};
+    void *datapointer = const_cast<uint8_t*>(data);
+    int32_t dataLen = static_cast<int32_t>(size);
+    StreamData streamdata = {reinterpret_cast<char*>(const_cast<uint8_t*>(data)), static_cast<int>(size)};
     StreamData ext = {0};
     StreamFrameInfo frameInfo = {0};
     std::shared_ptr<ScreenDataChannelImpl> listener = std::make_shared<ScreenDataChannelImpl>(peerDevId);
     int32_t result = *(reinterpret_cast<const int32_t*>(data));
-    unsigned int datalength = (unsigned int)size;
+    unsigned int datalength = static_cast<unsigned int>(size);
     int eventId = *(reinterpret_cast<const int*>(data));
     int tvCount = *(reinterpret_cast<const int*>(data));
-    QosTv tvList;    //???
+    QosTv tvList;
 
     SoftbusAdapter::GetInstance().CreateSoftbusSessionServer(pkgname, sessionName, peerDevId);
     SoftbusAdapter::GetInstance().RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
     SoftbusAdapter::GetInstance().OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
     SoftbusAdapter::GetInstance().CloseSoftbusSession(sessionId);
-    SoftbusAdapter::GetInstance().SendSoftbusBytes(sessionId, data1, dataLen);
+    SoftbusAdapter::GetInstance().SendSoftbusBytes(sessionId, datapointer, dataLen);
     SoftbusAdapter::GetInstance().SendSoftbusStream(sessionId, &streamdata, &ext, &frameInfo);
     SoftbusAdapter::GetInstance().RegisterSoftbusListener(listener, sessionName, peerDevId);
     SoftbusAdapter::GetInstance().UnRegisterSoftbusListener(sessionName, peerDevId);
     SoftbusAdapter::GetInstance().OnSoftbusSessionOpened(sessionId, result);
     SoftbusAdapter::GetInstance().OnSoftbusSessionClosed(sessionId);
-    SoftbusAdapter::GetInstance().OnBytesReceived(sessionId, data1, dataLen);
+    SoftbusAdapter::GetInstance().OnBytesReceived(sessionId, datapointer, dataLen);
     SoftbusAdapter::GetInstance().OnStreamReceived(sessionId, &streamdata, &ext, &frameInfo);
-    SoftbusAdapter::GetInstance().OnMessageReceived(sessionId, data1, datalength);
+    SoftbusAdapter::GetInstance().OnMessageReceived(sessionId, datapointer, datalength);
     SoftbusAdapter::GetInstance().OnQosEvent(sessionId, eventId, tvCount, &tvList);
 }
 }

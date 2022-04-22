@@ -44,7 +44,6 @@ void SinkServiceFuzzTest(const uint8_t* data, size_t size)
     sinkService->SubscribeLocalHardware(dhId, param);
     sinkService->UnsubscribeLocalHardware(dhId);
     sinkService->ReleaseSink();
-    
 }
 }
 }
