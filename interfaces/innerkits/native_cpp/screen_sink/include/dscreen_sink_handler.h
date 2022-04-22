@@ -44,8 +44,8 @@ private:
     DScreenSinkHandler();
     ~DScreenSinkHandler();
 
-    std::mutex mutex_;
-    std::condition_variable conVar_;
+    std::mutex proxyMutex_;
+    std::condition_variable proxyConVar_;
     sptr<IDScreenSink> dScreenSinkProxy_ = nullptr;
     sptr<DScreenSinkSvrRecipient> sinkSvrRecipient_ = nullptr;
 };

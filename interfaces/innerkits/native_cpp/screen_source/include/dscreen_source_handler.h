@@ -48,8 +48,8 @@ private:
     DScreenSourceHandler();
     ~DScreenSourceHandler();
 
-    std::mutex mutex_;
-    std::condition_variable conVar_;
+    std::mutex proxyMutex_;
+    std::condition_variable proxyConVar_;
     sptr<IDScreenSource> dScreenSourceProxy_ = nullptr;
     sptr<DScreenSourceCallback> dScreenSourceCallback_ = nullptr;
     sptr<DScreenSourceSvrRecipient> sourceSvrRecipient_ = nullptr;

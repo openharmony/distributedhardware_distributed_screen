@@ -31,7 +31,7 @@ IMPLEMENT_SINGLE_INSTANCE(DScreenSourceHandler);
 DScreenSourceHandler::DScreenSourceHandler()
 {
     DHLOGI("DScreenSourceHandler construct.");
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (!sourceSvrRecipient_) {
         sourceSvrRecipient_ = new DScreenSourceSvrRecipient();
     }
@@ -49,19 +49,15 @@ DScreenSourceHandler::~DScreenSourceHandler()
 int32_t DScreenSourceHandler::InitSource(const std::string &params)
 {
     DHLOGD("InitSource");
-    std::unique_lock<std::mutex> lock(mutex_);
 
     if (!dScreenSourceProxy_) {
-        sptr<ISystemAbilityManager> samgr =
-                SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+        sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
         if (!samgr) {
             DHLOGE("Failed to get system ability mgr.");
             return ERR_DH_SCREEN_SA_GET_SAMGR_FAIL;
         }
-        sptr<DScreenSourceLoadCallback> loadCallback =
-            new DScreenSourceLoadCallback(params);
-        int32_t ret = samgr->LoadSystemAbility(
-            DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, loadCallback);
+        sptr<DScreenSourceLoadCallback> loadCallback = new DScreenSourceLoadCallback(params);
+        int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, loadCallback);
         if (ret != ERR_OK) {
             DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
                 DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, ret);
@@ -69,8 +65,9 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
         }
     }
 
-    auto waitStatus = conVar_.wait_for(lock, std::chrono::milliseconds(SCREEN_LOADSA_TIMEOUT_MS),
-        [this]() { return dScreenSourceProxy_; });
+    std::unique_lock<std::mutex> lock(proxyMutex_);
+    auto waitStatus = proxyConVar_.wait_for(lock, std::chrono::milliseconds(SCREEN_LOADSA_TIMEOUT_MS),
+        [this]() { return (dScreenSourceProxy_ != nullptr); });
     if (!waitStatus) {
         DHLOGE("screen load sa timeout.");
         return ERR_DH_SCREEN_SA_LOAD_TIMEOUT;
@@ -83,6 +80,7 @@ void DScreenSourceHandler::FinishStartSA(const std::string params,
     const sptr<IRemoteObject> &remoteObject)
 {
     DHLOGD("FinishStartSA");
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     remoteObject->AddDeathRecipient(sourceSvrRecipient_);
     dScreenSourceProxy_ = iface_cast<IDScreenSource>(remoteObject);
     if ((!dScreenSourceProxy_) || (!dScreenSourceProxy_->AsObject())) {
@@ -90,12 +88,13 @@ void DScreenSourceHandler::FinishStartSA(const std::string params,
         return;
     }
     dScreenSourceProxy_->InitSource(params, dScreenSourceCallback_);
+    proxyConVar_.notify_one();
 }
 
 int32_t DScreenSourceHandler::ReleaseSource()
 {
     DHLOGD("ReleaseSource");
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (!dScreenSourceProxy_) {
         DHLOGE("screen source proxy not init.");
         return ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT;
@@ -110,7 +109,7 @@ int32_t DScreenSourceHandler::RegisterDistributedHardware(const std::string &dev
 {
     DHLOGD("RegisterDistributedHardware, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
         GetAnonyString(dhId).c_str());
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (!dScreenSourceProxy_) {
         DHLOGE("screen source proxy not init.");
         return ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT;
@@ -131,7 +130,7 @@ int32_t DScreenSourceHandler::UnregisterDistributedHardware(const std::string &d
 {
     DHLOGD("UnregisterDistributedHardware, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
         GetAnonyString(dhId).c_str());
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (!dScreenSourceProxy_) {
         DHLOGE("screen source proxy not init.");
         return ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT;
@@ -168,7 +167,7 @@ void DScreenSourceHandler::OnRemoteSourceSvrDied(const wptr<IRemoteObject> &remo
         DHLOGE("OnRemoteDied remote promoted failed");
         return;
     }
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (!dScreenSourceProxy_) {
         dScreenSourceProxy_->AsObject()->RemoveDeathRecipient(sourceSvrRecipient_);
         dScreenSourceProxy_ = nullptr;

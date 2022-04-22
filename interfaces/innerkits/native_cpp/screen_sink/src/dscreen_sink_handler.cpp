@@ -30,7 +30,7 @@ IMPLEMENT_SINGLE_INSTANCE(DScreenSinkHandler);
 DScreenSinkHandler::DScreenSinkHandler()
 {
     DHLOGI("DScreenSinkHandler construct.");
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (!sinkSvrRecipient_) {
         sinkSvrRecipient_ = new DScreenSinkSvrRecipient();
     }
@@ -44,19 +44,16 @@ DScreenSinkHandler::~DScreenSinkHandler()
 int32_t DScreenSinkHandler::InitSink(const std::string &params)
 {
     DHLOGD("InitSink");
-    std::unique_lock<std::mutex> lock(mutex_);
+
 
     if (!dScreenSinkProxy_) {
-        sptr<ISystemAbilityManager> samgr =
-                SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+        sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
         if (!samgr) {
             DHLOGE("Failed to get system ability mgr.");
             return ERR_DH_SCREEN_SA_GET_SAMGR_FAIL;
         }
-        sptr<DScreenSinkLoadCallback> loadCallback =
-            new DScreenSinkLoadCallback(params);
-        int32_t ret = samgr->LoadSystemAbility(
-            DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, loadCallback);
+        sptr<DScreenSinkLoadCallback> loadCallback = new DScreenSinkLoadCallback(params);
+        int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, loadCallback);
         if (ret != ERR_OK) {
             DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
                 DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, ret);
@@ -64,7 +61,8 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
         }
     }
 
-    auto waitStatus = conVar_.wait_for(lock, std::chrono::milliseconds(SCREEN_LOADSA_TIMEOUT_MS),
+    std::unique_lock<std::mutex> lock(proxyMutex_);
+    auto waitStatus = proxyConVar_.wait_for(lock, std::chrono::milliseconds(SCREEN_LOADSA_TIMEOUT_MS),
         [this]() { return dScreenSinkProxy_; });
     if (!waitStatus) {
         DHLOGE("screen load sa timeout");
@@ -78,6 +76,7 @@ void DScreenSinkHandler::FinishStartSA(const std::string params,
     const sptr<IRemoteObject> &remoteObject)
 {
     DHLOGD("FinishStartSA");
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     remoteObject->AddDeathRecipient(sinkSvrRecipient_);
     dScreenSinkProxy_ = iface_cast<IDScreenSink>(remoteObject);
     if ((!dScreenSinkProxy_) || (!dScreenSinkProxy_->AsObject())) {
@@ -85,12 +84,13 @@ void DScreenSinkHandler::FinishStartSA(const std::string params,
         return;
     }
     dScreenSinkProxy_->InitSink(params);
+    proxyConVar_.notify_one();
 }
 
 int32_t DScreenSinkHandler::ReleaseSink()
 {
     DHLOGD("ReleaseSink");
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (!dScreenSinkProxy_) {
         DHLOGE("screen sink proxy not init.");
         return ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT;
@@ -104,7 +104,7 @@ int32_t DScreenSinkHandler::ReleaseSink()
 int32_t DScreenSinkHandler::SubscribeLocalHardware(const std::string &dhId, const std::string &param)
 {
     DHLOGD("SubscribeLocalHardware");
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (!dScreenSinkProxy_) {
         DHLOGE("screen sink proxy not init.");
         return ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT;
@@ -116,7 +116,7 @@ int32_t DScreenSinkHandler::SubscribeLocalHardware(const std::string &dhId, cons
 int32_t DScreenSinkHandler::UnsubscribeLocalHardware(const std::string &dhId)
 {
     DHLOGD("UnsubscribeLocalHardware");
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (!dScreenSinkProxy_) {
         DHLOGE("screen sink proxy not init.");
         return ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT;
@@ -139,7 +139,7 @@ void DScreenSinkHandler::OnRemoteSinkSvrDied(const wptr<IRemoteObject> &remote)
         DHLOGE("OnRemoteDied remote promoted failed");
         return;
     }
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (!dScreenSinkProxy_) {
         dScreenSinkProxy_->AsObject()->RemoveDeathRecipient(sinkSvrRecipient_);
         dScreenSinkProxy_ = nullptr;
