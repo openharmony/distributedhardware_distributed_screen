@@ -21,7 +21,7 @@ import(
 ohos_fuzztest("SoftbusAdapterFuzzTest") {
   module_out_path = "distributed_screen/softbusadapter"
 
-  fuzz_config_file = 
+  fuzz_config_file =
       "${services_path}/softbusadapter/test/fuzztest/softbusadapter_fuzzer"
 
   include_dirs = [
@@ -49,16 +49,14 @@ ohos_fuzztest("SoftbusAdapterFuzzTest") {
     "-g",
     "-O0",
     "-Wno-unused-variable",
-    "-fno-omit-frame-pointer"
+    "-fno-omit-frame-pointer",
   ]
 
-  sources = [
-    "softbus_adapter_fuzzer.cpp",
-  ]
+  sources = [ "softbus_adapter_fuzzer.cpp" ]
 
   deps = [
-    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
     "${fwk_utils_path}:distributedhardwareutils",
+    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
     "//foundation/graphic/standard/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
