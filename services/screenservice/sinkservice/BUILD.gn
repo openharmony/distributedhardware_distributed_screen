@@ -13,70 +13,71 @@
 
 import("//build/ohos.gni")
 import("//build/ohos_var.gni")
-import("//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
 
 ohos_shared_library("distributed_screen_sink") {
-    include_dirs = [
-        "//third_party/json/include",
-        "//utils/native/base/include",
-        "//utils/system/safwk/native/include",
-        "//foundation/graphic/standard/interfaces/innerkits/surface",
-        "${windowmanager_path}/interfaces/innerkits/dm",
-        "${fwk_common_path}/utils/include",
-    ]
+  include_dirs = [
+    "//third_party/json/include",
+    "//utils/native/base/include",
+    "//utils/system/safwk/native/include",
+    "//foundation/graphic/standard/interfaces/innerkits/surface",
+    "${windowmanager_path}/interfaces/innerkits/dm",
+    "${fwk_common_path}/utils/include",
+  ]
 
-    include_dirs += [
-        "./dscreenservice/include",
-        "./screenregionmgr/include",
-        "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
-        "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
-        "${interfaces_path}/innerkits/native_cpp/screen_source/include",
-        "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
-        "${common_path}/include",
-        "${services_path}/common/utils/include",
-        "${services_path}/common/databuffer/include",
-        "${services_path}/common/screen_channel/include",
-        "${services_path}/screentransport/screensinktrans/include",
-        "${services_path}/screentransport/screensinkprocessor/include",
-        "${services_path}/screentransport/screensinkprocessor/decoder/include",
-        "${services_path}/screenclient/include/",
-    ]
+  include_dirs += [
+    "./dscreenservice/include",
+    "./screenregionmgr/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
+    "${interfaces_path}/innerkits/native_cpp/screen_source/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
+    "${common_path}/include",
+    "${services_path}/common/utils/include",
+    "${services_path}/common/databuffer/include",
+    "${services_path}/common/screen_channel/include",
+    "${services_path}/screentransport/screensinktrans/include",
+    "${services_path}/screentransport/screensinkprocessor/include",
+    "${services_path}/screentransport/screensinkprocessor/decoder/include",
+    "${services_path}/screenclient/include/",
+  ]
 
-    sources = [
-        "${services_path}/common/utils/src/dscreen_maprelation.cpp",
-        "${services_path}/common/utils/src/video_param.cpp",
-        "${interfaces_path}/innerkits/native_cpp/screen_sink/src/dscreen_sink_proxy.cpp",
-        "${interfaces_path}/innerkits/native_cpp/screen_source/src/dscreen_source_proxy.cpp",
-        "./dscreenservice/src/dscreen_sink_service.cpp",
-        "./dscreenservice/src/dscreen_sink_stub.cpp",
-        "./screenregionmgr/src/screenregion.cpp",
-        "./screenregionmgr/src/screenregionmgr.cpp",
-    ]
+  sources = [
+    "${interfaces_path}/innerkits/native_cpp/screen_sink/src/dscreen_sink_proxy.cpp",
+    "${interfaces_path}/innerkits/native_cpp/screen_source/src/dscreen_source_proxy.cpp",
+    "${services_path}/common/utils/src/dscreen_maprelation.cpp",
+    "${services_path}/common/utils/src/video_param.cpp",
+    "./dscreenservice/src/dscreen_sink_service.cpp",
+    "./dscreenservice/src/dscreen_sink_stub.cpp",
+    "./screenregionmgr/src/screenregion.cpp",
+    "./screenregionmgr/src/screenregionmgr.cpp",
+  ]
 
-    deps = [
-        "//utils/native/base:utils",
-        "${common_path}:distributed_screen_utils",
-        "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
-        "${services_path}/screenclient:distributed_screen_client",
-        "//foundation/graphic/standard/frameworks/surface:surface",
-        "${windowmanager_path}/dm:libdm",
-    ]
+  deps = [
+    "${common_path}:distributed_screen_utils",
+    "${services_path}/screenclient:distributed_screen_client",
+    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
+    "${windowmanager_path}/dm:libdm",
+    "//foundation/graphic/standard/frameworks/surface:surface",
+    "//utils/native/base:utils",
+  ]
 
-    defines = [
-        "HI_LOG_ENABLE",
-        "DH_LOG_TAG=\"dscreensink\"",
-        "LOG_DOMAIN=0xD004100",
-    ]
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"dscreensink\"",
+    "LOG_DOMAIN=0xD004100",
+  ]
 
-    external_deps = [
-        "hiviewdfx_hilog_native:libhilog",
-        "ipc:ipc_core",
-        "safwk:system_ability_fwk",
-        "samgr_standard:samgr_proxy",
-        "multimedia_media_standard:media_client",
-    ]
+  external_deps = [
+    "hiviewdfx_hilog_native:libhilog",
+    "ipc:ipc_core",
+    "multimedia_media_standard:media_client",
+    "safwk:system_ability_fwk",
+    "samgr_standard:samgr_proxy",
+  ]
 
-    subsystem_name = "distributedhardware"
+  subsystem_name = "distributedhardware"
 
-    part_name = "distributed_screen"
+  part_name = "distributed_screen"
 }

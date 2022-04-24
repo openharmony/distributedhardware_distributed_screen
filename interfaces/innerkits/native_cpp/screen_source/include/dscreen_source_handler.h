@@ -16,6 +16,7 @@
 #ifndef OHOS_DSCREEN_SOURCE_HANDLER_H
 #define OHOS_DSCREEN_SOURCE_HANDLER_H
 
+#include <condition_variable>
 #include <mutex>
 
 #include "dscreen_source_callback.h"
@@ -37,6 +38,7 @@ public:
     int32_t ConfigDistributedHardware(const std::string &devId, const std::string &dhId,
         const std::string &key, const std::string &value) override;
     void OnRemoteSourceSvrDied(const wptr<IRemoteObject> &remote);
+    void FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject);
 private:
     class DScreenSourceSvrRecipient : public IRemoteObject::DeathRecipient {
     public:
@@ -46,7 +48,8 @@ private:
     DScreenSourceHandler();
     ~DScreenSourceHandler();
 
-    std::mutex mutex_;
+    std::mutex proxyMutex_;
+    std::condition_variable proxyConVar_;
     sptr<IDScreenSource> dScreenSourceProxy_ = nullptr;
     sptr<DScreenSourceCallback> dScreenSourceCallback_ = nullptr;
     sptr<DScreenSourceSvrRecipient> sourceSvrRecipient_ = nullptr;

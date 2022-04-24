@@ -133,6 +133,12 @@ int32_t SoftbusAdapter::RemoveSoftbusSessionServer(const std::string &pkgname, c
         return ERR_DH_SCREEN_TRANS_ILLEGAL_OPERATION;
     }
 
+    int32_t ret = RemoveSessionServer(pkgname.c_str(), sessionName.c_str());
+    if (ret != DH_SUCCESS) {
+        DHLOGE("%s: RemoveSessionServer failed.", LOG_TAG);
+        return ret;
+    }
+
     mapSessionSet_[sessionName].erase(peerDevId);
     if (mapSessionSet_[sessionName].empty()) {
         mapSessionSet_.erase(sessionName);

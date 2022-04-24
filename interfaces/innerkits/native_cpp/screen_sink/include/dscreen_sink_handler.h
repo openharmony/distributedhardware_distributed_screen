@@ -16,6 +16,7 @@
 #ifndef OHOS_DSCREEN_SINK_HANDLER_H
 #define OHOS_DSCREEN_SINK_HANDLER_H
 
+#include <condition_variable>
 #include <mutex>
 
 #include "idistributed_hardware_sink.h"
@@ -33,6 +34,7 @@ public:
     int32_t SubscribeLocalHardware(const std::string &dhId, const std::string &param) override;
     int32_t UnsubscribeLocalHardware(const std::string &dhId) override;
     void OnRemoteSinkSvrDied(const wptr<IRemoteObject> &remote);
+    void FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject);
 private:
     class DScreenSinkSvrRecipient : public IRemoteObject::DeathRecipient {
     public:
@@ -42,7 +44,8 @@ private:
     DScreenSinkHandler();
     ~DScreenSinkHandler();
 
-    std::mutex mutex_;
+    std::mutex proxyMutex_;
+    std::condition_variable proxyConVar_;
     sptr<IDScreenSink> dScreenSinkProxy_ = nullptr;
     sptr<DScreenSinkSvrRecipient> sinkSvrRecipient_ = nullptr;
 };

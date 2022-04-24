@@ -13,46 +13,48 @@
 
 import("//build/ohos.gni")
 import("//build/ohos_var.gni")
-import("//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
 
 ohos_shared_library("distributed_screen_source_sdk") {
-    include_dirs = [
-        "//utils/system/safwk/native/include",
-        "${fwk_common_path}/utils/include",
-    ]
+  include_dirs = [
+    "//utils/system/safwk/native/include",
+    "${fwk_common_path}/utils/include",
+  ]
 
-    include_dirs += [
-        "include",
-        "include/callback",
-        "${common_path}/include",
-    ]
+  include_dirs += [
+    "include",
+    "include/callback",
+    "${common_path}/include",
+  ]
 
-    sources = [
-        "src/dscreen_source_handler.cpp",
-        "src/dscreen_source_proxy.cpp",
-        "src/callback/dscreen_source_callback_stub.cpp",
-        "src/callback/dscreen_source_callback.cpp",
-    ]
+  sources = [
+    "src/callback/dscreen_source_callback.cpp",
+    "src/callback/dscreen_source_callback_stub.cpp",
+    "src/callback/dscreen_source_load_callback.cpp",
+    "src/dscreen_source_handler.cpp",
+    "src/dscreen_source_proxy.cpp",
+  ]
 
-    deps = [
-        "//utils/native/base:utils",
-        "${common_path}:distributed_screen_utils",
-    ]
+  deps = [
+    "${common_path}:distributed_screen_utils",
+    "//utils/native/base:utils",
+  ]
 
-    defines = [
-        "HI_LOG_ENABLE",
-        "DH_LOG_TAG=\"dscreensourcesdk\"",
-        "LOG_DOMAIN=0xD004100",
-    ]
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"dscreensourcesdk\"",
+    "LOG_DOMAIN=0xD004100",
+  ]
 
-    external_deps = [
-        "hiviewdfx_hilog_native:libhilog",
-        "ipc:ipc_core",
-        "safwk:system_ability_fwk",
-        "samgr_standard:samgr_proxy",
-    ]
+  external_deps = [
+    "hiviewdfx_hilog_native:libhilog",
+    "ipc:ipc_core",
+    "safwk:system_ability_fwk",
+    "samgr_standard:samgr_proxy",
+  ]
 
-    subsystem_name = "distributedhardware"
+  subsystem_name = "distributedhardware"
 
-    part_name = "distributed_screen"
+  part_name = "distributed_screen"
 }

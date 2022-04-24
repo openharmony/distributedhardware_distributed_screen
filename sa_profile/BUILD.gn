@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build/ohos/sa_profile/sa_profile.gni")
+import("//build/ohos.gni")
 
 ohos_sa_profile("dscreen_sa_profile") {
   sources = [
@@ -20,4 +20,11 @@ ohos_sa_profile("dscreen_sa_profile") {
   ]
 
   part_name = "distributed_screen"
+}
+
+ohos_prebuilt_etc("dscreen.cfg") {
+  relative_install_dir = "init"
+  source = "dscreen.cfg"
+  part_name = "distributed_screen"
+  subsystem_name = "distributedhardware"
 }

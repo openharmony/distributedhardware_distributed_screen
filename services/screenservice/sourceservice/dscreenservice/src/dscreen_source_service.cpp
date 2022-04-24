@@ -93,6 +93,8 @@ int32_t DScreenSourceService::ReleaseSource()
         DHLOGE("UnInit DScreenManager failed. err: %d", ret);
         return ret;
     }
+    DHLOGI("exit source sa process");
+    exit(0);
     return DH_SUCCESS;
 }
 

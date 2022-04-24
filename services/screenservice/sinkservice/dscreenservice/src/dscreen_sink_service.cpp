@@ -76,7 +76,10 @@ int32_t DScreenSinkService::InitSink(const std::string &params)
 int32_t DScreenSinkService::ReleaseSink()
 {
     DHLOGI("ReleaseSink");
-    return ScreenRegionManager::GetInstance().ReleaseAllRegions();
+    ScreenRegionManager::GetInstance().ReleaseAllRegions();
+    DHLOGI("exit sink sa process");
+    exit(0);
+    return DH_SUCCESS;
 }
 
 int32_t DScreenSinkService::SubscribeLocalHardware(const std::string &dhId, const std::string &param)

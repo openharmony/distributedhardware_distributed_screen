@@ -33,6 +33,14 @@ DScreenSourceCallbackStub::~DScreenSourceCallbackStub()
 int32_t DScreenSourceCallbackStub::OnRemoteRequest(uint32_t code, MessageParcel &data,
     MessageParcel &reply, MessageOption &option)
 {
+    DHLOGI("OnRemoteRequest, code: %d", code);
+    std::u16string desc = DScreenSourceCallbackStub::GetDescriptor();
+    std::u16string remoteDesc = data.ReadInterfaceToken();
+    if (desc != remoteDesc) {
+        DHLOGE("DScreenSourceCallbackStub::OnRemoteRequest remoteDesc is invalid!");
+        return ERR_INVALID_DATA;
+    }
+
     std::map<int32_t, DScreenFunc>::iterator iter = memberFuncMap_.find(code);
     if (iter == memberFuncMap_.end()) {
         DHLOGE("invalid request code.");
