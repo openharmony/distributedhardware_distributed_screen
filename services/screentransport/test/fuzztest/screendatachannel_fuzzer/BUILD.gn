@@ -16,11 +16,13 @@ import("//build/config/features.gni")
 import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
+
 ##############################fuzztest##########################################
 ohos_fuzztest("ScreenDataChannelFuzzTest") {
   module_out_path = "distributed_screen/screendatachannel"
 
-  fuzz_config_file = "${services_path}/screentransport/test/fuzztest/screendatachannel_fuzzer"
+  fuzz_config_file =
+      "${services_path}/screentransport/test/fuzztest/screendatachannel_fuzzer"
 
   include_dirs = [
     "//third_party/json/include",
@@ -54,9 +56,9 @@ ohos_fuzztest("ScreenDataChannelFuzzTest") {
   sources = [ "screen_data_channel_fuzzer.cpp" ]
 
   deps = [
-    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
-    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "${fwk_utils_path}:distributedhardwareutils",
+    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
+    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
     "//foundation/graphic/standard/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
@@ -73,6 +75,7 @@ ohos_fuzztest("ScreenDataChannelFuzzTest") {
     "multimedia_media_standard:media_client",
   ]
 }
+
 ###############################################################################
 group("fuzztest") {
   testonly = true
