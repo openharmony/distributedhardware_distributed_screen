@@ -18,24 +18,38 @@ import(
     "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
 
 ##############################fuzztest##########################################
-ohos_fuzztest("DscreenSourceHandlerFuzzTest") {
-  module_out_path = "distributed_screen/dscreensourcehandler"
+ohos_fuzztest("SinkServiceFuzzTest") {
+  module_out_path = "distributed_screen/sinkservice"
 
-  fuzz_config_file = "${interfaces_path}/innerkits/native_cpp/test/fuzztest/dscreensourcehandler_fuzzer"
+  fuzz_config_file =
+      "${services_path}/screenservice/test/fuzztest/sinkservice_fuzzer"
 
   include_dirs = [
+    "//third_party/json/include",
+    "//utils/native/base/include",
     "//utils/system/safwk/native/include",
+    "//foundation/graphic/standard/interfaces/innerkits/surface",
+    "${windowmanager_path}/interfaces/innerkits/dm",
     "${fwk_common_path}/utils/include",
   ]
 
   include_dirs += [
-    "include",
-    "include/callback",
-    "${common_path}/include",
+    "./dscreenservice/include",
+    "./screenregionmgr/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
-    "${fwk_services_path}/distributedhardwarefwkserviceimpl/include",
-    "${fwk_services_path}/distributedhardwarefwkserviceimpl/include/componentmanager",
+    "${common_path}/include",
+    "${services_path}/common/utils/include",
+    "${services_path}/common/databuffer/include",
+    "${services_path}/common/screen_channel/include",
+    "${services_path}/screentransport/screensinktrans/include",
+    "${services_path}/screentransport/screensinkprocessor/include",
+    "${services_path}/screentransport/screensinkprocessor/decoder/include",
+    "${services_path}/screenclient/include",
+    "${services_path}/screenservice/sinkservice/dscreenservice/include",
+    "${services_path}/screenservice/sinkservice/screenregionmgr/include",
   ]
 
   cflags = [
@@ -45,24 +59,28 @@ ohos_fuzztest("DscreenSourceHandlerFuzzTest") {
     "-fno-omit-frame-pointer",
   ]
 
-  sources = [ "dscreen_source_handler_fuzzer.cpp" ]
+  sources = [ "sink_service_fuzzer.cpp" ]
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${fwk_services_path}/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl",
-    "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
+    "${services_path}/screenclient:distributed_screen_client",
+    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
+    "${windowmanager_path}/dm:libdm",
+    "//foundation/distributedhardware/distributedscreen/services/screenservice/sinkservice:distributed_screen_sink",
+    "//foundation/graphic/standard/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"DscreenSourceHandlerFuzzTest\"",
+    "DH_LOG_TAG=\"SinkServiceFuzzTest\"",
     "LOG_DOMAIN=0xD004100",
   ]
 
   external_deps = [
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
+    "multimedia_media_standard:media_client",
     "safwk:system_ability_fwk",
     "samgr_standard:samgr_proxy",
   ]
@@ -71,6 +89,6 @@ ohos_fuzztest("DscreenSourceHandlerFuzzTest") {
 ###############################################################################
 group("fuzztest") {
   testonly = true
-  deps = [ ":DscreenSourceHandlerFuzzTest" ]
+  deps = [ ":SinkServiceFuzzTest" ]
 }
 ###############################################################################

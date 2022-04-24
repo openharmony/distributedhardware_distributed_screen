@@ -18,20 +18,31 @@ import(
     "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
 
 ##############################fuzztest##########################################
-ohos_fuzztest("DscreenSinkProxyFuzzTest") {
-  module_out_path = "distributed_screen/dscreensinkproxy"
+ohos_fuzztest("SoftbusAdapterFuzzTest") {
+  module_out_path = "distributed_screen/softbusadapter"
 
-  fuzz_config_file = "${interfaces_path}/innerkits/native_cpp/test/fuzztest/dscreensinkproxy_fuzzer"
+  fuzz_config_file =
+      "${services_path}/softbusadapter/test/fuzztest/softbusadapter_fuzzer"
 
   include_dirs = [
-    "//utils/system/safwk/native/include",
+    "//third_party/json/include",
+    "//foundation/graphic/standard/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
+    "${fwk_utils_path}/include/",
   ]
 
   include_dirs += [
-    "include",
+    "./include",
     "${common_path}/include",
-    "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
+    "${services_path}/common/databuffer/include",
+    "${services_path}/common/screen_channel/include",
+    "${services_path}/common/utils/include",
+    "${services_path}/screentransport/test/unittest/screensourcetrans/include",
+    "${services_path}/screentransport/screensourcetrans/include",
+    "${services_path}/screentransport/screendatachannel/include",
+    "${services_path}/screentransport/screensourceprocessor/include",
+    "${services_path}/screentransport/screensourceprocessor/encoder/include",
+    "${services_path}/softbusadapter/include",
   ]
 
   cflags = [
@@ -41,31 +52,31 @@ ohos_fuzztest("DscreenSinkProxyFuzzTest") {
     "-fno-omit-frame-pointer",
   ]
 
-  sources = [ "dscreen_sink_proxy_fuzzer.cpp" ]
+  sources = [ "softbus_adapter_fuzzer.cpp" ]
 
   deps = [
-    "${common_path}:distributed_screen_utils",
-    "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
+    "${fwk_utils_path}:distributedhardwareutils",
+    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
+    "//foundation/graphic/standard/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"DscreenSinkProxyFuzzTest\"",
+    "DH_LOG_TAG=\"SoftbusAdapterFuzzTest\"",
     "LOG_DOMAIN=0xD004100",
   ]
 
   external_deps = [
+    "dsoftbus_standard:softbus_client",
     "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_core",
-    "safwk:system_ability_fwk",
-    "samgr_standard:samgr_proxy",
+    "multimedia_media_standard:media_client",
   ]
 }
 
 ###############################################################################
 group("fuzztest") {
   testonly = true
-  deps = [ ":DscreenSinkProxyFuzzTest" ]
+  deps = [ ":SoftbusAdapterFuzzTest" ]
 }
 ###############################################################################

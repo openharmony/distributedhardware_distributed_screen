@@ -81,7 +81,10 @@
                 "//foundation/distributedhardware/distributedscreen/services/softbusadapter/test/unittest:SoftBusAdapterTest",
                 "//foundation/distributedhardware/distributedscreen/services/common/test/unittest:service_common_test",
                 "//foundation/distributedhardware/distributedscreen/screenhandler/test/fuzztest:fuzztest",
-                "//foundation/distributedhardware/distributedscreen/interfaces/innerkits/native_cpp/test/fuzztest:fuzztest"
+                "//foundation/distributedhardware/distributedscreen/interfaces/innerkits/native_cpp/test/fuzztest:fuzztest",
+                "//foundation/distributedhardware/distributedscreen/services/softbusadapter/test/fuzztest:fuzztest",
+                "//foundation/distributedhardware/distributedscreen/services/screenservice/test/fuzztest:fuzztest",
+                "//foundation/distributedhardware/distributedscreen/services/screentransport/test/fuzztest:fuzztest"
             ]
         }
     }
