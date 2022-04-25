@@ -21,22 +21,21 @@ import(
 ohos_fuzztest("DscreenSourceProxyFuzzTest") {
   module_out_path = "distributed_screen/dscreensourceproxy"
 
-  fuzz_config_file = 
-      "${interfaces_path}/innerkits/native_cpp/test/fuzztest/dscreensourceproxy_fuzzer"
+  fuzz_config_file = "${interfaces_path}/innerkits/native_cpp/test/fuzztest/dscreensourceproxy_fuzzer"
 
   include_dirs = [
-      "//utils/system/safwk/native/include",
-      "${fwk_common_path}/utils/include",
+    "//utils/system/safwk/native/include",
+    "${fwk_common_path}/utils/include",
   ]
 
   include_dirs += [
-      "include",
-      "include/callback",
-      "${common_path}/include",
-      "${interfaces_path}/innerkits/native_cpp/screen_source/include",
-      "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
-      "${fwk_services_path}/distributedhardwarefwkserviceimpl/include",
-      "${fwk_services_path}/distributedhardwarefwkserviceimpl/include/componentmanager",
+    "include",
+    "include/callback",
+    "${common_path}/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_source/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
+    "${fwk_services_path}/distributedhardwarefwkserviceimpl/include",
+    "${fwk_services_path}/distributedhardwarefwkserviceimpl/include/componentmanager",
   ]
 
   cflags = [
@@ -49,25 +48,26 @@ ohos_fuzztest("DscreenSourceProxyFuzzTest") {
   sources = [ "dscreen_source_proxy_fuzzer.cpp" ]
 
   deps = [
-      "//utils/native/base:utils",
-      "${common_path}:distributed_screen_utils",
-      "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
-      "${fwk_services_path}/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl",
+    "${common_path}:distributed_screen_utils",
+    "${fwk_services_path}/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl",
+    "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
+    "//utils/native/base:utils",
   ]
 
   defines = [
-      "HI_LOG_ENABLE",
-      "DH_LOG_TAG=\"DscreenSourceProxyFuzzTest\"",
-      "LOG_DOMAIN=0xD004100",
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"DscreenSourceProxyFuzzTest\"",
+    "LOG_DOMAIN=0xD004100",
   ]
 
   external_deps = [
-      "hiviewdfx_hilog_native:libhilog",
-      "ipc:ipc_core",
-      "safwk:system_ability_fwk",
-      "samgr_standard:samgr_proxy",
+    "hiviewdfx_hilog_native:libhilog",
+    "ipc:ipc_core",
+    "safwk:system_ability_fwk",
+    "samgr_standard:samgr_proxy",
   ]
 }
+
 ###############################################################################
 group("fuzztest") {
   testonly = true

@@ -45,8 +45,7 @@ void DscreenSourceProxyHandlerFuzzTest(const uint8_t* data, size_t size)
     param.version = str;
     param.attrs = str;
     sptr<IDScreenSourceCallback> callback = new DScreenSourceCallback();
-    if (callback == nullptr)
-    {
+    if (callback == nullptr) {
         return;
     }
 
