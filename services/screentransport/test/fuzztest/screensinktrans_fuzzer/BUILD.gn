@@ -21,7 +21,8 @@ import(
 ohos_fuzztest("ScreenSinkTransFuzzTest") {
   module_out_path = "distributed_screen/screensinktrans"
 
-  fuzz_config_file = "${services_path}/screentransport/test/fuzztest/screensinktrans_fuzzer"
+  fuzz_config_file = 
+      "${services_path}/screentransport/test/fuzztest/screensinktrans_fuzzer"
 
   include_dirs = [
     "//third_party/json/include",

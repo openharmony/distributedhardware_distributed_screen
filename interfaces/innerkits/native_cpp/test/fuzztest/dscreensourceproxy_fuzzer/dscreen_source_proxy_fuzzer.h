@@ -19,6 +19,3 @@
 #define FUZZ_PROJECT_NAME "dscreen_source_proxy_fuzzer"
 
 #endif
-
-
-

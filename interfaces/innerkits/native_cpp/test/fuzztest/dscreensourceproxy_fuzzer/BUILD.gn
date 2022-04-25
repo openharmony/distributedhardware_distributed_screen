@@ -46,9 +46,7 @@ ohos_fuzztest("DscreenSourceProxyFuzzTest") {
     "-fno-omit-frame-pointer",
   ]
 
-  sources = [
-    "dscreen_source_proxy_fuzzer.cpp",
-  ]
+  sources = [ "dscreen_source_proxy_fuzzer.cpp" ]
 
   deps = [
       "//utils/native/base:utils",
