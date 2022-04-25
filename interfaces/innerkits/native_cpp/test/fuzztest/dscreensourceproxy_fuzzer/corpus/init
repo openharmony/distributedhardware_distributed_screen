@@ -11,14 +11,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-group("fuzztest") {
-  testonly = true
-
-  deps = [
-    "screendatachannel_fuzzer:fuzztest",
-    "screensourceprocessor_fuzzer:fuzztest",
-    "screensourcetrans_fuzzer:fuzztest",
-    "screensinktrans_fuzzer:fuzztest",
-    "screensinkprocessor_fuzzer:fuzztest"
-  ]
-}
+FUZZ
