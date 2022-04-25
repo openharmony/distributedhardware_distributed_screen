@@ -21,7 +21,7 @@ import(
 ohos_fuzztest("ScreenSinkTransFuzzTest") {
   module_out_path = "distributed_screen/screensinktrans"
 
-  fuzz_config_file = 
+  fuzz_config_file =
       "${services_path}/screentransport/test/fuzztest/screensinktrans_fuzzer"
 
   include_dirs = [
@@ -56,11 +56,11 @@ ohos_fuzztest("ScreenSinkTransFuzzTest") {
   sources = [ "screen_sink_trans_fuzzer.cpp" ]
 
   deps = [
-    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "${fwk_utils_path}:distributedhardwareutils",
+    "${services_path}/screenservice/sinkservice:distributed_screen_sink",
+    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "//foundation/graphic/standard/frameworks/surface:surface",
     "//utils/native/base:utils",
-    "${services_path}/screenservice/sinkservice:distributed_screen_sink",
   ]
 
   defines = [
@@ -75,6 +75,7 @@ ohos_fuzztest("ScreenSinkTransFuzzTest") {
     "multimedia_media_standard:media_client",
   ]
 }
+
 ###############################################################################
 group("fuzztest") {
   testonly = true

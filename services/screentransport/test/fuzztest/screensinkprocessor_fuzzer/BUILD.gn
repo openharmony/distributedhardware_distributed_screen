@@ -21,8 +21,7 @@ import(
 ohos_fuzztest("ScreenSinkProcessorFuzzTest") {
   module_out_path = "distributed_screen/screensinkprocessor"
 
-  fuzz_config_file =
-      "${services_path}/screentransport/test/fuzztest/screensinkprocessor_fuzzer"
+  fuzz_config_file = "${services_path}/screentransport/test/fuzztest/screensinkprocessor_fuzzer"
 
   include_dirs = [
     "//third_party/json/include",
@@ -56,8 +55,8 @@ ohos_fuzztest("ScreenSinkProcessorFuzzTest") {
   sources = [ "screen_sink_processor_fuzzer.cpp" ]
 
   deps = [
-    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "${fwk_utils_path}:distributedhardwareutils",
+    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "//foundation/graphic/standard/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
@@ -74,6 +73,7 @@ ohos_fuzztest("ScreenSinkProcessorFuzzTest") {
     "LOG_DOMAIN=0xD004100",
   ]
 }
+
 ###############################################################################
 group("fuzztest") {
   testonly = true

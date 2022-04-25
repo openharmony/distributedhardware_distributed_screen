@@ -45,7 +45,7 @@ void ScreenSinkTransFuzzTest(const uint8_t* data, size_t size)
     std::string remoteDevId(reinterpret_cast<const char*>(data), size);
     uint64_t screenId = *(reinterpret_cast<const uint64_t*>(data));
     uint64_t displayId = *(reinterpret_cast<const uint64_t*>(data));
-    std::shared_ptr<IScreenSinkTransCallback> callBack = 
+    std::shared_ptr<IScreenSinkTransCallback> callBack =
         std::make_shared<ScreenRegion>(remoteDevId, screenId, displayId);
     std::string name(reinterpret_cast<const char*>(data), size);
     sptr<Surface> surface = Surface::CreateSurfaceAsConsumer(name);

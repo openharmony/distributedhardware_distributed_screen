@@ -16,9 +16,9 @@ group("fuzztest") {
 
   deps = [
     "screendatachannel_fuzzer:fuzztest",
+    "screensinkprocessor_fuzzer:fuzztest",
+    "screensinktrans_fuzzer:fuzztest",
     "screensourceprocessor_fuzzer:fuzztest",
     "screensourcetrans_fuzzer:fuzztest",
-    "screensinktrans_fuzzer:fuzztest",
-    "screensinkprocessor_fuzzer:fuzztest"
   ]
 }
