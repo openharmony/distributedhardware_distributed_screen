@@ -70,7 +70,7 @@ int32_t DScreenSourceCallbackStub::OnNotifyUnregResultInner(MessageParcel &data,
     std::string reqId = data.ReadString();
     int32_t status = data.ReadInt32();
     std::string resultData = data.ReadString();
-    int32_t ret = OnNotifyRegResult(devId, dhId, reqId, status, resultData);
+    int32_t ret = OnNotifyUnregResult(devId, dhId, reqId, status, resultData);
     return ret;
 }
 }

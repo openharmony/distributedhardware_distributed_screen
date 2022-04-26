@@ -107,7 +107,7 @@ int32_t DScreenSourceStub::RegisterDistributedHardwareInner(MessageParcel &data,
 int32_t DScreenSourceStub::UnregisterDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("RegisterDistributedHardwareInner");
+    DHLOGI("UnregisterDistributedHardwareInner");
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string reqId = data.ReadString();

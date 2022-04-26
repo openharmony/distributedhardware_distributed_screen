@@ -13,7 +13,8 @@
 
 import("//build/ohos.gni")
 import("//build/ohos_var.gni")
-import("//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
 
 ohos_shared_library("distributed_screen_sinktrans") {
   include_dirs = [
@@ -36,14 +37,14 @@ ohos_shared_library("distributed_screen_sinktrans") {
   ]
 
   sources = [
-    "./src/screen_sink_trans.cpp",
     "${services_path}/common/databuffer/src/data_buffer.cpp",
     "${services_path}/common/utils/src/video_param.cpp",
     "${services_path}/screentransport/screendatachannel/src/screen_data_channel_impl.cpp",
-    "${services_path}/screentransport/screensinkprocessor/src/image_sink_processor.cpp",
-    "${services_path}/screentransport/screensinkprocessor/decoder/src/image_sink_decoder.cpp",
     "${services_path}/screentransport/screensinkprocessor/decoder/src/image_decoder_callback.cpp",
+    "${services_path}/screentransport/screensinkprocessor/decoder/src/image_sink_decoder.cpp",
+    "${services_path}/screentransport/screensinkprocessor/src/image_sink_processor.cpp",
     "${services_path}/softbusadapter/src/softbus_adapter.cpp",
+    "./src/screen_sink_trans.cpp",
   ]
 
   deps = [

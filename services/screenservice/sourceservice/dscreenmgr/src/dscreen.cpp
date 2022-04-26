@@ -279,7 +279,6 @@ void DScreen::HandleDisable(const std::string &taskId)
 {
     DHLOGI("HandleDisable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
     SetState(DISABLING);
-    Stop();
     int32_t ret = ScreenMgrAdapter::GetInstance().RemoveVirtualScreen(screenId_);
     if (ret != DH_SUCCESS) {
         DHLOGE("remove virtual screen failed.");
