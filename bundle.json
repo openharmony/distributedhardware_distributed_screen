@@ -84,7 +84,6 @@
                 "//foundation/distributedhardware/distributedscreen/screenhandler/test/fuzztest:fuzztest",
                 "//foundation/distributedhardware/distributedscreen/interfaces/innerkits/native_cpp/test/fuzztest:fuzztest",
                 "//foundation/distributedhardware/distributedscreen/services/softbusadapter/test/fuzztest:fuzztest",
-                "//foundation/distributedhardware/distributedscreen/services/screenservice/test/fuzztest:fuzztest",
                 "//foundation/distributedhardware/distributedscreen/services/screentransport/test/fuzztest:fuzztest"
             ]
         }
