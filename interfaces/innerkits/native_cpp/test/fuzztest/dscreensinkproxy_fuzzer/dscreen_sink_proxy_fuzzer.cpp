@@ -40,7 +40,15 @@ void DscreenSinkProxyHandlerFuzzTest(const uint8_t* data, size_t size)
 
     sptr<ISystemAbilityManager> samgr =
             SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (samgr == nullptr) {
+        return;
+    }
+
     sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID);
+    if (remoteObject == nullptr) {
+        return;
+    }
+
     std::shared_ptr<DScreenSinkProxy> dscreenSinkProxy = std::make_shared<DScreenSinkProxy>(remoteObject);
 
     dscreenSinkProxy->DScreenNotify(devId, eventCode, eventContent);
