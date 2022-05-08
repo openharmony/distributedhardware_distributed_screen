@@ -25,7 +25,7 @@ ohos_fuzztest("ScreenSinkProcessorFuzzTest") {
 
   include_dirs = [
     "//third_party/json/include",
-    "//foundation/graphic/standard/interfaces/innerkits/surface",
+    "//foundation/graphic/graphic/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
   ]
 
@@ -57,7 +57,7 @@ ohos_fuzztest("ScreenSinkProcessorFuzzTest") {
   deps = [
     "${fwk_utils_path}:distributedhardwareutils",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
-    "//foundation/graphic/standard/frameworks/surface:surface",
+    "//foundation/graphic/graphic/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
 

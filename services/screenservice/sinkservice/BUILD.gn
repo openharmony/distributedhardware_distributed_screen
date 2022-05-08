@@ -21,7 +21,7 @@ ohos_shared_library("distributed_screen_sink") {
     "//third_party/json/include",
     "//utils/native/base/include",
     "//utils/system/safwk/native/include",
-    "//foundation/graphic/standard/interfaces/innerkits/surface",
+    "//foundation/graphic/graphic/interfaces/innerkits/surface",
     "${windowmanager_path}/interfaces/innerkits/dm",
     "${fwk_common_path}/utils/include",
   ]
@@ -59,7 +59,7 @@ ohos_shared_library("distributed_screen_sink") {
     "${services_path}/screenclient:distributed_screen_client",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "${windowmanager_path}/dm:libdm",
-    "//foundation/graphic/standard/frameworks/surface:surface",
+    "//foundation/graphic/graphic/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
 

@@ -12,14 +12,15 @@
 # limitations under the License.
 
 distributedscreen_path = "//foundation/distributedhardware/distributedscreen"
-distributedhardwarefwk_path = "//foundation/distributedhardware/distributedhardwarefwk"
+distributedhardwarefwk_path =
+    "//foundation/distributedhardware/distributedhardwarefwk"
 windowmanager_path = "//foundation/windowmanager"
 mediastandard_path = "//foundation/multimedia/media_standard"
-graphicstandard_path = "//foundation/graphic/standard"
+graphicstandard_path = "//foundation/graphic/graphic"
 common_path = "${distributedscreen_path}/common"
 services_path = "${distributedscreen_path}/services"
 interfaces_path = "${distributedscreen_path}/interfaces"
 fwk_utils_path = "${distributedhardwarefwk_path}/utils"
 fwk_common_path = "${distributedhardwarefwk_path}/common"
 fwk_services_path = "${distributedhardwarefwk_path}/services"
-build_flags = ["-Werror"]
+build_flags = [ "-Werror" ]
