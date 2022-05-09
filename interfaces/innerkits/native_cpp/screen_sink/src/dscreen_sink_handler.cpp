@@ -44,6 +44,7 @@ DScreenSinkHandler::~DScreenSinkHandler()
 int32_t DScreenSinkHandler::InitSink(const std::string &params)
 {
     DHLOGD("InitSink");
+    std::unique_lock<std::mutex> lock(proxyMutex_);
     if (!dScreenSinkProxy_) {
         sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
         if (!samgr) {
@@ -59,7 +60,6 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
         }
     }
 
-    std::unique_lock<std::mutex> lock(proxyMutex_);
     auto waitStatus = proxyConVar_.wait_for(lock, std::chrono::milliseconds(SCREEN_LOADSA_TIMEOUT_MS),
         [this]() { return dScreenSinkProxy_ != nullptr; });
     if (!waitStatus) {
@@ -74,7 +74,7 @@ void DScreenSinkHandler::FinishStartSA(const std::string &params,
     const sptr<IRemoteObject> &remoteObject)
 {
     DHLOGD("FinishStartSA");
-    std::lock_guard<std::mutex> lock(proxyMutex_);
+    std::unique_lock<std::mutex> lock(proxyMutex_);
     remoteObject->AddDeathRecipient(sinkSvrRecipient_);
     dScreenSinkProxy_ = iface_cast<IDScreenSink>(remoteObject);
     if ((!dScreenSinkProxy_) || (!dScreenSinkProxy_->AsObject())) {
