@@ -22,12 +22,12 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
-void DScreenSourceHandlerTest::SetUpTestCase(void) 
+void DScreenSourceHandlerTest::SetUpTestCase(void)
 {
     DScreenSourceHandler::GetInstance().InitSource("DScreenSourceHandlerTest");
 }
 
-void DScreenSourceHandlerTest::TearDownTestCase(void) 
+void DScreenSourceHandlerTest::TearDownTestCase(void)
 {
     DScreenSourceHandler::GetInstance().ReleaseSource();
 }
