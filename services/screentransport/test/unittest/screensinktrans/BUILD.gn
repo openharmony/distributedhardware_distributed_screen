@@ -11,10 +11,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build/test.gni")
 import("//build/ohos.gni")
 import("//build/ohos_var.gni")
-import("//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
+import("//build/test.gni")
+import(
+    "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
 
 module_out_path = "distributed_screen/sink_trans_test"
 
@@ -22,7 +23,7 @@ config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "//third_party/json/include",
-    "//foundation/graphic/standard/interfaces/innerkits/surface",
+    "//foundation/graphic/graphic/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
   ]
 
@@ -46,18 +47,16 @@ config("module_private_config") {
 ohos_unittest("SinkTransTest") {
   module_out_path = module_out_path
 
-  sources = [
-    "${services_path}/screentransport/test/unittest/screensinktrans/src/screen_sink_trans_test.cpp"
-  ]
+  sources = [ "${services_path}/screentransport/test/unittest/screensinktrans/src/screen_sink_trans_test.cpp" ]
 
   configs = [ ":module_private_config" ]
 
   deps = [
+    "${fwk_utils_path}:distributedhardwareutils",
+    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
+    "//foundation/graphic/graphic/frameworks/surface:surface",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
-    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
-    "${fwk_utils_path}:distributedhardwareutils",
-    "//foundation/graphic/standard/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
 

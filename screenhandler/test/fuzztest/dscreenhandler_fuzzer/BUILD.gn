@@ -54,7 +54,7 @@ ohos_fuzztest("DscreenHandlerFuzzTest") {
     "${mediastandard_path}/interfaces/inner_api/native:media_client",
     "${windowmanager_path}/dm:libdm",
     "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
-    "//foundation/graphic/standard/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/graphic/graphic/rosen/modules/render_service_client:librender_service_client",
     "//utils/native/base:utils",
   ]
 

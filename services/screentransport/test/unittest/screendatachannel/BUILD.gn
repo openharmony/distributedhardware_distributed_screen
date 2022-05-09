@@ -12,7 +12,8 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
 
 module_out_path = "distributed_screen/data_channel_test"
 
@@ -20,7 +21,7 @@ config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "//third_party/json/include",
-    "//foundation/graphic/standard/interfaces/innerkits/surface",
+    "//foundation/graphic/graphic/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
   ]
 
@@ -50,11 +51,11 @@ ohos_unittest("DataChannelTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
+    "${fwk_utils_path}:distributedhardwareutils",
+    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
+    "//foundation/graphic/graphic/frameworks/surface:surface",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
-    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
-    "${fwk_utils_path}:distributedhardwareutils",
-    "//foundation/graphic/standard/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
 
@@ -70,8 +71,9 @@ ohos_unittest("DataChannelTest") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  cflags = [ "-frtti",
-    "-fexceptions"
+  cflags = [
+    "-frtti",
+    "-fexceptions",
   ]
   cflags_cc = cflags
 }

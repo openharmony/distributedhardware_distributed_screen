@@ -12,7 +12,8 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
 
 module_out_path = "distributed_screen/source_processor_test"
 
@@ -20,7 +21,7 @@ config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "//third_party/json/include",
-    "//foundation/graphic/standard/interfaces/innerkits/surface",
+    "//foundation/graphic/graphic/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
     "${fwk_utils_path}/include/",
   ]
@@ -47,18 +48,18 @@ ohos_unittest("SourceProcessorTest") {
   module_out_path = module_out_path
 
   sources = [
-    "${services_path}/screentransport/test/unittest/screensourceprocessor/src/image_source_processor_test.cpp",
     "${services_path}/screentransport/test/unittest/screensourceprocessor/src/image_source_encoder_test.cpp",
+    "${services_path}/screentransport/test/unittest/screensourceprocessor/src/image_source_processor_test.cpp",
   ]
 
   configs = [ ":module_private_config" ]
 
   deps = [
+    "${fwk_utils_path}:distributedhardwareutils",
+    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
+    "//foundation/graphic/graphic/frameworks/surface:surface",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
-    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
-    "${fwk_utils_path}:distributedhardwareutils",
-    "//foundation/graphic/standard/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
 

@@ -40,7 +40,7 @@ ohos_shared_library("distributed_screen_client") {
     "${graphicstandard_path}/frameworks/surface:surface",
     "${windowmanager_path}/wm:libwm",
     "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
-    "//foundation/graphic/standard/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/graphic/graphic/rosen/modules/render_service_client:librender_service_client",
   ]
 
   defines = [
