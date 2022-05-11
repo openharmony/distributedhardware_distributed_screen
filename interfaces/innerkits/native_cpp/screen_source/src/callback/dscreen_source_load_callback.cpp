@@ -31,7 +31,6 @@ void DScreenSourceLoadCallback::OnLoadSystemAbilitySuccess(
         DHLOGE("remoteObject is nullptr");
         return;
     }
-	
     DScreenSourceHandler::GetInstance().FinishStartSA(params_, remoteObject);
 }
 

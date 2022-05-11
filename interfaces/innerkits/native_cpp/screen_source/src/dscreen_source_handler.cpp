@@ -49,7 +49,7 @@ DScreenSourceHandler::~DScreenSourceHandler()
 int32_t DScreenSourceHandler::InitSource(const std::string &params)
 {
     DHLOGD("InitSource");
-
+    std::unique_lock<std::mutex> lock(proxyMutex_);
     if (!dScreenSourceProxy_) {
         sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
         if (!samgr) {
@@ -65,7 +65,6 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
         }
     }
 
-    std::unique_lock<std::mutex> lock(proxyMutex_);
     auto waitStatus = proxyConVar_.wait_for(lock, std::chrono::milliseconds(SCREEN_LOADSA_TIMEOUT_MS),
         [this]() { return (dScreenSourceProxy_ != nullptr); });
     if (!waitStatus) {
@@ -80,7 +79,7 @@ void DScreenSourceHandler::FinishStartSA(const std::string &params,
     const sptr<IRemoteObject> &remoteObject)
 {
     DHLOGD("FinishStartSA");
-    std::lock_guard<std::mutex> lock(proxyMutex_);
+    std::unique_lock<std::mutex> lock(proxyMutex_);
     remoteObject->AddDeathRecipient(sourceSvrRecipient_);
     dScreenSourceProxy_ = iface_cast<IDScreenSource>(remoteObject);
     if ((!dScreenSourceProxy_) || (!dScreenSourceProxy_->AsObject())) {
