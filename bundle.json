@@ -50,6 +50,8 @@
                 "//foundation/distributedhardware/distributedscreen/screenhandler:distributed_screen_handler",
                 "//foundation/distributedhardware/distributedscreen/services/screentransport/screensinktrans:distributed_screen_sinktrans",
                 "//foundation/distributedhardware/distributedscreen/services/screentransport/screensourcetrans:distributed_screen_sourcetrans",
+                "//foundation/distributedhardware/distributedscreen/services/screenservice/sinkservice:distributed_screen_sink",
+                "//foundation/distributedhardware/distributedscreen/services/screenservice/sourceservice:distributed_screen_source",
                 "//foundation/distributedhardware/distributedscreen/sa_profile:dscreen_sa_profile",
                 "//foundation/distributedhardware/distributedscreen/sa_profile:dscreen.cfg"
             ],
