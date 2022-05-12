@@ -60,6 +60,7 @@ ohos_shared_library("distributed_screen_sinktrans") {
   ]
 
   external_deps = [
+    "hisysevent_native:libhisysevent",
     "dsoftbus_standard:softbus_client",
     "hiviewdfx_hilog_native:libhilog",
     "multimedia_media_standard:media_client",

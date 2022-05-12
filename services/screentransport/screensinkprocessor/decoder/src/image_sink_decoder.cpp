@@ -18,6 +18,8 @@
 #include <chrono>
 #include <securec.h>
 
+#include "hisysevent.h"
+
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
@@ -78,6 +80,16 @@ int32_t ImageSinkDecoder::StartDecoder()
     ret = videoDecoder_->Start();
     if (ret != Media::MSERR_OK) {
         DHLOGE("%s: Start decoder failed.", LOG_TAG);
+        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+            OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+            "VIDEO_DECODER_ERROR",
+            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            "PID", getpid(),
+            "UID", getuid(),
+            "MSG", "video decoder start failed.");
+        if (res != DH_SUCCESS) {
+            DHLOGE("Write HiSysEvent error, res:%d", res);
+        }
         return ERR_DH_SCREEN_CODEC_START_FAILED;
     }
     StartInputThread();
@@ -102,6 +114,16 @@ int32_t ImageSinkDecoder::StopDecoder()
     ret = videoDecoder_->Stop();
     if (ret != Media::MSERR_OK) {
         DHLOGE("%s: Stop decoder failed.", LOG_TAG);
+        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+            OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+            "VIDEO_DECODER_ERROR",
+            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            "PID", getpid(),
+            "UID", getuid(),
+            "MSG", "video decoder stop failed.");
+        if (res != DH_SUCCESS) {
+            DHLOGE("Write HiSysEvent error, res:%d", res);
+        }
         return ERR_DH_SCREEN_CODEC_STOP_FAILED;
     }
     StopInputThread();

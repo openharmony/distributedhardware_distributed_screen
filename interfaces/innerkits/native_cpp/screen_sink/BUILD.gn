@@ -46,6 +46,7 @@ ohos_shared_library("distributed_screen_sink_sdk") {
   ]
 
   external_deps = [
+    "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",

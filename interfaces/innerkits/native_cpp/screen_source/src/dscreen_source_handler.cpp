@@ -15,6 +15,7 @@
 
 #include "dscreen_source_handler.h"
 
+#include "hisysevent.h"
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
 
@@ -61,6 +62,16 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
         if (ret != ERR_OK) {
             DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
                 DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, ret);
+            int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+                OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+                "SA_ERROR",
+                OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+                "PID", getpid(),
+                "UID", getuid(),
+                "MSG", "dscreen source LoadSystemAbility call failed.");
+            if (res != DH_SUCCESS) {
+                DHLOGE("Write HiSysEvent error, res:%d", res);
+            }
             return ERR_DH_SCREEN_SA_GET_SOURCEPROXY_FAIL;
         }
     }
@@ -69,6 +80,16 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
         [this]() { return (dScreenSourceProxy_ != nullptr); });
     if (!waitStatus) {
         DHLOGE("screen load sa timeout.");
+        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+            OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+            "SA_ERROR",
+            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
+            "PID", getpid(),
+            "UID", getuid(),
+            "MSG", "dscreen source sa load timeout.");
+        if (res != DH_SUCCESS) {
+            DHLOGE("Write HiSysEvent error, res:%d", res);
+        }
         return ERR_DH_SCREEN_SA_LOAD_TIMEOUT;
     }
 

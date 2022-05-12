@@ -50,6 +50,7 @@ ohos_shared_library("distributed_screen_client") {
   ]
 
   external_deps = [
+    "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
     "input:libmmi-client",
   ]
