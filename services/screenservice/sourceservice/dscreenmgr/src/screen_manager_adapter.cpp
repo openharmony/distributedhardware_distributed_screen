@@ -48,7 +48,7 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
         if (err != Rosen::DMError::DM_OK) {
             DHLOGE("remove virtual screen failed, screenId:%ulld", iter->second);
             int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-                OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+                OHOS::HiviewDFX::HiSysEvent::Domain::DISTSCREEN,
                 "VIRTUALSCREEN_ERROR",
                 OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
                 "PID", getpid(),
@@ -75,7 +75,7 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
     uint64_t screenId = Rosen::ScreenManager::GetInstance().CreateVirtualScreen(option);
     if (screenId == SCREEN_ID_INVALID) {
         int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+            OHOS::HiviewDFX::HiSysEvent::Domain::DISTSCREEN,
             "VIRTUALSCREEN_ERROR",
             OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             "PID", getpid(),
@@ -136,7 +136,7 @@ int32_t ScreenMgrAdapter::RemoveVirtualScreen(uint64_t screenId)
     if (err != Rosen::DMError::DM_OK) {
         DHLOGE("remove virtual screen failed, screenId:%ulld", screenId);
         int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+            OHOS::HiviewDFX::HiSysEvent::Domain::DISTSCREEN,
             "VIRTUALSCREEN_ERROR",
             OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             "PID", getpid(),

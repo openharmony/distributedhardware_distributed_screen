@@ -87,7 +87,7 @@ int32_t ImageSourceEncoder::StartEncoder()
     if (ret != Media::MSERR_OK) {
         DHLOGE("%s: Start encoder failed.", LOG_TAG);
         int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+            OHOS::HiviewDFX::HiSysEvent::Domain::DISTSCREEN,
             "VIDEO_ENCODER_ERROR",
             OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             "PID", getpid(),
@@ -119,7 +119,7 @@ int32_t ImageSourceEncoder::StopEncoder()
     if (ret != Media::MSERR_OK) {
         DHLOGE("%s: Stop encoder failed.", LOG_TAG);
         int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+            OHOS::HiviewDFX::HiSysEvent::Domain::DISTSCREEN,
             "VIDEO_ENCODER_ERROR",
             OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             "PID", getpid(),

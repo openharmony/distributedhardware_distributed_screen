@@ -37,7 +37,7 @@
 #   Example of some hiviewdfx events definition     #
 #####################################################
 
-domain: DSCREEN
+domain: DISTSCREEN
 
 SA_ERROR:
   __BASE: {type: FAULT, level: CRITICAL, desc: dscreen sa error occured}

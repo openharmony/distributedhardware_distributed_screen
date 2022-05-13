@@ -58,7 +58,7 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
             DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
                 DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, ret);
             int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-                OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+                OHOS::HiviewDFX::HiSysEvent::Domain::DISTSCREEN,
                 "SA_ERROR",
                 OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
                 "PID", getpid(),
@@ -76,7 +76,7 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
     if (!waitStatus) {
         DHLOGE("screen load sa timeout");
         int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+            OHOS::HiviewDFX::HiSysEvent::Domain::DISTSCREEN,
             "SA_ERROR",
             OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             "PID", getpid(),

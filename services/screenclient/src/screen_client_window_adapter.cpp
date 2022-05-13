@@ -65,7 +65,7 @@ sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProp
     if (window == nullptr || window->GetSurfaceNode() == nullptr) {
         DHLOGE("Create screen client window failed.");
         int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+            OHOS::HiviewDFX::HiSysEvent::Domain::DISTSCREEN,
             "WINDOW_ERROR",
             OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             "PID", getpid(),
@@ -123,7 +123,7 @@ int32_t ScreenClientWindowAdapter::ShowWindow(int32_t windowId)
     if (OHOS::Rosen::WMError::WM_OK != window->Show()) {
         DHLOGE("Show window failed.");
         int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DSCREEN,
+            OHOS::HiviewDFX::HiSysEvent::Domain::DISTSCREEN,
             "WINDOW_ERROR",
             OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
             "PID", getpid(),
