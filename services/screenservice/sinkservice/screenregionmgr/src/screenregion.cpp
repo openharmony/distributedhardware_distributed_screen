@@ -73,6 +73,16 @@ std::string ScreenRegion::GetRemoteDevId()
     return remoteDevId_;
 }
 
+std::shared_ptr<VideoParam> ScreenRegion::GetVideoParam()
+{
+    return videoParam_;
+}
+
+int32_t ScreenRegion::GetWindowId()
+{
+    return windowId_;
+}
+
 int32_t ScreenRegion::SetUp()
 {
     DHLOGI("ScreenRegion::SetUp, remoteDevId: %s", GetAnonyString(remoteDevId_).c_str());

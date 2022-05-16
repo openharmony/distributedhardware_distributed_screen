@@ -74,6 +74,43 @@ void ScreenRegionManager::HandleDScreenNotify(const std::string &remoteDevId, in
     DHLOGE("invalid event.");
 }
 
+void ScreenRegionManager::GetScreenDumpInfo(std::string &result)
+{
+    DHLOGI("GetScreenDumpInfo.");
+    result.clear();
+    result.append("screenRegion OnLine:\n[\n");
+    if (screenRegions_.size() == 0) {
+        result.append("]");
+        DHLOGD("no screenRegion");
+        return;
+    }
+
+    for (const auto &iter : screenRegions_) {
+        result.append("    {\n");
+        std::shared_ptr<ScreenRegion> screenRegion = iter.second;
+        if (!screenRegion) {
+            continue;
+        }
+        uint64_t screenId = screenRegion->GetScreenId();
+        std::string remoteDevId = screenRegion->GetRemoteDevId();
+        std::shared_ptr<VideoParam> videoParam = screenRegion->GetVideoParam();
+        if (videoParam == nullptr) {
+            continue;
+        }
+        int32_t screenHeight = videoParam->GetScreenHeight();
+        int32_t screenWidth = videoParam->GetScreenWidth();
+        int32_t windowId = screenRegion->GetWindowId();
+        std::string screenInfo = "        \"clientWindowId\" : \"" + std::to_string(windowId) + "\",\n" +
+                                 "        \"remoteScreenId\" : \"" + std::to_string(screenId) + "\",\n" +
+                                 "        \"localDevId\" : \"" + GetAnonyString(localDevId_) + "\",\n" +
+                                 "        \"remoteDevId\" : \"" + GetAnonyString(remoteDevId) + "\",\n" +
+                                 "        \"screenWidth\" : \"" + std::to_string(screenWidth) + "\",\n" +
+                                 "        \"screenHeight\" : \"" + std::to_string(screenHeight) + "\"\n";
+        result.append(screenInfo);
+    }
+    result.append("    }\n]");
+}
+
 void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, const std::string &eventContent)
 {
     DHLOGI("HandleNotifySetUp, remoteDevId: %s", GetAnonyString(remoteDevId).c_str());
@@ -169,6 +206,7 @@ int32_t ScreenRegionManager::NotifyRemoteScreenService(const std::string &remote
         DHLOGE("notify remote screen service failed, cannot get local device id");
         return ret;
     }
+    localDevId_ = localDevId;
     remoteSourceSA->DScreenNotify(localDevId, eventCode, eventContent);
     return DH_SUCCESS;
 }

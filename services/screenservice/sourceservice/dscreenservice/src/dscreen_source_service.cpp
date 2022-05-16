@@ -141,5 +141,19 @@ void DScreenSourceService::DScreenNotify(const std::string &devId, const int32_t
     DHLOGI("DScreenNotify, devId: %s, eventCode: %d", GetAnonyString(devId).c_str(), eventCode);
     DScreenManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
 }
+
+int DScreenSourceService::Dump(int32_t fd, const std::vector<std::u16string>& args)
+{
+    DHLOGI("DScreenSourceService  Dump.");
+    std::string result;
+    DScreenManager::GetInstance().GetScreenDumpInfo(result);
+    int ret = dprintf(fd, "%s\n", result.c_str());
+    if (ret < 0) {
+        DHLOGE("dprintf error");
+        return ERR_DH_SCREEN_SA_HIDUMPER_ERROR;
+    }
+
+    return ERR_OK;
+}
 } // namespace DistributedHardware
 } // namespace OHOS

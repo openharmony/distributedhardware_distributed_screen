@@ -58,6 +58,7 @@ public:
     void RegisterDScreenCallback(const sptr<IDScreenSourceCallback> &callback);
     void HandleScreenChange(const std::shared_ptr<DScreen> &changedScreen, Rosen::ScreenGroupChangeEvent event);
     std::shared_ptr<DScreen> FindDScreenByScreenId(uint64_t screenId);
+    void GetScreenDumpInfo(std::string &result);
 
 private:
     ~DScreenManager();
@@ -69,6 +70,7 @@ private:
     sptr<IDScreenSourceCallback> dScreenSourceCallbackProxy_ = nullptr;
     sptr<DScreenGroupListener> dScreenGroupListener_ = nullptr;
     std::shared_ptr<IDScreenCallback> dScreenCallback_ = nullptr;
+    std::string localDevId_;
 
     sptr<IDScreenSink> GetDScreenSinkSA(const std::string &devId);
     int32_t NotifyRemoteScreenService(const std::string &devId, int32_t eventCode, const std::string &eventContent);

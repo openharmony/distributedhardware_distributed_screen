@@ -15,6 +15,8 @@
 
 #include "dscreen_manager.h"
 
+#include <map>
+
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
 #include "nlohmann/json.hpp"
@@ -31,6 +33,17 @@ using json = nlohmann::json;
 namespace OHOS {
 namespace DistributedHardware {
 IMPLEMENT_SINGLE_INSTANCE(DScreenManager);
+
+const std::map<DScreenState, std::string> stateMap = {
+    { DISABLED, "disabled" },
+    { ENABLED, "enabled" },
+    { DISABLING, "disabling" },
+    { ENABLING, "enabling" },
+    { CONNECTING, "connecting" },
+    { CONNECTED, "connected" },
+    { DISCONNECTING, "disconnecting" }
+};
+
 DScreenManager::DScreenManager()
 {
     DHLOGI("DScreenMgr construct.");
@@ -293,6 +306,45 @@ std::shared_ptr<DScreen> DScreenManager::FindDScreenByScreenId(uint64_t screenId
     return nullptr;
 }
 
+void DScreenManager::GetScreenDumpInfo(std::string &result)
+{
+    DHLOGI("GetScreenDumpInfo.");
+    result.clear();
+    result.append("RemoteScreens OnLine:\n[\n");
+    if (dScreens_.size() == 0) {
+        result.append("]");
+        DHLOGD("no virtualscreen");
+        return;
+    }
+
+    for (const auto &iter : dScreens_) {
+        result.append("    {\n");
+        std::shared_ptr<DScreen> dScreen = iter.second;
+        if (!dScreen) {
+            continue;
+        }
+        uint64_t screenId = dScreen->GetScreenId();
+        std::string devId = dScreen->GetDevId();
+        std::shared_ptr<VideoParam> videoParam = dScreen->GetVideoParam();
+        if (videoParam == nullptr) {
+            continue;
+        }
+        int32_t screenHeight = videoParam->GetScreenHeight();
+        int32_t screenWidth = videoParam->GetScreenWidth();
+        DScreenState state = dScreen->GetState();
+        std::string screenState =
+            stateMap.find(state) == stateMap.end() ? "unknown state" : stateMap.find(state)->second;
+        std::string screenInfo = "        \"virtualScreenId\" : \"" + std::to_string(screenId) + "\",\n" +
+                                 "        \"localDevId\" : \"" + GetAnonyString(localDevId_) + "\",\n" +
+                                 "        \"remoteDevId\" : \"" + GetAnonyString(devId) + "\",\n" +
+                                 "        \"screenWidth\" : \"" + std::to_string(screenWidth) + "\",\n" +
+                                 "        \"screenHeight\" : \"" + std::to_string(screenHeight) + "\",\n" +
+                                 "        \"state\" : \"" + screenState + "\"\n";
+        result.append(screenInfo);
+    }
+    result.append("    }\n]");
+}
+
 void DScreenManager::HandleDScreenNotify(const std::string &devId, int32_t eventCode,
     const std::string &eventContent)
 {
@@ -321,6 +373,7 @@ int32_t DScreenManager::NotifyRemoteScreenService(const std::string &devId, int3
         DHLOGE("notify remote screen service failed, cannot get local device id");
         return ret;
     }
+    localDevId_ = localDevId;
     remoteSinkSA->DScreenNotify(localDevId, eventCode, eventContent);
     return DH_SUCCESS;
 }

@@ -45,6 +45,8 @@ public:
     std::string GetRemoteDevId();
     uint64_t GetScreenId();
     uint64_t GetDisplayId();
+    std::shared_ptr<VideoParam> GetVideoParam();
+    int32_t GetWindowId();
     int32_t SetUp();
     int32_t Start();
     int32_t Stop();

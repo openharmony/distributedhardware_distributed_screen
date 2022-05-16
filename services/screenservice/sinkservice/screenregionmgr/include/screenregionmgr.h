@@ -31,12 +31,14 @@ DECLARE_SINGLE_INSTANCE_BASE(ScreenRegionManager);
 public:
     int32_t ReleaseAllRegions();
     void HandleDScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent);
+    void GetScreenDumpInfo(std::string &result);
 
 private:
     ScreenRegionManager();
     ~ScreenRegionManager();
     std::map<std::string, std::shared_ptr<ScreenRegion>> screenRegions_;
     std::mutex screenRegionsMtx_;
+    std::string localDevId_;
 
     sptr<IDScreenSource> GetDScreenSourceSA(const std::string &devId);
     int32_t NotifyRemoteScreenService(const std::string &remoteDevId, const std::string &dhId,
