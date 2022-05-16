@@ -86,7 +86,6 @@ int32_t ScreenSourceTrans::Start()
 
     StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_OPEN_SESSION_START);
     int32_t ret = screenChannel_->OpenSession();
-
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Open channel session failed ret: %d.", LOG_TAG, ret);
         return ret;
