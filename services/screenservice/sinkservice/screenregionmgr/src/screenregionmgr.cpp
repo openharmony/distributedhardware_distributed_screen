@@ -97,8 +97,8 @@ void ScreenRegionManager::GetScreenDumpInfo(std::string &result)
         if (videoParam == nullptr) {
             continue;
         }
-        int32_t screenHeight = videoParam->GetScreenHeight();
-        int32_t screenWidth = videoParam->GetScreenWidth();
+        uint32_t screenHeight = videoParam->GetScreenHeight();
+        uint32_t screenWidth = videoParam->GetScreenWidth();
         int32_t windowId = screenRegion->GetWindowId();
         std::string screenInfo = "        \"clientWindowId\" : \"" + std::to_string(windowId) + "\",\n" +
                                  "        \"remoteScreenId\" : \"" + std::to_string(screenId) + "\",\n" +
