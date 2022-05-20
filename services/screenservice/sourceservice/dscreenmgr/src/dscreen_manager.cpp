@@ -329,8 +329,8 @@ void DScreenManager::GetScreenDumpInfo(std::string &result)
         if (videoParam == nullptr) {
             continue;
         }
-        int32_t screenHeight = videoParam->GetScreenHeight();
-        int32_t screenWidth = videoParam->GetScreenWidth();
+        uint32_t screenHeight = videoParam->GetScreenHeight();
+        uint32_t screenWidth = videoParam->GetScreenWidth();
         DScreenState state = dScreen->GetState();
         std::string screenState =
             stateMap.find(state) == stateMap.end() ? "unknown state" : stateMap.find(state)->second;
