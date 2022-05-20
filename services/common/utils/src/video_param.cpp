@@ -99,7 +99,8 @@ void to_json(json &j, const DistributedHardware::VideoParam &videoParam)
         {KEY_VIDEO_WIDTH, videoParam.videoWidth_},
         {KEY_VIDEO_HEIGHT, videoParam.videoHeight_},
         {KEY_FPS, videoParam.fps_},
-        {KEY_CODECTYPE, videoParam.codecType_}
+        {KEY_CODECTYPE, videoParam.codecType_},
+        {KEY_COLOR_FORMAT, videoParam.videoFormat_}
     };
 }
 
@@ -111,6 +112,7 @@ void from_json(const json &j, DistributedHardware::VideoParam &videoParam)
     j.at(KEY_VIDEO_HEIGHT).get_to(videoParam.videoHeight_);
     j.at(KEY_FPS).get_to(videoParam.fps_);
     j.at(KEY_CODECTYPE).get_to(videoParam.codecType_);
+    j.at(KEY_COLOR_FORMAT).get_to(videoParam.videoFormat_);
 }
 } // namespace DistributedHardware
 } // namespace OHOS
