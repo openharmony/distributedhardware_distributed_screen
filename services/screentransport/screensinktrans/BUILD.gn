@@ -19,7 +19,7 @@ import(
 ohos_shared_library("distributed_screen_sinktrans") {
   include_dirs = [
     "//third_party/json/include",
-    "//foundation/graphic/graphic/interfaces/innerkits/surface",
+    "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
     "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
   ]
@@ -50,7 +50,7 @@ ohos_shared_library("distributed_screen_sinktrans") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "//foundation/graphic/graphic/frameworks/surface:surface",
+    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
 

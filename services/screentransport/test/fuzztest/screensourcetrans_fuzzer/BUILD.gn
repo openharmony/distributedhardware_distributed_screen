@@ -26,7 +26,7 @@ ohos_fuzztest("ScreenSourceTransFuzzTest") {
 
   include_dirs = [
     "//third_party/json/include",
-    "//foundation/graphic/graphic/interfaces/innerkits/surface",
+    "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${windowmanager_path}/interfaces/innerkits/dm",
     "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
@@ -50,7 +50,7 @@ ohos_fuzztest("ScreenSourceTransFuzzTest") {
     "${services_path}/screentransport/screensourceprocessor/encoder/include",
     "${services_path}/softbusadapter/include",
     "${services_path}/screenservice/sourceservice/dscreenmgr/include",
-    "//foundation/graphic/graphic/rosen/modules/render_service_base/include",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
   ]
@@ -70,7 +70,7 @@ ohos_fuzztest("ScreenSourceTransFuzzTest") {
     "${services_path}/screenservice/sourceservice:distributed_screen_source",
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
     "${windowmanager_path}/dm:libdm",
-    "//foundation/graphic/graphic/frameworks/surface:surface",
+    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
 

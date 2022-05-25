@@ -26,7 +26,7 @@ ohos_fuzztest("ScreenDataChannelFuzzTest") {
 
   include_dirs = [
     "//third_party/json/include",
-    "//foundation/graphic/graphic/interfaces/innerkits/surface",
+    "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
   ]
 
@@ -59,7 +59,7 @@ ohos_fuzztest("ScreenDataChannelFuzzTest") {
     "${fwk_utils_path}:distributedhardwareutils",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
-    "//foundation/graphic/graphic/frameworks/surface:surface",
+    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
     "//utils/native/base:utils",
   ]
 

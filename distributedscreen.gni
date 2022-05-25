@@ -16,7 +16,7 @@ distributedhardwarefwk_path =
     "//foundation/distributedhardware/distributedhardwarefwk"
 windowmanager_path = "//foundation/windowmanager"
 mediastandard_path = "//foundation/multimedia/media_standard"
-graphicstandard_path = "//foundation/graphic/graphic"
+graphicstandard_path = "//foundation/graphic/graphic_2d"
 common_path = "${distributedscreen_path}/common"
 services_path = "${distributedscreen_path}/services"
 interfaces_path = "${distributedscreen_path}/interfaces"

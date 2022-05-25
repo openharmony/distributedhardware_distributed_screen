@@ -22,7 +22,7 @@ ohos_shared_library("distributed_screen_source") {
     "${windowmanager_path}/interfaces/innerkits/dm",
     "//utils/native/base/include",
     "//utils/system/safwk/native/include",
-    "//foundation/graphic/graphic/interfaces/innerkits/surface",
+    "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
     "${mediastandard_path}/interfaces/inner_api/native",
   ]
@@ -62,8 +62,8 @@ ohos_shared_library("distributed_screen_source") {
     "${mediastandard_path}/interfaces/inner_api/native:media_client",
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
     "${windowmanager_path}/dm:libdm",
-    "//foundation/graphic/graphic/frameworks/surface:surface",
-    "//foundation/graphic/graphic/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
     "//utils/native/base:utils",
   ]
 
