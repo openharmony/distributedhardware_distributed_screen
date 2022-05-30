@@ -13,9 +13,6 @@
  * limitations under the License.
  */
 
-#include <string>
-#include <iostream>
-
 #include "display.h"
 #include "display_manager.h"
 #include "dscreen_source_handler.h"

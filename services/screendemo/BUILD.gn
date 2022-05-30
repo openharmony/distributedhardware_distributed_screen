@@ -12,58 +12,58 @@
 # limitations under the License.
 
 import("//build/ohos.gni")
-import("//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributedscreen/distributedscreen.gni")
 
 ohos_executable("distributedScreenTest") {
-    install_enable = false
-    include_dirs = [
-        "${services_path}/common/utils/include",
-        "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
-        "${interfaces_path}/innerkits/native_cpp/screen_source/include",
-        "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
-        "${fwk_common_path}/utils/include",
-        "${windowmanager_path}/interfaces/innerkits/dm",
-        "${services_path}/screenclient/include",
-        "${windowmanager_path}/interfaces/innerkits/wm",
-        "${common_path}/include",
-    ]
+  install_enable = false
+  include_dirs = [
+    "${services_path}/common/utils/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_source/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
+    "${fwk_common_path}/utils/include",
+    "${windowmanager_path}/interfaces/innerkits/dm",
+    "${services_path}/screenclient/include",
+    "${windowmanager_path}/interfaces/innerkits/wm",
+    "${common_path}/include",
+  ]
 
-    include_dirs += [
-        "foundation/multimedia/media_standard/interfaces/inner_api/native",
-    ]
+  include_dirs +=
+      [ "foundation/multimedia/media_standard/interfaces/inner_api/native" ]
 
-    sources = [
-        "./test.cpp",
-        "./decoder_demo.cpp",
-    ]
+  sources = [
+    "./decoder_demo.cpp",
+    "./test.cpp",
+  ]
 
-    deps = [
-        "${services_path}/screenclient:distributed_screen_client",
-        "${common_path}:distributed_screen_utils",
-        "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
-        "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
-        "${windowmanager_path}/dm:libdm",
-        "${windowmanager_path}/wm:libwm",
-        "//foundation/communication/dsoftbus/adapter:softbus_adapter",
-        "//foundation/communication/dsoftbus/sdk:softbus_client",
-        "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
-        "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
-    ]
+  deps = [
+    "${common_path}:distributed_screen_utils",
+    "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
+    "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
+    "${services_path}/screenclient:distributed_screen_client",
+    "${windowmanager_path}/dm:libdm",
+    "${windowmanager_path}/wm:libwm",
+    "//foundation/communication/dsoftbus/adapter:softbus_adapter",
+    "//foundation/communication/dsoftbus/sdk:softbus_client",
+    "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+  ]
 
-    defines = [
-        "HI_LOG_ENABLE",
-        "DH_LOG_TAG=\"distributedScreenTest\"",
-        "LOG_DOMAIN=0xD004100",
-    ]
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"distributedScreenTest\"",
+    "LOG_DOMAIN=0xD004100",
+  ]
 
-    external_deps = [
-        "hiviewdfx_hilog_native:libhilog",
-        "multimedia_media_standard:media_client",
-    ]
+  external_deps = [
+    "hiviewdfx_hilog_native:libhilog",
+    "multimedia_media_standard:media_client",
+  ]
 
-    cflags = ["-Wall"]
-    cflags_cc = cflags
+  cflags = [ "-Wall" ]
+  cflags_cc = cflags
 
-    part_name = "distributed_screen"
-    subsystem_name = "distributedhardware"
+  part_name = "distributed_screen"
+  subsystem_name = "distributedhardware"
 }

@@ -17,11 +17,10 @@
 #define DISTRIBUTED_SCREEN_TEST_SA_H
 
 #include <climits>
+#include <cstdio>
+#include <cstdlib>
 #include <fcntl.h>
 #include <iostream>
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -36,7 +35,8 @@ namespace DistributedHardware {
 class DScreenMockRegisterCallback : public RegisterCallback {
 public:
     virtual ~DScreenMockRegisterCallback() = default;
-    int32_t OnRegisterResult(const std::string &devId, const std::string &dhId, int32_t status, const std::string &data)
+    int32_t OnRegisterResult(const std::string &devId, const std::string &dhId, int32_t status,
+                             const std::string &data)
     {
         std::cout << "Register devId: " << devId << " dhId: " << dhId << ", status: " << status << std::endl;
         return 0;
@@ -46,7 +46,8 @@ public:
 class DScreenMockUnRegisterCallback : public UnregisterCallback {
 public:
     virtual ~DScreenMockUnRegisterCallback() = default;
-    int32_t OnUnregisterResult(const std::string &devId, const std::string &dhId, int32_t status, const std::string &data)
+    int32_t OnUnregisterResult(const std::string &devId, const std::string &dhId, int32_t status,
+                               const std::string &data)
     {
         std::cout << "Unregister devId: " << devId << " dhId: " << dhId << ", status: " << status << std::endl;
         return 0;
