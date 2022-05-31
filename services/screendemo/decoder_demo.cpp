@@ -68,11 +68,12 @@ namespace {
     constexpr uint32_t MAX_INPUT_BUFFER_SIZE = 30000;
     constexpr uint32_t FRAME_DURATION_US = 33000;
     constexpr uint32_t DEFAULT_FRAME_COUNT = 1;
-    const string CODEC_NAME_H264 = "OMX_hisi_video_encoder_avc";
-    const string CODEC_NAME_MPEG4 = "avenc_mpeg4";
     constexpr uint32_t VIDEO_DATA_FORMAT_NV12 = 2;
     constexpr uint32_t VIDEO_DATA_FORMAT_RGBA = 5;
     constexpr uint32_t SLEEP_THREE_SECOND = 3;
+    constexpr uint32_t INDEX_CONSTANT = 10000;
+    const string CODEC_NAME_H264 = "OMX_hisi_video_encoder_avc";
+    const string CODEC_NAME_MPEG4 = "avenc_mpeg4";
 }
 
 void VDecDemo::RunCase()
@@ -140,6 +141,7 @@ int32_t VDecDemo::Stop()
 
     if (inputLoop_ != nullptr && inputLoop_->joinable()) {
         unique_lock<mutex> lock(signal_->inMutex_);
+        signal_->inQueue_.push(INDEX_CONSTANT);
         signal_->inCond_.notify_all();
         lock.unlock();
         inputLoop_->join();
@@ -148,6 +150,7 @@ int32_t VDecDemo::Stop()
 
     if (outputLoop_ != nullptr && outputLoop_->joinable()) {
         unique_lock<mutex> lock(signal_->outMutex_);
+        signal_->outQueue_.push(INDEX_CONSTANT);
         signal_->outCond_.notify_all();
         lock.unlock();
         outputLoop_->join();
