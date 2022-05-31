@@ -223,7 +223,7 @@ const int32_t* VDecDemo::GetFrameLen()
 
 void VDecDemo::InputFunc()
 {
-    const int32_t *frameLen =GetFrameLen();
+    const int32_t *frameLen = GetFrameLen();
 
     while (true) {
         if (!isRunning_.load()) {
