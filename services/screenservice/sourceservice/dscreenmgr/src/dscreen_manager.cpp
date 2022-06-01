@@ -81,9 +81,8 @@ int32_t DScreenManager::UnInit()
     if (ret != DH_SUCCESS) {
         DHLOGE("DScreenManager UnInit failed, err: %d", ret);
     }
+
     dScreenCallback_ = nullptr;
-    dScreenSourceCallbackProxy_ = nullptr;
-    dScreenGroupListener_ = nullptr;
 
     {
         std::lock_guard<std::mutex> lock(dScreenMapMtx_);
