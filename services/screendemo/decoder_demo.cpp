@@ -62,8 +62,6 @@ using namespace OHOS;
 using namespace OHOS::Media;
 using namespace std;
 namespace {
-    constexpr uint32_t DEFAULT_WIDTH = 480;
-    constexpr uint32_t DEFAULT_HEIGHT = 360;
     constexpr uint32_t DEFAULT_FRAME_RATE = 30;
     constexpr uint32_t MAX_INPUT_BUFFER_SIZE = 30000;
     constexpr uint32_t FRAME_DURATION_US = 33000;
@@ -81,8 +79,8 @@ void VDecDemo::RunCase()
     CheckCodecType();
     CreateVdec();
     Format format;
-    format.PutIntValue("width", DEFAULT_WIDTH);
-    format.PutIntValue("height", DEFAULT_HEIGHT);
+    format.PutIntValue("width", width_);
+    format.PutIntValue("height", height_);
     if (isW) {
         format.PutIntValue("pixel_format", VIDEO_DATA_FORMAT_NV12);
     } else {
