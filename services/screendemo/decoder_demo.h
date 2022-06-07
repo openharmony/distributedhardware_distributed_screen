@@ -88,7 +88,7 @@ private:
     bool isW = true;
     int64_t timeStamp_ = 0;
     uint32_t frameCount_ = 0;
-    uint32_t defaultFrameCount_ = 0
+    uint32_t defaultFrameCount_ = 0;
 };
 } // namespace Media
 } // namespace OHOS
