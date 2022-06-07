@@ -12,7 +12,8 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
 
 module_out_path = "distributed_screen/services/data_buffer_test"
 
@@ -47,18 +48,16 @@ ohos_unittest("DataBufferTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest_main",
     "${fwk_utils_path}:distributedhardwareutils",
     "${graphicstandard_path}/frameworks/surface:surface",
     "${graphicstandard_path}/rosen/modules/render_service_client:librender_service_client",
     "${windowmanager_path}/wm:libwm",
     "//foundation/distributedhardware/distributed_screen/services/screentransport/screensinktrans:distributed_screen_sinktrans",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest_main",
   ]
 
- external_deps = [
-    "hiviewdfx_hilog_native:libhilog",
-  ]
+  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
 }
 
 group("data_buffer_test") {
