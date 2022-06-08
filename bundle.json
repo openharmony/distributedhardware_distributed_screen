@@ -15,7 +15,7 @@
         "name":"distributed_screen",
         "subsystem":"distributedhardware",
         "syscap":[
-            "SystemCapability.Distributedhardware.DistributedScreen"
+            "SystemCapability.DistributedHardware.DistributedScreen"
         ],
         "features":[],
         "adapted_system_type":[
