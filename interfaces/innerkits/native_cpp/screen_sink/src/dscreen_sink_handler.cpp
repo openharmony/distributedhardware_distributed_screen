@@ -15,13 +15,13 @@
 
 #include "dscreen_sink_handler.h"
 
-#include "hisysevent.h"
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_hitrace.h"
+#include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
 #include "dscreen_sink_load_callback.h"
 
@@ -59,16 +59,7 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
         if (ret != ERR_OK) {
             DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
                 DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, ret);
-            int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-                OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
-                "SA_ERROR",
-                OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-                "PID", getpid(),
-                "UID", getuid(),
-                "MSG", "dscreen sink LoadSystemAbility call failed.");
-            if (res != DH_SUCCESS) {
-                DHLOGE("Write HiSysEvent error, res:%d", res);
-            }
+            ReportScreenEvent(SA_ERROR, "dscreen sink LoadSystemAbility call failed.");
             return ERR_DH_SCREEN_SA_GET_SINKPROXY_FAIL;
         }
     }
@@ -77,16 +68,7 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
         [this]() { return dScreenSinkProxy_ != nullptr; });
     if (!waitStatus) {
         DHLOGE("screen load sa timeout");
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
-            "SA_ERROR",
-            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            "PID", getpid(),
-            "UID", getuid(),
-            "MSG", "dscreen sink sa load timeout.");
-        if (res != DH_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
+        ReportScreenEvent(SA_ERROR, "dscreen sink sa load timeout.");
         return ERR_DH_SCREEN_SA_LOAD_TIMEOUT;
     }
 

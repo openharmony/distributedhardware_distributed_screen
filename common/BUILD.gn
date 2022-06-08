@@ -24,6 +24,7 @@ ohos_shared_library("distributed_screen_utils") {
   ]
 
   sources = [
+    "src/dscreen_hisysevent.cpp",
     "src/dscreen_log.cpp",
     "src/dscreen_util.cpp",
   ]
@@ -32,6 +33,7 @@ ohos_shared_library("distributed_screen_utils") {
 
   external_deps = [
     "dsoftbus_standard:softbus_client",
+    "hisysevent_native:libhisysevent",
     "hitrace_native:hitrace_meter",
     "hiviewdfx_hilog_native:libhilog",
   ]
