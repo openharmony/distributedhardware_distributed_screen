@@ -18,11 +18,11 @@
 #include <securec.h>
 #include <unistd.h>
 
-#include "hisysevent.h"
 #include "softbus_bus_center.h"
 #include "softbus_common.h"
 
 #include "dscreen_errcode.h"
+#include "dscreen_hisysevent.h"
 #include "dscreen_util.h"
 
 namespace OHOS {
@@ -111,18 +111,7 @@ int32_t SoftbusAdapter::CreateSoftbusSessionServer(const std::string &pkgname, c
         int32_t ret = CreateSessionServer(pkgname.c_str(), sessionName.c_str(), &sessListener_);
         if (ret != DH_SUCCESS) {
             DHLOGE("%s: CreateSessionServer failed.", LOG_TAG);
-            int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-                OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
-                "SOFTBUS_SESSIONSERVER_ERROR",
-                OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-                "PID", getpid(),
-                "UID", getuid(),
-                "PKGNAME", pkgname.c_str(),
-                "SESSIONNAME", sessionName.c_str(),
-                "MSG", "create session server failed.");
-            if (res != DH_SUCCESS) {
-                DHLOGE("Write HiSysEvent error, res:%d", res);
-            }
+            ReportScreenEvent(SOFTBUS_SESSIONSERVER_ERROR, "create session server failed.");
             return ret;
         }
     } else {
@@ -150,18 +139,7 @@ int32_t SoftbusAdapter::RemoveSoftbusSessionServer(const std::string &pkgname, c
     int32_t ret = RemoveSessionServer(pkgname.c_str(), sessionName.c_str());
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: RemoveSessionServer failed.", LOG_TAG);
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
-            "SOFTBUS_SESSIONSERVER_ERROR",
-            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            "PID", getpid(),
-            "UID", getuid(),
-            "PKGNAME", pkgname.c_str(),
-            "SESSIONNAME", sessionName.c_str(),
-            "MSG", "remove session server failed.");
-        if (res != DH_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
+        ReportScreenEvent(SOFTBUS_SESSIONSERVER_ERROR, "remove session server failed.");
         return ret;
     }
 
@@ -203,19 +181,7 @@ int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, con
     int32_t sessionId = OpenSession(mySessionName.c_str(), peerSessionName.c_str(), peerDevId.c_str(), "0", &attr);
     if (sessionId < 0) {
         DHLOGE("%s: OpenSession failed sessionId:%d.", LOG_TAG, sessionId);
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
-            "SOFTBUS_SESSION_ERROR",
-            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            "PID", getpid(),
-            "UID", getuid(),
-            "MYSESSIONNAME", mySessionName.c_str(),
-            "PEERSESSIONNAME", peerSessionName.c_str(),
-            "PEERDEVID", peerDevId.c_str(),
-            "MSG", "open session failed.");
-        if (res != DH_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
+        ReportScreenEvent(SOFTBUS_SESSION_ERROR, "open session failed.");
         return ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL;
     }
 

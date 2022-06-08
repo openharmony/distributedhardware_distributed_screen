@@ -15,13 +15,13 @@
 
 #include "screen_client_window_adapter.h"
 
-#include "hisysevent.h"
 #include "rs_surface_node.h"
 #include "window_option.h"
 #include "wm_common.h"
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
 
 namespace OHOS {
@@ -64,16 +64,7 @@ sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProp
     sptr<Rosen::Window> window = Rosen::Window::Create(windowName, option);
     if (window == nullptr || window->GetSurfaceNode() == nullptr) {
         DHLOGE("Create screen client window failed.");
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
-            "WINDOW_ERROR",
-            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            "PID", getpid(),
-            "UID", getuid(),
-            "MSG", "create window failed.");
-        if (res != DH_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
+        ReportScreenEvent(WINDOW_ERROR, "create window failed.");
         return nullptr;
     }
     auto surface = window->GetSurfaceNode()->GetSurface();
@@ -122,16 +113,7 @@ int32_t ScreenClientWindowAdapter::ShowWindow(int32_t windowId)
     }
     if (OHOS::Rosen::WMError::WM_OK != window->Show()) {
         DHLOGE("Show window failed.");
-        int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-            OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
-            "WINDOW_ERROR",
-            OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-            "PID", getpid(),
-            "UID", getuid(),
-            "MSG", "show window failed.");
-        if (res != DH_SUCCESS) {
-            DHLOGE("Write HiSysEvent error, res:%d", res);
-        }
+        ReportScreenEvent(WINDOW_ERROR, "show window failed.");
         return ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR;
     }
     DHLOGD("Show window (windowId = %d) success.", windowId);

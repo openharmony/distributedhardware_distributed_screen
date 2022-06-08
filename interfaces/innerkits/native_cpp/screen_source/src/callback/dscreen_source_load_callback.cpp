@@ -16,9 +16,8 @@
 
 #include <unistd.h>
 
-#include "hisysevent.h"
-
 #include "dscreen_errcode.h"
+#include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
 #include "dscreen_source_handler.h"
 
@@ -42,16 +41,7 @@ void DScreenSourceLoadCallback::OnLoadSystemAbilitySuccess(
 void DScreenSourceLoadCallback::OnLoadSystemAbilityFail(int32_t systemAbilityId)
 {
     DHLOGE("load screen SA failed, systemAbilityId:%d", systemAbilityId);
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
-        "SA_ERROR",
-        OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-        "PID", getpid(),
-        "UID", getuid(),
-        "MSG", "dscreen source OnLoadSystemAbilityFail.");
-    if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
-    }
+    ReportScreenEvent(SA_ERROR, "dscreen source OnLoadSystemAbilityFail.");
 }
 }
 }
