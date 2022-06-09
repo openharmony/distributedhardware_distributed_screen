@@ -62,12 +62,9 @@ using namespace OHOS;
 using namespace OHOS::Media;
 using namespace std;
 namespace {
-    constexpr uint32_t DEFAULT_WIDTH = 480;
-    constexpr uint32_t DEFAULT_HEIGHT = 360;
     constexpr uint32_t DEFAULT_FRAME_RATE = 30;
     constexpr uint32_t MAX_INPUT_BUFFER_SIZE = 30000;
     constexpr uint32_t FRAME_DURATION_US = 33000;
-    constexpr uint32_t DEFAULT_FRAME_COUNT = 1;
     constexpr uint32_t VIDEO_DATA_FORMAT_NV12 = 2;
     constexpr uint32_t VIDEO_DATA_FORMAT_RGBA = 5;
     constexpr uint32_t SLEEP_THREE_SECOND = 3;
@@ -81,8 +78,8 @@ void VDecDemo::RunCase()
     CheckCodecType();
     CreateVdec();
     Format format;
-    format.PutIntValue("width", DEFAULT_WIDTH);
-    format.PutIntValue("height", DEFAULT_HEIGHT);
+    format.PutIntValue("width", width_);
+    format.PutIntValue("height", height_);
     if (isW) {
         format.PutIntValue("pixel_format", VIDEO_DATA_FORMAT_NV12);
     } else {
@@ -217,11 +214,12 @@ const int32_t* VDecDemo::GetFrameLen()
     const int32_t* frameLen = nullptr;
     if (isW) {
         frameLen = ES_W;
-        return frameLen;
+        defaultFrameCount_ = sizeof(ES_W)/sizeof(ES_W[0]);
     } else {
         frameLen = ES_R;
-        return frameLen;
+        defaultFrameCount_ = sizeof(ES_R)/sizeof(ES_R[0]);
     }
+    return frameLen;
 }
 
 void VDecDemo::InputFunc()
@@ -274,7 +272,7 @@ void VDecDemo::InputFunc()
         signal_->inQueue_.pop();
 
         frameCount_++;
-        if (frameCount_ == DEFAULT_FRAME_COUNT) {
+        if (frameCount_ == defaultFrameCount_) {
             cout << "Finish decode, exit" << endl;
             break;
         }

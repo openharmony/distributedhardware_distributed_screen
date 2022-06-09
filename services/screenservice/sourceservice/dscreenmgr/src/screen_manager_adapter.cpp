@@ -25,6 +25,7 @@
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
+#include "dscreen_util.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -40,7 +41,8 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
 {
     DHLOGI("CreateVirtualScreen, width: %u, height: %u", videoParam->GetScreenWidth(),
         videoParam->GetScreenHeight());
-    std::string screenName = DSCREEN_PREFIX + SEPERATOR + devId + SEPERATOR + dhId;
+    std::string screenName = DSCREEN_PREFIX + SEPERATOR + GetInterruptString(devId) +
+                             SEPERATOR + GetInterruptString(dhId);
     auto iter = screenIdMap_.find(screenName);
     if (iter != screenIdMap_.end()) {
         DHLOGI("remove an exist virtual screen.");

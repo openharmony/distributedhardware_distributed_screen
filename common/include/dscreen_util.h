@@ -23,6 +23,7 @@ namespace DistributedHardware {
 int32_t GetLocalDeviceNetworkId(std::string &networkId);
 std::string GetRandomID();
 std::string GetAnonyString(const std::string &value);
+std::string GetInterruptString(const std::string &value);
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif
