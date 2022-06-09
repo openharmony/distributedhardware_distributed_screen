@@ -183,8 +183,7 @@ void DScreen::HandleTask(const std::shared_ptr<Task> &task)
 void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
 {
     DHLOGI("HandleEnable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
-    if (curState_ == ENABLED || curState_ == ENABLING ||
-        curState_ == CONNECTING || curState_ == CONNECTED) {
+    if (curState_ == ENABLED || curState_ == ENABLING || curState_ == CONNECTING || curState_ == CONNECTED) {
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "");
         return;
     }
@@ -195,23 +194,11 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     }
 
     json attrJson = json::parse(param, nullptr, false);
-    if (attrJson.is_discarded()) {
-        DHLOGE("enable param json is invalid.");
-        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
-            "enable param json is invalid.");
+    int32_t ret = CheckJsonData(attrJson);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("check json data failed.");
         ReportRegisterFail(REGISTER_ERROR, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
-            GetAnonyString(dhId_).c_str(), "enable param json is invalid.");
-        return;
-    }
-
-    if (!attrJson.contains(KEY_SCREEN_WIDTH) ||
-        !attrJson.contains(KEY_SCREEN_HEIGHT) ||
-        !attrJson.contains(KEY_CODECTYPE)) {
-        DHLOGE("enable param is invalid.");
-        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
-            "enable param is invalid.");
-        ReportRegisterFail(REGISTER_ERROR, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
-            GetAnonyString(dhId_).c_str(), "enable param is invalid.");
+            GetAnonyString(dhId_).c_str(), "check json data failed.");
         return;
     }
 
@@ -219,7 +206,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     videoParam_->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT]);
 
     // negotiate codecType
-    int32_t ret = NegotiateCodecType(attrJson[KEY_CODECTYPE]);
+    ret = NegotiateCodecType(attrJson[KEY_CODECTYPE]);
     if (ret != DH_SUCCESS) {
         DHLOGE("negotiate codec type failed.");
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
@@ -243,6 +230,25 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "");
     ReportRegisterScreenEvent(ENABLE_REGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
         "dscreen enable success.");
+}
+
+int32_t DScreen::CheckJsonData(json &attrJson)
+{
+    if (attrJson.is_discarded()) {
+        DHLOGE("enable param json is invalid.");
+        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
+            "enable param json is invalid.");
+        return ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR;
+    }
+
+    if (!attrJson.contains(KEY_SCREEN_WIDTH) || !attrJson.contains(KEY_SCREEN_HEIGHT) ||
+        !attrJson.contains(KEY_CODECTYPE)) {
+        DHLOGE("enable param is invalid.");
+        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
+            "enable param is invalid.");
+        return ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR;
+    }
+    return DH_SUCCESS;
 }
 
 int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)

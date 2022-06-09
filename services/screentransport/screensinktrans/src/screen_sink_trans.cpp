@@ -269,7 +269,7 @@ int32_t ScreenSinkTrans::RegisterProcessorListener(const VideoParam &localParam,
     int32_t ret = imageProcessor_->ConfigureImageProcessor(localParam, remoteParam, listener);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Config image processor failed ret: %d.", LOG_TAG, ret);
-        ReportVideoDecoderFail(VIDEO_DECODER_ERROR, ret, localParam.GetVideoWidth(),
+        ReportVideoDecoderFail(VIDEO_DECODER_ERROR, localParam.GetVideoWidth(),
             localParam.GetVideoHeight(), localParam.GetVideoFormat(), "Config image processor failed.");
         return ret;
     }

@@ -21,7 +21,6 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-
 void ReportSaFail(const std::string &eventName, int32_t errCode, int32_t saId, const std::string &errMsg)
 {
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
@@ -81,14 +80,13 @@ void ReportWindowFail(const std::string &eventName, int32_t errCode, const std::
     }
 }
 
-void ReportVideoEncoderFail(const std::string &eventName, int32_t errCode, int32_t width, int32_t height,
-    uint8_t format, const std::string &errMsg)
+void ReportVideoEncoderFail(const std::string &eventName, int32_t width, int32_t height, uint8_t format,
+    const std::string &errMsg)
 {
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
         eventName,
         OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-        "ERRCODE", errCode,
         "WIDTH", width,
         "HEIGHT", height,
         "FORMAT", format,
@@ -98,14 +96,13 @@ void ReportVideoEncoderFail(const std::string &eventName, int32_t errCode, int32
     }
 }
 
-void ReportVideoDecoderFail(const std::string eventName, int32_t errCode, int32_t width, int32_t height,
-    uint8_t format, const std::string &errMsg)
+void ReportVideoDecoderFail(const std::string eventName, int32_t width, int32_t height, uint8_t format,
+    const std::string &errMsg)
 {
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
         eventName,
         OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-        "ERRCODE", errCode,
         "WIDTH", width,
         "HEIGHT", height,
         "FORMAT", format,

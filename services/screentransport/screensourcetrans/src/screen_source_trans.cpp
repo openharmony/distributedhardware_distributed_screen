@@ -288,7 +288,7 @@ int32_t ScreenSourceTrans::RegisterProcessorListener(const VideoParam &localPara
     int32_t ret = imageProcessor_->ConfigureImageProcessor(localParam, remoteParam, listener);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Config image processor failed ret: %d.", LOG_TAG, ret);
-        ReportVideoEncoderFail(VIDEO_ENCODER_ERROR, ret, localParam.GetVideoWidth(),
+        ReportVideoEncoderFail(VIDEO_ENCODER_ERROR, localParam.GetVideoWidth(),
             localParam.GetVideoHeight(), localParam.GetVideoFormat(), "Config image processor failed.");
         return ret;
     }

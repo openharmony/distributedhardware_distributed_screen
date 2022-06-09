@@ -44,10 +44,10 @@ void ReportRegisterFail(const std::string &eventName, int32_t errCode, const std
 void ReportUnRegisterFail(const std::string &eventName, int32_t errCode, const std::string &devId,
     const std::string &dhId, const std::string &errMsg);
 void ReportWindowFail(const std::string &eventName, int32_t errCode, const std::string &errMsg);
-void ReportVideoEncoderFail(const std::string &eventName, int32_t errCode, int32_t width, int32_t height,
-    uint8_t format, const std::string &errMsg);
-void ReportVideoDecoderFail(const std::string eventName, int32_t errCode, int32_t width, int32_t height,
-    uint8_t format, const std::string &errMsg);
+void ReportVideoEncoderFail(const std::string &eventName, int32_t width, int32_t height, uint8_t format,
+    const std::string &errMsg);
+void ReportVideoDecoderFail(const std::string eventName, int32_t width, int32_t height, uint8_t format,
+    const std::string &errMsg);
 void ReportSoftbusSessionServerFail(const std::string &eventName, int32_t errCode, const std::string &pkgName,
     const std::string &sessionName, const std::string &errMsg);
 void ReportSoftbusSessionFail(const std::string &eventName, int32_t errCode, const std::string &sessName,
