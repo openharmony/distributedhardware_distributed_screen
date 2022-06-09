@@ -39,49 +39,90 @@
 
 domain: DISTSCREEN
 
-SA_ERROR:
-  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen sa error occured}
-  PID: {type: INT32, desc: dscreen pid}
-  UID: {type: INT32, desc: dscreen uid}
-  MSG: {type: STRING, desc: dscreen sa error info}
+DSCREEN_INIT_FAIL:
+  __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen init sa event}
+  ERRCODE: {type: INT32, desc: dscreen init fail error code}
+  SAID: {type: INT32, desc: dscreen SAID}
+  MSG: {type: STRING, desc: dscreen init sa event}
 
-VIRTUALSCREEN_ERROR:
-  __BASE: {type: FAULT, level: CRITICAL, desc: virtual screen error occured}
-  PID: {type: INT32, desc: dscreen pid}
-  UID: {type: INT32, desc: dscreen uid}
-  MSG: {type: STRING, desc: dscreen virtual screen error info}
+DSCREEN_REGISTER_FAIL:
+  __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen register event}
+  ERRCODE: {type: INT32, desc: dscreen register fail error code}
+  DEVID: {type: STRING, desc: dscreen devId}
+  DHID: {type: STRING, desc: dscreen dhId}
+  MSG: {type: STRING, desc: dscreen register event}
 
-SOFTBUS_SESSIONSERVER_ERROR:
-  __BASE: {type: FAULT, level: CRITICAL, desc: softbus sessionserver error occured}
-  PID: {type: INT32, desc: dscreen pid}
-  UID: {type: INT32, desc: dscreen uid}
+DSCREEN_UNREGISTER_FAIL:
+  __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen unregister event}
+  ERRCODE: {type: INT32, desc: dscreen unregister fail error code}
+  DEVID: {type: STRING, desc: dscreen devId}
+  DHID: {type: STRING, desc: dscreen dhId}
+  MSG: {type: STRING, desc: dscreen unregister event}
+
+DSCREEN_WINDOW_FAIL:
+  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen sink window error event}
+  ERRCODE: {type: INT32, desc: dscreen sink window error code}
+  MSG: {type: STRING, desc: dscreen sink window error info}
+
+DSCREEN_ENCODE_FAIL:
+  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen video encoder error event}
+  ERRCODE: {type: INT32, desc: dscreen encoder error code}
+  WIDTH: {type: INT32, desc: dscreen width}
+  HEIGHT: {type: INT32, desc: dscreen height}
+  FORMAT: {type: UINT32, desc: dscreen format}
+  MSG: {type: STRING, desc: dscreen video encoder error info}
+
+DSCREEN_DECODE_FAIL:
+  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen video decoder error event}
+  ERRCODE: {type: INT32, desc: dscreen decoder error code}
+  WIDTH: {type: INT32, desc: dscreen width}
+  HEIGHT: {type: INT32, desc: dscreen height}
+  FORMAT: {type: UINT32, desc: dscreen format}
+  MSG: {type: STRING, desc: dscreen video decoder error info}
+
+DSCREEN_CREATE_SESSIONSVR_FAIL:
+  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen softbus sessionserver error event}
+  ERRCODE: {type: INT32, desc: dscreen create session server fail error code}
   PKGNAME: {type: STRING, desc: softbus package name}
   SESSIONNAME: {type: STRING, desc: softbus session name}
   MSG: {type: STRING, desc: dscreen softbus sessionserver error info}
 
-SOFTBUS_SESSION_ERROR:
-  __BASE: {type: FAULT, level: CRITICAL, desc: softbus session error occured}
-  PID: {type: INT32, desc: dscreen pid}
-  UID: {type: INT32, desc: dscreen uid}
-  MYSESSIONNAME: {type: STRING, desc: softbus my session name}
-  PEERSESSIONNAME: {type: STRING, desc: softbus peer session name}
-  PEERDEVID: {type: STRING, desc: peer network id}
+DSCREEN_OPEN_SESSION_FAIL:
+  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen softbus session error event}
+  ERRCODE: {type: INT32, desc: dscreen open session fail error code}
+  SESSIONNAME: {type: STRING, desc: softbus my session name}
   MSG: {type: STRING, desc: dscreen softbus session error info}
 
-VIDEO_ENCODER_ERROR:
-  __BASE: {type: FAULT, level: CRITICAL, desc: video encoder error occured}
-  PID: {type: INT32, desc: dscreen pid}
-  UID: {type: INT32, desc: dscreen uid}
-  MSG: {type: STRING, desc: dscreen video encoder error info}
+DSCREEN_INIT:
+  __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen init sa event}
+  SAID: {type: INT32, desc: dscreen SAID}
+  MSG: {type: STRING, desc: dscreen init sa event}
 
-VIDEO_DECODER_ERROR:
-  __BASE: {type: FAULT, level: CRITICAL, desc: video decoder error occured}
-  PID: {type: INT32, desc: dscreen pid}
-  UID: {type: INT32, desc: dscreen uid}
-  MSG: {type: STRING, desc: dscreen video decoder error info}
+DSCREEN_EXIT:
+  __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen release sa event}
+  SAID: {type: INT32, desc: dscreen SAID}
+  MSG: {type: STRING, desc: dscreen release sa event}
 
-WINDOW_ERROR:
-  __BASE: {type: FAULT, level: CRITICAL, desc: screenregion window error occured}
-  PID: {type: INT32, desc: dscreen pid}
-  UID: {type: INT32, desc: dscreen uid}
-  MSG: {type: STRING, desc: dscreen virtual window error info}
+DSCREEN_REGISTER:
+  __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen register event}
+  DEVID: {type: STRING, desc: dscreen devId}
+  DHID: {type: STRING, desc: dscreen dhId}
+  MSG: {type: STRING, desc: dscreen register event}
+
+DSCREEN_UNREGISTER:
+  __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen unregister event}
+  DEVID: {type: STRING, desc: dscreen devId}
+  DHID: {type: STRING, desc: dscreen dhId}
+  MSG: {type: STRING, desc: dscreen unregister event}
+
+DSCREEN_PROJECT_START:
+  __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen open event}
+  DEVID: {type: STRING, desc: dscreen devId}
+  DHID: {type: STRING, desc: dscreen dhId}
+  MSG: {type: STRING, desc: dscreen open event}
+
+DSCREEN_PROJECT_END:
+  __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen close event}
+  DEVID: {type: STRING, desc: dscreen devId}
+  DHID: {type: STRING, desc: dscreen dhId}
+  MSG: {type: STRING, desc: dscreen close event}

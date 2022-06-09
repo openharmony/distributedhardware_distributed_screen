@@ -18,6 +18,7 @@
 #include <chrono>
 
 #include "dscreen_errcode.h"
+#include "dscreen_hisysevent.h"
 #include "dscreen_hitrace.h"
 #include "dscreen_log.h"
 #include "image_source_processor.h"
@@ -267,6 +268,8 @@ int32_t ScreenSourceTrans::RegisterChannelListener()
     int32_t ret = screenChannel_->CreateSession(listener);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Create session failed ret: %d.", LOG_TAG);
+        ReportSoftbusSessionServerFail(SOFTBUS_SESSIONSERVER_ERROR, ret, PKG_NAME,
+            DATA_SESSION_NAME, "dscreen source Create session failed.");
         return ret;
     }
 
@@ -285,6 +288,8 @@ int32_t ScreenSourceTrans::RegisterProcessorListener(const VideoParam &localPara
     int32_t ret = imageProcessor_->ConfigureImageProcessor(localParam, remoteParam, listener);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Config image processor failed ret: %d.", LOG_TAG, ret);
+        ReportVideoEncoderFail(VIDEO_ENCODER_ERROR, ret, localParam.GetVideoWidth(),
+            localParam.GetVideoHeight(), localParam.GetVideoFormat(), "Config image processor failed.");
         return ret;
     }
 

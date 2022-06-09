@@ -16,6 +16,7 @@
 #include "image_source_processor.h"
 
 #include "dscreen_errcode.h"
+#include "dscreen_hisysevent.h"
 #include "dscreen_hitrace.h"
 #include "dscreen_log.h"
 
@@ -47,6 +48,8 @@ int32_t ImageSourceProcessor::ReleaseImageProcessor()
     DHLOGI("%s: ReleaseImageProcessor.", LOG_TAG);
     if (!imageEncoder_) {
         DHLOGE("%s: Create screen encoder failed.", LOG_TAG);
+        ReportVideoEncoderFail(VIDEO_ENCODER_ERROR, ERR_DH_SCREEN_TRANS_NULL_VALUE, localParam_.GetVideoWidth(),
+            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "Create screen encoder failed.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
@@ -55,6 +58,8 @@ int32_t ImageSourceProcessor::ReleaseImageProcessor()
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Release screen encoder failed ret: %d.", LOG_TAG, ret);
+        ReportVideoEncoderFail(VIDEO_ENCODER_ERROR, ret, localParam_.GetVideoWidth(),
+            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "Release screen encoder failed.");
         return ret;
     }
 
@@ -66,6 +71,8 @@ int32_t ImageSourceProcessor::StartImageProcessor()
     DHLOGI("%s: StartImageProcessor.", LOG_TAG);
     if (!imageEncoder_) {
         DHLOGE("%s: Create screen encoder failed.", LOG_TAG);
+        ReportVideoEncoderFail(VIDEO_ENCODER_ERROR, ERR_DH_SCREEN_TRANS_NULL_VALUE, localParam_.GetVideoWidth(),
+            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "Create screen encoder failed.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
@@ -74,6 +81,8 @@ int32_t ImageSourceProcessor::StartImageProcessor()
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Start screen encoder failed ret: %d.", LOG_TAG, ret);
+        ReportVideoEncoderFail(VIDEO_ENCODER_ERROR, ret, localParam_.GetVideoWidth(),
+            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "Start screen encoder failed.");
         return ret;
     }
 
@@ -85,6 +94,8 @@ int32_t ImageSourceProcessor::StopImageProcessor()
     DHLOGI("%s: StopImageProcessor.", LOG_TAG);
     if (!imageEncoder_) {
         DHLOGE("%s: Create screen encoder failed.", LOG_TAG);
+        ReportVideoEncoderFail(VIDEO_ENCODER_ERROR, ERR_DH_SCREEN_TRANS_NULL_VALUE, localParam_.GetVideoWidth(),
+            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "Create screen encoder failed.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
@@ -93,6 +104,8 @@ int32_t ImageSourceProcessor::StopImageProcessor()
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Stop screen encoder failed ret: %d.", LOG_TAG, ret);
+        ReportVideoEncoderFail(VIDEO_ENCODER_ERROR, ret, localParam_.GetVideoWidth(),
+            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "Stop screen encoder failed.");
         return ret;
     }
 

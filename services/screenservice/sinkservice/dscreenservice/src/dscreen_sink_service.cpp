@@ -24,6 +24,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 
@@ -78,6 +79,7 @@ int32_t DScreenSinkService::ReleaseSink()
     DHLOGI("ReleaseSink");
     ScreenRegionManager::GetInstance().ReleaseAllRegions();
     DHLOGI("exit sink sa process");
+    ReportSaEvent(SA_EXIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, "dscreen sink sa exit success.");
     exit(0);
     return DH_SUCCESS;
 }

@@ -79,7 +79,6 @@ int32_t ImageSinkDecoder::StartDecoder()
     ret = videoDecoder_->Start();
     if (ret != Media::MSERR_OK) {
         DHLOGE("%s: Start decoder failed.", LOG_TAG);
-        ReportScreenEvent(VIDEO_DECODER_ERROR, "video decoder start failed.");
         return ERR_DH_SCREEN_CODEC_START_FAILED;
     }
     StartInputThread();
@@ -104,7 +103,6 @@ int32_t ImageSinkDecoder::StopDecoder()
     ret = videoDecoder_->Stop();
     if (ret != Media::MSERR_OK) {
         DHLOGE("%s: Stop decoder failed.", LOG_TAG);
-        ReportScreenEvent(VIDEO_DECODER_ERROR, "video decoder stop failed.");
         return ERR_DH_SCREEN_CODEC_STOP_FAILED;
     }
     StopInputThread();

@@ -47,7 +47,6 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
         Rosen::DMError err = Rosen::ScreenManager::GetInstance().DestroyVirtualScreen(iter->second);
         if (err != Rosen::DMError::DM_OK) {
             DHLOGE("remove virtual screen failed, screenId:%ulld", iter->second);
-            ReportScreenEvent(VIRTUALSCREEN_ERROR, "destroy virtual screen failed.");
             return SCREEN_ID_INVALID;
         }
         screenIdMap_.erase(screenName);
@@ -64,9 +63,6 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
     };
 
     uint64_t screenId = Rosen::ScreenManager::GetInstance().CreateVirtualScreen(option);
-    if (screenId == SCREEN_ID_INVALID) {
-        ReportScreenEvent(VIRTUALSCREEN_ERROR, "create virtual screen failed.");
-    }
     screenIdMap_.emplace(screenName, screenId);
     return screenId;
 }
@@ -117,7 +113,6 @@ int32_t ScreenMgrAdapter::RemoveVirtualScreen(uint64_t screenId)
     Rosen::DMError err = Rosen::ScreenManager::GetInstance().DestroyVirtualScreen(screenId);
     if (err != Rosen::DMError::DM_OK) {
         DHLOGE("remove virtual screen failed, screenId:%ulld", screenId);
-        ReportScreenEvent(VIRTUALSCREEN_ERROR, "destroy virtual screen failed.");
         return ERR_DH_SCREEN_SA_REMOVE_VIRTUALSCREEN_FAIL;
     }
     return DH_SUCCESS;

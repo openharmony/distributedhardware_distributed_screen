@@ -19,6 +19,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 
@@ -77,6 +78,7 @@ int32_t ScreenDataChannelImpl::OpenSession()
         SoftbusAdapter::GetInstance().OpenSoftbusSession(DATA_SESSION_NAME, DATA_SESSION_NAME, peerDevId_);
     if (sessionId < 0) {
         DHLOGE("%s: Open screen session failed, ret: %d", LOG_TAG, sessionId);
+        ReportSoftbusSessionFail(SOFTBUS_SESSION_ERROR, sessionId, DATA_SESSION_NAME, "Open screen session failed");
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
     sessionId_ = sessionId;

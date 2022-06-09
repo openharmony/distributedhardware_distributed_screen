@@ -24,6 +24,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 
@@ -94,6 +95,7 @@ int32_t DScreenSourceService::ReleaseSource()
         return ret;
     }
     DHLOGI("exit source sa process");
+    ReportSaEvent(SA_EXIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, "dscreen source sa exit success.");
     exit(0);
     return DH_SUCCESS;
 }
@@ -110,6 +112,8 @@ int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &dev
     if (ret != DH_SUCCESS) {
         DHLOGE("enable distributedScreen failed. devId: %s, dhId: %s, reqId: %s, attrs: %s",
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str(), attrs.c_str());
+        ReportRegisterFail(REGISTER_ERROR, ret, GetAnonyString(devId).c_str(),
+            GetAnonyString(dhId).c_str(), "enable distributedScreen failed.");
         return ERR_DH_SCREEN_SA_ENABLE_FAILED;
     }
     return DH_SUCCESS;
@@ -123,6 +127,8 @@ int32_t DScreenSourceService::UnregisterDistributedHardware(const std::string &d
     if (ret != DH_SUCCESS) {
         DHLOGE("disable distributedScreen failed. devId: %s, dhId: %s, reqId: %s",
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str());
+        ReportUnRegisterFail(UNREGISTER_ERROR, ret, GetAnonyString(devId).c_str(),
+            GetAnonyString(dhId).c_str(), "disable distributedScreen failed.");
         return ERR_DH_SCREEN_SA_DISABLE_FAILED;
     }
     return DH_SUCCESS;

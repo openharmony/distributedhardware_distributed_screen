@@ -111,7 +111,6 @@ int32_t SoftbusAdapter::CreateSoftbusSessionServer(const std::string &pkgname, c
         int32_t ret = CreateSessionServer(pkgname.c_str(), sessionName.c_str(), &sessListener_);
         if (ret != DH_SUCCESS) {
             DHLOGE("%s: CreateSessionServer failed.", LOG_TAG);
-            ReportScreenEvent(SOFTBUS_SESSIONSERVER_ERROR, "create session server failed.");
             return ret;
         }
     } else {
@@ -139,7 +138,6 @@ int32_t SoftbusAdapter::RemoveSoftbusSessionServer(const std::string &pkgname, c
     int32_t ret = RemoveSessionServer(pkgname.c_str(), sessionName.c_str());
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: RemoveSessionServer failed.", LOG_TAG);
-        ReportScreenEvent(SOFTBUS_SESSIONSERVER_ERROR, "remove session server failed.");
         return ret;
     }
 
@@ -181,7 +179,6 @@ int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, con
     int32_t sessionId = OpenSession(mySessionName.c_str(), peerSessionName.c_str(), peerDevId.c_str(), "0", &attr);
     if (sessionId < 0) {
         DHLOGE("%s: OpenSession failed sessionId:%d.", LOG_TAG, sessionId);
-        ReportScreenEvent(SOFTBUS_SESSION_ERROR, "open session failed.");
         return ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL;
     }
 

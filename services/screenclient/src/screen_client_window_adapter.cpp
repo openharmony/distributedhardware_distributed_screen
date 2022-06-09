@@ -64,7 +64,6 @@ sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProp
     sptr<Rosen::Window> window = Rosen::Window::Create(windowName, option);
     if (window == nullptr || window->GetSurfaceNode() == nullptr) {
         DHLOGE("Create screen client window failed.");
-        ReportScreenEvent(WINDOW_ERROR, "create window failed.");
         return nullptr;
     }
     auto surface = window->GetSurfaceNode()->GetSurface();
@@ -113,7 +112,6 @@ int32_t ScreenClientWindowAdapter::ShowWindow(int32_t windowId)
     }
     if (OHOS::Rosen::WMError::WM_OK != window->Show()) {
         DHLOGE("Show window failed.");
-        ReportScreenEvent(WINDOW_ERROR, "show window failed.");
         return ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR;
     }
     DHLOGD("Show window (windowId = %d) success.", windowId);

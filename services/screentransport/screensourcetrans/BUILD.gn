@@ -18,6 +18,7 @@ import(
 
 ohos_shared_library("distributed_screen_sourcetrans") {
   include_dirs = [
+    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//third_party/json/include",
     "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",

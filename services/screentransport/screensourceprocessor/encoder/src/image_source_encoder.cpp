@@ -85,7 +85,6 @@ int32_t ImageSourceEncoder::StartEncoder()
     ret = videoEncoder_->Start();
     if (ret != Media::MSERR_OK) {
         DHLOGE("%s: Start encoder failed.", LOG_TAG);
-        ReportScreenEvent(VIDEO_ENCODER_ERROR, "video encoder start failed.");
         return ERR_DH_SCREEN_CODEC_START_FAILED;
     }
 
@@ -108,7 +107,6 @@ int32_t ImageSourceEncoder::StopEncoder()
     ret = videoEncoder_->Stop();
     if (ret != Media::MSERR_OK) {
         DHLOGE("%s: Stop encoder failed.", LOG_TAG);
-        ReportScreenEvent(VIDEO_ENCODER_ERROR, "video encoder stop failed.");
         return ERR_DH_SCREEN_CODEC_STOP_FAILED;
     }
 

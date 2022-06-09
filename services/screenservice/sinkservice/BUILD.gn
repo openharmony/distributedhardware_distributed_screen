@@ -18,6 +18,7 @@ import(
 
 ohos_shared_library("distributed_screen_sink") {
   include_dirs = [
+    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//third_party/json/include",
     "//utils/native/base/include",
     "//utils/system/safwk/native/include",

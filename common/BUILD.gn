@@ -20,6 +20,7 @@ ohos_shared_library("distributed_screen_utils") {
   include_dirs = [
     "//utils/native/base/include",
     "include",
+    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
   ]
 

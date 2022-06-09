@@ -20,6 +20,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 #include "screen_manager_adapter.h"
@@ -198,6 +199,8 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         DHLOGE("enable param json is invalid.");
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
             "enable param json is invalid.");
+        ReportRegisterFail(REGISTER_ERROR, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
+            GetAnonyString(dhId_).c_str(), "enable param json is invalid.");
         return;
     }
 
@@ -207,6 +210,8 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         DHLOGE("enable param is invalid.");
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
             "enable param is invalid.");
+        ReportRegisterFail(REGISTER_ERROR, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
+            GetAnonyString(dhId_).c_str(), "enable param is invalid.");
         return;
     }
 
@@ -219,6 +224,8 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         DHLOGE("negotiate codec type failed.");
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
             "negotiate codec type failed.");
+        ReportRegisterFail(REGISTER_ERROR, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
+            GetAnonyString(dhId_).c_str(), "negotiate codec type failed.");
         return;
     }
 
@@ -227,11 +234,15 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         DHLOGE("create virtual screen failed.");
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
             "create virtual screen failed.");
+        ReportRegisterFail(REGISTER_ERROR, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
+            GetAnonyString(dhId_).c_str(), "create virtual screen failed.");
         return;
     }
     screenId_ = screenId;
     SetState(ENABLED);
     dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "");
+    ReportRegisterScreenEvent(ENABLE_REGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
+        "dscreen enable success.");
 }
 
 int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
@@ -284,10 +295,14 @@ void DScreen::HandleDisable(const std::string &taskId)
         DHLOGE("remove virtual screen failed.");
         dscreenCallback_->OnUnregResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_DISABLE_FAILED,
             "remove virtual screen failed.");
+        ReportUnRegisterFail(UNREGISTER_ERROR, ERR_DH_SCREEN_SA_DISABLE_FAILED, GetAnonyString(devId_).c_str(),
+            GetAnonyString(dhId_).c_str(), "remove virtual screen failed.");
         return;
     }
     SetState(DISABLED);
     dscreenCallback_->OnUnregResult(shared_from_this(), taskId, DH_SUCCESS, "");
+    ReportUnRegisterScreenEvent(DISABLE_UNREGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
+        "dscreen disable success.");
 }
 
 void DScreen::HandleConnect()
@@ -311,6 +326,8 @@ void DScreen::HandleConnect()
         return;
     }
     SetState(CONNECTED);
+    ReportScreenMirrorEvent(PROJECT_START, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
+        "dscreen connect success");
 }
 
 void DScreen::HandleDisconnect()
@@ -329,6 +346,8 @@ void DScreen::HandleDisconnect()
         return;
     }
     SetState(ENABLED);
+    ReportScreenMirrorEvent(PROJECT_END, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
+        "dscreen disconnect success");
 }
 
 int32_t DScreen::SetUp()

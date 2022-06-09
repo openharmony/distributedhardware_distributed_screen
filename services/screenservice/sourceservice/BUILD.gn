@@ -18,6 +18,7 @@ import(
 
 ohos_shared_library("distributed_screen_source") {
   include_dirs = [
+    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//third_party/json/include",
     "${windowmanager_path}/interfaces/innerkits/dm",
     "//utils/native/base/include",
