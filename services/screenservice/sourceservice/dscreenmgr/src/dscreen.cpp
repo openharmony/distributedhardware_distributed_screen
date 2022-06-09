@@ -197,6 +197,8 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     int32_t ret = CheckJsonData(attrJson);
     if (ret != DH_SUCCESS) {
         DHLOGE("check json data failed.");
+        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
+            "enable param json is invalid.");
         ReportRegisterFail(REGISTER_ERROR, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
             GetAnonyString(dhId_).c_str(), "check json data failed.");
         return;
@@ -236,16 +238,12 @@ int32_t DScreen::CheckJsonData(json &attrJson)
 {
     if (attrJson.is_discarded()) {
         DHLOGE("enable param json is invalid.");
-        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
-            "enable param json is invalid.");
         return ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR;
     }
 
     if (!attrJson.contains(KEY_SCREEN_WIDTH) || !attrJson.contains(KEY_SCREEN_HEIGHT) ||
         !attrJson.contains(KEY_CODECTYPE)) {
         DHLOGE("enable param is invalid.");
-        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
-            "enable param is invalid.");
         return ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR;
     }
     return DH_SUCCESS;
