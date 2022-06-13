@@ -56,7 +56,7 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
         sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
         if (!samgr) {
             DHLOGE("Failed to get system ability mgr.");
-            ReportSaFail(SA_ERROR, ERR_DH_SCREEN_SA_GET_SAMGR_FAIL, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
+            ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_GET_SAMGR_FAIL, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
                 "dscreen source get samgr failed.");
             return ERR_DH_SCREEN_SA_GET_SAMGR_FAIL;
         }
@@ -66,7 +66,7 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
         if (ret != ERR_OK) {
             DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
                 DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, ret);
-            ReportSaFail(SA_ERROR, ret, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
+            ReportSaFail(DSCREEN_INIT_FAIL, ret, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
                 "dscreen source LoadSystemAbility call failed.");
             return ERR_DH_SCREEN_SA_GET_SOURCEPROXY_FAIL;
         }
@@ -76,7 +76,7 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
         [this]() { return (dScreenSourceProxy_ != nullptr); });
     if (!waitStatus) {
         DHLOGE("screen load sa timeout.");
-        ReportSaFail(SA_ERROR, ERR_DH_SCREEN_SA_LOAD_TIMEOUT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
+        ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_LOAD_TIMEOUT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
             "dscreen source sa load timeout.");
         return ERR_DH_SCREEN_SA_LOAD_TIMEOUT;
     }
@@ -94,13 +94,13 @@ void DScreenSourceHandler::FinishStartSA(const std::string &params,
     dScreenSourceProxy_ = iface_cast<IDScreenSource>(remoteObject);
     if ((!dScreenSourceProxy_) || (!dScreenSourceProxy_->AsObject())) {
         DHLOGE("Failed to get dscreen source proxy.");
-        ReportSaFail(SA_ERROR, ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
+        ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
             "dscreen source get proxy failed.");
         return;
     }
     dScreenSourceProxy_->InitSource(params, dScreenSourceCallback_);
     proxyConVar_.notify_one();
-    ReportSaEvent(SA_START, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, "dscreen source sa load success.");
+    ReportSaEvent(DSCREEN_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, "dscreen source sa load success.");
 }
 
 int32_t DScreenSourceHandler::ReleaseSource()
@@ -109,7 +109,7 @@ int32_t DScreenSourceHandler::ReleaseSource()
     std::lock_guard<std::mutex> lock(proxyMutex_);
     if (!dScreenSourceProxy_) {
         DHLOGE("screen source proxy not init.");
-        ReportSaFail(SA_ERROR, ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
+        ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
             "dscreen source proxy not init.");
         return ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT;
     }

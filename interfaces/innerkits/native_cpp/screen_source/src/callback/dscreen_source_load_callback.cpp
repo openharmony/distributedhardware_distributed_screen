@@ -42,7 +42,7 @@ void DScreenSourceLoadCallback::OnLoadSystemAbilitySuccess(
 void DScreenSourceLoadCallback::OnLoadSystemAbilityFail(int32_t systemAbilityId)
 {
     DHLOGE("load screen SA failed, systemAbilityId:%d", systemAbilityId);
-    ReportSaFail(SA_ERROR, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
+    ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
         "dscreen source OnLoadSystemAbilityFail.");
 }
 }

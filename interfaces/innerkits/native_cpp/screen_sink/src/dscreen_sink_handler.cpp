@@ -51,7 +51,7 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
         sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
         if (!samgr) {
             DHLOGE("Failed to get system ability mgr.");
-            ReportSaFail(SA_ERROR, ERR_DH_SCREEN_SA_GET_SAMGR_FAIL, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
+            ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_GET_SAMGR_FAIL, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
                 "dscreen sink get samgr failed.");
             return ERR_DH_SCREEN_SA_GET_SAMGR_FAIL;
         }
@@ -61,7 +61,7 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
         if (ret != ERR_OK) {
             DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
                 DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, ret);
-            ReportSaFail(SA_ERROR, ret, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
+            ReportSaFail(DSCREEN_INIT_FAIL, ret, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
                 "dscreen sink LoadSystemAbility call failed.");
             return ERR_DH_SCREEN_SA_GET_SINKPROXY_FAIL;
         }
@@ -71,7 +71,7 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
         [this]() { return dScreenSinkProxy_ != nullptr; });
     if (!waitStatus) {
         DHLOGE("screen load sa timeout");
-        ReportSaFail(SA_ERROR, ERR_DH_SCREEN_SA_LOAD_TIMEOUT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
+        ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_LOAD_TIMEOUT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
             "dscreen sink sa load timeout.");
         return ERR_DH_SCREEN_SA_LOAD_TIMEOUT;
     }
@@ -89,13 +89,13 @@ void DScreenSinkHandler::FinishStartSA(const std::string &params,
     dScreenSinkProxy_ = iface_cast<IDScreenSink>(remoteObject);
     if ((!dScreenSinkProxy_) || (!dScreenSinkProxy_->AsObject())) {
         DHLOGE("Failed to get dscreen sink proxy.");
-        ReportSaFail(SA_ERROR, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
+        ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
             "dscreen sink get proxy failed.");
         return;
     }
     dScreenSinkProxy_->InitSink(params);
     proxyConVar_.notify_one();
-    ReportSaEvent(SA_START, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, "dscreen sink sa load success.");
+    ReportSaEvent(DSCREEN_INIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, "dscreen sink sa load success.");
 }
 
 int32_t DScreenSinkHandler::ReleaseSink()
@@ -104,7 +104,7 @@ int32_t DScreenSinkHandler::ReleaseSink()
     std::lock_guard<std::mutex> lock(proxyMutex_);
     if (!dScreenSinkProxy_) {
         DHLOGE("screen sink proxy not init.");
-        ReportSaFail(SA_ERROR, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
+        ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
             "dscreen sink proxy not init.");
         return ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT;
     }

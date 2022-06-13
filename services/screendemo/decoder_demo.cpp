@@ -140,19 +140,21 @@ int32_t VDecDemo::Stop()
     isRunning_.store(false);
 
     if (inputLoop_ != nullptr && inputLoop_->joinable()) {
-        unique_lock<mutex> lock(signal_->inMutex_);
-        signal_->inQueue_.push(INDEX_CONSTANT);
-        signal_->inCond_.notify_all();
-        lock.unlock();
+        {
+            unique_lock<mutex> inLock(signal_->inMutex_);
+            signal_->inQueue_.push(INDEX_CONSTANT);
+            signal_->inCond_.notify_all();
+        }
         inputLoop_->join();
         inputLoop_.reset();
     }
 
     if (outputLoop_ != nullptr && outputLoop_->joinable()) {
-        unique_lock<mutex> lock(signal_->outMutex_);
-        signal_->outQueue_.push(INDEX_CONSTANT);
-        signal_->outCond_.notify_all();
-        lock.unlock();
+        {
+            unique_lock<mutex> outLock(signal_->outMutex_);
+            signal_->outQueue_.push(INDEX_CONSTANT);
+            signal_->outCond_.notify_all();
+        }
         outputLoop_->join();
         outputLoop_.reset();
     }

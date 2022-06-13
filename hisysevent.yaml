@@ -40,58 +40,29 @@
 domain: DISTSCREEN
 
 DSCREEN_INIT_FAIL:
-  __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen init sa event}
+  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen init sa event}
   ERRCODE: {type: INT32, desc: dscreen init fail error code}
   SAID: {type: INT32, desc: dscreen SAID}
   MSG: {type: STRING, desc: dscreen init sa event}
 
 DSCREEN_REGISTER_FAIL:
-  __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen register event}
+  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen register event}
   ERRCODE: {type: INT32, desc: dscreen register fail error code}
   DEVID: {type: STRING, desc: dscreen devId}
   DHID: {type: STRING, desc: dscreen dhId}
   MSG: {type: STRING, desc: dscreen register event}
 
 DSCREEN_UNREGISTER_FAIL:
-  __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen unregister event}
+  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen unregister event}
   ERRCODE: {type: INT32, desc: dscreen unregister fail error code}
   DEVID: {type: STRING, desc: dscreen devId}
   DHID: {type: STRING, desc: dscreen dhId}
   MSG: {type: STRING, desc: dscreen unregister event}
 
-DSCREEN_WINDOW_FAIL:
-  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen sink window error event}
-  ERRCODE: {type: INT32, desc: dscreen sink window error code}
-  MSG: {type: STRING, desc: dscreen sink window error info}
-
-DSCREEN_ENCODE_FAIL:
-  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen video encoder error event}
-  ERRCODE: {type: INT32, desc: dscreen encoder error code}
-  WIDTH: {type: INT32, desc: dscreen width}
-  HEIGHT: {type: INT32, desc: dscreen height}
-  FORMAT: {type: UINT32, desc: dscreen format}
-  MSG: {type: STRING, desc: dscreen video encoder error info}
-
-DSCREEN_DECODE_FAIL:
-  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen video decoder error event}
-  ERRCODE: {type: INT32, desc: dscreen decoder error code}
-  WIDTH: {type: INT32, desc: dscreen width}
-  HEIGHT: {type: INT32, desc: dscreen height}
-  FORMAT: {type: UINT32, desc: dscreen format}
-  MSG: {type: STRING, desc: dscreen video decoder error info}
-
-DSCREEN_CREATE_SESSIONSVR_FAIL:
-  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen softbus sessionserver error event}
-  ERRCODE: {type: INT32, desc: dscreen create session server fail error code}
-  PKGNAME: {type: STRING, desc: softbus package name}
-  SESSIONNAME: {type: STRING, desc: softbus session name}
-  MSG: {type: STRING, desc: dscreen softbus sessionserver error info}
-
-DSCREEN_OPEN_SESSION_FAIL:
-  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen softbus session error event}
-  ERRCODE: {type: INT32, desc: dscreen open session fail error code}
-  SESSIONNAME: {type: STRING, desc: softbus my session name}
-  MSG: {type: STRING, desc: dscreen softbus session error info}
+DSCREEN_OPT_FAIL:
+  __BASE: {type: FAULT, level: CRITICAL, desc: dscreen opt event}
+  ERRCODE: {type: INT32, desc: dscreen opt fail error code}
+  MSG: {type: STRING, desc: dscreen opt event}
 
 DSCREEN_INIT:
   __BASE: {type: BEHAVIOR, level: MINOR, desc: dscreen init sa event}

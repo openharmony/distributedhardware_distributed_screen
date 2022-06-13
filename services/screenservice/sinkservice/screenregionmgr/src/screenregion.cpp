@@ -100,20 +100,20 @@ int32_t ScreenRegion::SetUp()
     windowId_ = ScreenClient::GetInstance().AddWindow(windowProperty);
     if (windowId_ < 0) {
         DHLOGE("AddWindow failed.");
-        ReportWindowFail(WINDOW_ERROR, ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, "AddWindow failed.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, "AddWindow failed.");
         return ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED;
     }
     int32_t ret = ScreenClient::GetInstance().ShowWindow(windowId_);
     if (ret != DH_SUCCESS) {
         DHLOGE("show window failed.");
-        ReportWindowFail(WINDOW_ERROR, ret, "show window failed.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ret, "show window failed.");
         return ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED;
     }
 
     sptr<Surface> surface = ScreenClient::GetInstance().GetSurface(windowId_);
     if (!surface) {
         DHLOGE("get window surface failed.");
-        ReportWindowFail(WINDOW_ERROR, ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, "get window surface failed.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, "get window surface failed.");
         return ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED;
     }
 

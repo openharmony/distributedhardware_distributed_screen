@@ -67,76 +67,13 @@ void ReportUnRegisterFail(const std::string &eventName, int32_t errCode, const s
     }
 }
 
-void ReportWindowFail(const std::string &eventName, int32_t errCode, const std::string &errMsg)
+void ReportOptFail(const std::string &eventName, int32_t errCode, const std::string &errMsg)
 {
     int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
         eventName,
         OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
         "ERRCODE", errCode,
-        "MSG", errMsg);
-    if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
-    }
-}
-
-void ReportVideoEncoderFail(const std::string &eventName, int32_t width, int32_t height, uint8_t format,
-    const std::string &errMsg)
-{
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
-        eventName,
-        OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-        "WIDTH", width,
-        "HEIGHT", height,
-        "FORMAT", format,
-        "MSG", errMsg);
-    if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
-    }
-}
-
-void ReportVideoDecoderFail(const std::string eventName, int32_t width, int32_t height, uint8_t format,
-    const std::string &errMsg)
-{
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
-        eventName,
-        OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-        "WIDTH", width,
-        "HEIGHT", height,
-        "FORMAT", format,
-        "MSG", errMsg);
-    if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
-    }
-}
-
-void ReportSoftbusSessionServerFail(const std::string &eventName, int32_t errCode, const std::string &pkgName,
-    const std::string &sessionName, const std::string &errMsg)
-{
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
-        eventName,
-        OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-        "ERRCODE", errCode,
-        "PKGNAME", pkgName,
-        "SESSIONNAME", sessionName,
-        "MSG", errMsg);
-    if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
-    }
-}
-
-void ReportSoftbusSessionFail(const std::string &eventName, int32_t errCode, const std::string &sessName,
-    const std::string &errMsg)
-{
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
-        OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
-        eventName,
-        OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
-        "ERRCODE", errCode,
-        "SESSIONNAME", sessName,
         "MSG", errMsg);
     if (res != DH_SUCCESS) {
         DHLOGE("Write HiSysEvent error, res:%d", res);

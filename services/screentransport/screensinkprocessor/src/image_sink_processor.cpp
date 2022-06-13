@@ -50,8 +50,7 @@ int32_t ImageSinkProcessor::ReleaseImageProcessor()
     DHLOGI("%s: ReleaseImageProcessor.", LOG_TAG);
     if (imageDecoder_ == nullptr) {
         DHLOGE("%s: Decoder is null.", LOG_TAG);
-        ReportVideoDecoderFail(VIDEO_DECODER_ERROR, localParam_.GetVideoWidth(),
-            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "Decoder is null.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "ReleaseImageProcessor Decoder is null.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
@@ -60,8 +59,7 @@ int32_t ImageSinkProcessor::ReleaseImageProcessor()
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: ReleaseDecoder failed.", LOG_TAG);
-        ReportVideoDecoderFail(VIDEO_DECODER_ERROR, localParam_.GetVideoWidth(),
-            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "ReleaseDecoder failed.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ret, "ReleaseDecoder failed.");
         return ret;
     }
 
@@ -73,8 +71,7 @@ int32_t ImageSinkProcessor::StartImageProcessor()
     DHLOGI("%s: StartImageProcessor.", LOG_TAG);
     if (imageDecoder_ == nullptr) {
         DHLOGE("%s: Decoder is null.", LOG_TAG);
-        ReportVideoDecoderFail(VIDEO_DECODER_ERROR, localParam_.GetVideoWidth(),
-            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "Decoder is null.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "StartImageProcessor Decoder is null.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
@@ -83,8 +80,7 @@ int32_t ImageSinkProcessor::StartImageProcessor()
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: StartDecoder failed ret:%d.", LOG_TAG, ret);
-        ReportVideoDecoderFail(VIDEO_DECODER_ERROR, localParam_.GetVideoWidth(),
-            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "StartDecoder failed.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ret, "StartDecoder failed.");
         return ret;
     }
 
@@ -96,8 +92,7 @@ int32_t ImageSinkProcessor::StopImageProcessor()
     DHLOGI("%s: StopImageProcessor.", LOG_TAG);
     if (imageDecoder_ == nullptr) {
         DHLOGE("%s: Decoder is null.", LOG_TAG);
-        ReportVideoDecoderFail(VIDEO_DECODER_ERROR, localParam_.GetVideoWidth(),
-            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "Decoder is null.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "StopImageProcessor Decoder is null.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
@@ -106,8 +101,7 @@ int32_t ImageSinkProcessor::StopImageProcessor()
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: StopDecoder failed ret:%d.", LOG_TAG, ret);
-        ReportVideoDecoderFail(VIDEO_DECODER_ERROR, localParam_.GetVideoWidth(),
-            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "StopDecoder failed.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ret, "StopDecoder failed.");
         return ret;
     }
 
@@ -119,16 +113,14 @@ int32_t ImageSinkProcessor::SetImageSurface(sptr<Surface> &surface)
     DHLOGI("%s: SetImageSurface.", LOG_TAG);
     if (imageDecoder_ == nullptr) {
         DHLOGE("%s: Decoder is null.", LOG_TAG);
-        ReportVideoDecoderFail(VIDEO_DECODER_ERROR, localParam_.GetVideoWidth(),
-            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "Decoder is null.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "SetImageSurface Decoder is null.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
     int32_t ret = imageDecoder_->SetOutputSurface(surface);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: SetOutputSurface failed ret:%d.", LOG_TAG, ret);
-        ReportVideoDecoderFail(VIDEO_DECODER_ERROR, localParam_.GetVideoWidth(),
-            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "SetOutputSurface failed.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ret, "SetOutputSurface failed.");
         return ret;
     }
 
@@ -140,16 +132,14 @@ int32_t ImageSinkProcessor::ProcessImage(const std::shared_ptr<DataBuffer> &data
     DHLOGI("%s: ProcessImage.", LOG_TAG);
     if (imageDecoder_ == nullptr) {
         DHLOGE("%s: Decoder is null.", LOG_TAG);
-        ReportVideoDecoderFail(VIDEO_DECODER_ERROR, localParam_.GetVideoWidth(),
-            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "Decoder is null.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "processImage Decoder is null.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
     int32_t ret = imageDecoder_->InputScreenData(data);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: InputScreenData failed ret:%d.", LOG_TAG, ret);
-        ReportVideoDecoderFail(VIDEO_DECODER_ERROR, localParam_.GetVideoWidth(),
-            localParam_.GetVideoHeight(), localParam_.GetVideoFormat(), "InputScreenData failed.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ret, "InputScreenData failed.");
         return ret;
     }
 
