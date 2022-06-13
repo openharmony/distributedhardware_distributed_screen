@@ -64,7 +64,7 @@ ohos_unittest("SourceTransTest") {
   ]
 
   external_deps = [
-    "dsoftbus_standard:softbus_client",
+    "dsoftbus:softbus_client",
     "hiviewdfx_hilog_native:libhilog",
     "multimedia_media_standard:media_client",
   ]
