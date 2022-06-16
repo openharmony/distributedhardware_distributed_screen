@@ -40,7 +40,7 @@ void DScreenMapRelationTest::TearDown() {}
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
- HWTEST_F(DScreenMapRelationTest, GetDisplayId_001, TestSize.Level1)
+HWTEST_F(DScreenMapRelationTest, GetDisplayId_001, TestSize.Level1)
 {
     uint64_t displayId = 0;
     dscreenMapRelation->SetDisplayId(displayId);
@@ -54,7 +54,7 @@ void DScreenMapRelationTest::TearDown() {}
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
- HWTEST_F(DScreenMapRelationTest, GetScreenId_001, TestSize.Level1)
+HWTEST_F(DScreenMapRelationTest, GetScreenId_001, TestSize.Level1)
 {
     uint64_t screenId = 0;
     dscreenMapRelation->SetScreenId(screenId);
@@ -68,7 +68,7 @@ void DScreenMapRelationTest::TearDown() {}
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
- HWTEST_F(DScreenMapRelationTest, GetDisplayRect_001, TestSize.Level1)
+HWTEST_F(DScreenMapRelationTest, GetDisplayRect_001, TestSize.Level1)
 {
     DisplayRect res;
     int32_t startX = 10;
@@ -84,7 +84,7 @@ void DScreenMapRelationTest::TearDown() {}
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
- HWTEST_F(DScreenMapRelationTest, GetScreenRect_001, TestSize.Level1)
+HWTEST_F(DScreenMapRelationTest, GetScreenRect_001, TestSize.Level1)
 {
     ScreenRect res;
     int32_t startX = 10;

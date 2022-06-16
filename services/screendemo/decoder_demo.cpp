@@ -216,10 +216,10 @@ const int32_t* VDecDemo::GetFrameLen()
     const int32_t* frameLen = nullptr;
     if (isW) {
         frameLen = ES_W;
-        defaultFrameCount_ = sizeof(ES_W)/sizeof(ES_W[0]);
+        defaultFrameCount_ = sizeof(ES_W) / sizeof(ES_W[0]);
     } else {
         frameLen = ES_R;
-        defaultFrameCount_ = sizeof(ES_R)/sizeof(ES_R[0]);
+        defaultFrameCount_ = sizeof(ES_R) / sizeof(ES_R[0]);
     }
     return frameLen;
 }
