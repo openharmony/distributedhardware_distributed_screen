@@ -24,7 +24,6 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
-#include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
 #include "dscreen_sa_process_state.h"
 #include "dscreen_util.h"
