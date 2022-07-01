@@ -26,6 +26,7 @@
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
+#include "dscreen_sa_process_state.h"
 #include "dscreen_util.h"
 
 namespace OHOS {
@@ -95,8 +96,7 @@ int32_t DScreenSourceService::ReleaseSource()
         return ret;
     }
     DHLOGI("exit source sa process");
-    ReportSaEvent(DSCREEN_EXIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, "dscreen source sa exit success.");
-    exit(0);
+    SetSourceProcessExit();
     return DH_SUCCESS;
 }
 

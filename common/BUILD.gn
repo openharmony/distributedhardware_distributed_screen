@@ -27,6 +27,7 @@ ohos_shared_library("distributed_screen_utils") {
   sources = [
     "src/dscreen_hisysevent.cpp",
     "src/dscreen_log.cpp",
+    "src/dscreen_sa_process_state.cpp",
     "src/dscreen_util.cpp",
   ]
 

@@ -26,6 +26,7 @@
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
+#include "dscreen_sa_process_state.h"
 #include "dscreen_util.h"
 
 namespace OHOS {
@@ -79,8 +80,7 @@ int32_t DScreenSinkService::ReleaseSink()
     DHLOGI("ReleaseSink");
     ScreenRegionManager::GetInstance().ReleaseAllRegions();
     DHLOGI("exit sink sa process");
-    ReportSaEvent(DSCREEN_EXIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, "dscreen sink sa exit success.");
-    exit(0);
+    SetSinkProcessExit();
     return DH_SUCCESS;
 }
 
