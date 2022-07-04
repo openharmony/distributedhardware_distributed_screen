@@ -218,6 +218,7 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
 
     std::string dScreenIdx = devId + SEPERATOR + dhId;
     std::shared_ptr<DScreen> dScreen = nullptr;
+    std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     if (dScreens_.count(dScreenIdx) != 0) {
         dScreen = dScreens_[dScreenIdx];
     }
@@ -248,6 +249,7 @@ int32_t DScreenManager::DisableDistributedScreen(const std::string &devId, const
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
 
     std::string dScreenIdx = devId + SEPERATOR + dhId;
+    std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     if (dScreens_.count(dScreenIdx) == 0) {
         DHLOGE("dscreen not found, devId: %s, dhId: %s",
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
@@ -310,6 +312,7 @@ void DScreenManager::GetScreenDumpInfo(std::string &result)
     DHLOGI("GetScreenDumpInfo.");
     result.clear();
     result.append("RemoteScreens OnLine:\n[\n");
+    std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     if (dScreens_.size() == 0) {
         result.append("]");
         DHLOGD("no virtualscreen");
@@ -448,6 +451,7 @@ void DScreenManager::HandleNotifySetUpResult(const std::string &remoteDevId, con
     std::string errContent = eventContentJson[KEY_ERR_CONTENT];
 
     std::string dScreenIdx = remoteDevId + SEPERATOR + dhId;
+    std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     if (dScreens_.count(dScreenIdx) == 0) {
         DHLOGE("dScreen not found, remoteDevId:%s, dhId:%s",
             GetAnonyString(remoteDevId).c_str(), GetAnonyString(dhId).c_str());
