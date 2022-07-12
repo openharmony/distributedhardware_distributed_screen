@@ -22,7 +22,9 @@
 #include <memory>
 #include <refbase.h>
 
-#include "i_input_event_consumer.h"
+#include "axis_event.h"
+#include "key_event.h"
+#include "pointer_event.h"
 #include "single_instance.h"
 #include "surface.h"
 #include "window.h"
@@ -47,12 +49,13 @@ private:
     std::mutex windowIdMapMutex_;
 };
 
-class ScreenClientInputEventListener : public MMI::IInputEventConsumer {
+class ScreenClientInputEventListener : public Rosen::IInputEventConsumer {
 public:
     ScreenClientInputEventListener() = default;
-    void OnInputEvent(std::shared_ptr<MMI::PointerEvent> pointerEvent) const override;
-    void OnInputEvent(std::shared_ptr<MMI::KeyEvent> keyEvent) const override;
-    void OnInputEvent(std::shared_ptr<MMI::AxisEvent> axisEvent) const override;
+    ~ScreenClientInputEventListener() override = default;
+    bool OnInputEvent(const std::shared_ptr<MMI::PointerEvent>& pointerEvent) const override;
+    bool OnInputEvent(const std::shared_ptr<MMI::KeyEvent>& keyEvent) const override;
+    bool OnInputEvent(const std::shared_ptr<MMI::AxisEvent>& axisEvent) const override;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

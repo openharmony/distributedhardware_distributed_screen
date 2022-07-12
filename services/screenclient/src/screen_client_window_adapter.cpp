@@ -72,9 +72,9 @@ sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProp
         DHLOGE("surface is nullptr");
         return nullptr;
     }
-    std::shared_ptr<MMI::IInputEventConsumer> listener =
+    std::shared_ptr<Rosen::IInputEventConsumer> listener =
         std::make_shared<ScreenClientInputEventListener>(ScreenClientInputEventListener());
-    window->AddInputEventListener(listener);
+    window->SetInputEventConsumer(listener);
     DHLOGD("Create window name is %s.", windowName.c_str());
     if (OHOS::Rosen::WMError::WM_OK != window->Resize(windowProperty->width, windowProperty->height)) {
         window->Destroy();
@@ -195,22 +195,25 @@ int32_t ScreenClientWindowAdapter::RemoveWindow(int32_t windowId)
     return DH_SUCCESS;
 }
 
-void ScreenClientInputEventListener::OnInputEvent(std::shared_ptr<MMI::PointerEvent> pointerEvent) const
+bool ScreenClientInputEventListener::OnInputEvent(const std::shared_ptr<MMI::PointerEvent>& pointerEvent) const
 {
     DHLOGI("onInputEvent, pointerEvent");
     pointerEvent->MarkProcessed();
+    return true;
 }
 
-void ScreenClientInputEventListener::OnInputEvent(std::shared_ptr<MMI::KeyEvent> keyEvent) const
+bool ScreenClientInputEventListener::OnInputEvent(const std::shared_ptr<MMI::KeyEvent>& keyEvent) const
 {
     DHLOGI("onInputEvent, keyEvent");
     keyEvent->MarkProcessed();
+    return true;
 }
 
-void ScreenClientInputEventListener::OnInputEvent(std::shared_ptr<MMI::AxisEvent> axisEvent) const
+bool ScreenClientInputEventListener::OnInputEvent(const std::shared_ptr<MMI::AxisEvent>& axisEvent) const
 {
     DHLOGI("onInputEvent, axisEvent");
     axisEvent->MarkProcessed();
+    return true;
 }
 } // namespace DistributedHardware
 } // namespace OHOS
