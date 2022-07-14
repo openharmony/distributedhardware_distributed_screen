@@ -14,5 +14,9 @@
 group("fuzztest") {
   testonly = true
 
-  deps = [ "dscreenhandler_fuzzer:fuzztest" ]
+  deps = [
+    "pluginhardware_fuzzer:fuzztest",
+    "registerpluginlistener_fuzzer:fuzztest",
+    "unpluginhardware_fuzzer:fuzztest",
+  ]
 }

@@ -1,0 +1,76 @@
+# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#####################hydra-fuzz###################
+import("//build/config/features.gni")
+import("//build/test.gni")
+import(
+    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+
+##############################fuzztest##########################################
+ohos_fuzztest("RegisterPluginListenerFuzzTest") {
+  module_out_path = "distributed_screen/dscreenhandler"
+
+  fuzz_config_file = "${distributedscreen_path}/screenhandler/test/fuzztest/registerpluginlistener_fuzzer"
+
+  include_dirs = [
+    "//third_party/json/include",
+    "${windowmanager_path}/interfaces/innerkits/dm",
+    "${mediastandard_path}/interfaces/innerkits/native/media/include",
+    "${fwk_common_path}/utils/include",
+  ]
+
+  include_dirs += [
+    "include",
+    "${common_path}/include",
+    "${distributedscreen_path}/screenhandler/include",
+    "${fwk_services_path}/distributedhardwarefwkserviceimpl/include/localhardwaremanager",
+    "//foundation/distributedhardware/distributed_hardware_fwk/common/utils/include",
+  ]
+
+  cflags = [
+    "-g",
+    "-O0",
+    "-Wno-unused-variable",
+    "-fno-omit-frame-pointer",
+  ]
+
+  sources = [ "registerpluginlistener_fuzzer.cpp" ]
+
+  deps = [
+    "${common_path}:distributed_screen_utils",
+    "${distributedscreen_path}/screenhandler:distributed_screen_handler",
+    "${fwk_services_path}/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl",
+    "${mediastandard_path}/interfaces/inner_api/native:media_client",
+    "${windowmanager_path}/dm:libdm",
+    "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//utils/native/base:utils",
+  ]
+
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"RegisterPluginListenerFuzzTest\"",
+    "LOG_DOMAIN=0xD004100",
+  ]
+
+  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
+}
+
+###############################################################################
+group("fuzztest") {
+  testonly = true
+  deps = []
+  deps += [ ":RegisterPluginListenerFuzzTest" ]
+}
+###############################################################################

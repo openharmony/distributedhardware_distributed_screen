@@ -15,9 +15,15 @@ group("fuzztest") {
   testonly = true
 
   deps = [
-    "dscreensinkhandler_fuzzer:fuzztest",
-    "dscreensinkproxy_fuzzer:fuzztest",
-    "dscreensourcehandler_fuzzer:fuzztest",
-    "dscreensourceproxy_fuzzer:fuzztest",
+    "dscreen_source_handler/handlerconfigdistributedhardware_fuzzer:fuzztest",
+    "dscreen_source_handler/handlerinitsource_fuzzer:fuzztest",
+    "dscreen_source_handler/handleronremotesourcesvrdied_fuzzer:fuzztest",
+    "dscreen_source_handler/handlerregisterdistributedhardware_fuzzer:fuzztest",
+    "dscreen_source_handler/handlerunregisterdistributedhardware_fuzzer:fuzztest",
+    "dscreen_source_proxy/proxyconfigdistributedhardware_fuzzer:fuzztest",
+    "dscreen_source_proxy/proxydscreennotify_fuzzer:fuzztest",
+    "dscreen_source_proxy/proxyinitsource_fuzzer:fuzztest",
+    "dscreen_source_proxy/proxyregisterdistributedhardware_fuzzer:fuzztest",
+    "dscreen_source_proxy/proxyunregisterdistributedhardware_fuzzer:fuzztest",
   ]
 }
