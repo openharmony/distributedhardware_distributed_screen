@@ -28,17 +28,18 @@
         ],
         "deps":{
             "components":[
-                "appexecfwk_standard",
-                "eventhandler",
-                "hiviewdfx_hilog_native",
-                "ipc",
-                "safwk",
-                "samgr_standard",
                 "dsoftbus",
-                "utils_base",
+                "hisysevent_native",
+                "ipc",
+                "hiviewdfx_hilog_native",
+                "input",
                 "graphic_standard",
-                "distributed_hardware_fwk",
-                "multimedia_media_standard"
+                "samgr_standard",
+                "safwk",
+                "hitrace_native",
+                "utils_base",
+                "multimedia_media_standard",
+                "window_manager"
             ],
             "third_party":[
                 "json"

@@ -16,7 +16,6 @@ import(
     "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
 
 ohos_executable("distributedScreenTest") {
-  install_enable = false
   include_dirs = [
     "${services_path}/common/utils/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
