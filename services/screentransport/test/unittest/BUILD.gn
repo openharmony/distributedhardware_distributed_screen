@@ -14,10 +14,10 @@
 group("screen_transport_test") {
   testonly = true
   deps = [
-    "screensinktrans:sink_trans_test",
-    "screensinkprocessor:sink_processor_test",
-    "screensourcetrans:source_trans_test",
-    "screensourceprocessor:source_processor_test",
     "screendatachannel:data_channel_test",
+    "screensinkprocessor:sink_processor_test",
+    "screensinktrans:sink_trans_test",
+    "screensourceprocessor:source_processor_test",
+    "screensourcetrans:source_trans_test",
   ]
 }

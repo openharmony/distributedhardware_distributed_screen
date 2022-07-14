@@ -38,7 +38,7 @@
                 "safwk",
                 "hitrace_native",
                 "utils_base",
-                "multimedia_media_standard",
+                "multimedia_player_framework",
                 "window_manager"
             ],
             "third_party":[

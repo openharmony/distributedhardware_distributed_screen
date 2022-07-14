@@ -29,7 +29,7 @@ ohos_executable("distributedScreenTest") {
   ]
 
   include_dirs +=
-      [ "foundation/multimedia/media_standard/interfaces/inner_api/native" ]
+      [ "foundation/multimedia/player_framework/interfaces/inner_api/native" ]
 
   sources = [
     "./decoder_demo.cpp",
@@ -57,7 +57,7 @@ ohos_executable("distributedScreenTest") {
 
   external_deps = [
     "hiviewdfx_hilog_native:libhilog",
-    "multimedia_media_standard:media_client",
+    "multimedia_player_framework:media_client",
   ]
 
   cflags = [ "-Wall" ]
