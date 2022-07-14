@@ -16,6 +16,7 @@
 #include "screen_client_window_adapter.h"
 
 #include "rs_surface_node.h"
+#include "transaction/rs_interfaces.h"
 #include "window_option.h"
 #include "wm_common.h"
 
@@ -72,6 +73,7 @@ sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProp
         DHLOGE("surface is nullptr");
         return nullptr;
     }
+    Rosen::RSTransactionProxy::GetInstance()->FlushImplicitTransaction();
     std::shared_ptr<MMI::IInputEventConsumer> listener =
         std::make_shared<ScreenClientInputEventListener>(ScreenClientInputEventListener());
     window->AddInputEventListener(listener);
