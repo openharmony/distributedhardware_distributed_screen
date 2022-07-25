@@ -34,8 +34,8 @@ ohos_fuzztest("ProxyRegisterDistributedHardwareFuzzTest") {
     "${common_path}/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
-    "${fwk_services_path}/distributedhardwarefwkserviceimpl/include",
-    "${fwk_services_path}/distributedhardwarefwkserviceimpl/include/componentmanager",
+    "${fwk_services_path}/distributedhardwarefwkservice/include",
+    "${fwk_services_path}/distributedhardwarefwkservice/include/componentmanager",
   ]
 
   cflags = [
@@ -49,7 +49,7 @@ ohos_fuzztest("ProxyRegisterDistributedHardwareFuzzTest") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${fwk_services_path}/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl",
+    "${fwk_services_path}/distributedhardwarefwkservice:distributedhardwarefwksvr",
     "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
     "//utils/native/base:utils",
   ]
