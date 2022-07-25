@@ -49,35 +49,6 @@ HWTEST_F(ScreenSourceTransTest, SetUp_001, TestSize.Level1)
 }
 
 /**
- * @tc.name: SetUp_002
- * @tc.desc: Verify the SetUp function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ScreenSourceTransTest, SetUp_002, TestSize.Level1)
-{
-    VideoParam localParam;
-    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
-    localParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
-    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
-    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
-    localParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
-    localParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
-    VideoParam remoteParam;
-    remoteParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
-    remoteParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
-    remoteParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
-    remoteParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
-    remoteParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
-    remoteParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
-    std::string peerDevId = "hello";
-
-    int32_t actual = trans->SetUp(localParam, remoteParam, peerDevId);
-
-    EXPECT_EQ(DH_SUCCESS, actual);
-}
-
-/**
  * @tc.name: Release_001
  * @tc.desc: Verify the Release function.
  * @tc.type: FUNC
