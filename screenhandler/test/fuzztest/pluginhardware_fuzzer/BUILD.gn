@@ -34,7 +34,7 @@ ohos_fuzztest("PluginHardwareFuzzTest") {
     "include",
     "${common_path}/include",
     "${distributedscreen_path}/screenhandler/include",
-    "${fwk_services_path}/distributedhardwarefwkserviceimpl/include/localhardwaremanager",
+    "${fwk_services_path}/distributedhardwarefwkservice/include/localhardwaremanager",
     "//foundation/distributedhardware/distributed_hardware_fwk/common/utils/include",
   ]
 
@@ -50,7 +50,7 @@ ohos_fuzztest("PluginHardwareFuzzTest") {
   deps = [
     "${common_path}:distributed_screen_utils",
     "${distributedscreen_path}/screenhandler:distributed_screen_handler",
-    "${fwk_services_path}/distributedhardwarefwkserviceimpl:distributedhardwarefwksvr_impl",
+    "${fwk_services_path}/distributedhardwarefwkservice:distributedhardwarefwksvr",
     "${mediastandard_path}/interfaces/inner_api/native:media_client",
     "${windowmanager_path}/dm:libdm",
     "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
