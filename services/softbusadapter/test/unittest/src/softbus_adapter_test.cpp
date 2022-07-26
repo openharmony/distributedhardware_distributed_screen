@@ -82,28 +82,6 @@ HWTEST_F(SoftbusAdapterTest, UnRegisterSoftbusListener_001, TestSize.Level1)
 }
 
 /**
- * @tc.name: CreateSoftbusSessionServer_001
- * @tc.desc: Verify the CreateSoftbusSessionServer function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_001, TestSize.Level1)
-{
-    std::string pkgname = PKG_NAME;
-    std::string sessionName = DATA_SESSION_NAME;
-    std::string peerDevId = "testDevId";
-
-    int32_t actual = softbusAdapter.CreateSoftbusSessionServer(pkgname, sessionName, peerDevId);
-    EXPECT_EQ(DH_SUCCESS, actual);
-
-    actual = softbusAdapter.RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
-    EXPECT_EQ(DH_SUCCESS, actual);
-
-    actual = softbusAdapter.RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_OPERATION, actual);
-}
-
-/**
  * @tc.name: RemoveSoftbusSessionServer_001
  * @tc.desc: Verify the RemoveSoftbusSessionServer function.
  * @tc.type: FUNC

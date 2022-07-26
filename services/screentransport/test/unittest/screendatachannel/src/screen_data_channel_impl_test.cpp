@@ -49,22 +49,6 @@ HWTEST_F(ScreenDataChannelImplTest, CreateSession_001, TestSize.Level1)
 }
 
 /**
- * @tc.name: release_session_test_001
- * @tc.desc: Verify the ReleaseSession function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ScreenDataChannelImplTest, release_session_test_001, TestSize.Level1)
-{
-    std::shared_ptr<IScreenChannelListener> listener =
-        std::make_shared<MockIScreenChannelListener>();
-
-    dataChannelImpl_->CreateSession(listener);
-    int32_t ret = dataChannelImpl_->ReleaseSession();
-    EXPECT_EQ(DH_SUCCESS, ret);
-}
-
-/**
  * @tc.name: release_session_test_002
  * @tc.desc: Verify the ReleaseSession function.
  * @tc.type: FUNC
