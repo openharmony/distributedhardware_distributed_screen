@@ -46,7 +46,6 @@ ohos_fuzztest("HandlerSubscribeLocalHardwareFuzzTest") {
   deps = [
     "${common_path}:distributed_screen_utils",
     "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
-    "//utils/native/base:utils",
   ]
 
   defines = [
@@ -56,6 +55,7 @@ ohos_fuzztest("HandlerSubscribeLocalHardwareFuzzTest") {
   ]
 
   external_deps = [
+    "c_utils:utils",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",

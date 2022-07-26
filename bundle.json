@@ -37,7 +37,7 @@
                 "samgr_standard",
                 "safwk",
                 "hitrace_native",
-                "utils_base",
+                "c_utils",
                 "multimedia_player_framework",
                 "window_manager"
             ],
