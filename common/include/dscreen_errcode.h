@@ -92,6 +92,8 @@ enum DScreenErrorCode {
     ERR_DH_SCREEN_SCREENCLIENT_ADD_WINDOW_ERROR = -54002,
     ERR_DH_SCREEN_SCREENCLIENT_MOVE_WINDOW_ERROR = -54003,
     ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR = -54004,
+    // screen register callback
+    ERR_DH_SCREEN_REGISTER_CALLBACK_NOT_INIT = -55000,
 };
 } // namespace DistributedHardware
 } // namespace OHOS
