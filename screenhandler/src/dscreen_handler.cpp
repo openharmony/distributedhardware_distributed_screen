@@ -107,9 +107,13 @@ std::vector<DHItem> DScreenHandler::Query()
     DHLOGI("DScreenHandler query hardware info");
     std::vector<DHItem> dhItemVec;
     std::vector<sptr<Rosen::Screen>> screens = Rosen::ScreenManager::GetInstance().GetAllScreens();
-    for (auto screen : screens) {
+    DHLOGI("screens size is: %d.", screens.size());
+    for (const auto &screen : screens) {
         if (screen == nullptr) {
             DHLOGE("screen is nullptr.");
+            continue;
+        }
+        if (screen->GetWidth() <= 0) {
             continue;
         }
         std::string dhId = SCREEN_PREFIX + SEPERATOR + std::to_string(screen->GetId());

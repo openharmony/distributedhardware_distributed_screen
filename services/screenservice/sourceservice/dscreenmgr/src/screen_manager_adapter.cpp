@@ -65,6 +65,7 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
     };
 
     uint64_t screenId = Rosen::ScreenManager::GetInstance().CreateVirtualScreen(option);
+    DHLOGI("virtualScreen id is: %" PRIu64, screenId);
     screenIdMap_.emplace(screenName, screenId);
     return screenId;
 }
