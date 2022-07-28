@@ -37,10 +37,7 @@ ohos_shared_library("distributed_screen_source_sdk") {
     "src/dscreen_source_proxy.cpp",
   ]
 
-  deps = [
-    "${common_path}:distributed_screen_utils",
-    "//utils/native/base:utils",
-  ]
+  deps = [ "${common_path}:distributed_screen_utils" ]
 
   defines = [
     "HI_LOG_ENABLE",
@@ -49,6 +46,7 @@ ohos_shared_library("distributed_screen_source_sdk") {
   ]
 
   external_deps = [
+    "c_utils:utils",
     "hisysevent_native:libhisysevent",
     "hitrace_native:hitrace_meter",
     "hiviewdfx_hilog_native:libhilog",

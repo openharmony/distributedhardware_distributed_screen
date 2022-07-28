@@ -21,7 +21,7 @@ ohos_shared_library("distributed_screen_source") {
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//third_party/json/include",
     "${windowmanager_path}/interfaces/innerkits/dm",
-    "//utils/native/base/include",
+    "//commonlibrary/c_utils/base/include",
     "//utils/system/safwk/native/include",
     "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
@@ -65,7 +65,6 @@ ohos_shared_library("distributed_screen_source") {
     "${windowmanager_path}/dm:libdm",
     "//foundation/graphic/graphic_2d/frameworks/surface:surface",
     "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
-    "//utils/native/base:utils",
   ]
 
   defines = [
@@ -75,6 +74,7 @@ ohos_shared_library("distributed_screen_source") {
   ]
 
   external_deps = [
+    "c_utils:utils",
     "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",

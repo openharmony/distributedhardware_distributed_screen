@@ -55,7 +55,6 @@ ohos_fuzztest("UnPluginHardwareFuzzTest") {
     "${windowmanager_path}/dm:libdm",
     "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
     "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
-    "//utils/native/base:utils",
   ]
 
   defines = [
@@ -64,7 +63,10 @@ ohos_fuzztest("UnPluginHardwareFuzzTest") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
+  external_deps = [
+    "c_utils:utils",
+    "hiviewdfx_hilog_native:libhilog",
+  ]
 }
 
 ###############################################################################

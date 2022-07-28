@@ -20,7 +20,7 @@ ohos_shared_library("distributed_screen_sink") {
   include_dirs = [
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//third_party/json/include",
-    "//utils/native/base/include",
+    "//commonlibrary/c_utils/base/include",
     "//utils/system/safwk/native/include",
     "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${windowmanager_path}/interfaces/innerkits/dm",
@@ -61,7 +61,6 @@ ohos_shared_library("distributed_screen_sink") {
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "${windowmanager_path}/dm:libdm",
     "//foundation/graphic/graphic_2d/frameworks/surface:surface",
-    "//utils/native/base:utils",
   ]
 
   defines = [
@@ -71,6 +70,7 @@ ohos_shared_library("distributed_screen_sink") {
   ]
 
   external_deps = [
+    "c_utils:utils",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
     "multimedia_player_framework:media_client",
