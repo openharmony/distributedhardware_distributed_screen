@@ -34,7 +34,7 @@
                 "hiviewdfx_hilog_native",
                 "input",
                 "graphic_standard",
-                "samgr_standard",
+                "samgr",
                 "safwk",
                 "hitrace_native",
                 "c_utils",

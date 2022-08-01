@@ -45,8 +45,8 @@ ohos_executable("distributedScreenTest") {
     "${windowmanager_path}/wm:libwm",
     "//foundation/communication/dsoftbus/adapter:softbus_adapter",
     "//foundation/communication/dsoftbus/sdk:softbus_client",
-    "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
     "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
   ]
 
   defines = [
