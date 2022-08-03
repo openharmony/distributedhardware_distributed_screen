@@ -15,6 +15,10 @@
 
 #include "screenregionmgr.h"
 
+#include <chrono>
+#include <condition_variable>
+#include <mutex>
+
 #include "display_manager.h"
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
@@ -67,6 +71,17 @@ void ScreenRegionManager::HandleDScreenNotify(const std::string &remoteDevId, in
     const std::string &eventContent)
 {
     DHLOGI("HandleDScreenNotify, remoteDevId: %s, eventCode: %d", GetAnonyString(remoteDevId).c_str(), eventCode);
+    if (dhfwkKit_ == nullptr) {
+        dhfwkKit_ = std::make_shared<DistributedHardwareFwkKit>();
+    }
+    {
+        std::mutex kitMtx;
+        std::condition_variable dhfwkKitCond_;
+        std::unique_lock<std::mutex> lck(kitMtx);
+        dhfwkKitCond_.wait_for(lck, std::chrono::milliseconds(INIT_DHFWKKIT_TIME_MS), [](){ return false; });
+        DHLOGI("Init dhfwkKit time(%dms).", INIT_DHFWKKIT_TIME_MS);
+    }
+
     if (eventCode == NOTIFY_SINK_SETUP) {
         HandleNotifySetUp(remoteDevId, eventContent);
         return;
@@ -170,6 +185,8 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
         return;
     }
 
+    PublishMessage(DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO, screenId, remoteDevId, screenRegion->GetWindowId(),
+        screenRegion->GetWindowProperty());
     NotifyRemoteSourceSetUpResult(remoteDevId, dhId, DH_SUCCESS, "");
 }
 
@@ -232,6 +249,29 @@ sptr<IDScreenSource> ScreenRegionManager::GetDScreenSourceSA(const std::string &
         return nullptr;
     }
     return remoteSourceSA;
+}
+
+void ScreenRegionManager::PublishMessage(const DHTopic topic, const uint64_t &screenId,
+    const std::string &remoteDevId, const int32_t &windowId, std::shared_ptr<WindowProperty> windowProperty)
+{
+    DHLOGD("Sink PublishMessage");
+    if (dhfwkKit_ == nullptr) {
+        DHLOGE("dhfwkKit is nullptr.");
+        return;
+    }
+
+    json messageJosn;
+    std::string message;
+    messageJosn[SOURCE_WIN_ID] = screenId;
+    messageJosn[SOURCE_DEV_ID] = remoteDevId;
+    messageJosn[SINK_SHOW_WIN_ID] = windowId;
+    messageJosn[SINK_PROJ_SHOW_WIDTH] = windowProperty->width;
+    messageJosn[SINK_PROJ_SHOW_HEIGHT] = windowProperty->height;
+    messageJosn[SINK_WIN_SHOW_X] = windowProperty->startX;
+    messageJosn[SINK_WIN_SHOW_Y] = windowProperty->startY;
+    message = messageJosn.dump();
+
+    dhfwkKit_->PublishMessage(topic, message);
 }
 } // namespace DistributedHardware
 } // namespace OHOS
