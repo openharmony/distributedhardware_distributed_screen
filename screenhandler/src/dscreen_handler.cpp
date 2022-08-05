@@ -107,23 +107,31 @@ std::vector<DHItem> DScreenHandler::Query()
     DHLOGI("DScreenHandler query hardware info");
     std::vector<DHItem> dhItemVec;
     std::vector<sptr<Rosen::Screen>> screens = Rosen::ScreenManager::GetInstance().GetAllScreens();
-    sptr<Rosen::Screen> screen = screens[SCREEN_ID_DEFAULT];
-    std::string dhId = SCREEN_PREFIX + SEPERATOR + std::to_string(screen->GetId());
-    uint32_t screenWidth = screen->GetWidth();
-    uint32_t screenHeight = screen->GetHeight();
+    DHLOGI("screens size is: %d.", screens.size());
+    for (const auto &screen : screens) {
+        if (screen == nullptr) {
+            DHLOGE("screen is nullptr.");
+            continue;
+        }
+        if (screen->GetWidth() <= 0) {
+            continue;
+        }
+        std::string dhId = SCREEN_PREFIX + SEPERATOR + std::to_string(screen->GetId());
+        uint32_t screenWidth = screen->GetWidth();
+        uint32_t screenHeight = screen->GetHeight();
 
-    json attrJson;
-    attrJson[KEY_VERSION] = DSCREEN_VERSION;
-    attrJson[KEY_SCREEN_WIDTH] = screenWidth;
-    attrJson[KEY_SCREEN_HEIGHT] = screenHeight;
-    attrJson[KEY_CODECTYPE] = QueryCodecInfo();
+        json attrJson;
+        attrJson[KEY_VERSION] = DSCREEN_VERSION;
+        attrJson[KEY_SCREEN_WIDTH] = screenWidth;
+        attrJson[KEY_SCREEN_HEIGHT] = screenHeight;
+        attrJson[KEY_CODECTYPE] = QueryCodecInfo();
 
-    DHItem dhItem;
-    dhItem.dhId = dhId;
-    dhItem.attrs = attrJson.dump();
-    dhItemVec.push_back(dhItem);
-    DHLOGD("query result: dhId: %s, attrs: %s", GetAnonyString(dhId).c_str(), attrJson.dump().c_str());
-
+        DHItem dhItem;
+        dhItem.dhId = dhId;
+        dhItem.attrs = attrJson.dump();
+        dhItemVec.push_back(dhItem);
+        DHLOGD("query result: dhId: %s, attrs: %s", GetAnonyString(dhId).c_str(), attrJson.dump().c_str());
+    }
     return dhItemVec;
 }
 
@@ -161,11 +169,20 @@ std::string DScreenHandler::QueryCodecInfo()
 
     // query codec info
     std::shared_ptr<Media::AVCodecList> codecList = Media::AVCodecListFactory::CreateAVCodecList();
+    if (codecList == nullptr) {
+        return codecInfoStr_;
+    }
     std::vector<std::shared_ptr<Media::VideoCaps>> caps = codecList->GetVideoEncoderCaps();
     json codecTypeArray = json::array();
     
     for (const auto &cap : caps) {
+        if (cap == nullptr) {
+            continue;
+        }
         std::shared_ptr<Media::AVCodecInfo> codecInfo = cap->GetCodecInfo();
+        if (codecInfo == nullptr) {
+            continue;
+        }
         codecTypeArray.push_back(codecInfo->GetName());
     }
 

@@ -40,8 +40,8 @@ DScreenSinkHandler::DScreenSinkHandler()
 {
     DHLOGI("DScreenSinkHandler construct.");
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (!sinkSvrRecipient_) {
-        sinkSvrRecipient_ = new DScreenSinkSvrRecipient();
+    if (sinkSvrRecipient_ == nullptr) {
+        sinkSvrRecipient_ = new (std::nothrow) DScreenSinkSvrRecipient();
     }
 }
 
@@ -63,6 +63,12 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
             return ERR_DH_SCREEN_SA_GET_SAMGR_FAIL;
         }
         sptr<DScreenSinkLoadCallback> loadCallback = new DScreenSinkLoadCallback(params);
+        if (loadCallback == nullptr) {
+            DHLOGE("loadCallback is nullptr.");
+            ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_GET_SAMGR_FAIL, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
+                "loadCallback is nullptr.");
+            return ERR_DH_SCREEN_SA_GET_SAMGR_FAIL;
+        }
         StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SINK_LOAD_SYSTEM_ABILITY_START);
         int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, loadCallback);
         if (ret != ERR_OK) {
@@ -92,6 +98,12 @@ void DScreenSinkHandler::FinishStartSA(const std::string &params,
 {
     DHLOGD("FinishStartSA");
     std::unique_lock<std::mutex> lock(proxyMutex_);
+    if (sinkSvrRecipient_ == nullptr) {
+        DHLOGE("sinkSvrRecipient is nullptr.");
+        ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
+            "sinkSvrRecipient is nullptr.");
+        return;
+    }
     remoteObject->AddDeathRecipient(sinkSvrRecipient_);
     dScreenSinkProxy_ = iface_cast<IDScreenSink>(remoteObject);
     if ((!dScreenSinkProxy_) || (!dScreenSinkProxy_->AsObject())) {
@@ -160,7 +172,7 @@ void DScreenSinkHandler::OnRemoteSinkSvrDied(const wptr<IRemoteObject> &remote)
         return;
     }
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (dScreenSinkProxy_ != nullptr) {
+    if (dScreenSinkProxy_ != nullptr && sinkSvrRecipient_ != nullptr) {
         dScreenSinkProxy_->AsObject()->RemoveDeathRecipient(sinkSvrRecipient_);
         dScreenSinkProxy_ = nullptr;
     }
