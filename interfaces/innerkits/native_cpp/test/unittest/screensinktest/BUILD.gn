@@ -51,7 +51,7 @@ ohos_unittest("ScreenSinkTest") {
     "${fwk_utils_path}:distributedhardwareutils",
     "//foundation/communication/ipc/interfaces/innerkits/ipc_core:ipc_core",
     "//foundation/distributedhardware/distributed_screen/interfaces/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
-    "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
+    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
@@ -63,7 +63,7 @@ ohos_unittest("ScreenSinkTest") {
     "ipc:ipc_core",
     "multimedia_player_framework:media_client",
     "safwk:system_ability_fwk",
-    "samgr_standard:samgr_proxy",
+    "samgr:samgr_proxy",
   ]
 }
 

@@ -53,8 +53,8 @@ ohos_fuzztest("PluginHardwareFuzzTest") {
     "${fwk_services_path}/distributedhardwarefwkservice:distributedhardwarefwksvr",
     "${mediastandard_path}/interfaces/inner_api/native:media_client",
     "${windowmanager_path}/dm:libdm",
-    "//foundation/distributedschedule/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
     "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
   ]
 
   defines = [
