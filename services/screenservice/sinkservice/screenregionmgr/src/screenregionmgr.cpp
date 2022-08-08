@@ -15,10 +15,6 @@
 
 #include "screenregionmgr.h"
 
-#include <chrono>
-#include <condition_variable>
-#include <mutex>
-
 #include "display_manager.h"
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
@@ -26,6 +22,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_fwkkit.h"
 #include "dscreen_log.h"
 #include "dscreen_maprelation.h"
 #include "dscreen_util.h"
@@ -71,17 +68,6 @@ void ScreenRegionManager::HandleDScreenNotify(const std::string &remoteDevId, in
     const std::string &eventContent)
 {
     DHLOGI("HandleDScreenNotify, remoteDevId: %s, eventCode: %d", GetAnonyString(remoteDevId).c_str(), eventCode);
-    if (dhfwkKit_ == nullptr) {
-        dhfwkKit_ = std::make_shared<DistributedHardwareFwkKit>();
-    }
-    {
-        std::mutex kitMtx;
-        std::condition_variable dhfwkKitCond_;
-        std::unique_lock<std::mutex> lck(kitMtx);
-        dhfwkKitCond_.wait_for(lck, std::chrono::milliseconds(INIT_DHFWKKIT_TIME_MS), [](){ return false; });
-        DHLOGI("Init dhfwkKit time(%dms).", INIT_DHFWKKIT_TIME_MS);
-    }
-
     if (eventCode == NOTIFY_SINK_SETUP) {
         HandleNotifySetUp(remoteDevId, eventContent);
         return;
@@ -131,14 +117,12 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
     DHLOGI("HandleNotifySetUp, remoteDevId: %s", GetAnonyString(remoteDevId).c_str());
     json eventContentJson = json::parse(eventContent, nullptr, false);
     if (eventContentJson.is_discarded()) {
-        DHLOGE("HandleNotifySetUp, eventJsonContent is invalid.");
         NotifyRemoteSourceSetUpResult(remoteDevId, "", ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
         return;
     }
 
     if (!eventContentJson.contains(KEY_SCREEN_ID) || !eventContentJson.contains(KEY_DH_ID) ||
         !eventContentJson.contains(KEY_VIDEO_PARAM) || !eventContentJson.contains(KEY_MAPRELATION)) {
-        DHLOGE("HandleNotifySetUp, eventJsonContent is invalid.");
         NotifyRemoteSourceSetUpResult(remoteDevId, "", ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
         return;
     }
@@ -173,7 +157,7 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
 
     ret = screenRegion->SetUp();
     if (ret != DH_SUCCESS) {
-        DHLOGE("screen region start failed");
+        DHLOGE("screen region setup failed");
         NotifyRemoteSourceSetUpResult(remoteDevId, dhId, ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
         return;
     }
@@ -254,9 +238,9 @@ sptr<IDScreenSource> ScreenRegionManager::GetDScreenSourceSA(const std::string &
 void ScreenRegionManager::PublishMessage(const DHTopic topic, const uint64_t &screenId,
     const std::string &remoteDevId, const int32_t &windowId, std::shared_ptr<WindowProperty> windowProperty)
 {
-    DHLOGD("Sink PublishMessage");
-    if (dhfwkKit_ == nullptr) {
-        DHLOGE("dhfwkKit is nullptr.");
+    DHLOGD("PublishMessage");
+    if (DScreenFwkKit::GetInstance().GetDHFwkKit() == nullptr) {
+        DHLOGE("GetDHFwkKit fail.");
         return;
     }
 
@@ -271,7 +255,7 @@ void ScreenRegionManager::PublishMessage(const DHTopic topic, const uint64_t &sc
     messageJosn[SINK_WIN_SHOW_Y] = windowProperty->startY;
     message = messageJosn.dump();
 
-    dhfwkKit_->PublishMessage(topic, message);
+    DScreenFwkKit::GetInstance().GetDHFwkKit()->PublishMessage(topic, message);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

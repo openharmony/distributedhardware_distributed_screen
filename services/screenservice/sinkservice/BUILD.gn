@@ -48,6 +48,7 @@ ohos_shared_library("distributed_screen_sink") {
   sources = [
     "${interfaces_path}/innerkits/native_cpp/screen_sink/src/dscreen_sink_proxy.cpp",
     "${interfaces_path}/innerkits/native_cpp/screen_source/src/dscreen_source_proxy.cpp",
+    "${services_path}/common/utils/src/dscreen_fwkkit.cpp",
     "${services_path}/common/utils/src/dscreen_maprelation.cpp",
     "${services_path}/common/utils/src/video_param.cpp",
     "./dscreenservice/src/dscreen_sink_service.cpp",
@@ -58,11 +59,11 @@ ohos_shared_library("distributed_screen_sink") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
+    "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
     "${services_path}/screenclient:distributed_screen_client",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "${windowmanager_path}/dm:libdm",
     "//foundation/graphic/graphic_2d/frameworks/surface:surface",
-    "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
   ]
 
   defines = [

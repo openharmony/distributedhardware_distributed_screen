@@ -42,7 +42,6 @@ private:
     std::map<std::string, std::shared_ptr<ScreenRegion>> screenRegions_;
     std::mutex screenRegionsMtx_;
     std::string localDevId_;
-    std::shared_ptr<DistributedHardwareFwkKit> dhfwkKit_ = nullptr;
 
     sptr<IDScreenSource> GetDScreenSourceSA(const std::string &devId);
     int32_t NotifyRemoteScreenService(const std::string &remoteDevId, const std::string &dhId,

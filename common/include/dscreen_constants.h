@@ -119,7 +119,8 @@ const std::string CODEC_NAME_H264 = "OMX_hisi_video_encoder_avc";
 const std::string CODEC_NAME_MPEG4 = "avenc_mpeg4";
 // Publish massage
 const std::string SOURCE_WIN_ID = "sourceWinId";
-const std::string SOURCE_DEV_ID = "screenDevId";
+const std::string SOURCE_DEV_ID = "sourceDevId";
+const std::string SINK_DEV_ID = "sinkDevId";
 const std::string SOURCE_WIN_WIDTH = "sourceWinWidth";
 const std::string SOURCE_WIN_HEIGHT = "sourceWinHeight";
 const std::string SINK_SHOW_WIN_ID = "sinkShowWinId";
@@ -138,7 +139,6 @@ constexpr int32_t DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID = 4808;
 constexpr uint64_t SCREEN_ID_INVALID = -1ULL;
 constexpr uint64_t SCREEN_ID_DEFAULT = 0;
 constexpr int32_t SCREEN_LOADSA_TIMEOUT_MS = 10000;
-constexpr int32_t INIT_DHFWKKIT_TIME_MS = 10;
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

@@ -16,6 +16,8 @@
 #ifndef OHOS_DSCREEN_SCREEN_REGION_H
 #define OHOS_DSCREEN_SCREEN_REGION_H
 
+#include <mutex>
+
 #include "surface.h"
 
 #include "iscreen_sink_trans_callback.h"

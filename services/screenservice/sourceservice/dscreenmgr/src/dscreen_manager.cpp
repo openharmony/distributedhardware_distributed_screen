@@ -15,10 +15,7 @@
 
 #include "dscreen_manager.h"
 
-#include <chrono>
-#include <condition_variable>
 #include <map>
-#include <mutex>
 
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
@@ -26,6 +23,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_fwkkit.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 #include "idscreen_sink.h"
@@ -70,6 +68,7 @@ int32_t DScreenManager::Init()
     if (!dScreenCallback_) {
         dScreenCallback_ = std::make_shared<DScreenCallback>();
     }
+
     return ret;
 }
 
@@ -120,17 +119,6 @@ void DScreenManager::HandleScreenChange(const std::shared_ptr<DScreen> &changedS
     if (!changedScreen) {
         DHLOGE("DScreenManager::HandleScreenChange, dScreen is null.");
         return;
-    }
-
-    if (dhfwkKit_ == nullptr) {
-        dhfwkKit_ = std::make_shared<DistributedHardwareFwkKit>();
-    }
-    {
-        std::mutex kitMtx;
-        std::condition_variable dhfwkKitCond_;
-        std::unique_lock<std::mutex> lck(kitMtx);
-        dhfwkKitCond_.wait_for(lck, std::chrono::milliseconds(INIT_DHFWKKIT_TIME_MS), [](){ return false; });
-        DHLOGI("Init dhfwkKit time(%dms).", INIT_DHFWKKIT_TIME_MS);
     }
 
     uint64_t screenId = changedScreen->GetScreenId();
@@ -424,8 +412,8 @@ sptr<IDScreenSink> DScreenManager::GetDScreenSinkSA(const std::string &devId)
 void DScreenManager::PublishMessage(const DHTopic topic, const std::shared_ptr<DScreen> &dScreen)
 {
     DHLOGD("PublishMessage");
-    if (dhfwkKit_ == nullptr) {
-        DHLOGE("dhfwkKit is nullptr.");
+    if (DScreenFwkKit::GetInstance().GetDHFwkKit() == nullptr) {
+        DHLOGE("GetDHFwkKit fail.");
         return;
     }
 
@@ -433,7 +421,7 @@ void DScreenManager::PublishMessage(const DHTopic topic, const std::shared_ptr<D
     std::string message;
     if (topic == DHTopic::TOPIC_START_DSCREEN) {
         messageJosn[SOURCE_WIN_ID] = dScreen->GetScreenId();
-        messageJosn[SOURCE_DEV_ID] = dScreen->GetDevId();
+        messageJosn[SINK_DEV_ID] = dScreen->GetDevId();
         std::shared_ptr<VideoParam> videoParam = dScreen->GetVideoParam();
         if (videoParam == nullptr) {
             DHLOGE("videoParam is nullptr");
@@ -448,7 +436,7 @@ void DScreenManager::PublishMessage(const DHTopic topic, const std::shared_ptr<D
         message = messageJosn.dump();
     }
 
-    dhfwkKit_->PublishMessage(topic, message);
+    DScreenFwkKit::GetInstance().GetDHFwkKit()->PublishMessage(topic, message);
 }
 
 void DScreenManager::NotifyRemoteSinkSetUp(const std::shared_ptr<DScreen> &dScreen)
