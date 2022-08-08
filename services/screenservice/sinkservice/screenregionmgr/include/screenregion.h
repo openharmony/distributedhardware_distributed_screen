@@ -16,11 +16,14 @@
 #ifndef OHOS_DSCREEN_SCREEN_REGION_H
 #define OHOS_DSCREEN_SCREEN_REGION_H
 
+#include <mutex>
+
 #include "surface.h"
 
 #include "iscreen_sink_trans_callback.h"
 #include "iscreen_sink_trans.h"
 #include "dscreen_maprelation.h"
+#include "screen_client_common.h"
 #include "video_param.h"
 
 namespace OHOS {
@@ -50,6 +53,7 @@ public:
     int32_t SetUp();
     int32_t Start();
     int32_t Stop();
+    std::shared_ptr<WindowProperty> GetWindowProperty();
 
 private:
     std::string remoteDevId_;
@@ -62,6 +66,7 @@ private:
     sptr<OHOS::Surface> surface_ = nullptr;
     int32_t windowId_ = INVALID_WINDOW_ID;
     std::shared_ptr<IScreenSinkTrans> sinkTrans_ = nullptr;
+    std::shared_ptr<WindowProperty> windowProperty_ = nullptr;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

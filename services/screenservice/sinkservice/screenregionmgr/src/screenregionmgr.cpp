@@ -22,6 +22,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_fwkkit.h"
 #include "dscreen_log.h"
 #include "dscreen_maprelation.h"
 #include "dscreen_util.h"
@@ -116,14 +117,12 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
     DHLOGI("HandleNotifySetUp, remoteDevId: %s", GetAnonyString(remoteDevId).c_str());
     json eventContentJson = json::parse(eventContent, nullptr, false);
     if (eventContentJson.is_discarded()) {
-        DHLOGE("HandleNotifySetUp, eventJsonContent is invalid.");
         NotifyRemoteSourceSetUpResult(remoteDevId, "", ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
         return;
     }
 
     if (!eventContentJson.contains(KEY_SCREEN_ID) || !eventContentJson.contains(KEY_DH_ID) ||
         !eventContentJson.contains(KEY_VIDEO_PARAM) || !eventContentJson.contains(KEY_MAPRELATION)) {
-        DHLOGE("HandleNotifySetUp, eventJsonContent is invalid.");
         NotifyRemoteSourceSetUpResult(remoteDevId, "", ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
         return;
     }
@@ -158,7 +157,7 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
 
     ret = screenRegion->SetUp();
     if (ret != DH_SUCCESS) {
-        DHLOGE("screen region start failed");
+        DHLOGE("screen region setup failed");
         NotifyRemoteSourceSetUpResult(remoteDevId, dhId, ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
         return;
     }
@@ -170,6 +169,8 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
         return;
     }
 
+    PublishMessage(DHTopic::TOPIC_SINK_PROJECT_WINDOW_INFO, screenId, remoteDevId, screenRegion->GetWindowId(),
+        screenRegion->GetWindowProperty());
     NotifyRemoteSourceSetUpResult(remoteDevId, dhId, DH_SUCCESS, "");
 }
 
@@ -232,6 +233,29 @@ sptr<IDScreenSource> ScreenRegionManager::GetDScreenSourceSA(const std::string &
         return nullptr;
     }
     return remoteSourceSA;
+}
+
+void ScreenRegionManager::PublishMessage(const DHTopic topic, const uint64_t &screenId,
+    const std::string &remoteDevId, const int32_t &windowId, std::shared_ptr<WindowProperty> windowProperty)
+{
+    DHLOGD("PublishMessage");
+    if (DScreenFwkKit::GetInstance().GetDHFwkKit() == nullptr) {
+        DHLOGE("GetDHFwkKit fail.");
+        return;
+    }
+
+    json messageJosn;
+    std::string message;
+    messageJosn[SOURCE_WIN_ID] = screenId;
+    messageJosn[SOURCE_DEV_ID] = remoteDevId;
+    messageJosn[SINK_SHOW_WIN_ID] = windowId;
+    messageJosn[SINK_PROJ_SHOW_WIDTH] = windowProperty->width;
+    messageJosn[SINK_PROJ_SHOW_HEIGHT] = windowProperty->height;
+    messageJosn[SINK_WIN_SHOW_X] = windowProperty->startX;
+    messageJosn[SINK_WIN_SHOW_Y] = windowProperty->startY;
+    message = messageJosn.dump();
+
+    DScreenFwkKit::GetInstance().GetDHFwkKit()->PublishMessage(topic, message);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -19,6 +19,7 @@
 #include <map>
 #include <mutex>
 
+#include "distributed_hardware_fwk_kit.h"
 #include "single_instance.h"
 
 #include "screenregion.h"
@@ -32,6 +33,8 @@ public:
     int32_t ReleaseAllRegions();
     void HandleDScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent);
     void GetScreenDumpInfo(std::string &result);
+    void PublishMessage(const DHTopic topic, const uint64_t &screenId, const std::string &remoteDevId,
+        const int32_t &windowId, std::shared_ptr<WindowProperty> windowProperty);
 
 private:
     ScreenRegionManager();
