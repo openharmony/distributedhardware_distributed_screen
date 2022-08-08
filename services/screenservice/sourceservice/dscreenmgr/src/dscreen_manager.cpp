@@ -23,6 +23,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_fwkkit.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 #include "idscreen_sink.h"
@@ -67,6 +68,7 @@ int32_t DScreenManager::Init()
     if (!dScreenCallback_) {
         dScreenCallback_ = std::make_shared<DScreenCallback>();
     }
+
     return ret;
 }
 
@@ -118,6 +120,7 @@ void DScreenManager::HandleScreenChange(const std::shared_ptr<DScreen> &changedS
         DHLOGE("DScreenManager::HandleScreenChange, dScreen is null.");
         return;
     }
+
     uint64_t screenId = changedScreen->GetScreenId();
     DHLOGI("DScreenManager::HandleScreenChange, screenId: %ulld, changeEvent: %", screenId, event);
     if (event == Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP) {
@@ -143,6 +146,7 @@ void DScreenManager::HandleScreenChange(const std::shared_ptr<DScreen> &changedS
             mapRelations_[screenId] = mapRelation;
         }
         NotifyRemoteSinkSetUp(changedScreen);
+        PublishMessage(DHTopic::TOPIC_START_DSCREEN, changedScreen);
     } else if (event == Rosen::ScreenGroupChangeEvent::REMOVE_FROM_GROUP) {
         if (changedScreen->GetState() == DISCONNECTING) {
             DHLOGD("screen is disconnecting, no need handle change");
@@ -159,6 +163,7 @@ void DScreenManager::HandleScreenChange(const std::shared_ptr<DScreen> &changedS
             mapRelations_.erase(screenId);
         }
         changedScreen->AddTask(std::make_shared<Task>(TaskType::TASK_DISCONNECT, ""));
+        PublishMessage(DHTopic::TOPIC_STOP_DSCREEN, changedScreen);
     } else if (event == Rosen::ScreenGroupChangeEvent::CHANGE_GROUP) {
         DHLOGE("CHANGE_GROUP not implement.");
     } else {
@@ -239,6 +244,7 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
         DHLOGE("EnableDistributedScreen, add task failed. devId: %s, dhId:%s",
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     }
+
     return ret;
 }
 
@@ -401,6 +407,36 @@ sptr<IDScreenSink> DScreenManager::GetDScreenSinkSA(const std::string &devId)
         return nullptr;
     }
     return remoteSinkSA;
+}
+
+void DScreenManager::PublishMessage(const DHTopic topic, const std::shared_ptr<DScreen> &dScreen)
+{
+    DHLOGD("PublishMessage");
+    if (DScreenFwkKit::GetInstance().GetDHFwkKit() == nullptr) {
+        DHLOGE("GetDHFwkKit fail.");
+        return;
+    }
+
+    json messageJosn;
+    std::string message;
+    if (topic == DHTopic::TOPIC_START_DSCREEN) {
+        messageJosn[SOURCE_WIN_ID] = dScreen->GetScreenId();
+        messageJosn[SINK_DEV_ID] = dScreen->GetDevId();
+        std::shared_ptr<VideoParam> videoParam = dScreen->GetVideoParam();
+        if (videoParam == nullptr) {
+            DHLOGE("videoParam is nullptr");
+            return;
+        }
+        messageJosn[SOURCE_WIN_WIDTH] = videoParam->GetScreenWidth();
+        messageJosn[SOURCE_WIN_HEIGHT] = videoParam->GetScreenHeight();
+        message = messageJosn.dump();
+    } else if (topic == DHTopic::TOPIC_STOP_DSCREEN) {
+        messageJosn[SOURCE_WIN_ID] = dScreen->GetScreenId();
+        messageJosn[SOURCE_DEV_ID] = dScreen->GetDevId();
+        message = messageJosn.dump();
+    }
+
+    DScreenFwkKit::GetInstance().GetDHFwkKit()->PublishMessage(topic, message);
 }
 
 void DScreenManager::NotifyRemoteSinkSetUp(const std::shared_ptr<DScreen> &dScreen)

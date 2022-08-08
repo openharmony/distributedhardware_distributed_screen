@@ -84,6 +84,11 @@ int32_t ScreenRegion::GetWindowId()
     return windowId_;
 }
 
+std::shared_ptr<WindowProperty> ScreenRegion::GetWindowProperty()
+{
+    return windowProperty_;
+}
+
 int32_t ScreenRegion::SetUp()
 {
     DHLOGI("ScreenRegion::SetUp, remoteDevId: %s", GetAnonyString(remoteDevId_).c_str());
@@ -96,6 +101,7 @@ int32_t ScreenRegion::SetUp()
     windowProperty->startY = screenRect.startY;
     windowProperty->width = screenRect.width;
     windowProperty->height = screenRect.height;
+    windowProperty_ = windowProperty;
 
     windowId_ = ScreenClient::GetInstance().AddWindow(windowProperty);
     if (windowId_ < 0) {

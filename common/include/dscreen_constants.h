@@ -117,6 +117,18 @@ const std::string KEY_VIDEO_PARAM = "videoParam";
 const std::string KEY_MAPRELATION = "mapRelation";
 const std::string CODEC_NAME_H264 = "OMX_hisi_video_encoder_avc";
 const std::string CODEC_NAME_MPEG4 = "avenc_mpeg4";
+// Publish massage
+const std::string SOURCE_WIN_ID = "sourceWinId";
+const std::string SOURCE_DEV_ID = "sourceDevId";
+const std::string SINK_DEV_ID = "sinkDevId";
+const std::string SOURCE_WIN_WIDTH = "sourceWinWidth";
+const std::string SOURCE_WIN_HEIGHT = "sourceWinHeight";
+const std::string SINK_SHOW_WIN_ID = "sinkShowWinId";
+const std::string SINK_PROJ_SHOW_WIDTH = "sinkProjShowWidth";
+const std::string SINK_PROJ_SHOW_HEIGHT = "sinkProjShowHeight";
+const std::string SINK_WIN_SHOW_X = "sinkWinShowX";
+const std::string SINK_WIN_SHOW_Y = "sinkWinShowY";
+
 constexpr float DEFAULT_DENSITY = 2.0;
 constexpr int32_t DEFAULT_SCREEN_FLAGS = 0;
 constexpr uint32_t DEFAULT_FPS = 30;

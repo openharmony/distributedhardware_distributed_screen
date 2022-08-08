@@ -16,6 +16,7 @@
 #ifndef OHOS_DSCREEN_MGR_H
 #define OHOS_DSCREEN_MGR_H
 
+#include "distributed_hardware_fwk_kit.h"
 #include "dm_common.h"
 #include "single_instance.h"
 #include "screen_manager.h"
@@ -59,7 +60,7 @@ public:
     void HandleScreenChange(const std::shared_ptr<DScreen> &changedScreen, Rosen::ScreenGroupChangeEvent event);
     std::shared_ptr<DScreen> FindDScreenByScreenId(uint64_t screenId);
     void GetScreenDumpInfo(std::string &result);
-
+    void PublishMessage(const DHTopic topic, const std::shared_ptr<DScreen> &dScreen);
 private:
     ~DScreenManager();
     DScreenManager();
