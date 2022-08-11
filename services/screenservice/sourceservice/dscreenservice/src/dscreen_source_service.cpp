@@ -148,7 +148,7 @@ void DScreenSourceService::DScreenNotify(const std::string &devId, const int32_t
     DScreenManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
 }
 
-int DScreenSourceService::Dump(int32_t fd, const std::vector<std::u16string>& args)
+int32_t DScreenSourceService::Dump(int32_t fd, const std::vector<std::u16string>& args)
 {
     DHLOGI("DScreenSourceService  Dump.");
     std::string result;
