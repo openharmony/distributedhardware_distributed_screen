@@ -124,51 +124,72 @@ void DScreenManager::HandleScreenChange(const std::shared_ptr<DScreen> &changedS
     uint64_t screenId = changedScreen->GetScreenId();
     DHLOGI("DScreenManager::HandleScreenChange, screenId: %ulld, changeEvent: %", screenId, event);
     if (event == Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP) {
-        if (changedScreen->GetState() == CONNECTING) {
-            DHLOGD("screen is connecting, no need handle change");
-            return;
-        }
-        std::shared_ptr<DScreenMapRelation> mapRelation =
-            ScreenMgrAdapter::GetInstance().GetMapRelation(screenId);
-        if (!mapRelation) {
-            DHLOGE("mapRelation construct failed. screenId: %ulld", screenId);
-            return;
-        }
-
-        std::shared_ptr<VideoParam> videoParam = changedScreen->GetVideoParam();
-        DisplayRect displayRect = mapRelation->GetDisplayRect();
-        videoParam->SetVideoWidth(displayRect.width);
-        videoParam->SetVideoHeight(displayRect.height);
-        changedScreen->SetState(CONNECTING);
-
-        {
-            std::lock_guard<std::mutex> lock(dScreenMapRelationMtx_);
-            mapRelations_[screenId] = mapRelation;
-        }
+        AddToGroup(changedScreen, screenId);
         NotifyRemoteSinkSetUp(changedScreen);
         PublishMessage(DHTopic::TOPIC_START_DSCREEN, changedScreen);
     } else if (event == Rosen::ScreenGroupChangeEvent::REMOVE_FROM_GROUP) {
-        if (changedScreen->GetState() == DISCONNECTING) {
-            DHLOGD("screen is disconnecting, no need handle change");
-            return;
-        }
-        std::shared_ptr<DScreenMapRelation> mapRelation = nullptr;
-        {
-            std::lock_guard<std::mutex> lock(dScreenMapRelationMtx_);
-            if (mapRelations_.count(screenId) == 0) {
-                DHLOGE("destroyed relation not found.");
-                return;
-            }
-            mapRelation = mapRelations_[screenId];
-            mapRelations_.erase(screenId);
-        }
-        changedScreen->AddTask(std::make_shared<Task>(TaskType::TASK_DISCONNECT, ""));
+        RemoveFromGroup(changedScreen, screenId);
         PublishMessage(DHTopic::TOPIC_STOP_DSCREEN, changedScreen);
     } else if (event == Rosen::ScreenGroupChangeEvent::CHANGE_GROUP) {
         DHLOGE("CHANGE_GROUP not implement.");
     } else {
         DHLOGE("unknown change type.");
     }
+}
+
+void DScreenManager::AddToGroup(const std::shared_ptr<DScreen> &changedScreen, uint64_t screenId)
+{
+    DHLOGI("DScreenManager::ADDToGroup, screenId: %ulld", screenId);
+    if (!changedScreen) {
+        DHLOGE("DScreenManager::ADDToGroup, dScreen is null.");
+        return;
+    }
+
+    if (changedScreen->GetState() == CONNECTING) {
+        DHLOGD("screen is connecting, no need handle change");
+        return;
+    }
+    std::shared_ptr<DScreenMapRelation> mapRelation = ScreenMgrAdapter::GetInstance().GetMapRelation(screenId);
+    if (!mapRelation) {
+        DHLOGE("mapRelation construct failed. screenId: %ulld", screenId);
+        return;
+    }
+
+    std::shared_ptr<VideoParam> videoParam = changedScreen->GetVideoParam();
+    DisplayRect displayRect = mapRelation->GetDisplayRect();
+    videoParam->SetVideoWidth(displayRect.width);
+    videoParam->SetVideoHeight(displayRect.height);
+    changedScreen->SetState(CONNECTING);
+
+    {
+        std::lock_guard<std::mutex> lock(dScreenMapRelationMtx_);
+        mapRelations_[screenId] = mapRelation;
+    }
+}
+
+void DScreenManager::RemoveFromGroup(const std::shared_ptr<DScreen> &changedScreen, uint64_t screenId)
+{
+    DHLOGI("DScreenManager::RemoveFromGroup, screenId: %ulld", screenId);
+    if (!changedScreen) {
+        DHLOGE("DScreenManager::RemoveFromGroup, dScreen is null.");
+        return;
+    }
+
+    if (changedScreen->GetState() == DISCONNECTING) {
+        DHLOGD("screen is disconnecting, no need handle change");
+        return;
+    }
+    std::shared_ptr<DScreenMapRelation> mapRelation = nullptr;
+    {
+        std::lock_guard<std::mutex> lock(dScreenMapRelationMtx_);
+        if (mapRelations_.count(screenId) == 0) {
+            DHLOGE("destroyed relation not found.");
+            return;
+        }
+        mapRelation = mapRelations_[screenId];
+        mapRelations_.erase(screenId);
+    }
+    changedScreen->AddTask(std::make_shared<Task>(TaskType::TASK_DISCONNECT, ""));
 }
 
 void DScreenCallback::OnRegResult(const std::shared_ptr<DScreen> &dScreen,
