@@ -35,7 +35,7 @@ public:
     int32_t SubscribeLocalHardware(const std::string &dhId, const std::string &param) override;
     int32_t UnsubscribeLocalHardware(const std::string &dhId) override;
     void DScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent) override;
-    int Dump(int32_t fd, const std::vector<std::u16string>& args) override;
+    int32_t Dump(int32_t fd, const std::vector<std::u16string>& args) override;
 
 protected:
     void OnStart() override;

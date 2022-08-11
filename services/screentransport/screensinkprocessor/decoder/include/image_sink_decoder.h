@@ -65,7 +65,7 @@ private:
 private:
     static const constexpr char *LOG_TAG = "ImageSinkDecoder";
     static constexpr uint32_t DECODE_WAIT_MILLISECONDS = 5000;
-    static constexpr size_t DATA_QUEUE_MAX_SIZE = 10;
+    static constexpr size_t DATA_QUEUE_MAX_SIZE = 1000;
 
     std::mutex dataMutex_;
     std::mutex decodeMutex_;

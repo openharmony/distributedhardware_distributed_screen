@@ -63,7 +63,7 @@ private:
     static const constexpr char *LOG_TAG = "ScreenSourceTrans";
     static constexpr uint8_t SESSION_WAIT_SECONDS = 5;
     static constexpr uint8_t DATA_WAIT_SECONDS = 1;
-    static constexpr size_t DATA_QUEUE_MAX_SIZE = 10;
+    static constexpr size_t DATA_QUEUE_MAX_SIZE = 1000;
 
     std::mutex sessionMtx_;
     std::mutex dataMtx_;

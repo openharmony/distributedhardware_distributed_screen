@@ -102,9 +102,9 @@ void DScreenSinkService::DScreenNotify(const std::string &devId, int32_t eventCo
     ScreenRegionManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
 }
 
-int DScreenSinkService::Dump(int32_t fd, const std::vector<std::u16string>& args)
+int32_t DScreenSinkService::Dump(int32_t fd, const std::vector<std::u16string>& args)
 {
-    DHLOGI("DScreenSourceService  Dump.");
+    DHLOGI("DScreenSinkService  Dump.");
     std::string result;
     ScreenRegionManager::GetInstance().GetScreenDumpInfo(result);
     int ret = dprintf(fd, "%s\n", result.c_str());
