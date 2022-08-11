@@ -29,7 +29,6 @@ enum DScreenSAState : uint32_t {
     DSCREEN_SA_EXIT_STATE_START = 0,
     DSCREEN_SA_EXIT_STATE_STOP = 1
 };
-
 DScreenSAState g_sinkSAState = DSCREEN_SA_EXIT_STATE_START;
 DScreenSAState g_sourceSAState = DSCREEN_SA_EXIT_STATE_START;
 std::mutex g_saProcessState;
@@ -45,7 +44,7 @@ void SetSinkProcessExit()
     }
     DHLOGI("exit sa process success.");
     ReportSaEvent(DSCREEN_EXIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, "dscreen sink sa exit success.");
-    exit(0);
+    _Exit(0);
 }
 
 void SetSourceProcessExit()
@@ -59,7 +58,7 @@ void SetSourceProcessExit()
     }
     DHLOGI("exit sa process success.");
     ReportSaEvent(DSCREEN_EXIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, "dscreen source sa exit success.");
-    exit(0);
+    _Exit(0);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

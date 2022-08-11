@@ -92,6 +92,7 @@ const std::string DSCREEN_LOG_TITLE_TAG = "DSCREEN";
 const std::string DSCREEN_PREFIX = "DISTRIBUTED_SCREEN";
 const std::string SCREEN_PREFIX = "SCREEN";
 const std::string DSCREEN_VERSION = "1.0";
+const std::string DSCREEN_PROCESS_NAME = "dscreen";
 const std::string SEPERATOR = "#";
 const std::string KEY_VERSION = "screenVersion";
 const std::string KEY_DISPLAY_ID = "displayId";
