@@ -59,6 +59,8 @@ public:
     void RegisterDScreenCallback(const sptr<IDScreenSourceCallback> &callback);
     void HandleScreenChange(const std::shared_ptr<DScreen> &changedScreen, Rosen::ScreenGroupChangeEvent event);
     std::shared_ptr<DScreen> FindDScreenByScreenId(uint64_t screenId);
+    void AddToGroup(const std::shared_ptr<DScreen> &changedScreen, uint64_t screenId);
+    void RemoveFromGroup(const std::shared_ptr<DScreen> &changedScreen, uint64_t screenId);
     void GetScreenDumpInfo(std::string &result);
     void PublishMessage(const DHTopic topic, const std::shared_ptr<DScreen> &dScreen);
 private:
