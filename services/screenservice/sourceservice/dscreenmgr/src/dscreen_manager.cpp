@@ -453,7 +453,7 @@ void DScreenManager::PublishMessage(const DHTopic topic, const std::shared_ptr<D
         message = messageJosn.dump();
     } else if (topic == DHTopic::TOPIC_STOP_DSCREEN) {
         messageJosn[SOURCE_WIN_ID] = dScreen->GetScreenId();
-        messageJosn[SOURCE_DEV_ID] = dScreen->GetDevId();
+        messageJosn[SINK_DEV_ID] = dScreen->GetDevId();
         message = messageJosn.dump();
     }
 
