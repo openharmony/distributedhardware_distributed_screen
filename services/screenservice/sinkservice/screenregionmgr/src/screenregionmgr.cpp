@@ -51,7 +51,7 @@ int32_t ScreenRegionManager::ReleaseAllRegions()
     std::lock_guard<std::mutex> lock(screenRegionsMtx_);
     for (const auto &item : screenRegions_) {
         std::shared_ptr<ScreenRegion> screenRegion = item.second;
-        if (!screenRegion) {
+        if (screenRegion == nullptr) {
             continue;
         }
         int32_t ret = screenRegion->Stop();
@@ -89,7 +89,7 @@ void ScreenRegionManager::GetScreenDumpInfo(std::string &result)
     for (const auto &iter : screenRegions_) {
         result.append("    {\n");
         std::shared_ptr<ScreenRegion> screenRegion = iter.second;
-        if (!screenRegion) {
+        if (screenRegion == nullptr) {
             continue;
         }
         uint64_t screenId = screenRegion->GetScreenId();
@@ -197,7 +197,7 @@ int32_t ScreenRegionManager::NotifyRemoteScreenService(const std::string &remote
     DHLOGI("Notify remote source screen service, remote devId: %s, eventCode: %d",
         GetAnonyString(remoteDevId).c_str(), eventCode);
     sptr<IDScreenSource> remoteSourceSA = GetDScreenSourceSA(remoteDevId);
-    if (!remoteSourceSA) {
+    if (remoteSourceSA == nullptr) {
         DHLOGE("get remote source sa failed.");
         return ERR_DH_SCREEN_SA_GET_REMOTE_SOURCE_SERVICE_FAIL;
     }
@@ -238,7 +238,7 @@ sptr<IDScreenSource> ScreenRegionManager::GetDScreenSourceSA(const std::string &
 void ScreenRegionManager::PublishMessage(const DHTopic topic, const uint64_t &screenId,
     const std::string &remoteDevId, const int32_t &windowId, std::shared_ptr<WindowProperty> windowProperty)
 {
-    DHLOGD("PublishMessage");
+    DHLOGI("ScreenRegionManager PublishMessage");
     if (DScreenFwkKit::GetInstance().GetDHFwkKit() == nullptr) {
         DHLOGE("GetDHFwkKit fail.");
         return;

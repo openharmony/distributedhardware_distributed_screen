@@ -272,7 +272,7 @@ int32_t SoftbusAdapter::OnSoftbusSessionOpened(int32_t sessionId, int32_t result
     }
 
     std::shared_ptr<ISoftbusListener> &listener = GetSoftbusListenerByName(sessionId);
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("Get softbus listener failed.");
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
@@ -288,7 +288,7 @@ void SoftbusAdapter::OnSoftbusSessionClosed(int32_t sessionId)
 {
     DHLOGI("%s: OnSessionClosed sessionId:%d.", LOG_TAG, sessionId);
     std::shared_ptr<ISoftbusListener> &listener = GetSoftbusListenerById(sessionId);
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("Get softbus listener failed.");
         return;
     }
@@ -311,7 +311,7 @@ void SoftbusAdapter::OnBytesReceived(int32_t sessionId, const void *data, uint32
     }
 
     std::shared_ptr<ISoftbusListener> &listener = GetSoftbusListenerByName(sessionId);
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("Get softbus listener failed.");
         return;
     }
@@ -332,7 +332,7 @@ void SoftbusAdapter::OnStreamReceived(int32_t sessionId, const StreamData *data,
     }
 
     std::shared_ptr<ISoftbusListener> &listener = GetSoftbusListenerByName(sessionId);
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("Get softbus listener failed.");
         return;
     }

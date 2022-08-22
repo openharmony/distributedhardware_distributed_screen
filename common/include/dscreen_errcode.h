@@ -20,6 +20,8 @@ namespace OHOS {
 namespace DistributedHardware {
 enum DScreenErrorCode {
     DH_SUCCESS = 0,
+    DSCREEN_INIT_ERR = -1,
+    DSCREEN_BAD_VALUE = -2,
     // SA error code
     ERR_DH_SCREEN_SA_GET_SAMGR_FAIL = -50000,
     ERR_DH_SCREEN_SA_GET_SOURCESERVICE_FAIL = -50001,

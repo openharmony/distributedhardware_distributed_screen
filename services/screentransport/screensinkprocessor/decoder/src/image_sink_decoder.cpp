@@ -46,7 +46,7 @@ int32_t ImageSinkDecoder::ConfigureDecoder(const VideoParam &configParam)
 int32_t ImageSinkDecoder::ReleaseDecoder()
 {
     DHLOGI("%s: ReleaseDecoder.", LOG_TAG);
-    if (!videoDecoder_) {
+    if (videoDecoder_ == nullptr) {
         DHLOGE("%s: Decoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -65,7 +65,7 @@ int32_t ImageSinkDecoder::ReleaseDecoder()
 int32_t ImageSinkDecoder::StartDecoder()
 {
     DHLOGI("%s: StartDecoder.", LOG_TAG);
-    if (!videoDecoder_) {
+    if (videoDecoder_ == nullptr) {
         DHLOGE("%s: Decoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -89,7 +89,7 @@ int32_t ImageSinkDecoder::StartDecoder()
 int32_t ImageSinkDecoder::StopDecoder()
 {
     DHLOGI("%s: StopDecoder.", LOG_TAG);
-    if (!videoDecoder_) {
+    if (videoDecoder_ == nullptr) {
         DHLOGE("%s: Decoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -146,7 +146,7 @@ int32_t ImageSinkDecoder::InitVideoDecoder(const VideoParam &configParam)
 int32_t ImageSinkDecoder::SetDecoderFormat(const VideoParam &configParam)
 {
     DHLOGI("%s: SetDecoderFormat.", LOG_TAG);
-    if (!videoDecoder_) {
+    if (videoDecoder_ == nullptr) {
         DHLOGE("%s: Decoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -200,7 +200,7 @@ int32_t ImageSinkDecoder::SetDecoderFormat(const VideoParam &configParam)
 int32_t ImageSinkDecoder::SetOutputSurface(sptr<Surface> &surface)
 {
     DHLOGI("%s: SetOutputSurface.", LOG_TAG);
-    if (!videoDecoder_) {
+    if (videoDecoder_ == nullptr) {
         DHLOGE("%s: Decoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -232,7 +232,7 @@ void ImageSinkDecoder::OnError(Media::AVCodecErrorType errorType, int32_t errorC
 {
     DHLOGI("%s: OnImageDecodeError, errorType(%d), errorCode(%d)", LOG_TAG, errorType, errorCode);
     std::shared_ptr<IImageSinkProcessorListener> listener = imageProcessorListener_.lock();
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("%s: Listener is null.", LOG_TAG);
         return;
     }
@@ -250,7 +250,7 @@ void ImageSinkDecoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecBuf
     Media::AVCodecBufferFlag flag)
 {
     DHLOGI("%s: OnDecodeOutputBufferAvailable.", LOG_TAG);
-    if (!videoDecoder_) {
+    if (videoDecoder_ == nullptr) {
         DHLOGE("%s: Decoder is null.", LOG_TAG);
         return;
     }
@@ -296,6 +296,7 @@ int32_t ImageSinkDecoder::StopInputThread()
 
 void ImageSinkDecoder::DecodeScreenData()
 {
+    DHLOGI("%s: DecodeScreenData.", LOG_TAG);
     while (isDecoderReady_) {
         std::shared_ptr<DataBuffer> screenData;
         int32_t bufferIndex = 0;
@@ -325,7 +326,8 @@ void ImageSinkDecoder::DecodeScreenData()
 
 int32_t ImageSinkDecoder::ProcessData(const std::shared_ptr<DataBuffer> &screenData, const int32_t bufferIndex)
 {
-    if (!videoDecoder_) {
+    DHLOGI("%s: ProcessData.", LOG_TAG);
+    if (videoDecoder_ == nullptr) {
         DHLOGE("%s: Decoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }

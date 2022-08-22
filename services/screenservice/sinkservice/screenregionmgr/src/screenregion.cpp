@@ -117,7 +117,7 @@ int32_t ScreenRegion::SetUp()
     }
 
     sptr<Surface> surface = ScreenClient::GetInstance().GetSurface(windowId_);
-    if (!surface) {
+    if (surface == nullptr) {
         DHLOGE("get window surface failed.");
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, "get window surface failed.");
         return ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED;
@@ -125,7 +125,7 @@ int32_t ScreenRegion::SetUp()
 
     surface_ = surface;
 
-    if (!sinkTrans_) {
+    if (sinkTrans_ == nullptr) {
         sinkTrans_ = std::make_shared<ScreenSinkTrans>();
     }
 
@@ -143,7 +143,7 @@ int32_t ScreenRegion::SetUp()
 int32_t ScreenRegion::Start()
 {
     DHLOGI("ScreenRegion::Start remoteDevId: %s", GetAnonyString(remoteDevId_).c_str());
-    if (!sinkTrans_) {
+    if (sinkTrans_ == nullptr) {
         DHLOGE("sink trans not init.");
         return ERR_DH_SCREEN_SA_SINKTRANS_NOT_INIT;
     }
@@ -165,7 +165,7 @@ int32_t ScreenRegion::Stop()
         return DH_SUCCESS;
     }
 
-    if (!sinkTrans_) {
+    if (sinkTrans_ == nullptr) {
         DHLOGE("sink trans not init.");
         return ERR_DH_SCREEN_SA_SINKTRANS_NOT_INIT;
     }

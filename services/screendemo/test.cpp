@@ -29,6 +29,8 @@
 #include "wm_common.h"
 #include "window.h"
 #include "window_option.h"
+#include "nativetoken_kit.h"
+#include "token_setproc.h"
 
 #include "decoder_demo.h"
 #include "softbus_adapter_mem.h"
@@ -103,7 +105,7 @@ static void StartMirror()
     }
 
     sptr<Display> defaultDisplay = DisplayManager::GetInstance().GetDefaultDisplay();
-    cout << "------------start mirror----------" <<endl;
+    cout << "------------start mirror----------" << endl;
     cout << "mirror screen Id is " << mirrorId << endl;
     vector<uint64_t> mirrorIds;
     mirrorIds.push_back(mirrorId);
@@ -240,6 +242,25 @@ static void PrintNodeProperty(NodeBasicInfo *nodeInfo)
 
 static void QueryRemoteDeviceInfo()
 {
+    uint64_t tokenId;
+    const char **perms = new const char *[1];
+    perms[0] = "ohos.permission.DISTRIBUTED_DATASYNC";
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = 1,
+        .dcaps = nullptr,
+        .perms = perms,
+        .aplStr = "system_basic",
+    };
+
+    infoInstance.acls = NULL;
+    infoInstance.aclsNum = 0;
+    infoInstance.processName = "test_attest";
+    tokenId = GetAccessTokenId(&infoInstance);
+    cout << "tokenId ====== " << tokenId << endl;
+    int32_t ret = SetSelfTokenID(tokenId);
+    cout << "ret ======" << ret << endl;
+
     NodeBasicInfo localNodeinfo;
     NodeBasicInfo *remoteNodeInfo = nullptr;
     int32_t infoNum = 0;
