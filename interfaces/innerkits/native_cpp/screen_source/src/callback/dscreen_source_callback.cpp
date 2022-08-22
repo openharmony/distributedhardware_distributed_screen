@@ -17,6 +17,7 @@
 
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
+#include "dscreen_util.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -25,7 +26,8 @@ DScreenSourceCallback::~DScreenSourceCallback() {}
 int32_t DScreenSourceCallback::OnNotifyRegResult(const std::string &devId, const std::string &dhId,
     const std::string &reqId, int32_t status, const std::string &data)
 {
-    DHLOGD("OnNotifyRegResult");
+    DHLOGI("DScreenSourceCallback OnNotifyRegResult devId: %s dhId: %s status: %d",
+        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), status);
     auto iter = registerCallbackMap_.find(reqId);
     if (iter != registerCallbackMap_.end()) {
         iter->second->OnRegisterResult(devId, dhId, status, data);
@@ -39,7 +41,8 @@ int32_t DScreenSourceCallback::OnNotifyRegResult(const std::string &devId, const
 int32_t DScreenSourceCallback::OnNotifyUnregResult(const std::string &devId, const std::string &dhId,
     const std::string &reqId, int32_t status, const std::string &data)
 {
-    DHLOGD("OnNotifyUnregResult");
+    DHLOGI("DScreenSourceCallback OnNotifyUnregResult devId: %s dhId: %s status: %d",
+        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), status);
     auto iter = unregisterCallbackMap_.find(reqId);
     if (iter != unregisterCallbackMap_.end()) {
         iter->second->OnUnregisterResult(devId, dhId, status, data);

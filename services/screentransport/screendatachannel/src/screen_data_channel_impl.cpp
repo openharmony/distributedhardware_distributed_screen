@@ -28,7 +28,7 @@ namespace DistributedHardware {
 int32_t ScreenDataChannelImpl::CreateSession(const std::shared_ptr<IScreenChannelListener> &listener)
 {
     DHLOGI("%s: CreateSession, peerDevId(%s)", LOG_TAG, GetAnonyString(peerDevId_).c_str());
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("%s: Channel listener is null", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -109,7 +109,7 @@ int32_t ScreenDataChannelImpl::CloseSession()
 int32_t ScreenDataChannelImpl::SendData(const std::shared_ptr<DataBuffer> &screenData)
 {
     DHLOGD("%s: SendData, sessionId(%d)", LOG_TAG, sessionId_);
-    if (!screenData) {
+    if (screenData == nullptr) {
         DHLOGE("%s: Screen data is null", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -136,7 +136,7 @@ void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, int32_t result)
     }
 
     std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("%s: Channel listener is null", LOG_TAG);
         return;
     }
@@ -148,7 +148,7 @@ void ScreenDataChannelImpl::OnSessionClosed(int32_t sessionId)
 {
     DHLOGI("%s: OnScreenSessionClosed, sessionId(%d).", LOG_TAG, sessionId);
     std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("%s: Channel listener is null", LOG_TAG);
         return;
     }
@@ -176,14 +176,14 @@ void ScreenDataChannelImpl::OnStreamReceived(int32_t sessionId, const StreamData
     }
 
     std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("%s: Channel listener is null.", LOG_TAG);
         return;
     }
 
     DHLOGI("%s: OnScreenStreamReceived, sessionId(%d) dataSize(%zu).", LOG_TAG, sessionId, data->bufLen);
     auto dataBuffer = std::make_shared<DataBuffer>(data->bufLen);
-    if (!dataBuffer) {
+    if (dataBuffer == nullptr) {
         DHLOGE("%s: DataBuffer is null.", LOG_TAG);
         return;
     }

@@ -27,7 +27,7 @@ int32_t ImageSourceProcessor::ConfigureImageProcessor(const VideoParam &localPar
 {
     DHLOGI("%s: ConfigureImageProcessor.", LOG_TAG);
     imageEncoder_ = std::make_shared<ImageSourceEncoder>(listener);
-    if (!imageEncoder_) {
+    if (imageEncoder_ == nullptr) {
         DHLOGE("%s: Create screen encoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -46,7 +46,7 @@ int32_t ImageSourceProcessor::ConfigureImageProcessor(const VideoParam &localPar
 int32_t ImageSourceProcessor::ReleaseImageProcessor()
 {
     DHLOGI("%s: ReleaseImageProcessor.", LOG_TAG);
-    if (!imageEncoder_) {
+    if (imageEncoder_ == nullptr) {
         DHLOGE("%s: Create screen encoder failed.", LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "ReleaseImageProcessor encoder is nullptr.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
@@ -67,7 +67,7 @@ int32_t ImageSourceProcessor::ReleaseImageProcessor()
 int32_t ImageSourceProcessor::StartImageProcessor()
 {
     DHLOGI("%s: StartImageProcessor.", LOG_TAG);
-    if (!imageEncoder_) {
+    if (imageEncoder_ == nullptr) {
         DHLOGE("%s: Create screen encoder failed.", LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "StartImageProcessor encoder is nullptr.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
@@ -88,7 +88,7 @@ int32_t ImageSourceProcessor::StartImageProcessor()
 int32_t ImageSourceProcessor::StopImageProcessor()
 {
     DHLOGI("%s: StopImageProcessor.", LOG_TAG);
-    if (!imageEncoder_) {
+    if (imageEncoder_ == nullptr) {
         DHLOGE("%s: Create screen encoder failed.", LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "StopImageProcessor encoder is nullptr.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;

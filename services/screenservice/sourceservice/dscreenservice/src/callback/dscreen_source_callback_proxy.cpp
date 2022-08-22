@@ -28,6 +28,11 @@ int32_t DScreenSourceCallbackProxy::OnNotifyRegResult(const std::string &devId, 
 {
     DHLOGD("OnNotifyRegResult, devId: %s, dhId: %s, reqId: %s, status: %d",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str(), status);
+    sptr<IRemoteObject> remote = Remote();
+    if (remote == nullptr) {
+        DHLOGE("DScreenSourceCallbackProxy remote service null");
+        return DSCREEN_BAD_VALUE;
+    }
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -43,7 +48,7 @@ int32_t DScreenSourceCallbackProxy::OnNotifyRegResult(const std::string &devId, 
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
 
-    Remote()->SendRequest(NOTIFY_REG_RESULT, data, reply, option);
+    remote->SendRequest(NOTIFY_REG_RESULT, data, reply, option);
     return reply.ReadInt32();
 }
 
@@ -52,6 +57,11 @@ int32_t DScreenSourceCallbackProxy::OnNotifyUnregResult(const std::string &devId
 {
     DHLOGD("OnNotifyUnregResult, devId: %s, dhId: %s, reqId: %s, status: %d",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str(), status);
+    sptr<IRemoteObject> remote = Remote();
+    if (remote == nullptr) {
+        DHLOGE("DScreenSourceCallbackProxy remote service null");
+        return DSCREEN_BAD_VALUE;
+    }
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -67,7 +77,7 @@ int32_t DScreenSourceCallbackProxy::OnNotifyUnregResult(const std::string &devId
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
 
-    Remote()->SendRequest(NOTIFY_UNREG_RESULT, data, reply, option);
+    remote->SendRequest(NOTIFY_UNREG_RESULT, data, reply, option);
     return reply.ReadInt32();
 }
 } // namespace DistributedHardware

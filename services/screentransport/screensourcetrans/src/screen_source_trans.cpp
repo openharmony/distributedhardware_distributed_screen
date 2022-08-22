@@ -49,7 +49,7 @@ int32_t ScreenSourceTrans::SetUp(const VideoParam &localParam, const VideoParam 
 int32_t ScreenSourceTrans::Release()
 {
     DHLOGI("%s: Release.", LOG_TAG);
-    if (!imageProcessor_ || !screenChannel_) {
+    if (imageProcessor_ == nullptr || screenChannel_ == nullptr) {
         DHLOGE("%s: Processor or channel is null, Setup first.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -80,7 +80,7 @@ int32_t ScreenSourceTrans::Release()
 int32_t ScreenSourceTrans::Start()
 {
     DHLOGI("%s: Start.", LOG_TAG);
-    if (!imageProcessor_ || !screenChannel_) {
+    if (imageProcessor_ == nullptr || screenChannel_ == nullptr) {
         DHLOGE("%s: Processor or channel is null, Setup first.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -109,7 +109,7 @@ int32_t ScreenSourceTrans::Start()
 int32_t ScreenSourceTrans::Stop()
 {
     DHLOGI("%s: Stop.", LOG_TAG);
-    if (!imageProcessor_ || !screenChannel_) {
+    if (imageProcessor_ == nullptr || screenChannel_ == nullptr) {
         DHLOGE("%s: Processor or channel is null, Setup first.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -144,7 +144,7 @@ int32_t ScreenSourceTrans::Stop()
 int32_t ScreenSourceTrans::RegisterStateCallback(const std::shared_ptr<IScreenSourceTransCallback> &callback)
 {
     DHLOGI("%s:RegisterStateCallback.", LOG_TAG);
-    if (!callback) {
+    if (callback == nullptr) {
         DHLOGE("%s: Trans callback is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -194,6 +194,7 @@ int32_t ScreenSourceTrans::CheckVideoParam(const VideoParam &param)
 int32_t ScreenSourceTrans::CheckTransParam(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::string &peerDevId)
 {
+    DHLOGI("%s:CheckTransParam.", LOG_TAG);
     if (peerDevId.empty()) {
         DHLOGE("%s: Remote device id is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
@@ -223,8 +224,9 @@ int32_t ScreenSourceTrans::CheckTransParam(const VideoParam &localParam, const V
 int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::string &peerDevId)
 {
+    DHLOGI("%s:InitScreenTrans.", LOG_TAG);
     screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
-    if (!screenChannel_) {
+    if (screenChannel_ == nullptr) {
         DHLOGE("%s: Create screen data channel failed.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -236,7 +238,7 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
     }
 
     imageProcessor_ = std::make_shared<ImageSourceProcessor>();
-    if (!imageProcessor_) {
+    if (imageProcessor_ == nullptr) {
         DHLOGE("%s: Create image processor failed.", LOG_TAG);
         screenChannel_ = nullptr;
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
@@ -256,7 +258,7 @@ int32_t ScreenSourceTrans::RegisterChannelListener()
 {
     DHLOGI("%s: RegisterChannelListener.", LOG_TAG);
     std::shared_ptr<IScreenChannelListener> listener = shared_from_this();
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("%s: Channel listener is null", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -279,11 +281,15 @@ int32_t ScreenSourceTrans::RegisterProcessorListener(const VideoParam &localPara
 {
     DHLOGI("%s: RegisterProcessorListener.", LOG_TAG);
     std::shared_ptr<IImageSourceProcessorListener> listener = shared_from_this();
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("%s: Processor listener is null", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
 
+    if (imageProcessor_ == nullptr) {
+        DHLOGE("%s: imageProcessor is null", LOG_TAG);
+        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
+    }
     int32_t ret = imageProcessor_->ConfigureImageProcessor(localParam, remoteParam, listener);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Config image processor failed ret: %d.", LOG_TAG, ret);
@@ -292,7 +298,7 @@ int32_t ScreenSourceTrans::RegisterProcessorListener(const VideoParam &localPara
     }
 
     encoderSurface_ = imageProcessor_->GetImageSurface();
-    if (!encoderSurface_) {
+    if (encoderSurface_ == nullptr) {
         DHLOGE("%s: Surface is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -303,6 +309,10 @@ int32_t ScreenSourceTrans::RegisterProcessorListener(const VideoParam &localPara
 void ScreenSourceTrans::OnSessionOpened()
 {
     DHLOGI("%s: OnChannelSessionOpened.", LOG_TAG);
+    if (imageProcessor_ == nullptr) {
+        DHLOGE("%s: imageProcessor is null", LOG_TAG);
+        return;
+    }
     int32_t ret = imageProcessor_->StartImageProcessor();
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Start image processor failed ret: %d.", LOG_TAG, ret);
@@ -326,7 +336,7 @@ void ScreenSourceTrans::OnSessionClosed()
     }
 
     std::shared_ptr<IScreenSourceTransCallback> callback = transCallback_.lock();
-    if (!callback) {
+    if (callback == nullptr) {
         DHLOGE("%s: Trans callback is null.", LOG_TAG);
         return;
     }
@@ -355,7 +365,7 @@ void ScreenSourceTrans::OnProcessorStateNotify(int32_t state)
 {
     DHLOGI("%s:OnProcessorStateNotify.", LOG_TAG);
     std::shared_ptr<IScreenSourceTransCallback> callback = transCallback_.lock();
-    if (!callback) {
+    if (callback == nullptr) {
         DHLOGE("%s: Trans callback is null.", LOG_TAG);
         return;
     }

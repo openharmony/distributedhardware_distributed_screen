@@ -130,10 +130,18 @@ int32_t ScreenMgrAdapter::SetImageSurface(uint64_t screenId, sptr<OHOS::Surface>
 
 std::shared_ptr<DScreenMapRelation> ScreenMgrAdapter::GetMapRelation(uint64_t screenId)
 {
-    DHLOGI("GetMapRelation");
+    DHLOGI("GetMapRelation screenId: %ulld", screenId);
     std::shared_ptr<DScreenMapRelation> mapRelation = std::make_shared<DScreenMapRelation>();
     sptr<Rosen::Screen> screen = Rosen::ScreenManager::GetInstance().GetScreenById(screenId);
+    if (screen == nullptr) {
+        DHLOGE("screen is nullptr.");
+        return nullptr;
+    }
     sptr<Rosen::Display> display = Rosen::DisplayManager::GetInstance().GetDefaultDisplay();
+    if (display == nullptr) {
+        DHLOGE("display is nullptr.");
+        return nullptr;
+    }
     mapRelation->SetDisplayId(display->GetId());
     mapRelation->SetScreenId(screenId);
 

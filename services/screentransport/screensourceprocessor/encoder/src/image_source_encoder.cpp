@@ -52,7 +52,7 @@ int32_t ImageSourceEncoder::ConfigureEncoder(const VideoParam &configParam)
 int32_t ImageSourceEncoder::ReleaseEncoder()
 {
     DHLOGI("%s: ReleaseEncoder.", LOG_TAG);
-    if (!videoEncoder_) {
+    if (videoEncoder_ == nullptr) {
         DHLOGE("%s: Encoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -71,7 +71,7 @@ int32_t ImageSourceEncoder::ReleaseEncoder()
 int32_t ImageSourceEncoder::StartEncoder()
 {
     DHLOGI("%s: StartEncoder.", LOG_TAG);
-    if (!videoEncoder_) {
+    if (videoEncoder_ == nullptr) {
         DHLOGE("%s: Encoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -94,7 +94,7 @@ int32_t ImageSourceEncoder::StartEncoder()
 int32_t ImageSourceEncoder::StopEncoder()
 {
     DHLOGI("%s: StopEncoder.", LOG_TAG);
-    if (!videoEncoder_) {
+    if (videoEncoder_ == nullptr) {
         DHLOGE("%s: Encoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -149,7 +149,7 @@ int32_t ImageSourceEncoder::InitVideoEncoder(const VideoParam &configParam)
 int32_t ImageSourceEncoder::SetEncoderFormat(const VideoParam &configParam)
 {
     DHLOGI("%s: SetEncoderFormat.", LOG_TAG);
-    if (!videoEncoder_) {
+    if (videoEncoder_ == nullptr) {
         DHLOGE("%s: Encoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -202,7 +202,7 @@ void ImageSourceEncoder::OnError(Media::AVCodecErrorType errorType, int32_t erro
 {
     DHLOGI("%s: Encoder error, errorType(%d), errorCode(%d)", LOG_TAG, errorType, errorCode);
     std::shared_ptr<IImageSourceProcessorListener> listener = imageProcessorListener_.lock();
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("%s: Processor listener is null", LOG_TAG);
         return;
     }
@@ -214,25 +214,25 @@ void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecB
 {
     DHLOGD("%s: OnOutputBufferAvailable.", LOG_TAG);
     std::shared_ptr<IImageSourceProcessorListener> listener = imageProcessorListener_.lock();
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("%s: Processor listener is null", LOG_TAG);
         return;
     }
-    if (!videoEncoder_) {
+    if (videoEncoder_ == nullptr) {
         DHLOGE("%s: Encoder is null.", LOG_TAG);
         return;
     }
 
     encoderBufferInfo_ = info;
     videoSharedMemory_ = videoEncoder_->GetOutputBuffer(index);
-    if (!videoSharedMemory_) {
+    if (videoSharedMemory_ == nullptr) {
         DHLOGE("%s: GetOutputBuffer failed.", LOG_TAG);
         return;
     }
 
     size_t dataSize = static_cast<size_t>(info.size);
     auto dataBuf = std::make_shared<DataBuffer>(dataSize);
-    if (!dataBuf) {
+    if (dataBuf == nullptr) {
         DHLOGE("%s: Create buffer failed.", LOG_TAG);
         return;
     }
