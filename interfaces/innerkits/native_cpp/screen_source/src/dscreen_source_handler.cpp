@@ -43,11 +43,11 @@ DScreenSourceHandler::DScreenSourceHandler()
 {
     DHLOGI("DScreenSourceHandler construct.");
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (!sourceSvrRecipient_) {
+    if (sourceSvrRecipient_ == nullptr) {
         sourceSvrRecipient_ = new (std::nothrow) DScreenSourceSvrRecipient();
     }
 
-    if (!dScreenSourceCallback_) {
+    if (dScreenSourceCallback_ == nullptr) {
         dScreenSourceCallback_ = new (std::nothrow) DScreenSourceCallback();
     }
 }
@@ -59,11 +59,11 @@ DScreenSourceHandler::~DScreenSourceHandler()
 
 int32_t DScreenSourceHandler::InitSource(const std::string &params)
 {
-    DHLOGD("InitSource");
+    DHLOGI("DScreenSourceHandler InitSource");
     std::unique_lock<std::mutex> lock(proxyMutex_);
-    if (!dScreenSourceProxy_) {
+    if (dScreenSourceProxy_ == nullptr) {
         sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-        if (!samgr) {
+        if (samgr == nullptr) {
             DHLOGE("Failed to get system ability mgr.");
             ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_GET_SAMGR_FAIL, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
                 "dscreen source get samgr failed.");
@@ -94,10 +94,9 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
     return DH_SUCCESS;
 }
 
-void DScreenSourceHandler::FinishStartSA(const std::string &params,
-    const sptr<IRemoteObject> &remoteObject)
+void DScreenSourceHandler::FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject)
 {
-    DHLOGD("FinishStartSA");
+    DHLOGI("DScreenSourceHandler FinishStartSA");
     std::unique_lock<std::mutex> lock(proxyMutex_);
     if (sourceSvrRecipient_ == nullptr) {
         DHLOGE("sourceSvrRecipient is nullptr.");
@@ -107,7 +106,7 @@ void DScreenSourceHandler::FinishStartSA(const std::string &params,
     }
     remoteObject->AddDeathRecipient(sourceSvrRecipient_);
     dScreenSourceProxy_ = iface_cast<IDScreenSource>(remoteObject);
-    if ((!dScreenSourceProxy_) || (!dScreenSourceProxy_->AsObject())) {
+    if ((dScreenSourceProxy_ == nullptr) || (!dScreenSourceProxy_->AsObject())) {
         DHLOGE("Failed to get dscreen source proxy.");
         ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
             "dscreen source get proxy failed.");
@@ -126,9 +125,9 @@ void DScreenSourceHandler::FinishStartSA(const std::string &params,
 
 int32_t DScreenSourceHandler::ReleaseSource()
 {
-    DHLOGD("ReleaseSource");
+    DHLOGI("DScreenSourceHandler ReleaseSource");
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (!dScreenSourceProxy_) {
+    if (dScreenSourceProxy_ == nullptr) {
         DHLOGE("screen source proxy not init.");
         ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
             "dscreen source proxy not init.");
@@ -142,18 +141,18 @@ int32_t DScreenSourceHandler::ReleaseSource()
 int32_t DScreenSourceHandler::RegisterDistributedHardware(const std::string &devId,
     const std::string &dhId, const EnableParam &param, std::shared_ptr<RegisterCallback> callback)
 {
-    DHLOGD("RegisterDistributedHardware, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
+    DHLOGI("RegisterDistributedHardware, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
         GetAnonyString(dhId).c_str());
     if (callback == nullptr) {
         DHLOGE("callback is nullptr.");
         return ERR_DH_SCREEN_REGISTER_CALLBACK_NOT_INIT;
     }
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (!dScreenSourceProxy_) {
+    if (dScreenSourceProxy_ == nullptr) {
         DHLOGE("screen source proxy not init.");
         return ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT;
     }
-    if (!dScreenSourceCallback_) {
+    if (dScreenSourceCallback_ == nullptr) {
         DHLOGE("screen source callback is null.");
         return ERR_DH_SCREEN_SA_SOURCEPCALLBACK_NOT_INIT;
     }
@@ -167,18 +166,18 @@ int32_t DScreenSourceHandler::RegisterDistributedHardware(const std::string &dev
 int32_t DScreenSourceHandler::UnregisterDistributedHardware(const std::string &devId,
     const std::string &dhId, std::shared_ptr<UnregisterCallback> callback)
 {
-    DHLOGD("UnregisterDistributedHardware, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
+    DHLOGI("UnregisterDistributedHardware, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
         GetAnonyString(dhId).c_str());
     if (callback == nullptr) {
         DHLOGE("callback is nullptr.");
         return ERR_DH_SCREEN_REGISTER_CALLBACK_NOT_INIT;
     }
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (!dScreenSourceProxy_) {
+    if (dScreenSourceProxy_ == nullptr) {
         DHLOGE("screen source proxy not init.");
         return ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT;
     }
-    if (!dScreenSourceCallback_) {
+    if (dScreenSourceCallback_ == nullptr) {
         DHLOGE("screen source callback is null.");
         return ERR_DH_SCREEN_SA_SOURCEPCALLBACK_NOT_INIT;
     }
@@ -192,7 +191,7 @@ int32_t DScreenSourceHandler::UnregisterDistributedHardware(const std::string &d
 int32_t DScreenSourceHandler::ConfigDistributedHardware(const std::string &devId,
     const std::string &dhId, const std::string &key, const std::string &value)
 {
-    DHLOGD("ConfigDistributedHardware");
+    DHLOGI("ConfigDistributedHardware");
     return DH_SUCCESS;
 }
 
@@ -206,7 +205,7 @@ void DScreenSourceHandler::OnRemoteSourceSvrDied(const wptr<IRemoteObject> &remo
 {
     DHLOGI("OnRemoteSourceSvrDied");
     sptr<IRemoteObject> remoteObject = remote.promote();
-    if (!remoteObject) {
+    if (remoteObject == nullptr) {
         DHLOGE("OnRemoteDied remote promoted failed");
         return;
     }
@@ -219,7 +218,7 @@ void DScreenSourceHandler::OnRemoteSourceSvrDied(const wptr<IRemoteObject> &remo
 
 IDistributedHardwareSource *GetSourceHardwareHandler()
 {
-    DHLOGD("GetSourceHardwareHandler");
+    DHLOGI("GetSourceHardwareHandler");
     return &DScreenSourceHandler::GetInstance();
 }
 }

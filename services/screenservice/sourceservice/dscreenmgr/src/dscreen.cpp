@@ -51,7 +51,7 @@ DScreen::~DScreen()
         taskQueueThread_.join();
     }
     int32_t ret = DH_SUCCESS;
-    if (sourceTrans_) {
+    if (sourceTrans_ != nullptr) {
         ret = sourceTrans_->Release();
     }
     if (ret != DH_SUCCESS) {
@@ -117,7 +117,7 @@ int32_t DScreen::AddTask(const std::shared_ptr<Task> &task)
 {
     DHLOGI("DScreen::AddTask, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
-    if (!task) {
+    if (task == nullptr) {
         DHLOGE("AddTask, task is invalid.");
         return ERR_DH_SCREEN_SA_DSCREEN_TASK_NOT_VALID;
     }
@@ -189,7 +189,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     }
 
     SetState(ENABLING);
-    if (!videoParam_) {
+    if (videoParam_ == nullptr) {
         videoParam_ = std::make_shared<VideoParam>();
     }
 
@@ -260,6 +260,10 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
     std::vector<std::string> localCodecArray;
     // query local support encoder type
     std::shared_ptr<Media::AVCodecList> codecList = Media::AVCodecListFactory::CreateAVCodecList();
+    if (codecList == nullptr) {
+        DHLOGE("codecList is nullptr.");
+        return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
+    }
     std::vector<std::shared_ptr<Media::VideoCaps>> caps = codecList->GetVideoEncoderCaps();
     for (const auto &cap : caps) {
         std::shared_ptr<Media::AVCodecInfo> codecInfo = cap->GetCodecInfo();
@@ -359,7 +363,7 @@ int32_t DScreen::SetUp()
     DHLOGD("SetUp, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
 
-    if (!sourceTrans_) {
+    if (sourceTrans_ == nullptr) {
         sourceTrans_ = std::make_shared<ScreenSourceTrans>();
     }
 
@@ -381,7 +385,7 @@ int32_t DScreen::Start()
 {
     DHLOGD("Start, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
-    if (!sourceTrans_) {
+    if (sourceTrans_ == nullptr) {
         DHLOGE("source trans not init.");
         return ERR_DH_SCREEN_SA_SOURCETRANS_NOT_INIT;
     }
@@ -398,7 +402,7 @@ int32_t DScreen::Stop()
 {
     DHLOGD("Stop, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
-    if (!sourceTrans_) {
+    if (sourceTrans_ == nullptr) {
         DHLOGE("source trans not init.");
         return ERR_DH_SCREEN_SA_SOURCETRANS_NOT_INIT;
     }

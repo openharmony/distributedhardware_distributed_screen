@@ -21,12 +21,18 @@
 
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
+#include "dscreen_util.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 int32_t DScreenSinkProxy::InitSink(const std::string &params)
 {
-    DHLOGD("InitSink");
+    DHLOGI("DScreenSinkProxy InitSink");
+    sptr<IRemoteObject> remote = Remote();
+    if (remote == nullptr) {
+        DHLOGE("DScreenSinkProxy remote service null");
+        return DSCREEN_BAD_VALUE;
+    }
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -40,14 +46,19 @@ int32_t DScreenSinkProxy::InitSink(const std::string &params)
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
 
-    Remote()->SendRequest(INIT_SINK, data, reply, option);
+    remote->SendRequest(INIT_SINK, data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
 
 int32_t DScreenSinkProxy::ReleaseSink()
 {
-    DHLOGD("ReleaseSink");
+    DHLOGI("DScreenSinkProxy ReleaseSink");
+    sptr<IRemoteObject> remote = Remote();
+    if (remote == nullptr) {
+        DHLOGE("DScreenSinkProxy remote service null");
+        return DSCREEN_BAD_VALUE;
+    }
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -56,14 +67,19 @@ int32_t DScreenSinkProxy::ReleaseSink()
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 
-    Remote()->SendRequest(RELEASE_SINK, data, reply, option);
+    remote->SendRequest(RELEASE_SINK, data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
 
 int32_t DScreenSinkProxy::SubscribeLocalHardware(const std::string &dhId, const std::string &param)
 {
-    DHLOGD("SubscribeLocalHardware");
+    DHLOGI("DScreenSinkProxy SubscribeLocalHardware dhId: %s", GetAnonyString(dhId).c_str());
+    sptr<IRemoteObject> remote = Remote();
+    if (remote == nullptr) {
+        DHLOGE("DScreenSinkProxy remote service null");
+        return DSCREEN_BAD_VALUE;
+    }
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -77,14 +93,19 @@ int32_t DScreenSinkProxy::SubscribeLocalHardware(const std::string &dhId, const 
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
 
-    Remote()->SendRequest(SUBSCRIBE_DISTRIBUTED_HARDWARE, data, reply, option);
+    remote->SendRequest(SUBSCRIBE_DISTRIBUTED_HARDWARE, data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
 
 int32_t DScreenSinkProxy::UnsubscribeLocalHardware(const std::string &dhId)
 {
-    DHLOGD("UnsubscribeLocalHardware");
+    DHLOGI("DScreenSinkProxy UnsubscribeLocalHardware dhId: %s", GetAnonyString(dhId).c_str());
+    sptr<IRemoteObject> remote = Remote();
+    if (remote == nullptr) {
+        DHLOGE("DScreenSinkProxy remote service null");
+        return DSCREEN_BAD_VALUE;
+    }
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -98,14 +119,20 @@ int32_t DScreenSinkProxy::UnsubscribeLocalHardware(const std::string &dhId)
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
 
-    Remote()->SendRequest(UNSUBSCRIBE_DISTRIBUTED_HARDWARE, data, reply, option);
+    remote->SendRequest(UNSUBSCRIBE_DISTRIBUTED_HARDWARE, data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
 
 void DScreenSinkProxy::DScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent)
 {
-    DHLOGD("DScreenNotify");
+    DHLOGI("DScreenNotify devId: %s eventCode: %d eventContent: %s",
+        GetAnonyString(devId).c_str(), eventCode, eventContent.c_str());
+    sptr<IRemoteObject> remote = Remote();
+    if (remote == nullptr) {
+        DHLOGE("DScreenSinkProxy remote service null");
+        return;
+    }
     MessageParcel data;
     MessageParcel reply;
     MessageOption option = { MessageOption::TF_ASYNC };
@@ -119,7 +146,7 @@ void DScreenSinkProxy::DScreenNotify(const std::string &devId, int32_t eventCode
         return;
     }
 
-    Remote()->SendRequest(DSCREEN_NOTIFY, data, reply, option);
+    remote->SendRequest(DSCREEN_NOTIFY, data, reply, option);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

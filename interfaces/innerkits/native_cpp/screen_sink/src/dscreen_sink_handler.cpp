@@ -31,6 +31,7 @@
 #include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
 #include "dscreen_sink_load_callback.h"
+#include "dscreen_util.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -52,11 +53,11 @@ DScreenSinkHandler::~DScreenSinkHandler()
 
 int32_t DScreenSinkHandler::InitSink(const std::string &params)
 {
-    DHLOGD("InitSink");
+    DHLOGI("DScreenSinkHandler InitSink");
     std::unique_lock<std::mutex> lock(proxyMutex_);
-    if (!dScreenSinkProxy_) {
+    if (dScreenSinkProxy_ == nullptr) {
         sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-        if (!samgr) {
+        if (samgr == nullptr) {
             DHLOGE("Failed to get system ability mgr.");
             ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_GET_SAMGR_FAIL, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
                 "dscreen sink get samgr failed.");
@@ -93,10 +94,9 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
     return DH_SUCCESS;
 }
 
-void DScreenSinkHandler::FinishStartSA(const std::string &params,
-    const sptr<IRemoteObject> &remoteObject)
+void DScreenSinkHandler::FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject)
 {
-    DHLOGD("FinishStartSA");
+    DHLOGI("DScreenSinkHandler FinishStartSA");
     std::unique_lock<std::mutex> lock(proxyMutex_);
     if (sinkSvrRecipient_ == nullptr) {
         DHLOGE("sinkSvrRecipient is nullptr.");
@@ -106,7 +106,7 @@ void DScreenSinkHandler::FinishStartSA(const std::string &params,
     }
     remoteObject->AddDeathRecipient(sinkSvrRecipient_);
     dScreenSinkProxy_ = iface_cast<IDScreenSink>(remoteObject);
-    if ((!dScreenSinkProxy_) || (!dScreenSinkProxy_->AsObject())) {
+    if ((dScreenSinkProxy_== nullptr) || (!dScreenSinkProxy_->AsObject())) {
         DHLOGE("Failed to get dscreen sink proxy.");
         ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
             "dscreen sink get proxy failed.");
@@ -119,9 +119,9 @@ void DScreenSinkHandler::FinishStartSA(const std::string &params,
 
 int32_t DScreenSinkHandler::ReleaseSink()
 {
-    DHLOGD("ReleaseSink");
+    DHLOGI("DScreenSinkHandler ReleaseSink");
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (!dScreenSinkProxy_) {
+    if (dScreenSinkProxy_ == nullptr) {
         DHLOGE("screen sink proxy not init.");
         ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
             "dscreen sink proxy not init.");
@@ -135,9 +135,9 @@ int32_t DScreenSinkHandler::ReleaseSink()
 
 int32_t DScreenSinkHandler::SubscribeLocalHardware(const std::string &dhId, const std::string &param)
 {
-    DHLOGD("SubscribeLocalHardware");
+    DHLOGI("DScreenSinkHandler SubscribeLocalHardware dhId: %s", GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (!dScreenSinkProxy_) {
+    if (dScreenSinkProxy_ == nullptr) {
         DHLOGE("screen sink proxy not init.");
         return ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT;
     }
@@ -147,9 +147,9 @@ int32_t DScreenSinkHandler::SubscribeLocalHardware(const std::string &dhId, cons
 
 int32_t DScreenSinkHandler::UnsubscribeLocalHardware(const std::string &dhId)
 {
-    DHLOGD("UnsubscribeLocalHardware");
+    DHLOGI("DScreenSinkHandler UnsubscribeLocalHardware dhId: %s", GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (!dScreenSinkProxy_) {
+    if (dScreenSinkProxy_ == nullptr) {
         DHLOGE("screen sink proxy not init.");
         return ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT;
     }
@@ -165,9 +165,9 @@ void DScreenSinkHandler::DScreenSinkSvrRecipient::OnRemoteDied(const wptr<IRemot
 
 void DScreenSinkHandler::OnRemoteSinkSvrDied(const wptr<IRemoteObject> &remote)
 {
-    DHLOGI("OnRemoteSinkSvrDied");
+    DHLOGI("DScreenSinkHandler OnRemoteSinkSvrDied");
     sptr<IRemoteObject> remoteObject = remote.promote();
-    if (!remoteObject) {
+    if (remoteObject == nullptr) {
         DHLOGE("OnRemoteDied remote promoted failed");
         return;
     }
@@ -180,7 +180,7 @@ void DScreenSinkHandler::OnRemoteSinkSvrDied(const wptr<IRemoteObject> &remote)
 
 IDistributedHardwareSink *GetSinkHardwareHandler()
 {
-    DHLOGD("GetSinkHardwareHandler");
+    DHLOGI("GetSinkHardwareHandler");
     return &DScreenSinkHandler::GetInstance();
 }
 } // namespace DistributedHardware

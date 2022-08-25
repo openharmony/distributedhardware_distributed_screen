@@ -45,12 +45,13 @@ DScreenHandler::~DScreenHandler()
 int32_t DScreenHandler::Initialize()
 {
     DHLOGI("DScreenHandler Initialize");
-    if (!screenListener_) {
-        screenListener_ = new ScreenListener();
+    if (screenListener_ == nullptr) {
+        screenListener_ = new (std::nothrow) ScreenListener();
     }
     bool ret = Rosen::ScreenManager::GetInstance().RegisterScreenListener(screenListener_);
     if (!ret) {
         DHLOGE("register screen listener failed.");
+        return DSCREEN_INIT_ERR;
     }
     return DH_SUCCESS;
 }
@@ -59,6 +60,7 @@ void ScreenListener::OnConnect(uint64_t screenId)
 {
     DHLOGI("on screen connect");
     if (screenId != SCREEN_ID_DEFAULT) {
+        DHLOGE("screenId is invalid, screenId: %ulld", screenId);
         return;
     }
     sptr<Rosen::Screen> screen = Rosen::ScreenManager::GetInstance().GetScreenById(screenId);
@@ -90,6 +92,7 @@ void ScreenListener::OnDisconnect(uint64_t screenId)
 
 void DScreenHandler::PluginHardware(const std::string &dhId, const std::string &attr)
 {
+    DHLOGI("DScreenHandler PluginHardware");
     if (listener_ != nullptr) {
         listener_->PluginHardware(dhId, attr);
     }
@@ -97,6 +100,7 @@ void DScreenHandler::PluginHardware(const std::string &dhId, const std::string &
 
 void DScreenHandler::UnPluginHardware(const std::string &dhId)
 {
+    DHLOGI("DScreenHandler UnPluginHardware");
     if (listener_ != nullptr) {
         listener_->UnPluginHardware(dhId);
     }
@@ -151,6 +155,10 @@ bool DScreenHandler::IsSupportPlugin()
 void DScreenHandler::RegisterPluginListener(std::shared_ptr<PluginListener> listener)
 {
     DHLOGD("DScreenHandler register plugin listener");
+    if (listener == nullptr) {
+        DHLOGE("DScreenHandler unregistering plugin listener");
+        return;
+    }
     listener_ = listener;
 }
 
@@ -192,6 +200,7 @@ std::string DScreenHandler::QueryCodecInfo()
 
 IHardwareHandler* GetHardwareHandler()
 {
+    DHLOGI("DScreenHandler::GetHardwareHandler");
     return &DScreenHandler::GetInstance();
 }
 } // namespace DistributedHardware
