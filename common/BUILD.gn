@@ -35,7 +35,6 @@ ohos_shared_library("distributed_screen_utils") {
     "c_utils:utils",
     "dsoftbus:softbus_client",
     "hisysevent_native:libhisysevent",
-    "hitrace_native:hitrace_meter",
     "hiviewdfx_hilog_native:libhilog",
   ]
 

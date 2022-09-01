@@ -22,7 +22,9 @@ ohos_shared_library("distributed_screen_sink") {
     "//third_party/json/include",
     "//commonlibrary/c_utils/base/include",
     "//utils/system/safwk/native/include",
-    "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
+    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
     "${windowmanager_path}/interfaces/innerkits/dm",
     "${fwk_common_path}/utils/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
@@ -43,6 +45,9 @@ ohos_shared_library("distributed_screen_sink") {
     "${services_path}/screentransport/screensinkprocessor/include",
     "${services_path}/screentransport/screensinkprocessor/decoder/include",
     "${services_path}/screenclient/include/",
+    "//foundation/multimedia/image_standard/interfaces/innerkits/include",
+    "//drivers/peripheral/display/interfaces/include",
+    "//drivers/peripheral/base",
   ]
 
   sources = [
@@ -63,7 +68,6 @@ ohos_shared_library("distributed_screen_sink") {
     "${services_path}/screenclient:distributed_screen_client",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "${windowmanager_path}/dm:libdm",
-    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
   ]
 
   defines = [
@@ -74,9 +78,7 @@ ohos_shared_library("distributed_screen_sink") {
 
   external_deps = [
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
-    "multimedia_player_framework:media_client",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
