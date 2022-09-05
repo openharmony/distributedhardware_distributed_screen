@@ -51,7 +51,7 @@ private:
     };
 
     DScreenSourceHandler();
-    ~DScreenSourceHandler();
+    ~DScreenSourceHandler() = default;
 
     std::mutex proxyMutex_;
     std::condition_variable proxyConVar_;

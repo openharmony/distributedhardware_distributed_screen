@@ -103,11 +103,8 @@ int32_t DScreenSourceService::ReleaseSource()
 int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
     const EnableParam &param, const std::string &reqId)
 {
-    DHLOGI("RegisterDistributedHardware");
     std::string version = param.version;
     std::string attrs = param.attrs;
-    DHLOGD("enable distributedScreen. devId: %s, dhId: %s, reqId: %s, attrs: %s, version: %s",
-        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str(), attrs.c_str(), version.c_str());
     int ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, attrs, reqId);
     if (ret != DH_SUCCESS) {
         DHLOGE("enable distributedScreen failed. devId: %s, dhId: %s, reqId: %s, attrs: %s",
@@ -122,7 +119,6 @@ int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &dev
 int32_t DScreenSourceService::UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
     const std::string &reqId)
 {
-    DHLOGI("UnregisterDistributedHardware");
     int ret = DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
     if (ret != DH_SUCCESS) {
         DHLOGE("disable distributedScreen failed. devId: %s, dhId: %s, reqId: %s",
@@ -137,7 +133,10 @@ int32_t DScreenSourceService::UnregisterDistributedHardware(const std::string &d
 int32_t DScreenSourceService::ConfigDistributedHardware(const std::string &devId, const std::string &dhId,
     const std::string &key, const std::string &value)
 {
-    DHLOGI("ConfigDistributedHardware");
+    (void)devId;
+    (void)dhId;
+    (void)key;
+    (void)value;
     return DH_SUCCESS;
 }
 
@@ -151,6 +150,7 @@ void DScreenSourceService::DScreenNotify(const std::string &devId, const int32_t
 int32_t DScreenSourceService::Dump(int32_t fd, const std::vector<std::u16string>& args)
 {
     DHLOGI("DScreenSourceService  Dump.");
+    (void)args;
     std::string result;
     DScreenManager::GetInstance().GetScreenDumpInfo(result);
     int ret = dprintf(fd, "%s\n", result.c_str());

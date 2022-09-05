@@ -23,7 +23,6 @@ namespace OHOS {
 namespace DistributedHardware {
 DScreenSinkStub::DScreenSinkStub()
 {
-    DHLOGI("DScreenSinkStub construct.");
     memberFuncMap_[INIT_SINK] = &DScreenSinkStub::InitSinkInner;
     memberFuncMap_[RELEASE_SINK] = &DScreenSinkStub::ReleaseSinkInner;
     memberFuncMap_[SUBSCRIBE_DISTRIBUTED_HARDWARE] = &DScreenSinkStub::SubscribeDistributedHardwareInner;
@@ -31,15 +30,9 @@ DScreenSinkStub::DScreenSinkStub()
     memberFuncMap_[DSCREEN_NOTIFY] = &DScreenSinkStub::DScreenNotifyInner;
 }
 
-DScreenSinkStub::~DScreenSinkStub()
-{
-    DHLOGI("DScreenSinkStub deconstruct.");
-}
-
 int32_t DScreenSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("OnRemoteRequest, code: %d", code);
     std::u16string desc = DScreenSinkStub::GetDescriptor();
     std::u16string remoteDesc = data.ReadInterfaceToken();
     if (desc != remoteDesc) {
@@ -59,7 +52,6 @@ int32_t DScreenSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &data, Mes
 int32_t DScreenSinkStub::InitSinkInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("InitSinkInner");
     std::string param = data.ReadString();
     int32_t ret = InitSink(param);
     reply.WriteInt32(ret);
@@ -69,7 +61,6 @@ int32_t DScreenSinkStub::InitSinkInner(MessageParcel &data, MessageParcel &reply
 int32_t DScreenSinkStub::ReleaseSinkInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("ReleaseSinkInner");
     int32_t ret = ReleaseSink();
     reply.WriteInt32(ret);
     return DH_SUCCESS;
@@ -78,7 +69,6 @@ int32_t DScreenSinkStub::ReleaseSinkInner(MessageParcel &data, MessageParcel &re
 int32_t DScreenSinkStub::SubscribeDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("SubscribeDistributedHardwareInner");
     std::string dhId = data.ReadString();
     std::string param = data.ReadString();
     int32_t ret = SubscribeLocalHardware(dhId, param);
@@ -89,7 +79,6 @@ int32_t DScreenSinkStub::SubscribeDistributedHardwareInner(MessageParcel &data, 
 int32_t DScreenSinkStub::UnsubscribeDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("UnsubscribeDistributedHardwareInner");
     std::string dhId = data.ReadString();
     int32_t ret = UnsubscribeLocalHardware(dhId);
     reply.WriteInt32(ret);
@@ -99,7 +88,6 @@ int32_t DScreenSinkStub::UnsubscribeDistributedHardwareInner(MessageParcel &data
 int32_t DScreenSinkStub::DScreenNotifyInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("DScreenNotifyInner");
     std::string devId = data.ReadString();
     int32_t eventCode = data.ReadInt32();
     std::string eventContent = data.ReadString();

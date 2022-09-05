@@ -32,9 +32,9 @@ namespace DistributedHardware {
 class DScreenCallback : public IDScreenCallback {
 public:
     void OnRegResult(const std::shared_ptr<DScreen> &dScreen, const std::string &reqId,
-        int32_t status, const std::string &data) override;
+        const int32_t status, const std::string &data) override;
     void OnUnregResult(const std::shared_ptr<DScreen> &dScreen, const std::string &reqId,
-        int32_t status, const std::string &data) override;
+        const int32_t status, const std::string &data) override;
 };
 
 class DScreenGroupListener : public Rosen::ScreenManager::IScreenGroupListener {
@@ -46,9 +46,9 @@ class DScreenManager {
 DECLARE_SINGLE_INSTANCE_BASE(DScreenManager);
 public:
     void OnRegResult(const std::shared_ptr<DScreen> &dScreen, const std::string &reqId,
-        int32_t status, const std::string &data);
+        const int32_t status, const std::string &data);
     void OnUnregResult(const std::shared_ptr<DScreen> &dScreen, const std::string &reqId,
-        int32_t status, const std::string &data);
+        const int32_t status, const std::string &data);
 
     int32_t Init();
     int32_t UnInit();
@@ -59,8 +59,8 @@ public:
     void RegisterDScreenCallback(const sptr<IDScreenSourceCallback> &callback);
     void HandleScreenChange(const std::shared_ptr<DScreen> &changedScreen, Rosen::ScreenGroupChangeEvent event);
     std::shared_ptr<DScreen> FindDScreenByScreenId(uint64_t screenId);
-    void AddToGroup(const std::shared_ptr<DScreen> &changedScreen, uint64_t screenId);
-    void RemoveFromGroup(const std::shared_ptr<DScreen> &changedScreen, uint64_t screenId);
+    int32_t AddToGroup(const std::shared_ptr<DScreen> &changedScreen, uint64_t screenId);
+    int32_t RemoveFromGroup(const std::shared_ptr<DScreen> &changedScreen, uint64_t screenId);
     void GetScreenDumpInfo(std::string &result);
     void PublishMessage(const DHTopic topic, const std::shared_ptr<DScreen> &dScreen);
 private:

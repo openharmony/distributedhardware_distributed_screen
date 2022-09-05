@@ -26,7 +26,6 @@ namespace OHOS {
 namespace DistributedHardware {
 DScreenSourceStub::DScreenSourceStub()
 {
-    DHLOGI("DScreenSourceStub construct.");
     memberFuncMap_[INIT_SOURCE] = &DScreenSourceStub::InitSourceInner;
     memberFuncMap_[RELEASE_SOURCE] = &DScreenSourceStub::ReleaseSourceInner;
     memberFuncMap_[REGISTER_DISTRIBUTED_HARDWARE] = &DScreenSourceStub::RegisterDistributedHardwareInner;
@@ -35,15 +34,9 @@ DScreenSourceStub::DScreenSourceStub()
     memberFuncMap_[DSCREEN_NOTIFY] = &DScreenSourceStub::DScreenNotifyInner;
 }
 
-DScreenSourceStub::~DScreenSourceStub()
-{
-    DHLOGI("DScreenSourceStub deconstruct.");
-}
-
 int32_t DScreenSourceStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("OnRemoteRequest, code: %d", code);
     std::u16string desc = DScreenSourceStub::GetDescriptor();
     std::u16string remoteDesc = data.ReadInterfaceToken();
     if (desc != remoteDesc) {
@@ -63,7 +56,6 @@ int32_t DScreenSourceStub::OnRemoteRequest(uint32_t code, MessageParcel &data, M
 int32_t DScreenSourceStub::InitSourceInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("InitSourceInner");
     std::string param = data.ReadString();
     sptr<IRemoteObject> remoteObject = data.ReadRemoteObject();
     if (remoteObject == nullptr) {
@@ -80,7 +72,6 @@ int32_t DScreenSourceStub::InitSourceInner(MessageParcel &data, MessageParcel &r
 int32_t DScreenSourceStub::ReleaseSourceInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("ReleaseSourceInner");
     int32_t ret = ReleaseSource();
     reply.WriteInt32(ret);
     return DH_SUCCESS;
@@ -89,7 +80,6 @@ int32_t DScreenSourceStub::ReleaseSourceInner(MessageParcel &data, MessageParcel
 int32_t DScreenSourceStub::RegisterDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("RegisterDistributedHardwareInner");
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string version = data.ReadString();
@@ -107,7 +97,6 @@ int32_t DScreenSourceStub::RegisterDistributedHardwareInner(MessageParcel &data,
 int32_t DScreenSourceStub::UnregisterDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("UnregisterDistributedHardwareInner");
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string reqId = data.ReadString();
@@ -120,7 +109,6 @@ int32_t DScreenSourceStub::UnregisterDistributedHardwareInner(MessageParcel &dat
 int32_t DScreenSourceStub::ConfigDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("ConfigDistributedHardwareInner");
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string key = data.ReadString();
@@ -134,7 +122,6 @@ int32_t DScreenSourceStub::ConfigDistributedHardwareInner(MessageParcel &data, M
 int32_t DScreenSourceStub::DScreenNotifyInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("DScreenNotifyInner");
     std::string devId = data.ReadString();
     int32_t eventCode = data.ReadInt32();
     std::string eventContent = data.ReadString();
