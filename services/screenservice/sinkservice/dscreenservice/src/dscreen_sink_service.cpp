@@ -71,6 +71,7 @@ bool DScreenSinkService::Init()
 int32_t DScreenSinkService::InitSink(const std::string &params)
 {
     DHLOGI("InitSink");
+    (void)params;
     return DH_SUCCESS;
 }
 
@@ -86,12 +87,15 @@ int32_t DScreenSinkService::ReleaseSink()
 int32_t DScreenSinkService::SubscribeLocalHardware(const std::string &dhId, const std::string &param)
 {
     DHLOGI("SubscribeLocalHardware");
+    (void)dhId;
+    (void)param;
     return DH_SUCCESS;
 }
 
 int32_t DScreenSinkService::UnsubscribeLocalHardware(const std::string &dhId)
 {
     DHLOGI("UnsubscribeLocalHardware");
+    (void)dhId;
     return DH_SUCCESS;
 }
 
@@ -105,6 +109,7 @@ void DScreenSinkService::DScreenNotify(const std::string &devId, int32_t eventCo
 int32_t DScreenSinkService::Dump(int32_t fd, const std::vector<std::u16string>& args)
 {
     DHLOGI("DScreenSinkService  Dump.");
+    (void)args;
     std::string result;
     ScreenRegionManager::GetInstance().GetScreenDumpInfo(result);
     int ret = dprintf(fd, "%s\n", result.c_str());

@@ -29,7 +29,7 @@ namespace DistributedHardware {
 class DScreenSourceCallback : public DScreenSourceCallbackStub {
 public:
     DScreenSourceCallback() = default;
-    ~DScreenSourceCallback();
+    ~DScreenSourceCallback() = default;
 
     int32_t OnNotifyRegResult(const std::string &devId, const std::string &dhId,
         const std::string &reqId, int32_t status, const std::string &data) override;

@@ -21,8 +21,6 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-DScreenSourceCallback::~DScreenSourceCallback() {}
-
 int32_t DScreenSourceCallback::OnNotifyRegResult(const std::string &devId, const std::string &dhId,
     const std::string &reqId, int32_t status, const std::string &data)
 {
@@ -30,6 +28,10 @@ int32_t DScreenSourceCallback::OnNotifyRegResult(const std::string &devId, const
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), status);
     auto iter = registerCallbackMap_.find(reqId);
     if (iter != registerCallbackMap_.end()) {
+        if (iter->second == nullptr) {
+            DHLOGE("DScreenSourceCallback Regcallback is null.");
+            return ERR_DH_SCREEN_SA_REGISTERCALLBACK_NOT_FOUND;
+        }
         iter->second->OnRegisterResult(devId, dhId, status, data);
         registerCallbackMap_.erase(reqId);
         return DH_SUCCESS;
@@ -45,6 +47,10 @@ int32_t DScreenSourceCallback::OnNotifyUnregResult(const std::string &devId, con
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), status);
     auto iter = unregisterCallbackMap_.find(reqId);
     if (iter != unregisterCallbackMap_.end()) {
+        if (iter->second == nullptr) {
+            DHLOGE("DScreenSourceCallback Unregcallback is null.");
+            return ERR_DH_SCREEN_SA_UNREGISTERCALLBACK_NOT_FOUND;
+        }
         iter->second->OnUnregisterResult(devId, dhId, status, data);
         unregisterCallbackMap_.erase(reqId);
         return DH_SUCCESS;

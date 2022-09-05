@@ -28,7 +28,6 @@ namespace OHOS {
 namespace DistributedHardware {
 int32_t DScreenSourceProxy::InitSource(const std::string &params, const sptr<IDScreenSourceCallback> &callback)
 {
-    DHLOGI("DScreenSourceProxy InitSource");
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceProxy remote service null");
@@ -55,7 +54,6 @@ int32_t DScreenSourceProxy::InitSource(const std::string &params, const sptr<IDS
 
 int32_t DScreenSourceProxy::ReleaseSource()
 {
-    DHLOGI("DScreenSourceProxy ReleaseSource");
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceProxy remote service null");
@@ -77,8 +75,6 @@ int32_t DScreenSourceProxy::ReleaseSource()
 int32_t DScreenSourceProxy::RegisterDistributedHardware(const std::string &devId,
     const std::string &dhId, const EnableParam &param, const std::string &reqId)
 {
-    DHLOGI("DScreenSourceProxy RegisterDistributedHardware devId: %s dhId: %s",
-        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceProxy remote service null");
@@ -106,8 +102,6 @@ int32_t DScreenSourceProxy::RegisterDistributedHardware(const std::string &devId
 int32_t DScreenSourceProxy::UnregisterDistributedHardware(const std::string &devId,
     const std::string &dhId, const std::string &reqId)
 {
-    DHLOGI("DScreenSourceProxy UnregisterDistributedHardware devId: %s dhId: %s",
-        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceProxy remote service null");
@@ -134,8 +128,6 @@ int32_t DScreenSourceProxy::UnregisterDistributedHardware(const std::string &dev
 int32_t DScreenSourceProxy::ConfigDistributedHardware(const std::string &devId,
     const std::string &dhId, const std::string &key, const std::string &value)
 {
-    DHLOGI("DScreenSourceProxy ConfigDistributedHardware devId: %s dhId: %s",
-        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceProxy remote service null");
@@ -162,8 +154,6 @@ int32_t DScreenSourceProxy::ConfigDistributedHardware(const std::string &devId,
 void DScreenSourceProxy::DScreenNotify(const std::string &devId,
     int32_t eventCode, const std::string &eventContent)
 {
-    DHLOGI("DScreenNotify devId: %s eventCode: %d eventContent: %s",
-        GetAnonyString(devId).c_str(), eventCode, eventContent.c_str());
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceProxy remote service null");

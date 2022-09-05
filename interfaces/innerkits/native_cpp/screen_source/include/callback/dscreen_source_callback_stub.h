@@ -31,7 +31,7 @@ namespace DistributedHardware {
 class DScreenSourceCallbackStub : public IRemoteStub<IDScreenSourceCallback> {
 public:
     DScreenSourceCallbackStub();
-    virtual ~DScreenSourceCallbackStub();
+    virtual ~DScreenSourceCallbackStub() = default;
     int32_t OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
         MessageOption &option) override;
 private:

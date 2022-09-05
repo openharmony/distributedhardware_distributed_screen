@@ -52,11 +52,6 @@ DScreenSourceHandler::DScreenSourceHandler()
     }
 }
 
-DScreenSourceHandler::~DScreenSourceHandler()
-{
-    DHLOGI("~DScreenSourceHandler.");
-}
-
 int32_t DScreenSourceHandler::InitSource(const std::string &params)
 {
     DHLOGI("DScreenSourceHandler InitSource");
@@ -97,7 +92,7 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
 void DScreenSourceHandler::FinishStartSA(const std::string &params, const sptr<IRemoteObject> &remoteObject)
 {
     DHLOGI("DScreenSourceHandler FinishStartSA");
-    std::unique_lock<std::mutex> lock(proxyMutex_);
+    std::lock_guard<std::mutex> lock(proxyMutex_);
     if (sourceSvrRecipient_ == nullptr) {
         DHLOGE("sourceSvrRecipient is nullptr.");
         ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
@@ -106,7 +101,7 @@ void DScreenSourceHandler::FinishStartSA(const std::string &params, const sptr<I
     }
     remoteObject->AddDeathRecipient(sourceSvrRecipient_);
     dScreenSourceProxy_ = iface_cast<IDScreenSource>(remoteObject);
-    if ((dScreenSourceProxy_ == nullptr) || (!dScreenSourceProxy_->AsObject())) {
+    if ((dScreenSourceProxy_ == nullptr) || (dScreenSourceProxy_->AsObject() == nullptr)) {
         DHLOGE("Failed to get dscreen source proxy.");
         ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
             "dscreen source get proxy failed.");
@@ -141,12 +136,16 @@ int32_t DScreenSourceHandler::ReleaseSource()
 int32_t DScreenSourceHandler::RegisterDistributedHardware(const std::string &devId,
     const std::string &dhId, const EnableParam &param, std::shared_ptr<RegisterCallback> callback)
 {
-    DHLOGI("RegisterDistributedHardware, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
-        GetAnonyString(dhId).c_str());
+    if (devId.empty() || dhId.empty()) {
+        DHLOGE("device id or dh id empty.");
+        return ERR_DH_SCREEN_STRING_PARAM_EMPTY;
+    }
     if (callback == nullptr) {
         DHLOGE("callback is nullptr.");
         return ERR_DH_SCREEN_REGISTER_CALLBACK_NOT_INIT;
     }
+    DHLOGI("RegisterDistributedHardware, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
+        GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(proxyMutex_);
     if (dScreenSourceProxy_ == nullptr) {
         DHLOGE("screen source proxy not init.");
@@ -159,19 +158,22 @@ int32_t DScreenSourceHandler::RegisterDistributedHardware(const std::string &dev
 
     std::string reqId = GetRandomID();
     dScreenSourceCallback_->PushRegRegisterCallback(reqId, callback);
-    int ret = dScreenSourceProxy_->RegisterDistributedHardware(devId, dhId, param, reqId);
-    return ret;
+    return dScreenSourceProxy_->RegisterDistributedHardware(devId, dhId, param, reqId);
 }
 
 int32_t DScreenSourceHandler::UnregisterDistributedHardware(const std::string &devId,
     const std::string &dhId, std::shared_ptr<UnregisterCallback> callback)
 {
-    DHLOGI("UnregisterDistributedHardware, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
-        GetAnonyString(dhId).c_str());
+    if (devId.empty() || dhId.empty()) {
+        DHLOGE("device id or dh id empty.");
+        return ERR_DH_SCREEN_STRING_PARAM_EMPTY;
+    }
     if (callback == nullptr) {
         DHLOGE("callback is nullptr.");
         return ERR_DH_SCREEN_REGISTER_CALLBACK_NOT_INIT;
     }
+    DHLOGI("UnregisterDistributedHardware, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
+        GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(proxyMutex_);
     if (dScreenSourceProxy_ == nullptr) {
         DHLOGE("screen source proxy not init.");
@@ -184,8 +186,7 @@ int32_t DScreenSourceHandler::UnregisterDistributedHardware(const std::string &d
 
     std::string reqId = GetRandomID();
     dScreenSourceCallback_->PushUnregisterCallback(reqId, callback);
-    int ret = dScreenSourceProxy_->UnregisterDistributedHardware(devId, dhId, reqId);
-    return ret;
+    return dScreenSourceProxy_->UnregisterDistributedHardware(devId, dhId, reqId);
 }
 
 int32_t DScreenSourceHandler::ConfigDistributedHardware(const std::string &devId,
@@ -210,10 +211,18 @@ void DScreenSourceHandler::OnRemoteSourceSvrDied(const wptr<IRemoteObject> &remo
         return;
     }
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (dScreenSourceProxy_ != nullptr && sourceSvrRecipient_ != nullptr) {
-        dScreenSourceProxy_->AsObject()->RemoveDeathRecipient(sourceSvrRecipient_);
+    if (dScreenSourceProxy_ == nullptr || dScreenSourceProxy_->AsObject() == nullptr) {
+        delete sourceSvrRecipient_;
+        sourceSvrRecipient_ = nullptr;
         dScreenSourceProxy_ = nullptr;
+        return;
     }
+    if (sourceSvrRecipient_ == nullptr) {
+        dScreenSourceProxy_ = nullptr;
+        return;
+    }
+    dScreenSourceProxy_->AsObject()->RemoveDeathRecipient(sourceSvrRecipient_);
+    dScreenSourceProxy_ = nullptr;
 }
 
 IDistributedHardwareSource *GetSourceHardwareHandler()

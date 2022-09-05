@@ -33,9 +33,9 @@ class IDScreenCallback {
 public:
     virtual ~IDScreenCallback() {};
     virtual void OnRegResult(const std::shared_ptr<DScreen> &dScreen,
-        const std::string &reqId, int32_t status, const std::string &data) = 0;
+        const std::string &reqId, const int32_t status, const std::string &data) = 0;
     virtual void OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
-        const std::string &reqId, int32_t status, const std::string &data) = 0;
+        const std::string &reqId, const int32_t status, const std::string &data) = 0;
 };
 
 class ScreenSourceTransCallback : public IScreenSourceTransCallback {

@@ -27,7 +27,6 @@ namespace OHOS {
 namespace DistributedHardware {
 int32_t DScreenSinkProxy::InitSink(const std::string &params)
 {
-    DHLOGI("DScreenSinkProxy InitSink");
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSinkProxy remote service null");
@@ -53,7 +52,6 @@ int32_t DScreenSinkProxy::InitSink(const std::string &params)
 
 int32_t DScreenSinkProxy::ReleaseSink()
 {
-    DHLOGI("DScreenSinkProxy ReleaseSink");
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSinkProxy remote service null");
@@ -74,7 +72,6 @@ int32_t DScreenSinkProxy::ReleaseSink()
 
 int32_t DScreenSinkProxy::SubscribeLocalHardware(const std::string &dhId, const std::string &param)
 {
-    DHLOGI("DScreenSinkProxy SubscribeLocalHardware dhId: %s", GetAnonyString(dhId).c_str());
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSinkProxy remote service null");
@@ -100,7 +97,6 @@ int32_t DScreenSinkProxy::SubscribeLocalHardware(const std::string &dhId, const 
 
 int32_t DScreenSinkProxy::UnsubscribeLocalHardware(const std::string &dhId)
 {
-    DHLOGI("DScreenSinkProxy UnsubscribeLocalHardware dhId: %s", GetAnonyString(dhId).c_str());
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSinkProxy remote service null");
@@ -126,8 +122,6 @@ int32_t DScreenSinkProxy::UnsubscribeLocalHardware(const std::string &dhId)
 
 void DScreenSinkProxy::DScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent)
 {
-    DHLOGI("DScreenNotify devId: %s eventCode: %d eventContent: %s",
-        GetAnonyString(devId).c_str(), eventCode, eventContent.c_str());
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSinkProxy remote service null");
