@@ -23,7 +23,6 @@ config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "//third_party/json/include",
-    "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
   ]
 
@@ -40,6 +39,10 @@ config("module_private_config") {
     "${services_path}/screentransport/screensinkprocessor/include",
     "${services_path}/screentransport/screensinkprocessor/decoder/include",
     "${services_path}/softbusadapter/include",
+    "//foundation/multimedia/player_framework/interfaces/inner_api/native",
+    "//foundation/communication/dsoftbus/interfaces/kits/transport",
+    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
+    "//drivers/peripheral/base",
   ]
 }
 
@@ -52,7 +55,6 @@ ohos_unittest("SinkTransTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "${fwk_utils_path}:distributedhardwareutils",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "//foundation/graphic/graphic_2d/frameworks/surface:surface",
     "//third_party/googletest:gmock",
@@ -61,8 +63,6 @@ ohos_unittest("SinkTransTest") {
 
   external_deps = [
     "c_utils:utils",
-    "dsoftbus:softbus_client",
-    "hiviewdfx_hilog_native:libhilog",
     "multimedia_player_framework:media_client",
   ]
 

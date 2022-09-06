@@ -21,7 +21,6 @@ config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "//third_party/json/include",
-    "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
     "${fwk_utils_path}/include",
   ]
@@ -53,22 +52,15 @@ ohos_unittest("ScreenSourceTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "${fwk_utils_path}:distributedhardwareutils",
+    "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
     "//foundation/communication/ipc/interfaces/innerkits/ipc_core:ipc_core",
-    "//foundation/distributedhardware/distributed_screen/interfaces/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
-    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
     "c_utils:utils",
-    "dsoftbus:softbus_client",
-    "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
-    "multimedia_player_framework:media_client",
-    "safwk:system_ability_fwk",
-    "samgr:samgr_proxy",
   ]
 }
 
