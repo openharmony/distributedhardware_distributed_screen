@@ -35,7 +35,16 @@ ohos_fuzztest("RegisterPluginListenerFuzzTest") {
     "${common_path}/include",
     "${distributedscreen_path}/screenhandler/include",
     "${fwk_services_path}/distributedhardwarefwkservice/include/localhardwaremanager",
+    "//drivers/peripheral/base",
+    "//drivers/peripheral/display/interfaces/include",
+    "//foundation/arkui/ace_engine/frameworks/base/utils",
+    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
     "//foundation/distributedhardware/distributed_hardware_fwk/common/utils/include",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include",
+    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
+    "//foundation/window/window_manager/utils/include",
   ]
 
   cflags = [
@@ -48,13 +57,8 @@ ohos_fuzztest("RegisterPluginListenerFuzzTest") {
   sources = [ "registerpluginlistener_fuzzer.cpp" ]
 
   deps = [
-    "${common_path}:distributed_screen_utils",
     "${distributedscreen_path}/screenhandler:distributed_screen_handler",
     "${fwk_services_path}/distributedhardwarefwkservice:distributedhardwarefwksvr",
-    "${mediastandard_path}/interfaces/inner_api/native:media_client",
-    "${windowmanager_path}/dm:libdm",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
-    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
   ]
 
   defines = [
@@ -63,10 +67,7 @@ ohos_fuzztest("RegisterPluginListenerFuzzTest") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [
-    "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
-  ]
+  external_deps = [ "c_utils:utils" ]
 }
 
 ###############################################################################

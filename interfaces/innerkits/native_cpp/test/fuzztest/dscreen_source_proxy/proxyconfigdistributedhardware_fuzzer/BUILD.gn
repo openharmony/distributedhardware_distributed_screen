@@ -48,7 +48,6 @@ ohos_fuzztest("ProxyConfigDistributedHardwareFuzzTest") {
   sources = [ "configdistributedhardware_fuzzer.cpp" ]
 
   deps = [
-    "${common_path}:distributed_screen_utils",
     "${fwk_services_path}/distributedhardwarefwkservice:distributedhardwarefwksvr",
     "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
   ]
@@ -61,9 +60,7 @@ ohos_fuzztest("ProxyConfigDistributedHardwareFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
-    "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
 }
