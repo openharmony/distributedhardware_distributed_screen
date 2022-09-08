@@ -26,8 +26,6 @@ namespace DistributedHardware {
 int32_t DScreenSourceCallbackProxy::OnNotifyRegResult(const std::string &devId, const std::string &dhId,
     const std::string &reqId, int32_t status, const std::string &resultData)
 {
-    DHLOGD("OnNotifyRegResult, devId: %s, dhId: %s, reqId: %s, status: %d",
-        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str(), status);
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceCallbackProxy remote service null");
@@ -55,8 +53,6 @@ int32_t DScreenSourceCallbackProxy::OnNotifyRegResult(const std::string &devId, 
 int32_t DScreenSourceCallbackProxy::OnNotifyUnregResult(const std::string &devId, const std::string &dhId,
     const std::string &reqId, int32_t status, const std::string &resultData)
 {
-    DHLOGD("OnNotifyUnregResult, devId: %s, dhId: %s, reqId: %s, status: %d",
-        GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str(), status);
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceCallbackProxy remote service null");

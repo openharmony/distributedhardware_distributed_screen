@@ -58,6 +58,7 @@ enum DScreenErrorCode {
     ERR_DH_SCREEN_SA_LOAD_TIMEOUT = -500032,
     ERR_DH_SCREEN_SA_HIDUMPER_ERROR = -500033,
     ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR = -500034,
+    ERR_DH_SCREEN_SA_VALUE_NOT_INIT = -500035,
     // Transport component error code
     ERR_DH_SCREEN_TRANS_ERROR = -51000,
     ERR_DH_SCREEN_TRANS_TIMEOUT = -51001,
@@ -96,6 +97,8 @@ enum DScreenErrorCode {
     ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR = -54004,
     // screen register callback
     ERR_DH_SCREEN_REGISTER_CALLBACK_NOT_INIT = -55000,
+    // screen string param empty
+    ERR_DH_SCREEN_STRING_PARAM_EMPTY = -56000,
 };
 } // namespace DistributedHardware
 } // namespace OHOS

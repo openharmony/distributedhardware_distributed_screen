@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "dscreen_source_load_callback.h"
 
 #include "dscreen_constants.h"
@@ -23,9 +24,6 @@
 namespace OHOS { class IRemoteObject; }
 namespace OHOS {
 namespace DistributedHardware {
-DScreenSourceLoadCallback::DScreenSourceLoadCallback(
-    const std::string &params) : params_(params) {}
-
 void DScreenSourceLoadCallback::OnLoadSystemAbilitySuccess(
     int32_t systemAbilityId, const sptr<IRemoteObject> &remoteObject)
 {

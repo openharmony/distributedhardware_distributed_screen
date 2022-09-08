@@ -27,7 +27,7 @@ namespace DistributedHardware {
 class DScreenSinkStub : public IRemoteStub<IDScreenSink> {
 public:
     DScreenSinkStub();
-    virtual ~DScreenSinkStub();
+    virtual ~DScreenSinkStub() = default;
     virtual int32_t OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
         MessageOption &option) override;
 private:

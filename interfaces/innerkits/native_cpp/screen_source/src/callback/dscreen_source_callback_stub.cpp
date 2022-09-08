@@ -33,14 +33,9 @@ DScreenSourceCallbackStub::DScreenSourceCallbackStub()
     memberFuncMap_[NOTIFY_UNREG_RESULT] = &DScreenSourceCallbackStub::OnNotifyUnregResultInner;
 }
 
-DScreenSourceCallbackStub::~DScreenSourceCallbackStub()
-{
-}
-
 int32_t DScreenSourceCallbackStub::OnRemoteRequest(uint32_t code, MessageParcel &data,
     MessageParcel &reply, MessageOption &option)
 {
-    DHLOGI("OnRemoteRequest, code: %d", code);
     std::u16string desc = DScreenSourceCallbackStub::GetDescriptor();
     std::u16string remoteDesc = data.ReadInterfaceToken();
     if (desc != remoteDesc) {
@@ -60,7 +55,6 @@ int32_t DScreenSourceCallbackStub::OnRemoteRequest(uint32_t code, MessageParcel 
 int32_t DScreenSourceCallbackStub::OnNotifyRegResultInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("DScreenSourceCallbackStub OnNotifyRegResultInner");
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string reqId = data.ReadString();
@@ -73,7 +67,6 @@ int32_t DScreenSourceCallbackStub::OnNotifyRegResultInner(MessageParcel &data, M
 int32_t DScreenSourceCallbackStub::OnNotifyUnregResultInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    DHLOGI("DScreenSourceCallbackStub OnNotifyUnregResultInner");
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string reqId = data.ReadString();
