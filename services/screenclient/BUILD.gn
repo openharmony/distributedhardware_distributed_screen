@@ -37,10 +37,8 @@ ohos_shared_library("distributed_screen_client") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${graphicstandard_path}/frameworks/surface:surface",
     "${windowmanager_path}/wm:libwm",
     "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
-    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
   ]
 
   defines = [
@@ -49,11 +47,7 @@ ohos_shared_library("distributed_screen_client") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [
-    "hisysevent_native:libhisysevent",
-    "hiviewdfx_hilog_native:libhilog",
-    "input:libmmi-client",
-  ]
+  external_deps = [ "input:libmmi-client" ]
 
   part_name = "distributed_screen"
   subsystem_name = "distributedhardware"

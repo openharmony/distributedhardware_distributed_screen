@@ -27,6 +27,11 @@ ohos_shared_library("distributed_screen_handler") {
   include_dirs += [
     "include",
     "${common_path}/include",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include",
+    "//drivers/peripheral/display/interfaces/include",
+    "//drivers/peripheral/base",
+    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
+    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
   ]
 
   sources = [ "src/dscreen_handler.cpp" ]
@@ -35,8 +40,6 @@ ohos_shared_library("distributed_screen_handler") {
     "${common_path}:distributed_screen_utils",
     "${mediastandard_path}/interfaces/inner_api/native:media_client",
     "${windowmanager_path}/dm:libdm",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
-    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
   ]
 
   defines = [
@@ -45,10 +48,7 @@ ohos_shared_library("distributed_screen_handler") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [
-    "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
-  ]
+  external_deps = [ "c_utils:utils" ]
 
   subsystem_name = "distributedhardware"
 

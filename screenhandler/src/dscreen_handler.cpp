@@ -60,7 +60,7 @@ void ScreenListener::OnConnect(uint64_t screenId)
 {
     DHLOGI("on screen connect");
     if (screenId != SCREEN_ID_DEFAULT) {
-        DHLOGE("screenId is invalid, screenId: %ulld", screenId);
+        DHLOGI("screenId is invalid, screenId: %ulld", screenId);
         return;
     }
     sptr<Rosen::Screen> screen = Rosen::ScreenManager::GetInstance().GetScreenById(screenId);
