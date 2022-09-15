@@ -166,22 +166,22 @@ void DScreenSinkHandler::DScreenSinkSvrRecipient::OnRemoteDied(const wptr<IRemot
 void DScreenSinkHandler::OnRemoteSinkSvrDied(const wptr<IRemoteObject> &remote)
 {
     DHLOGI("DScreenSinkHandler OnRemoteSinkSvrDied");
+    std::lock_guard<std::mutex> lock(proxyMutex_);
+    if (dScreenSinkProxy_ == nullptr) {
+        DHLOGE("dScreenSinkProxy is nullptr.");
+        return;
+    }
     sptr<IRemoteObject> remoteObject = remote.promote();
     if (remoteObject == nullptr) {
         DHLOGE("OnRemoteDied remote promoted failed");
         return;
     }
-    std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (dScreenSinkProxy_ == nullptr || dScreenSinkProxy_->AsObject() == nullptr) {
-        delete sinkSvrRecipient_;
-        sinkSvrRecipient_ = nullptr;
-        dScreenSinkProxy_ = nullptr;
+
+    if (dScreenSinkProxy_->AsObject() != remoteObject) {
+        DHLOGE("OnRemoteSinkSvrDied not found remote object.");
         return;
     }
-    if (sinkSvrRecipient_ == nullptr) {
-        dScreenSinkProxy_ = nullptr;
-        return;
-    }
+
     dScreenSinkProxy_->AsObject()->RemoveDeathRecipient(sinkSvrRecipient_);
     dScreenSinkProxy_ = nullptr;
 }
