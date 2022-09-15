@@ -43,10 +43,7 @@ ohos_fuzztest("ProxyUnsubscribeLocalHardwareFuzzTest") {
 
   sources = [ "unsubscribelocalhardware_fuzzer.cpp" ]
 
-  deps = [
-    "${common_path}:distributed_screen_utils",
-    "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
-  ]
+  deps = [ "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk" ]
 
   defines = [
     "HI_LOG_ENABLE",
@@ -56,9 +53,7 @@ ohos_fuzztest("ProxyUnsubscribeLocalHardwareFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
-    "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
   ]
 }

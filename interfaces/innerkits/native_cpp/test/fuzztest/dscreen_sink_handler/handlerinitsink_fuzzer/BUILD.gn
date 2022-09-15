@@ -32,6 +32,7 @@ ohos_fuzztest("HandlerInitSinkFuzzTest") {
     "include",
     "${common_path}/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
+    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
   ]
 
   cflags = [
@@ -43,10 +44,7 @@ ohos_fuzztest("HandlerInitSinkFuzzTest") {
 
   sources = [ "initsink_fuzzer.cpp" ]
 
-  deps = [
-    "${common_path}:distributed_screen_utils",
-    "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
-  ]
+  deps = [ "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk" ]
 
   defines = [
     "HI_LOG_ENABLE",
@@ -54,13 +52,7 @@ ohos_fuzztest("HandlerInitSinkFuzzTest") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [
-    "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_core",
-    "safwk:system_ability_fwk",
-    "samgr:samgr_proxy",
-  ]
+  external_deps = [ "c_utils:utils" ]
 }
 
 ###############################################################################
