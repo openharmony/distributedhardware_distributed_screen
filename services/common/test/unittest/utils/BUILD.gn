@@ -22,9 +22,6 @@ config("module_private_config") {
 
   include_dirs = [
     "//third_party/json/include",
-    "${windowmanager_path}/interfaces/innerkits/wm",
-    "${graphicstandard_path}/interfaces/innerkits/surface",
-    "${graphicstandard_path}/rosen/modules/render_service_client/core/ui",
     "${fwk_common_path}/utils/include",
     "${fwk_common_path}/log/include",
     "${fwk_utils_path}/include/log",
@@ -50,16 +47,10 @@ ohos_unittest("UtilsTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "${fwk_utils_path}:distributedhardwareutils",
-    "${graphicstandard_path}/frameworks/surface:surface",
-    "${graphicstandard_path}/rosen/modules/render_service_client:librender_service_client",
-    "${windowmanager_path}/wm:libwm",
-    "//foundation/distributedhardware/distributed_screen/services/screenservice/sinkservice:distributed_screen_sink",
+    "${services_path}/screenservice/sinkservice:distributed_screen_sink",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
-
-  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
 }
 
 group("utils_test") {

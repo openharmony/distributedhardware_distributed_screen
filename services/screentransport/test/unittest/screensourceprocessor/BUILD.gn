@@ -21,7 +21,6 @@ config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "//third_party/json/include",
-    "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
     "${fwk_utils_path}/include/",
   ]
@@ -40,6 +39,10 @@ config("module_private_config") {
     "${services_path}/screentransport/screensourceprocessor/encoder/include",
     "${services_path}/softbusadapter/include",
     "${services_path}/screentransport/test/unittest/screensourceprocessor/include",
+    "//drivers/peripheral/display/interfaces/include",
+    "//drivers/peripheral/base",
+    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
+    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
   ]
 }
 
@@ -55,17 +58,13 @@ ohos_unittest("SourceProcessorTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "${fwk_utils_path}:distributedhardwareutils",
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
-    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
     "c_utils:utils",
-    "dsoftbus:softbus_client",
-    "hiviewdfx_hilog_native:libhilog",
     "multimedia_player_framework:media_client",
   ]
 }
