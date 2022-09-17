@@ -30,7 +30,7 @@ void RegisterPluginListenerFuzzTest(const uint8_t* data, size_t size)
         return;
     }
 
-    DHType dhType = DHType::DISPLAY;
+    DHType dhType = DHType::SCREEN;
     std::shared_ptr<PluginListener> listener = std::make_shared<PluginListenerImpl>(dhType);
 
     DScreenHandler::GetInstance().RegisterPluginListener(listener);
