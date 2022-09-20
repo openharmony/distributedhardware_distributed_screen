@@ -45,7 +45,7 @@ ohos_shared_library("distributed_screen_sink") {
     "${services_path}/screentransport/screensinkprocessor/include",
     "${services_path}/screentransport/screensinkprocessor/decoder/include",
     "${services_path}/screenclient/include/",
-    "//foundation/multimedia/image_standard/interfaces/innerkits/include",
+    "//foundation/multimedia/image_framework/interfaces/innerkits/include",
     "//drivers/peripheral/display/interfaces/include",
     "//drivers/peripheral/base",
   ]
