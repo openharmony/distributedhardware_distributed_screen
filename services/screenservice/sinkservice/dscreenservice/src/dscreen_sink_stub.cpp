@@ -53,6 +53,10 @@ int32_t DScreenSinkStub::InitSinkInner(MessageParcel &data, MessageParcel &reply
     MessageOption &option)
 {
     std::string param = data.ReadString();
+    if (param.empty() || param.size() > PARAM_MAX_SIZE) {
+        DHLOGE("InitSinkInner error: invalid parameter.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     int32_t ret = InitSink(param);
     reply.WriteInt32(ret);
     return DH_SUCCESS;
@@ -71,6 +75,10 @@ int32_t DScreenSinkStub::SubscribeDistributedHardwareInner(MessageParcel &data, 
 {
     std::string dhId = data.ReadString();
     std::string param = data.ReadString();
+    if (dhId.empty() || dhId.size() > DID_MAX_SIZE || param.empty() || param.size() > PARAM_MAX_SIZE) {
+        DHLOGE("SubscribeDistributedHardwareInner error: invalid parameter.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     int32_t ret = SubscribeLocalHardware(dhId, param);
     reply.WriteInt32(ret);
     return DH_SUCCESS;
@@ -80,6 +88,10 @@ int32_t DScreenSinkStub::UnsubscribeDistributedHardwareInner(MessageParcel &data
     MessageOption &option)
 {
     std::string dhId = data.ReadString();
+    if (dhId.empty() || dhId.size() > DID_MAX_SIZE) {
+        DHLOGE("UnsubscribeDistributedHardwareInner error: invalid parameter.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     int32_t ret = UnsubscribeLocalHardware(dhId);
     reply.WriteInt32(ret);
     return DH_SUCCESS;
@@ -91,7 +103,11 @@ int32_t DScreenSinkStub::DScreenNotifyInner(MessageParcel &data, MessageParcel &
     std::string devId = data.ReadString();
     int32_t eventCode = data.ReadInt32();
     std::string eventContent = data.ReadString();
-
+    if (devId.empty() || devId.size() > DID_MAX_SIZE || eventContent.empty() ||
+        eventContent.size() > PARAM_MAX_SIZE) {
+        DHLOGE("DScreenNotifyInner error: invalid parameter.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     DScreenNotify(devId, eventCode, eventContent);
     return DH_SUCCESS;
 }

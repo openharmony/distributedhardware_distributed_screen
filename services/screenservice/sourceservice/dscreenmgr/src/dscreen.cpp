@@ -184,7 +184,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
 {
     DHLOGI("HandleEnable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
     if (curState_ == ENABLED || curState_ == ENABLING || curState_ == CONNECTING || curState_ == CONNECTED) {
-        dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "");
+        dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
         return;
     }
 
@@ -229,7 +229,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     }
     screenId_ = screenId;
     SetState(ENABLED);
-    dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "");
+    dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
     ReportRegisterScreenEvent(DSCREEN_REGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
         "dscreen enable success.");
 }
@@ -267,9 +267,12 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
     std::vector<std::shared_ptr<Media::VideoCaps>> caps = codecList->GetVideoEncoderCaps();
     for (const auto &cap : caps) {
         std::shared_ptr<Media::AVCodecInfo> codecInfo = cap->GetCodecInfo();
+        if (codecInfo == nullptr) {
+            continue;
+        }
         localCodecArray.push_back(codecInfo->GetName());
     }
-    
+
     std::vector<std::string> codecTypeCandidates;
     for (const auto &remoteCodecType : remoteCodecArray) {
         if (std::find(localCodecArray.begin(), localCodecArray.end(),
@@ -277,7 +280,7 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
             codecTypeCandidates.push_back(remoteCodecType);
         }
     }
-    
+
     if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
         CODEC_NAME_H264) != codecTypeCandidates.end()) {
         videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
