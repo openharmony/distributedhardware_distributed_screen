@@ -205,22 +205,22 @@ void DScreenSourceHandler::DScreenSourceSvrRecipient::OnRemoteDied(const wptr<IR
 void DScreenSourceHandler::OnRemoteSourceSvrDied(const wptr<IRemoteObject> &remote)
 {
     DHLOGI("OnRemoteSourceSvrDied");
+    std::lock_guard<std::mutex> lock(proxyMutex_);
+    if (dScreenSourceProxy_ == nullptr) {
+        DHLOGE("dScreenSourceProxy is nullptr.");
+        return;
+    }
     sptr<IRemoteObject> remoteObject = remote.promote();
     if (remoteObject == nullptr) {
         DHLOGE("OnRemoteDied remote promoted failed");
         return;
     }
-    std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (dScreenSourceProxy_ == nullptr || dScreenSourceProxy_->AsObject() == nullptr) {
-        delete sourceSvrRecipient_;
-        sourceSvrRecipient_ = nullptr;
-        dScreenSourceProxy_ = nullptr;
+
+    if (dScreenSourceProxy_->AsObject() != remoteObject) {
+        DHLOGE("OnRemoteSourceSvrDied not found remote object.");
         return;
     }
-    if (sourceSvrRecipient_ == nullptr) {
-        dScreenSourceProxy_ = nullptr;
-        return;
-    }
+
     dScreenSourceProxy_->AsObject()->RemoveDeathRecipient(sourceSvrRecipient_);
     dScreenSourceProxy_ = nullptr;
 }
