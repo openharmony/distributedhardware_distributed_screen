@@ -1,4 +1,4 @@
-# **分布式屏幕组件**
+# **分布式屏幕部件**
 
 ## **简介**
 
@@ -25,35 +25,36 @@
 
 ```
 /foundation/distributedhardware/distributed_screen
-├── common                                  # 分布式屏幕公共数据定义，包括常量、错误码、日志、工具等 
-├── interface                               # 分布式屏幕SDK，包含主控端和被控端服务调用接口 
-├── sa_profile                              # 分布式屏幕的SA配置信息 
-├── services                                # 分布式屏幕主控端和被控端功能主体业务实现 
-│   └── common                              # 分布式屏幕功能主控端、被控端共用功能实现 
-│       ├── databuffer                      # 屏幕数据存储定义 
-│       └── screen_channel                  # 屏幕数据传输通道接口定义 
-│   └── screenclient                        # 分布式屏幕代理客户端实现 
-│   └── screenservice                       # 分布式屏幕主体功能实现 
-│       └── sinkservice                     # 分布式屏幕被控端服务功能实现 
-│           ├── dscreenservice              # 分布式屏幕被控端SA 
-│           └── screenregionmgr             # 分布式屏幕被控端显示区域管理 
-│       └── sourceservice                   # 分布式屏幕主控端服务功能实现 
-│           ├── dscreenmgr                  # 分布式屏幕主控端屏幕管理 
-│           └── dscreenservice              # 分布式屏幕主控端SA 
-│       └── screentransport                 # 分布式屏幕传输组件 
-│           ├── screendatachannel           # 屏幕数据传输通道，用于传输组件和编解码器之间数据传输 
-│           ├── screensinkprocessor         # 分布式屏幕被控端数据处理模块，包括解码等 
-│           ├── screensinktrans             # 分布式屏幕被控端数据传输组件，包含数据传输通道channel和数据处理模块processor 
-│           ├── screensourceprocessor       # 分布式屏幕主控端数据处理模块，包括编码等 
-│           └── screensourcetrans           # 分布式屏幕主控端数据传输组件，包含数据传输通道channel和数据处理模块processor 
-│       └── softbusadapter                  # 软总线接口适配器，为屏幕传输、触控事件传输提供统一传输接口 
-└── screenhandler                           # 分布式屏幕硬件信息上报、设备状态变化通知，由分布式硬件管理框架加载
+├── common                                  # 分布式屏幕公共数据定义，包括常量、错误码、日志、工具等
+├── interface                               # 分布式屏幕SDK，包含主控端和被控端服务调用接口
+├── sa_profile                              # 分布式屏幕的SA配置信息
+├── screenhandler                           # 分布式屏幕硬件信息上报、设备状态变化通知，由分布式硬件管理框架加载
+├── services                                # 分布式屏幕主控端和被控端功能主体业务实现
+│   └── common                              # 分布式屏幕功能主控端、被控端共用功能实现
+│       ├── databuffer                      # 屏幕数据存储定义
+│       └── screen_channel                  # 屏幕数据传输通道接口定义
+│   ├── screenclient                        # 分布式屏幕代理客户端实现
+│   ├── screendemo                          # 分布式屏幕demo
+│   └── screenservice                       # 分布式屏幕主体功能实现
+│       └── sinkservice                     # 分布式屏幕被控端服务功能实现
+│           ├── dscreenservice              # 分布式屏幕被控端SA
+│           └── screenregionmgr             # 分布式屏幕被控端显示区域管理
+│       └── sourceservice                   # 分布式屏幕主控端服务功能实现
+│           ├── dscreenmgr                  # 分布式屏幕主控端屏幕管理
+│           └── dscreenservice              # 分布式屏幕主控端SA
+│       └── screentransport                 # 分布式屏幕传输组件
+│           ├── screendatachannel           # 屏幕数据传输通道，用于传输组件和编解码器之间数据传输
+│           ├── screensinkprocessor         # 分布式屏幕被控端数据处理模块，包括解码等
+│           ├── screensinktrans             # 分布式屏幕被控端数据传输组件，包含数据传输通道channel和数据处理模块processor
+│           ├── screensourceprocessor       # 分布式屏幕主控端数据处理模块，包括编码等
+│           └── screensourcetrans           # 分布式屏幕主控端数据传输组件，包含数据传输通道channel和数据处理模块processor
+│       └── softbusadapter                  # 软总线接口适配器，为屏幕传输、触控事件传输提供统一传输接口
 ```
 
 ## **约束**
-**语言限制**：C++语言。  
-**组网环境**：必须确保设备在同一个局域网中。  
-**操作系统限制**：OpenHarmony操作系统。  
+**语言限制**：C++语言。
+**组网环境**：必须确保设备在同一个局域网中。
+**操作系统限制**：OpenHarmony操作系统。
 
 ## **说明**
 ### **概念说明**
@@ -84,18 +85,18 @@
 #### **4. 设备下线**
 设备下线后，分布式硬件管理框架去使能下线设备的屏幕硬件，本地移除对应的虚拟屏幕并通知窗口子系统，此时下线设备的分布式屏幕不可用。
 
-## **涉及仓**
+## **相关仓**
 ****
-**分布式硬件子系统：**  
+**分布式硬件子系统：**
 
 设备管理
-[device_manager](https://gitee.com/openharmony/device_manager)
+[distributedhardware_device_manager](https://gitee.com/openharmony/distributedhardware_device_manager)
 
 分步式硬件管理框架
-[distributed_hardware_fwk](https://gitee.com/openharmony/distributed_hardware_fwk)
+[distributedhardware_distributed_hardware_fwk](https://gitee.com/openharmony/distributedhardware_distributed_hardware_fwk)
 
 分布式相机
-[distributed_camera](https://gitee.com/openharmony/distributed_camera)
+[distributedhardware_distributed_camera](https://gitee.com/openharmony/distributedhardware_distributed_camera)
 
 **分布式屏幕
-[distributed_screen](https://gitee.com/openharmony/distributed_screen)**
+[distributedhardware_distributed_screen](https://gitee.com/openharmony/distributedhardware_distributed_screen)**
