@@ -83,6 +83,8 @@
             ],
             "test":[
                 "//foundation/distributedhardware/distributed_screen/services/screendemo:distributedScreenTest",
+                "//foundation/distributedhardware/distributed_screen/screenhandler/test/unittest/screenhandler:DscreenHandlerTest",
+                "//foundation/distributedhardware/distributed_screen/services/screenservice/test/unittest/sinkservice/screenregionmgr:DscreenSinkServiceTest",
                 "//foundation/distributedhardware/distributed_screen/services/screentransport/test/unittest:screen_transport_test",
                 "//foundation/distributedhardware/distributed_screen/services/softbusadapter/test/unittest:SoftBusAdapterTest",
                 "//foundation/distributedhardware/distributed_screen/services/common/test/unittest:service_common_test",

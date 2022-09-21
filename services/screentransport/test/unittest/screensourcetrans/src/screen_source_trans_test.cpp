@@ -49,6 +49,23 @@ HWTEST_F(ScreenSourceTransTest, SetUp_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: InitScreenTrans_001
+ * @tc.desc: Verify the InitScreenTrans function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, InitScreenTrans_001, TestSize.Level1)
+{
+    VideoParam localParam;
+    VideoParam remoteParam;
+    std::string peerDevId = "sinkDevId";
+    trans->screenChannel_ = std::make_shared<MockScreenDataChannelImpl>();
+    int32_t actual = trans->InitScreenTrans(localParam, remoteParam, peerDevId);
+
+    EXPECT_EQ(-1, actual);
+}
+
+/**
  * @tc.name: Release_001
  * @tc.desc: Verify the Release function.
  * @tc.type: FUNC
@@ -70,7 +87,7 @@ HWTEST_F(ScreenSourceTransTest, Release_001, TestSize.Level1)
 HWTEST_F(ScreenSourceTransTest, Release_002, TestSize.Level1)
 {
     trans->imageProcessor_ = std::make_shared<ImageSourceProcessor>();
-    std::string peerDevId = "hello";
+    std::string peerDevId = "sinkDevId";
     trans->screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
     int32_t actual = trans->Release();
 
@@ -99,9 +116,69 @@ HWTEST_F(ScreenSourceTransTest, Start_001, TestSize.Level1)
 HWTEST_F(ScreenSourceTransTest, Start_002, TestSize.Level1)
 {
     trans->imageProcessor_ = std::make_shared<ImageSourceProcessor>();
-    std::string peerDevId = "hello";
+    std::string peerDevId = "sinkDevId";
     trans->screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
     int32_t actual = trans->Start();
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, actual);
+}
+
+/**
+ * @tc.name: Start_003
+ * @tc.desc: Verify the Start function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, Start_003, TestSize.Level1)
+{
+    trans->imageProcessor_ = std::make_shared<ImageSourceProcessor>();
+    std::string peerDevId = "sinkDevId";
+    trans->screenChannel_ = std::make_shared<MockScreenDataChannelImpl>();
+    int32_t actual = trans->Start();
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_TIMEOUT, actual);
+}
+
+/**
+ * @tc.name: Stop_001
+ * @tc.desc: Verify the Stop function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, Stop_001, TestSize.Level1)
+{
+    int32_t actual = trans->Stop();
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, actual);
+}
+
+/**
+ * @tc.name: Stop_002
+ * @tc.desc: Verify the Stop function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, Stop_002, TestSize.Level1)
+{
+    trans->imageProcessor_ = std::make_shared<ImageSourceProcessor>();
+    std::string peerDevId = "sinkDevId";
+    trans->screenChannel_ = std::make_shared<MockScreenDataChannelImpl>();
+    int32_t actual = trans->Stop();
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, actual);
+}
+
+/**
+ * @tc.name: Stop_003
+ * @tc.desc: Verify the Stop function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, Stop_003, TestSize.Level1)
+{
+    trans->imageProcessor_ = std::make_shared<ImageSourceProcessor>();
+    std::string peerDevId = "sinkDevId";
+    trans->screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
+    int32_t actual = trans->Stop();
 
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, actual);
 }
@@ -136,6 +213,39 @@ HWTEST_F(ScreenSourceTransTest, RegisterStateCallback_002, TestSize.Level1)
 }
 
 /**
+ * @tc.name: CheckVideoParam_001
+ * @tc.desc: Verify the CheckVideoParam function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, CheckVideoParam_001, TestSize.Level1)
+{
+    VideoParam localParam;
+    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4 + 1;
+    int32_t actual = trans->CheckVideoParam(localParam);
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
+}
+
+/**
+ * @tc.name: CheckVideoParam
+ * @tc.desc: Verify the CheckVideoParam function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, CheckVideoParam_002, TestSize.Level1)
+{
+    VideoParam localParam;
+    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    localParam.videoFormat_ = VIDEO_DATA_FORMAT_RGBA8888 + 1;
+    VideoParam remoteParam;
+    std::string peerDevId;
+    int32_t actual = trans->CheckVideoParam(localParam);
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
+}
+
+/**
  * @tc.name: CheckTransParam_001
  * @tc.desc: Verify the CheckTransParam function.
  * @tc.type: FUNC
@@ -144,7 +254,18 @@ HWTEST_F(ScreenSourceTransTest, RegisterStateCallback_002, TestSize.Level1)
 HWTEST_F(ScreenSourceTransTest, CheckTransParam_001, TestSize.Level1)
 {
     VideoParam localParam;
+    localParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    localParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    localParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
     VideoParam remoteParam;
+    remoteParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    remoteParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    remoteParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    remoteParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    remoteParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    remoteParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
     std::string peerDevId;
     int32_t actual = trans->CheckTransParam(localParam, remoteParam, peerDevId);
 
@@ -160,6 +281,60 @@ HWTEST_F(ScreenSourceTransTest, CheckTransParam_001, TestSize.Level1)
 HWTEST_F(ScreenSourceTransTest, CheckTransParam_002, TestSize.Level1)
 {
     VideoParam localParam;
+    localParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    localParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH + 1;
+    localParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
+    VideoParam remoteParam;
+    remoteParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    remoteParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    remoteParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    remoteParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    remoteParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    remoteParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
+    std::string peerDevId = "sinkDevId";
+    int32_t actual = trans->CheckTransParam(localParam, remoteParam, peerDevId);
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
+}
+
+/**
+ * @tc.name: CheckTransParam_003
+ * @tc.desc: Verify the CheckTransParam function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, CheckTransParam_003, TestSize.Level1)
+{
+    VideoParam localParam;
+    localParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    localParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    localParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
+    VideoParam remoteParam;
+    remoteParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    remoteParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    remoteParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH + 1;
+    remoteParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    remoteParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    remoteParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
+    std::string peerDevId = "sinkDevId";
+    int32_t actual = trans->CheckTransParam(localParam, remoteParam, peerDevId);
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
+}
+
+/**
+ * @tc.name: CheckTransParam_004
+ * @tc.desc: Verify the CheckTransParam function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, CheckTransParam_004, TestSize.Level1)
+{
+    VideoParam localParam;
     localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
     localParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
     localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
@@ -173,10 +348,39 @@ HWTEST_F(ScreenSourceTransTest, CheckTransParam_002, TestSize.Level1)
     remoteParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
     remoteParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
     remoteParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
-    std::string peerDevId = "hello";
+    std::string peerDevId = "sinkDevId";
     int32_t actual = trans->CheckTransParam(localParam, remoteParam, peerDevId);
 
     EXPECT_EQ(DH_SUCCESS, actual);
+}
+
+/**
+ * @tc.name: GetImageSurface_001
+ * @tc.desc: Verify the GetImageSurface function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, GetImageSurface_001, TestSize.Level1)
+{
+    VideoParam localParam;
+    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    localParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    localParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    localParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
+    VideoParam remoteParam;
+    remoteParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    remoteParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    remoteParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    remoteParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    remoteParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    remoteParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
+    trans->imageProcessor_ = std::make_shared<ImageSourceProcessor>();
+    trans->RegisterProcessorListener(localParam, remoteParam);
+    sptr<Surface> encoderSurface = trans->GetImageSurface();
+
+    EXPECT_NE(nullptr, encoderSurface);
 }
 
 /**
@@ -192,6 +396,36 @@ HWTEST_F(ScreenSourceTransTest, OnSessionOpened_001, TestSize.Level1)
     trans->OnSessionOpened();
 
     EXPECT_EQ(false, trans->isChannelReady_);
+}
+
+/**
+ * @tc.name: OnSessionClosed_001
+ * @tc.desc: Verify the OnSessionClosed function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, OnSessionClosed_001, TestSize.Level1)
+{
+    trans->transCallback_ = std::make_shared<MockIScreenSourceTransCallback>();
+
+    trans->OnSessionClosed();
+
+    EXPECT_EQ(false, trans->isChannelReady_);
+}
+
+/**
+ * @tc.name: OnImageProcessDone_001
+ * @tc.desc: Verify the OnImageProcessDone function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, OnImageProcessDone_001, TestSize.Level1)
+{
+    std::shared_ptr<DataBuffer> data = nullptr;
+    int32_t queueSize = trans->dataQueue_.size();
+    trans->OnImageProcessDone(data);
+
+    EXPECT_NE(queueSize, trans->dataQueue_.size());
 }
 }
 }

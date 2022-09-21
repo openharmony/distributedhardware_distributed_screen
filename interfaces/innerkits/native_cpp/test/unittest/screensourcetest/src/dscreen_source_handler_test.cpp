@@ -22,19 +22,19 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
-void DScreenSourceHandlerTest::SetUpTestCase(void)
+void DScreenSourceHandlerTest::SetUpTestCase(void) {}
+
+void DScreenSourceHandlerTest::TearDownTestCase(void) {}
+
+void DScreenSourceHandlerTest::SetUp(void) 
 {
     DScreenSourceHandler::GetInstance().InitSource("DScreenSourceHandlerTest");
 }
 
-void DScreenSourceHandlerTest::TearDownTestCase(void)
+void DScreenSourceHandlerTest::TearDown(void) 
 {
     DScreenSourceHandler::GetInstance().ReleaseSource();
 }
-
-void DScreenSourceHandlerTest::SetUp(void) {}
-
-void DScreenSourceHandlerTest::TearDown(void) {}
 
 /**
  * @tc.name: RegisterDistributedHardware_001
@@ -69,8 +69,61 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_002, TestSize.Lev
     param.attrs = "attrs";
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = nullptr;
+
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
     EXPECT_EQ(ERR_DH_SCREEN_SA_SOURCEPCALLBACK_NOT_INIT, ret);
+}
+
+/**
+ * @tc.name: UnregisterDistributedHardware_001
+ * @tc.desc: Verify the UnregisterDistributedHardware function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceHandlerTest, UnregisterDistributedHardware_001, TestSize.Level1)
+{
+    const std::string devId = "devId";
+    const std::string dhId = "dhId";
+    std::shared_ptr<UnregisterCallbackTest> callback = std::make_shared<UnregisterCallbackTest>();
+    if (DScreenSourceHandler::GetInstance().dScreenSourceCallback_ == nullptr) {
+        DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = new (std::nothrow) DScreenSourceCallback();;
+    }
+    int32_t ret = DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, callback);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_DISABLE_FAILED, ret);
+}
+
+/**
+ * @tc.name: UnregisterDistributedHardware_002
+ * @tc.desc: Verify the UnregisterDistributedHardware function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceHandlerTest, UnregisterDistributedHardware_002, TestSize.Level1)
+{
+    const std::string devId = "devId";
+    const std::string dhId = "dhId";
+    std::shared_ptr<UnregisterCallbackTest> callback = std::make_shared<UnregisterCallbackTest>();
+    DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = nullptr;
+
+    int32_t ret = DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, callback);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_SOURCEPCALLBACK_NOT_INIT, ret);
+}
+
+/**
+ * @tc.name: ConfigDistributedHardware_001
+ * @tc.desc: Verify the ConfigDistributedHardware function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceHandlerTest, ConfigDistributedHardware_001, TestSize.Level1)
+{
+    const std::string devId = "devId";
+    const std::string dhId = "dhId";
+    const std::string key = "key";
+    const std::string value = "value";
+
+    int32_t ret = DScreenSourceHandler::GetInstance().ConfigDistributedHardware(devId, dhId, key, value);
+    EXPECT_EQ(DH_SUCCESS, ret);
 }
 }
 }

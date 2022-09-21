@@ -24,6 +24,7 @@
 #include "iscreen_sink_trans_callback.h"
 #include "iscreen_source_trans_callback.h"
 #include "iscreen_channel_listener.h"
+#include "iscreen_channel.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -78,6 +79,32 @@ public:
     void OnSessionClosed() override {}
     void OnDataReceived(const std::shared_ptr<DataBuffer> &data) override {}
 };
+
+class MockScreenDataChannelImpl :public IScreenChannel {
+public:
+    int32_t CreateSession(const std::shared_ptr<IScreenChannelListener> &listener) override
+    {
+        return DH_SUCCESS;
+    }
+    int32_t ReleaseSession() override
+    {
+        return DH_SUCCESS;
+    }
+    int32_t OpenSession() override
+    {
+        return DH_SUCCESS;
+    }
+    int32_t CloseSession() override
+    {
+        return ERR_DH_SCREEN_TRANS_SESSION_NOT_OPEN;
+    }
+    int32_t SendData(const std::shared_ptr<DataBuffer> &data) override
+    {
+        (void) data;
+        return DH_SUCCESS;
+    }
+};
+
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

@@ -324,6 +324,7 @@ static void CreateWindow()
          << ", width: " << windowWidth
          << ", height: " << windowHeight << endl;
     ScreenClient::GetInstance().RemoveWindow(windowId);
+    _Exit(0);
 }
 
 int main()
