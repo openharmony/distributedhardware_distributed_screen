@@ -103,7 +103,6 @@ int32_t DScreenSourceService::ReleaseSource()
 int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
     const EnableParam &param, const std::string &reqId)
 {
-    std::string version = param.version;
     std::string attrs = param.attrs;
     int ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, attrs, reqId);
     if (ret != DH_SUCCESS) {
