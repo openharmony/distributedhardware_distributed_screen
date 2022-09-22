@@ -45,6 +45,8 @@ using namespace OHOS::Media;
 
 namespace {
     static char const *g_pkgName = "ohos.dsoftbus.tool";
+    const uint32_t MAX_WINDOW_WIDTH = 2560;
+    const uint32_t MAX_WINDOW_HEIGHT = 1600;
 }
 
 vector<sptr<Screen>> QueryRemoteScreenInfo()
@@ -294,7 +296,8 @@ static void CreateWindow()
     uint32_t windowHeight;
     cin >> windowHeight;
 
-    if (windowWidth <= 0 || windowHeight <= 0) {
+    if (windowWidth == 0 || windowWidth >= MAX_WINDOW_WIDTH ||
+        windowHeight == 0 || windowHeight >= MAX_WINDOW_HEIGHT) {
         cout << "Invalid window size." << endl;
         return;
     }
