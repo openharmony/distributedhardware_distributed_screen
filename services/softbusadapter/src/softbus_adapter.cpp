@@ -78,6 +78,10 @@ SoftbusAdapter::~SoftbusAdapter()
 int32_t SoftbusAdapter::RegisterSoftbusListener(const std::shared_ptr<ISoftbusListener> &listener,
     const std::string &sessionName, const std::string &peerDevId)
 {
+    if (listener == nullptr) {
+        DHLOGE("%s: listener is nullptr.", LOG_TAG);
+        return ERR_DH_SCREEN_ADAPTER_REGISTER_SOFTBUS_LISTENER_FAIL;
+    }
     DHLOGI("%s: RegisterListener sess:%s id:%s.", LOG_TAG, sessionName.c_str(), GetAnonyString(peerDevId).c_str());
     std::string strListenerKey = sessionName + "_" + peerDevId;
 

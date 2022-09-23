@@ -75,7 +75,7 @@ int32_t ScreenClient::ShowWindow(int32_t windowId)
     int32_t ret = ScreenClientWindowAdapter::GetInstance().ShowWindow(windowId);
     if (DH_SUCCESS != ret) {
         DHLOGE("Show window (ID = %d) failed.", windowId);
-        return ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR;
+        return ret;
     }
     DHLOGI("Show window (ID = %d) success.", windowId);
     return ret;
@@ -94,7 +94,7 @@ int32_t ScreenClient::HideWindow(int32_t windowId)
     int32_t ret = ScreenClientWindowAdapter::GetInstance().HideWindow(windowId);
     if (DH_SUCCESS != ret) {
         DHLOGE("Hide window (ID = %d) failed.", windowId);
-        return ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR;
+        return ret;
     }
     DHLOGI("Hide window (ID = %d) success.", windowId);
     return ret;
@@ -113,7 +113,7 @@ int32_t ScreenClient::MoveWindow(int32_t windowId, int32_t startX, int32_t start
     int32_t ret = ScreenClientWindowAdapter::GetInstance().MoveWindow(windowId, startX, startY);
     if (DH_SUCCESS != ret) {
         DHLOGE("Move window (ID = %d) failed.", windowId);
-        return ERR_DH_SCREEN_SCREENCLIENT_MOVE_WINDOW_ERROR;
+        return ret;
     }
     DHLOGD("Move window (ID = %d) success.", windowId);
     return ret;
@@ -153,7 +153,7 @@ int32_t ScreenClient::RemoveWindow(int32_t windowId)
     int32_t ret = ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
     if (ret != DH_SUCCESS) {
         DHLOGE("windowId (ID = %d) remove failed.", windowId);
-        return ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR;
+        return ret;
     }
     DHLOGD("windowId (ID = %d) remove success.", windowId);
     return DH_SUCCESS;

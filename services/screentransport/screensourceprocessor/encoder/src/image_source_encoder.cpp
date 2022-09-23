@@ -231,6 +231,10 @@ void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecB
     }
 
     size_t dataSize = static_cast<size_t>(info.size);
+    if (dataSize <= 0 || dataSize > DATA_BUFFER_MAX_SIZE) {
+        DHLOGE("%s:OnOutputBufferAvailable params invalid, size: %d.", LOG_TAG, dataSize);
+        return;
+    }
     auto dataBuf = std::make_shared<DataBuffer>(dataSize);
     if (dataBuf == nullptr) {
         DHLOGE("%s: Create buffer failed.", LOG_TAG);

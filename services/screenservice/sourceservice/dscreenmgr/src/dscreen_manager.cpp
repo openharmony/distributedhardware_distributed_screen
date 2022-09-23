@@ -319,7 +319,7 @@ std::shared_ptr<DScreen> DScreenManager::FindDScreenByScreenId(uint64_t screenId
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     for (const auto &iter : dScreens_) {
         std::shared_ptr<DScreen> dScreen = iter.second;
-        if (!dScreen) {
+        if (dScreen == nullptr) {
             continue;
         }
 
@@ -346,7 +346,7 @@ void DScreenManager::GetScreenDumpInfo(std::string &result)
     for (const auto &iter : dScreens_) {
         result.append("    {\n");
         std::shared_ptr<DScreen> dScreen = iter.second;
-        if (!dScreen) {
+        if (dScreen == nullptr) {
             continue;
         }
         uint64_t screenId = dScreen->GetScreenId();
@@ -389,7 +389,7 @@ int32_t DScreenManager::NotifyRemoteScreenService(const std::string &devId, int3
     DHLOGI("Notify remote sink screen service, remote devId: %s, eventCode: %d",
         GetAnonyString(devId).c_str(), eventCode);
     sptr<IDScreenSink> remoteSinkSA = GetDScreenSinkSA(devId);
-    if (!remoteSinkSA) {
+    if (remoteSinkSA == nullptr) {
         DHLOGE("get remote sink sa failed.");
         return ERR_DH_SCREEN_SA_GET_REMOTE_SINK_SERVICE_FAIL;
     }
@@ -409,7 +409,7 @@ sptr<IDScreenSink> DScreenManager::GetDScreenSinkSA(const std::string &devId)
     DHLOGI("GetDScreenSinkSA, devId: %s", GetAnonyString(devId).c_str());
     sptr<ISystemAbilityManager> samgr =
         SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (!samgr) {
+    if (samgr == nullptr) {
         DHLOGE("Failed to get system ability mgr.");
         return nullptr;
     }
