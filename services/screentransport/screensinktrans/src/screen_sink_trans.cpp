@@ -47,7 +47,7 @@ int32_t ScreenSinkTrans::SetUp(const VideoParam &localParam, const VideoParam &r
 int32_t ScreenSinkTrans::Release()
 {
     DHLOGI("%s: Release.", LOG_TAG);
-    if (!imageProcessor_ || !screenChannel_) {
+    if (imageProcessor_ ==nullptr || screenChannel_ == nullptr) {
         DHLOGE("%s: Processor or channel is null, Setup first.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -73,7 +73,7 @@ int32_t ScreenSinkTrans::Release()
 int32_t ScreenSinkTrans::Start()
 {
     DHLOGI("%s: Start.", LOG_TAG);
-    if (!imageProcessor_ || !screenChannel_) {
+    if (imageProcessor_ == nullptr || screenChannel_ == nullptr) {
         DHLOGE("%s: Processor or channel is null, Setup first.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -91,7 +91,7 @@ int32_t ScreenSinkTrans::Start()
 int32_t ScreenSinkTrans::Stop()
 {
     DHLOGI("%s: Stop.", LOG_TAG);
-    if (!imageProcessor_ || !screenChannel_) {
+    if (imageProcessor_ == nullptr || screenChannel_ == nullptr) {
         DHLOGE("%s: Processor or channel is null, Setup first.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -123,7 +123,7 @@ int32_t ScreenSinkTrans::Stop()
 int32_t ScreenSinkTrans::RegisterStateCallback(const std::shared_ptr<IScreenSinkTransCallback> &callback)
 {
     DHLOGI("%s:RegisterStateCallback.", LOG_TAG);
-    if (!callback) {
+    if (callback == nullptr) {
         DHLOGE("%s: Trans callback is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -134,7 +134,7 @@ int32_t ScreenSinkTrans::RegisterStateCallback(const std::shared_ptr<IScreenSink
 
 int32_t ScreenSinkTrans::SetImageSurface(const sptr<Surface> &surface)
 {
-    if (!surface) {
+    if (surface == nullptr) {
         DHLOGE("%s: Image surface is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -208,7 +208,7 @@ int32_t ScreenSinkTrans::InitScreenTrans(const VideoParam &localParam, const Vid
     const std::string &peerDevId)
 {
     screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
-    if (!screenChannel_) {
+    if (screenChannel_ == nullptr) {
         DHLOGE("%s: Create screen data channel failed.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -220,7 +220,7 @@ int32_t ScreenSinkTrans::InitScreenTrans(const VideoParam &localParam, const Vid
     }
 
     imageProcessor_ = std::make_shared<ImageSinkProcessor>();
-    if (!imageProcessor_) {
+    if (imageProcessor_ == nullptr) {
         DHLOGE("%s: Create image processor failed.", LOG_TAG);
         screenChannel_ = nullptr;
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
@@ -240,7 +240,7 @@ int32_t ScreenSinkTrans::RegisterChannelListener()
 {
     DHLOGI("%s: RegisterChannelListener.", LOG_TAG);
     std::shared_ptr<IScreenChannelListener> listener = shared_from_this();
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("%s: Channel Listener is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -260,7 +260,7 @@ int32_t ScreenSinkTrans::RegisterProcessorListener(const VideoParam &localParam,
 {
     DHLOGI("%s: RegisterProcessorListener.", LOG_TAG);
     std::shared_ptr<IImageSinkProcessorListener> listener = shared_from_this();
-    if (!listener) {
+    if (listener == nullptr) {
         DHLOGE("%s: Channel listener to null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -289,7 +289,7 @@ void ScreenSinkTrans::OnSessionClosed()
 {
     DHLOGI("%s:OnChannelSessionClosed.", LOG_TAG);
     std::shared_ptr<IScreenSinkTransCallback> callback = transCallback_.lock();
-    if (!callback) {
+    if (callback == nullptr) {
         DHLOGE("%s: Trans callback is null.", LOG_TAG);
         return;
     }
@@ -309,7 +309,7 @@ void ScreenSinkTrans::OnProcessorStateNotify(int32_t state)
 {
     DHLOGI("%s: OnProcessorStateNotify.", LOG_TAG);
     std::shared_ptr<IScreenSinkTransCallback> callback = transCallback_.lock();
-    if (!callback) {
+    if (callback == nullptr) {
         DHLOGE("%s: Trans callback is null.", LOG_TAG);
         return;
     }

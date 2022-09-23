@@ -38,11 +38,15 @@ private:
     using DScreenFunc = int32_t (DScreenSourceCallbackStub::*)(MessageParcel &data, MessageParcel &reply,
         MessageOption &option);
     std::map<int32_t, DScreenFunc> memberFuncMap_;
+    const size_t DID_MAX_SIZE = 256;
+    const size_t PARAM_MAX_SIZE = 50 * 1024 * 1024;
 
     int32_t OnNotifyRegResultInner(MessageParcel &data, MessageParcel &reply,
         MessageOption &option);
     int32_t OnNotifyUnregResultInner(MessageParcel &data, MessageParcel &reply,
         MessageOption &option);
+    bool CheckParams(const std::string &devId, const std::string &dhId, const std::string &reqId,
+        const std::string &resultData);
 };
 }
 }

@@ -28,11 +28,16 @@ namespace OHOS {
 namespace DistributedHardware {
 int32_t DScreenSourceProxy::InitSource(const std::string &params, const sptr<IDScreenSourceCallback> &callback)
 {
+    if (params.empty() || params.size() > PARAM_MAX_SIZE || callback == nullptr) {
+        DHLOGE("InitSource error: invalid parameter");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceProxy remote service null");
         return DSCREEN_BAD_VALUE;
     }
+
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -59,6 +64,7 @@ int32_t DScreenSourceProxy::ReleaseSource()
         DHLOGE("DScreenSourceProxy remote service null");
         return DSCREEN_BAD_VALUE;
     }
+
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -75,11 +81,16 @@ int32_t DScreenSourceProxy::ReleaseSource()
 int32_t DScreenSourceProxy::RegisterDistributedHardware(const std::string &devId,
     const std::string &dhId, const EnableParam &param, const std::string &reqId)
 {
+    if (!CheckRegParams(devId, dhId, param, reqId)) {
+        DHLOGE("RegisterDistributedHardware error: invalid parameter");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceProxy remote service null");
         return DSCREEN_BAD_VALUE;
     }
+
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -102,11 +113,16 @@ int32_t DScreenSourceProxy::RegisterDistributedHardware(const std::string &devId
 int32_t DScreenSourceProxy::UnregisterDistributedHardware(const std::string &devId,
     const std::string &dhId, const std::string &reqId)
 {
+    if (!CheckUnregParams(devId, dhId, reqId)) {
+        DHLOGE("UnregisterDistributedHardware error: invalid parameter");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceProxy remote service null");
         return DSCREEN_BAD_VALUE;
     }
+
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -128,11 +144,16 @@ int32_t DScreenSourceProxy::UnregisterDistributedHardware(const std::string &dev
 int32_t DScreenSourceProxy::ConfigDistributedHardware(const std::string &devId,
     const std::string &dhId, const std::string &key, const std::string &value)
 {
+    if (!CheckConfigParams(devId, dhId, key, value)) {
+        DHLOGE("ConfigDistributedHardware error: invalid parameter");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceProxy remote service null");
         return DSCREEN_BAD_VALUE;
     }
+
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -151,14 +172,19 @@ int32_t DScreenSourceProxy::ConfigDistributedHardware(const std::string &devId,
     return ret;
 }
 
-void DScreenSourceProxy::DScreenNotify(const std::string &devId,
-    int32_t eventCode, const std::string &eventContent)
+void DScreenSourceProxy::DScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent)
 {
+    if (devId.empty() || devId.size() > DID_MAX_SIZE || eventContent.empty() ||
+        eventContent.size() > PARAM_MAX_SIZE) {
+        DHLOGE("DScreenNotify error: invalid parameter");
+        return;
+    }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceProxy remote service null");
         return;
     }
+
     MessageParcel data;
     MessageParcel reply;
     MessageOption option = { MessageOption::TF_ASYNC };
@@ -173,6 +199,52 @@ void DScreenSourceProxy::DScreenNotify(const std::string &devId,
     }
 
     remote->SendRequest(DSCREEN_NOTIFY, data, reply, option);
+}
+
+bool DScreenSourceProxy::CheckRegParams(const std::string &devId, const std::string &dhId,
+    const EnableParam &param, const std::string &reqId)
+{
+    if (devId.empty() || devId.size() > DID_MAX_SIZE || dhId.empty() || dhId.size() > DID_MAX_SIZE) {
+        DHLOGE("DScreenSourceProxy CheckRegParams devId or dhId is invalid.");
+        return false;
+    }
+    if (reqId.empty() || reqId.size() > DID_MAX_SIZE) {
+        DHLOGE("DScreenSourceProxy CheckRegParams reqId is invalid.");
+        return false;
+    }
+    if (param.version.empty() || param.version.size() > PARAM_MAX_SIZE || param.attrs.empty() ||
+        param.attrs.size() > PARAM_MAX_SIZE) {
+        DHLOGE("DScreenSourceProxy CheckRegParams param is invalid.");
+        return false;
+    }
+    return true;
+}
+
+bool DScreenSourceProxy::CheckUnregParams(const std::string &devId, const std::string &dhId, const std::string &reqId)
+{
+    if (devId.empty() || devId.size() > DID_MAX_SIZE || dhId.empty() || dhId.size() > DID_MAX_SIZE) {
+        DHLOGE("DScreenSourceProxy CheckUnregParams devId or dhId is invalid.");
+        return false;
+    }
+    if (reqId.empty() || reqId.size() > DID_MAX_SIZE) {
+        DHLOGE("DScreenSourceProxy CheckUnregParams reqId is invalid.");
+        return false;
+    }
+    return true;
+}
+
+bool DScreenSourceProxy::CheckConfigParams(const std::string &devId, const std::string &dhId,
+    const std::string &key, const std::string &value)
+{
+    if (devId.empty() || devId.size() > DID_MAX_SIZE || dhId.empty() || dhId.size() > DID_MAX_SIZE) {
+        DHLOGE("DScreenSourceProxy CheckConfigParams devId or dhId is invalid.");
+        return false;
+    }
+    if (key.empty() || key.size() > PARAM_MAX_SIZE || value.empty() || value.size() > PARAM_MAX_SIZE) {
+        DHLOGE("DScreenSourceProxy CheckConfigParams key or value is invalid.");
+        return false;
+    }
+    return true;
 }
 }
 }
