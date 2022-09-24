@@ -42,10 +42,17 @@ private:
         MessageOption &option);
     int32_t DScreenNotifyInner(MessageParcel &data, MessageParcel &reply,
         MessageOption &option);
-
+    bool CheckRegParams(const std::string &devId, const std::string &dhId,
+        const std::string &version, const std::string &attrs, const std::string &reqId);
+    bool CheckUnregParams(const std::string &devId, const std::string &dhId, const std::string &reqId);
+    bool CheckConfigParams(const std::string &devId, const std::string &dhId,
+        const std::string &key, const std::string &value);
     using DScreenSourceFunc = int32_t (DScreenSourceStub::*)(MessageParcel &data, MessageParcel &reply,
         MessageOption &option);
     std::map<int32_t, DScreenSourceFunc> memberFuncMap_;
+
+    const size_t DID_MAX_SIZE = 256;
+    const size_t PARAM_MAX_SIZE = 50 * 1024 * 1024;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

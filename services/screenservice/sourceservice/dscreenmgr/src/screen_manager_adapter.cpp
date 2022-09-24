@@ -73,7 +73,7 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
 int32_t ScreenMgrAdapter::RegisterScreenGroupListener(sptr<Rosen::ScreenManager::IScreenGroupListener> listener)
 {
     DHLOGI("RegisterScreenGroupListener");
-    if (listenerRegistered) {
+    if (listenerRegistered_) {
         DHLOGI("already registered listener.");
         return DH_SUCCESS;
     }
@@ -82,14 +82,14 @@ int32_t ScreenMgrAdapter::RegisterScreenGroupListener(sptr<Rosen::ScreenManager:
         DHLOGE("RegisterScreenGroupListener Failed.");
         return ERR_DH_SCREEN_SA_REGISTER_SCREENLISTENER_FAIL;
     }
-    listenerRegistered = true;
+    listenerRegistered_ = true;
     return DH_SUCCESS;
 }
 
 int32_t ScreenMgrAdapter::UnregisterScreenGroupListener(sptr<Rosen::ScreenManager::IScreenGroupListener> listener)
 {
     DHLOGI("UnregisterScreenGroupListener");
-    if (!listenerRegistered) {
+    if (!listenerRegistered_) {
         DHLOGI("listener already unregistered.");
         return DH_SUCCESS;
     }
@@ -98,7 +98,7 @@ int32_t ScreenMgrAdapter::UnregisterScreenGroupListener(sptr<Rosen::ScreenManage
         DHLOGE("UnregisterScreenGroupListener Failed.");
         return ERR_DH_SCREEN_SA_UNREGISTER_SCREENLISTENER_FAIL;
     }
-    listenerRegistered = false;
+    listenerRegistered_ = false;
     return DH_SUCCESS;
 }
 
@@ -112,7 +112,7 @@ void ScreenMgrAdapter::RemoveScreenFromGroup(uint64_t screenId)
 
 int32_t ScreenMgrAdapter::RemoveVirtualScreen(uint64_t screenId)
 {
-    DHLOGI("remove virtual screen");
+    DHLOGI("remove virtual screen, screenId: %ulld", screenId);
     Rosen::DMError err = Rosen::ScreenManager::GetInstance().DestroyVirtualScreen(screenId);
     if (err != Rosen::DMError::DM_OK) {
         DHLOGE("remove virtual screen failed, screenId:%ulld", screenId);

@@ -44,7 +44,7 @@ private:
     ScreenMgrAdapter() = default;
     ~ScreenMgrAdapter();
 
-    bool listenerRegistered = false;
+    bool listenerRegistered_ = false;
     std::map<std::string, uint64_t> screenIdMap_;
 };
 } // namespace DistributedHardware

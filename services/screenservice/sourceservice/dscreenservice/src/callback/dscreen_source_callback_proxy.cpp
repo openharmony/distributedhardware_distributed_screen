@@ -26,6 +26,10 @@ namespace DistributedHardware {
 int32_t DScreenSourceCallbackProxy::OnNotifyRegResult(const std::string &devId, const std::string &dhId,
     const std::string &reqId, int32_t status, const std::string &resultData)
 {
+    if (!CheckParams(devId, dhId, reqId, resultData)) {
+        DHLOGE("OnNotifyRegResult error: invalid parameter.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceCallbackProxy remote service null");
@@ -53,6 +57,10 @@ int32_t DScreenSourceCallbackProxy::OnNotifyRegResult(const std::string &devId, 
 int32_t DScreenSourceCallbackProxy::OnNotifyUnregResult(const std::string &devId, const std::string &dhId,
     const std::string &reqId, int32_t status, const std::string &resultData)
 {
+    if (!CheckParams(devId, dhId, reqId, resultData)) {
+        DHLOGE("OnNotifyUnregResult error: invalid parameter.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSourceCallbackProxy remote service null");
@@ -75,6 +83,20 @@ int32_t DScreenSourceCallbackProxy::OnNotifyUnregResult(const std::string &devId
 
     remote->SendRequest(NOTIFY_UNREG_RESULT, data, reply, option);
     return reply.ReadInt32();
+}
+
+bool DScreenSourceCallbackProxy::CheckParams(const std::string &devId, const std::string &dhId,
+    const std::string &reqId, const std::string &resultData)
+{
+    if (devId.empty() || devId.size() > DID_MAX_SIZE || dhId.empty() || dhId.size() > DID_MAX_SIZE) {
+        DHLOGE("DScreenSourceCallbackProxy CheckParams devId or dhId is invalid.");
+        return false;
+    }
+    if (reqId.empty() || reqId.size() > DID_MAX_SIZE || resultData.empty() || resultData.size() > PARAM_MAX_SIZE) {
+        DHLOGE("DScreenSourceCallbackProxy CheckParams reqId or resultData is invalid.");
+        return false;
+    }
+    return true;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

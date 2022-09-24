@@ -27,6 +27,10 @@ namespace OHOS {
 namespace DistributedHardware {
 int32_t DScreenSinkProxy::InitSink(const std::string &params)
 {
+    if (params.empty() || params.size() > PARAM_MAX_SIZE) {
+        DHLOGE("InitSink error: invalid parameter.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSinkProxy remote service null");
@@ -72,6 +76,10 @@ int32_t DScreenSinkProxy::ReleaseSink()
 
 int32_t DScreenSinkProxy::SubscribeLocalHardware(const std::string &dhId, const std::string &param)
 {
+    if (dhId.empty() || dhId.size() > DID_MAX_SIZE || param.empty() || param.size() > PARAM_MAX_SIZE) {
+        DHLOGE("SubscribeLocalHardware error: invalid parameter.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSinkProxy remote service null");
@@ -97,6 +105,10 @@ int32_t DScreenSinkProxy::SubscribeLocalHardware(const std::string &dhId, const 
 
 int32_t DScreenSinkProxy::UnsubscribeLocalHardware(const std::string &dhId)
 {
+    if (dhId.empty() || dhId.size() > DID_MAX_SIZE) {
+        DHLOGE("UnsubscribeLocalHardware error: invalid parameter.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSinkProxy remote service null");
@@ -122,6 +134,11 @@ int32_t DScreenSinkProxy::UnsubscribeLocalHardware(const std::string &dhId)
 
 void DScreenSinkProxy::DScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent)
 {
+    if (devId.empty() || devId.size() > DID_MAX_SIZE || eventContent.empty() ||
+        eventContent.size() > PARAM_MAX_SIZE) {
+            DHLOGE("DScreenNotify error: invalid parameter.");
+            return;
+    }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
         DHLOGE("DScreenSinkProxy remote service null");
