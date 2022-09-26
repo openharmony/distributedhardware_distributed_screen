@@ -35,7 +35,7 @@ void SoftbusAdapterTest::TearDown(void) {}
  */
 HWTEST_F(SoftbusAdapterTest, RegisterSoftbusListener_001, TestSize.Level1)
 {
-    std::shared_ptr<ISoftbusListener> listener = nullptr;
+    std::shared_ptr<ISoftbusListener> listener = std::make_shared<MockSoftbusListener>();;
     std::string sessionName = DATA_SESSION_NAME;
     std::string peerDevId = "testDevId";
 
@@ -54,7 +54,7 @@ HWTEST_F(SoftbusAdapterTest, RegisterSoftbusListener_001, TestSize.Level1)
  */
 HWTEST_F(SoftbusAdapterTest, RegisterSoftbusListener_002, TestSize.Level1)
 {
-    std::shared_ptr<ISoftbusListener> listener = nullptr;
+    std::shared_ptr<ISoftbusListener> listener = std::make_shared<MockSoftbusListener>();;
     std::string sessionName = DATA_SESSION_NAME;
     std::string peerDevId = "testDevId";
 
