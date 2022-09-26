@@ -184,7 +184,7 @@ int32_t DScreenManager::RemoveFromGroup(const std::shared_ptr<DScreen> &changedS
         DHLOGD("screen is disconnecting, no need handle change");
         return DH_SUCCESS;
     }
-    std::shared_ptr<DScreenMapRelation> mapRelation = nullptr;
+
     {
         std::lock_guard<std::mutex> lock(dScreenMapRelationMtx_);
         mapRelations_.erase(screenId);
