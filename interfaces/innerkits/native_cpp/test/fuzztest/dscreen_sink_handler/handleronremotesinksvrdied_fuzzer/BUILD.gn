@@ -44,6 +44,8 @@ ohos_fuzztest("HandlerOnRemoteSinkSvrDiedFuzzTest") {
 
   sources = [ "onremotesinksvrdied_fuzzer.cpp" ]
 
+  deps = [ "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk" ]
+
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"HandlerOnRemoteSinkSvrDiedFuzzTest\"",

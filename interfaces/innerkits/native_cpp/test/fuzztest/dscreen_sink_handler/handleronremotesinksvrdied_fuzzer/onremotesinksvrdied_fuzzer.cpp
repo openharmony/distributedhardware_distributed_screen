@@ -26,7 +26,7 @@ namespace OHOS {
 namespace DistributedHardware {
 void OnRemoteSinkSvrDiedFuzzTest(const uint8_t* data, size_t size)
 {
-    if ((data == nullptr) || (size <= 0)) {
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
         return;
     }
 
@@ -34,7 +34,7 @@ void OnRemoteSinkSvrDiedFuzzTest(const uint8_t* data, size_t size)
 
     sptr<ISystemAbilityManager> samgr =
             SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (samgr != nullptr) {
+    if (samgr == nullptr) {
         return;
     }
 
