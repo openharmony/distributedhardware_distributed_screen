@@ -25,6 +25,7 @@
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_util.h"
+#include "isoftbus_listener.h"
 #define private public
 #include "softbus_adapter.h"
 #undef private
@@ -39,6 +40,16 @@ public:
     void TearDown();
 
     SoftbusAdapter softbusAdapter;
+};
+class MockSoftbusListener : public ISoftbusListener {
+public:
+    MockSoftbusListener() = default;
+    ~MockSoftbusListener() = default;
+    void OnSessionOpened(int32_t sessionId, int32_t result) override {}
+    void OnSessionClosed(int32_t sessionId) override {}
+    void OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen) override {}
+    void OnStreamReceived(int32_t sessionId, const StreamData *data, const StreamData *ext,
+        const StreamFrameInfo *param) override {}
 };
 } // namespace DistributedHardware
 } // namespace OHOS
