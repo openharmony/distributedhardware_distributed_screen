@@ -47,7 +47,7 @@ int32_t ScreenSinkTrans::SetUp(const VideoParam &localParam, const VideoParam &r
 int32_t ScreenSinkTrans::Release()
 {
     DHLOGI("%s: Release.", LOG_TAG);
-    if (imageProcessor_ ==nullptr || screenChannel_ == nullptr) {
+    if (imageProcessor_ == nullptr || screenChannel_ == nullptr) {
         DHLOGE("%s: Processor or channel is null, Setup first.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
