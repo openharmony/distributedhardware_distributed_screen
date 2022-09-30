@@ -61,7 +61,8 @@ HWTEST_F(ScreenRegionManagerTest, NotifyRemoteScreenService_001, TestSize.Level1
     const std::string dhId = "sinkDhId";
     int32_t eventCode = 0;
     const std::string eventContent = "sourceEvent";
-    int32_t ret = ScreenRegionManager::GetInstance().NotifyRemoteScreenService(remoteDevId, dhId, eventCode, eventContent);
+    int32_t ret =
+        ScreenRegionManager::GetInstance().NotifyRemoteScreenService(remoteDevId, dhId, eventCode, eventContent);
 
     EXPECT_EQ(ERR_DH_SCREEN_SA_GET_REMOTE_SOURCE_SERVICE_FAIL, ret);
 }

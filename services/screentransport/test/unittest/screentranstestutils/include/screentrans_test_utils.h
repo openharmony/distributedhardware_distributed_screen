@@ -80,7 +80,7 @@ public:
     void OnDataReceived(const std::shared_ptr<DataBuffer> &data) override {}
 };
 
-class MockScreenDataChannelImpl :public IScreenChannel {
+class MockScreenDataChannelImpl : public IScreenChannel {
 public:
     int32_t CreateSession(const std::shared_ptr<IScreenChannelListener> &listener) override
     {

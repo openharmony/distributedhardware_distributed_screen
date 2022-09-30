@@ -26,12 +26,12 @@ void DScreenSourceHandlerTest::SetUpTestCase(void) {}
 
 void DScreenSourceHandlerTest::TearDownTestCase(void) {}
 
-void DScreenSourceHandlerTest::SetUp(void) 
+void DScreenSourceHandlerTest::SetUp(void)
 {
     DScreenSourceHandler::GetInstance().InitSource("DScreenSourceHandlerTest");
 }
 
-void DScreenSourceHandlerTest::TearDown(void) 
+void DScreenSourceHandlerTest::TearDown(void)
 {
     DScreenSourceHandler::GetInstance().ReleaseSource();
 }
