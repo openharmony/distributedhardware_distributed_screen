@@ -33,7 +33,7 @@ void ScreenRegionTest::SetUp(void)
     screenRegion_ = std::make_shared<ScreenRegion>(remoteDevId, screenId, displayId);
 }
 
-void ScreenRegionTest::TearDown(void) 
+void ScreenRegionTest::TearDown(void)
 {
     sleep(1);
 }
