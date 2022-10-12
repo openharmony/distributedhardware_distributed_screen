@@ -107,7 +107,7 @@ int32_t ScreenClientWindowAdapter::ShowWindow(int32_t windowId)
         std::lock_guard<std::mutex> dataLock(windowIdMapMutex_);
         auto iter = windowIdMap_.find(windowId);
         if (iter == windowIdMap_.end()) {
-            DHLOGE("ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR.");
+            DHLOGE("Invalid windowId (windowId = %d).", windowId);
             return ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR;
         }
         window = iter->second;
@@ -131,7 +131,7 @@ int32_t ScreenClientWindowAdapter::HideWindow(int32_t windowId)
         std::lock_guard<std::mutex> dataLock(windowIdMapMutex_);
         auto iter = windowIdMap_.find(windowId);
         if (iter == windowIdMap_.end()) {
-            DHLOGE("ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR.");
+            DHLOGE("Invalid windowId (windowId = %d).", windowId);
             return ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR;
         }
         window = iter->second;

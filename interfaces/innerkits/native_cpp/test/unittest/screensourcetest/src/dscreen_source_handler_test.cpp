@@ -52,25 +52,9 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_001, TestSize.Lev
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
     EXPECT_EQ(DH_SUCCESS, ret);
-}
 
-/**
- * @tc.name: RegisterDistributedHardware_002
- * @tc.desc: Verify the RegisterDistributedHardware function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_002, TestSize.Level1)
-{
-    const std::string devId = "devId";
-    const std::string dhId = "dhId";
-    EnableParam param;
-    param.version = "1";
-    param.attrs = "attrs";
-    std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = nullptr;
-
-    int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
+    ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
     EXPECT_EQ(ERR_DH_SCREEN_SA_SOURCEPCALLBACK_NOT_INIT, ret);
 }
 
