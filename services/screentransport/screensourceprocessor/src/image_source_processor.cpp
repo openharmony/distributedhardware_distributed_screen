@@ -27,11 +27,6 @@ int32_t ImageSourceProcessor::ConfigureImageProcessor(const VideoParam &localPar
 {
     DHLOGI("%s: ConfigureImageProcessor.", LOG_TAG);
     imageEncoder_ = std::make_shared<ImageSourceEncoder>(listener);
-    if (imageEncoder_ == nullptr) {
-        DHLOGE("%s: Create screen encoder failed.", LOG_TAG);
-        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
-    }
-
     int32_t ret = imageEncoder_->ConfigureEncoder(localParam);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Configure screen encoder failed ret: %d.", LOG_TAG, ret);

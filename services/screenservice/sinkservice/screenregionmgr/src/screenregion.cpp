@@ -89,13 +89,15 @@ std::shared_ptr<WindowProperty> ScreenRegion::GetWindowProperty()
     return windowProperty_;
 }
 
-int32_t ScreenRegion::SetUp()
+int32_t ScreenRegion::SetUpWindow()
 {
-    DHLOGI("ScreenRegion::SetUp, remoteDevId: %s", GetAnonyString(remoteDevId_).c_str());
-
+    DHLOGI("ScreenRegion::SetUpWindow");
     std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
     windowProperty->displayId = displayId_;
-
+    if (mapRelation_ == nullptr) {
+        DHLOGE("ScreenRegion::SetUp mapRelation is nullptr.");
+        return ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED;
+    }
     ScreenRect screenRect = mapRelation_->GetScreenRect();
     windowProperty->startX = screenRect.startX;
     windowProperty->startY = screenRect.startY;
@@ -122,8 +124,20 @@ int32_t ScreenRegion::SetUp()
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, "get window surface failed.");
         return ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED;
     }
-
     surface_ = surface;
+
+    return DH_SUCCESS;
+}
+
+
+int32_t ScreenRegion::SetUp()
+{
+    DHLOGI("ScreenRegion::SetUp, remoteDevId: %s", GetAnonyString(remoteDevId_).c_str());
+    int32_t ret = SetUpWindow();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("SetUpWindow failed.");
+        return ret;
+    }
 
     if (sinkTrans_ == nullptr) {
         sinkTrans_ = std::make_shared<ScreenSinkTrans>();

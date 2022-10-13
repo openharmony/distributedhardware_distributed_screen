@@ -31,11 +31,6 @@ int32_t ImageSinkProcessor::ConfigureImageProcessor(
     remoteParam_ = remoteParam;
 
     imageDecoder_ = std::make_shared<ImageSinkDecoder>(imageListener);
-    if (imageDecoder_ == nullptr) {
-        DHLOGE("%s: Decoder is null.", LOG_TAG);
-        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
-    }
-
     int32_t ret = imageDecoder_->ConfigureDecoder(localParam);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: ConfigureDecoder failed ret:%d.", LOG_TAG, ret);

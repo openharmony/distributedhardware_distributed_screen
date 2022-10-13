@@ -54,6 +54,10 @@ DScreenSourceHandler::DScreenSourceHandler()
 
 int32_t DScreenSourceHandler::InitSource(const std::string &params)
 {
+    if (params.empty()) {
+        DHLOGE("InitSource params is invalid.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     DHLOGI("DScreenSourceHandler InitSource");
     std::unique_lock<std::mutex> lock(proxyMutex_);
     if (dScreenSourceProxy_ == nullptr) {
@@ -198,6 +202,10 @@ int32_t DScreenSourceHandler::ConfigDistributedHardware(const std::string &devId
 
 void DScreenSourceHandler::DScreenSourceSvrRecipient::OnRemoteDied(const wptr<IRemoteObject> &remote)
 {
+    if (remote == nullptr) {
+        DHLOGI("OnRemoteDied remote is nullptr.");
+        return;
+    }
     DHLOGI("DScreenSourceSvrRecipient OnRemoteDied");
     DScreenSourceHandler::GetInstance().OnRemoteSourceSvrDied(remote);
 }

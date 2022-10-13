@@ -183,11 +183,6 @@ void ScreenDataChannelImpl::OnStreamReceived(int32_t sessionId, const StreamData
 
     DHLOGI("%s: OnScreenStreamReceived, sessionId(%d) dataSize(%zu).", LOG_TAG, sessionId, data->bufLen);
     auto dataBuffer = std::make_shared<DataBuffer>(data->bufLen);
-    if (dataBuffer == nullptr) {
-        DHLOGE("%s: DataBuffer is null.", LOG_TAG);
-        return;
-    }
-
     int32_t ret = memcpy_s(dataBuffer->Data(), dataBuffer->Capacity(), (uint8_t *)data->buf, data->bufLen);
     if (ret != EOK) {
         DHLOGE("%s: Data memcpy_s failed.", LOG_TAG);
