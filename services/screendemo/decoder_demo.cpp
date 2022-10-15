@@ -243,7 +243,7 @@ void VDecDemo::InputFunc()
         uint32_t index = signal_->inQueue_.front();
         auto buffer = vdec_->GetInputBuffer(index);
 
-        char *fileBuffer = (char *)malloc(sizeof(char) * (*frameLen) + 1);
+        char *fileBuffer = static_cast<char *>(malloc(sizeof(char) * (*frameLen) + 1));
         if (fileBuffer == nullptr) {
             break;
         }

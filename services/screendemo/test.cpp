@@ -231,14 +231,14 @@ static void PrintNodeProperty(NodeBasicInfo *nodeInfo)
     if (GetNodeKeyInfo(g_pkgName, nodeInfo->networkId, key, udid, UDID_BUF_LEN) != 0) {
         printf("GetNodeKeyInfo Fail!\n");
     } else {
-        printf("Udid = %s\n", GetAnonyString((char *)udid).c_str());
+        printf("Udid = %s\n", GetAnonyString(reinterpret_cast<char *>(udid)).c_str());
     }
     key = NODE_KEY_UUID;
     unsigned char uuid[UUID_BUF_LEN] = {0};
     if (GetNodeKeyInfo(g_pkgName, nodeInfo->networkId, key, uuid, UUID_BUF_LEN) != 0) {
         printf("GetNodeKeyInfo Fail!\n");
     } else {
-        printf("Uuid = %s\n", GetAnonyString((char *)uuid).c_str());
+        printf("Uuid = %s\n", GetAnonyString(reinterpret_cast<char *>(udid)).c_str());
     }
 }
 
@@ -315,10 +315,7 @@ static void CreateWindow()
     cout << "create window success." << endl;
 
     auto vdec = make_shared<VDecDemo>();
-    if (vdec == nullptr) {
-        cout << "videoDecoder is nullptr" << endl;
-        return;
-    }
+
     vdec->SetWindowSize(windowWidth, windowHeight);
     vdec->SetOutputSurface(surface);
     cout << "start run decoder" << endl;
