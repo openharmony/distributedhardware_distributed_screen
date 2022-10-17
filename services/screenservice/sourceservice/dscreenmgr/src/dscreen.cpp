@@ -378,6 +378,10 @@ int32_t DScreen::SetUp()
     }
 
     sptr<OHOS::Surface> surface = sourceTrans_->GetImageSurface();
+    if (surface == nullptr) {
+        DHLOGE("DScreen SetUp failed.");
+        return ERR_DH_SCREEN_SA_DSCREEN_SETUP_FAILED;
+    }
 
     ScreenMgrAdapter::GetInstance().SetImageSurface(screenId_, surface);
     DHLOGI("DScreen SetUp success.");

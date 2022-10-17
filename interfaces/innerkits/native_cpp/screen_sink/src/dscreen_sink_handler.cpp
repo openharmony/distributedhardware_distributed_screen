@@ -53,6 +53,10 @@ DScreenSinkHandler::~DScreenSinkHandler()
 
 int32_t DScreenSinkHandler::InitSink(const std::string &params)
 {
+    if (params.empty()) {
+        DHLOGE("InitSink params is invalid.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
     DHLOGI("DScreenSinkHandler InitSink");
     std::unique_lock<std::mutex> lock(proxyMutex_);
     if (dScreenSinkProxy_ == nullptr) {
@@ -159,6 +163,10 @@ int32_t DScreenSinkHandler::UnsubscribeLocalHardware(const std::string &dhId)
 
 void DScreenSinkHandler::DScreenSinkSvrRecipient::OnRemoteDied(const wptr<IRemoteObject> &remote)
 {
+    if (remote == nullptr) {
+        DHLOGI("OnRemoteDied remote is nullptr.");
+        return;
+    }
     DHLOGI("DScreenSinkSvrRecipient OnRemoteDied.");
     DScreenSinkHandler::GetInstance().OnRemoteSinkSvrDied(remote);
 }
