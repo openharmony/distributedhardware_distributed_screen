@@ -74,13 +74,13 @@ constexpr uint32_t DSCREEN_MAX_RECV_DATA_LEN = 104857600;
 constexpr uint32_t DSCREEN_MAX_VIDEO_DATA_WIDTH = 2560;
 
 /* Screen max video data height */
-constexpr uint32_t DSCREEN_MAX_VIDEO_DATA_HEIGHT = 1600;
+constexpr uint32_t DSCREEN_MAX_VIDEO_DATA_HEIGHT = 2772;
 
 /* Screen max screen data width */
 constexpr uint32_t DSCREEN_MAX_SCREEN_DATA_WIDTH = 2560;
 
 /* Screen max screen data height */
-constexpr uint32_t DSCREEN_MAX_SCREEN_DATA_HEIGHT = 1600;
+constexpr uint32_t DSCREEN_MAX_SCREEN_DATA_HEIGHT = 2772;
 
 /* YUV420 buffer size max size */
 constexpr int64_t MAX_YUV420_BUFFER_SIZE = 2560 * 1600 * (3 / 2) * 2;
