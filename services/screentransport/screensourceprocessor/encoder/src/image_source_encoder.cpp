@@ -236,6 +236,7 @@ void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecB
         return;
     }
     auto dataBuf = std::make_shared<DataBuffer>(dataSize);
+
     int32_t ret = memcpy_s(dataBuf->Data(), dataBuf->Capacity(), videoSharedMemory_->GetBase(), dataSize);
     if (ret != EOK) {
         DHLOGE("%s: Copy data failed.", LOG_TAG);

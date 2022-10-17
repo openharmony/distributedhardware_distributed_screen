@@ -31,6 +31,7 @@ int32_t ImageSinkProcessor::ConfigureImageProcessor(
     remoteParam_ = remoteParam;
 
     imageDecoder_ = std::make_shared<ImageSinkDecoder>(imageListener);
+
     int32_t ret = imageDecoder_->ConfigureDecoder(localParam);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: ConfigureDecoder failed ret:%d.", LOG_TAG, ret);

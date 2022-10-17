@@ -226,6 +226,7 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
 {
     DHLOGI("%s:InitScreenTrans.", LOG_TAG);
     screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
+
     int32_t ret = RegisterChannelListener();
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Register channel listener failed ret: %d.", LOG_TAG, ret);
@@ -234,6 +235,7 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
     }
 
     imageProcessor_ = std::make_shared<ImageSourceProcessor>();
+
     ret = RegisterProcessorListener(localParam, remoteParam);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Register data processor listener failed ret: %d.", LOG_TAG, ret);

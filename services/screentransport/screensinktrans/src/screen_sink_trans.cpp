@@ -208,6 +208,7 @@ int32_t ScreenSinkTrans::InitScreenTrans(const VideoParam &localParam, const Vid
     const std::string &peerDevId)
 {
     screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
+
     int32_t ret = RegisterChannelListener();
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Register channel listener failed.", LOG_TAG);
@@ -216,6 +217,7 @@ int32_t ScreenSinkTrans::InitScreenTrans(const VideoParam &localParam, const Vid
     }
 
     imageProcessor_ = std::make_shared<ImageSinkProcessor>();
+
     ret = RegisterProcessorListener(localParam, remoteParam, peerDevId);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Register processor listener failed.", LOG_TAG);

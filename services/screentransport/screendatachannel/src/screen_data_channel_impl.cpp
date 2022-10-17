@@ -114,7 +114,7 @@ int32_t ScreenDataChannelImpl::SendData(const std::shared_ptr<DataBuffer> &scree
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
-    StreamData data = {(char *)screenData->Data(), screenData->Capacity()};
+    StreamData data = {reinterpret_cast<char *>(screenData->Data()), screenData->Capacity()};
     StreamData ext = {0};
     StreamFrameInfo frameInfo = {0};
 
@@ -183,7 +183,9 @@ void ScreenDataChannelImpl::OnStreamReceived(int32_t sessionId, const StreamData
 
     DHLOGI("%s: OnScreenStreamReceived, sessionId(%d) dataSize(%zu).", LOG_TAG, sessionId, data->bufLen);
     auto dataBuffer = std::make_shared<DataBuffer>(data->bufLen);
-    int32_t ret = memcpy_s(dataBuffer->Data(), dataBuffer->Capacity(), (uint8_t *)data->buf, data->bufLen);
+
+    int32_t ret = memcpy_s(dataBuffer->Data(), dataBuffer->Capacity(), reinterpret_cast<uint8_t *>(data->buf),
+        data->bufLen);
     if (ret != EOK) {
         DHLOGE("%s: Data memcpy_s failed.", LOG_TAG);
         return;
