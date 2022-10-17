@@ -107,8 +107,8 @@ int32_t ImageSinkProcessor::StopImageProcessor()
 int32_t ImageSinkProcessor::SetImageSurface(sptr<Surface> &surface)
 {
     DHLOGI("%s: SetImageSurface.", LOG_TAG);
-    if (imageDecoder_ == nullptr) {
-        DHLOGE("%s: Decoder is null.", LOG_TAG);
+    if (imageDecoder_ == nullptr || surface == nullptr) {
+        DHLOGE("%s: Decoder or surface is null.", LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "SetImageSurface Decoder is null.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -126,8 +126,8 @@ int32_t ImageSinkProcessor::SetImageSurface(sptr<Surface> &surface)
 int32_t ImageSinkProcessor::ProcessImage(const std::shared_ptr<DataBuffer> &data)
 {
     DHLOGI("%s: ProcessImage.", LOG_TAG);
-    if (imageDecoder_ == nullptr) {
-        DHLOGE("%s: Decoder is null.", LOG_TAG);
+    if (imageDecoder_ == nullptr || data == nullptr) {
+        DHLOGE("%s: Decoder or data is null.", LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "processImage Decoder is null.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }

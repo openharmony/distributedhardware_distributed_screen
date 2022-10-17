@@ -80,8 +80,8 @@ int32_t ScreenSourceTrans::Release()
 int32_t ScreenSourceTrans::Start()
 {
     DHLOGI("%s: Start.", LOG_TAG);
-    if (imageProcessor_ == nullptr || screenChannel_ == nullptr) {
-        DHLOGE("%s: Processor or channel is null, Setup first.", LOG_TAG);
+    if (screenChannel_ == nullptr) {
+        DHLOGE("%s: channel is null, Setup first.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 

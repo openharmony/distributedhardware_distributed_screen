@@ -73,8 +73,8 @@ int32_t ScreenSinkTrans::Release()
 int32_t ScreenSinkTrans::Start()
 {
     DHLOGI("%s: Start.", LOG_TAG);
-    if (imageProcessor_ == nullptr || screenChannel_ == nullptr) {
-        DHLOGE("%s: Processor or channel is null, Setup first.", LOG_TAG);
+    if (imageProcessor_ == nullptr) {
+        DHLOGE("%s: Processor is null, Setup first.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
@@ -251,6 +251,10 @@ int32_t ScreenSinkTrans::RegisterChannelListener()
 int32_t ScreenSinkTrans::RegisterProcessorListener(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::string &peerDevId)
 {
+    if (imageProcessor_ == nullptr || decoderSurface_ == nullptr) {
+        DHLOGE("%s: imageProcessor_ or decoderSurface_ is nullptr.", LOG_TAG);
+        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
+    }
     DHLOGI("%s: RegisterProcessorListener.", LOG_TAG);
     std::shared_ptr<IImageSinkProcessorListener> listener = shared_from_this();
     if (listener == nullptr) {
@@ -291,6 +295,10 @@ void ScreenSinkTrans::OnSessionClosed()
 
 void ScreenSinkTrans::OnDataReceived(const std::shared_ptr<DataBuffer> &data)
 {
+    if (imageProcessor_ == nullptr || data == nullptr) {
+        DHLOGE("%s: imageProcessor_ or data is nullptr.", LOG_TAG);
+        return;
+    }
     DHLOGD("%s: OnChannelDataReceived.", LOG_TAG);
     int32_t ret = imageProcessor_->ProcessImage(data);
     if (ret != DH_SUCCESS) {

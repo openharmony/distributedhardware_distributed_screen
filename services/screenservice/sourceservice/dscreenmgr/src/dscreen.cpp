@@ -182,6 +182,10 @@ void DScreen::HandleTask(const std::shared_ptr<Task> &task)
 
 void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
 {
+    if (dscreenCallback_ == nullptr) {
+        DHLOGE("DScreen::HandleEnable, dscreenCallback_ is nullptr");
+        return;
+    }
     DHLOGI("HandleEnable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
     if (curState_ == ENABLED || curState_ == ENABLING || curState_ == CONNECTING || curState_ == CONNECTED) {
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
@@ -266,6 +270,9 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
     }
     std::vector<std::shared_ptr<Media::VideoCaps>> caps = codecList->GetVideoEncoderCaps();
     for (const auto &cap : caps) {
+        if (cap == nullptr) {
+            continue;
+        }
         std::shared_ptr<Media::AVCodecInfo> codecInfo = cap->GetCodecInfo();
         if (codecInfo == nullptr) {
             continue;
@@ -299,6 +306,10 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
 
 void DScreen::HandleDisable(const std::string &taskId)
 {
+    if (dscreenCallback_ == nullptr) {
+        DHLOGE("DScreen::HandleDisable, dscreenCallback_ is nullptr");
+        return;
+    }
     DHLOGI("HandleDisable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
     SetState(DISABLING);
     int32_t ret = ScreenMgrAdapter::GetInstance().RemoveVirtualScreen(screenId_);

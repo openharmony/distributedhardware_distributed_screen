@@ -39,6 +39,10 @@ ScreenMgrAdapter::~ScreenMgrAdapter()
 uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const std::string &dhId,
     const std::shared_ptr<VideoParam> &videoParam)
 {
+    if (videoParam == nullptr) {
+        DHLOGE("ScreenMgrAdapter::CreateVirtualScreen, videoParam is nullptr");
+        return SCREEN_ID_INVALID;
+    }
     DHLOGI("CreateVirtualScreen, width: %u, height: %u", videoParam->GetScreenWidth(),
         videoParam->GetScreenHeight());
     std::string screenName = DSCREEN_PREFIX + SEPERATOR + GetInterruptString(devId) +
@@ -72,6 +76,10 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
 
 int32_t ScreenMgrAdapter::RegisterScreenGroupListener(sptr<Rosen::ScreenManager::IScreenGroupListener> listener)
 {
+    if (listener == nullptr) {
+        DHLOGE("ScreenMgrAdapter::RegisterScreenGroupListener, listener is nullptr.");
+        return ERR_DH_SCREEN_SA_REGISTER_SCREENLISTENER_FAIL;
+    }
     DHLOGI("RegisterScreenGroupListener");
     if (listenerRegistered_) {
         DHLOGI("already registered listener.");
@@ -88,6 +96,10 @@ int32_t ScreenMgrAdapter::RegisterScreenGroupListener(sptr<Rosen::ScreenManager:
 
 int32_t ScreenMgrAdapter::UnregisterScreenGroupListener(sptr<Rosen::ScreenManager::IScreenGroupListener> listener)
 {
+    if (listener == nullptr) {
+        DHLOGE("ScreenMgrAdapter::UnregisterScreenGroupListener, listener is nullptr.");
+        return ERR_DH_SCREEN_SA_UNREGISTER_SCREENLISTENER_FAIL;
+    }
     DHLOGI("UnregisterScreenGroupListener");
     if (!listenerRegistered_) {
         DHLOGI("listener already unregistered.");
@@ -123,6 +135,10 @@ int32_t ScreenMgrAdapter::RemoveVirtualScreen(uint64_t screenId)
 
 int32_t ScreenMgrAdapter::SetImageSurface(uint64_t screenId, sptr<OHOS::Surface> surface)
 {
+    if (surface == nullptr) {
+        DHLOGE("ScreenMgrAdapter::SetImageSurface, surface is nullptr");
+        return ERR_DH_SCREEN_SA_SET_IMAGESURFACE_FAIL;
+    }
     DHLOGI("SetImageSurface for virtualscreen, screenId: %ulld", screenId);
     Rosen::ScreenManager::GetInstance().SetVirtualScreenSurface(screenId, surface);
     return DH_SUCCESS;

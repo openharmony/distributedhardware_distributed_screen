@@ -200,8 +200,8 @@ int32_t ImageSinkDecoder::SetDecoderFormat(const VideoParam &configParam)
 int32_t ImageSinkDecoder::SetOutputSurface(sptr<Surface> &surface)
 {
     DHLOGI("%s: SetOutputSurface.", LOG_TAG);
-    if (videoDecoder_ == nullptr) {
-        DHLOGE("%s: Decoder is null.", LOG_TAG);
+    if (videoDecoder_ == nullptr || surface == nullptr) {
+        DHLOGE("%s: Decoder or surface is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
@@ -216,6 +216,10 @@ int32_t ImageSinkDecoder::SetOutputSurface(sptr<Surface> &surface)
 
 int32_t ImageSinkDecoder::InputScreenData(const std::shared_ptr<DataBuffer> &data)
 {
+    if (data == nullptr) {
+        DHLOGE("%s: InputScreenData failed, data is nullptr.", LOG_TAG);
+        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
+    }
     DHLOGD("%s: InputScreenData.", LOG_TAG);
     std::lock_guard<std::mutex> dataLock(dataMutex_);
     while (videoDataQueue_.size() >= DATA_QUEUE_MAX_SIZE) {
@@ -327,8 +331,8 @@ void ImageSinkDecoder::DecodeScreenData()
 int32_t ImageSinkDecoder::ProcessData(const std::shared_ptr<DataBuffer> &screenData, const int32_t bufferIndex)
 {
     DHLOGI("%s: ProcessData.", LOG_TAG);
-    if (videoDecoder_ == nullptr) {
-        DHLOGE("%s: Decoder is null.", LOG_TAG);
+    if (videoDecoder_ == nullptr || screenData == nullptr) {
+        DHLOGE("%s: Decoder or screenData is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
