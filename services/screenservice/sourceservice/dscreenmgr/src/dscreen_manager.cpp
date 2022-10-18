@@ -264,8 +264,8 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
 
     int32_t dScreenState = dScreen->GetState();
     if (dScreenState == ENABLED || dScreenState == ENABLING) {
-        DHLOGE("dScreen state is ENABLED or ENABLING.");
-        return ERR_DH_SCREEN_SA_ENABLE_FAILED;
+        DHLOGI("dScreen state Already is ENABLED or ENABLING.");
+        return DH_SUCCESS;
     }
 
     dScreens_[dScreenIdx] = dScreen;

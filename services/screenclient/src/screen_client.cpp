@@ -131,10 +131,6 @@ sptr<Surface> ScreenClient::GetSurface(int32_t windowId)
         }
         surface = iter->second;
     }
-    if (surface == nullptr) {
-        DHLOGE("Get surface is null(ID = %d).", windowId);
-        return nullptr;
-    }
     DHLOGD("Get surface (ID = %d) success.", windowId);
     return surface;
 }
