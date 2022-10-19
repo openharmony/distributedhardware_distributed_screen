@@ -76,6 +76,10 @@ bool DScreenSourceService::Init()
 
 int32_t DScreenSourceService::InitSource(const std::string &params, const sptr<IDScreenSourceCallback> &callback)
 {
+    if (callback == nullptr) {
+        DHLOGE("DScreenSourceService::InitSource, callback is nullptr.");
+        return ERR_DH_SCREEN_SA_INIT_SOURCE_FAIL;
+    }
     DHLOGI("InitSource");
     int32_t ret = DScreenManager::GetInstance().Init();
     if (ret != DH_SUCCESS) {

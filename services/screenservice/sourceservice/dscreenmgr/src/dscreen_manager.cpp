@@ -160,6 +160,10 @@ int32_t DScreenManager::AddToGroup(const std::shared_ptr<DScreen> &changedScreen
     }
 
     std::shared_ptr<VideoParam> videoParam = changedScreen->GetVideoParam();
+    if (videoParam == nullptr) {
+        DHLOGE("videoParam is nullptr.");
+        return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
+    }
     DisplayRect displayRect = mapRelation->GetDisplayRect();
     videoParam->SetVideoWidth(displayRect.width);
     videoParam->SetVideoHeight(displayRect.height);
@@ -196,6 +200,10 @@ int32_t DScreenManager::RemoveFromGroup(const std::shared_ptr<DScreen> &changedS
 void DScreenCallback::OnRegResult(const std::shared_ptr<DScreen> &dScreen,
     const std::string &reqId, const int32_t status, const std::string &data)
 {
+    if (dScreen == nullptr) {
+        DHLOGE("DScreenCallback::OnRegResult, dScreen id nullptr");
+        return;
+    }
     DHLOGI("DScreenCallback::OnRegResult, devId: %s, dhId: %s, reqId: %s",
         GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(), reqId.c_str());
     DScreenManager::GetInstance().OnRegResult(dScreen, reqId, status, data);
@@ -204,6 +212,10 @@ void DScreenCallback::OnRegResult(const std::shared_ptr<DScreen> &dScreen,
 void DScreenCallback::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
     const std::string &reqId, const int32_t status, const std::string &data)
 {
+    if (dScreen == nullptr) {
+        DHLOGE("DScreenCallback::OnUnregResult, dScreen id nullptr");
+        return;
+    }
     DHLOGI("DScreenCallback::OnUnregResult, devId: %s, dhId: %s, reqId: %s",
         GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(), reqId.c_str());
     DScreenManager::GetInstance().OnUnregResult(dScreen, reqId, status, data);

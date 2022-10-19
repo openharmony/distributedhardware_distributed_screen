@@ -152,7 +152,7 @@ int32_t ScreenClient::RemoveWindow(int32_t windowId)
         return ret;
     }
     DHLOGD("windowId (ID = %d) remove success.", windowId);
-    return DH_SUCCESS;
+    return ret;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

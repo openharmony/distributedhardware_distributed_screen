@@ -203,6 +203,10 @@ int32_t ScreenClientWindowAdapter::RemoveWindow(int32_t windowId)
 
 bool ScreenClientInputEventListener::OnInputEvent(const std::shared_ptr<MMI::PointerEvent>& pointerEvent) const
 {
+    if (pointerEvent == nullptr) {
+        DHLOGE("OnInputEvent failed, pointerEvent is nullptr.");
+        return false;
+    }
     DHLOGI("onInputEvent, pointerEvent");
     pointerEvent->MarkProcessed();
     return true;
@@ -210,6 +214,10 @@ bool ScreenClientInputEventListener::OnInputEvent(const std::shared_ptr<MMI::Poi
 
 bool ScreenClientInputEventListener::OnInputEvent(const std::shared_ptr<MMI::KeyEvent>& keyEvent) const
 {
+    if (keyEvent == nullptr) {
+        DHLOGE("OnInputEvent failed, keyEvent is nullptr.");
+        return false;
+    }
     DHLOGI("onInputEvent, keyEvent");
     keyEvent->MarkProcessed();
     return true;
@@ -217,6 +225,10 @@ bool ScreenClientInputEventListener::OnInputEvent(const std::shared_ptr<MMI::Key
 
 bool ScreenClientInputEventListener::OnInputEvent(const std::shared_ptr<MMI::AxisEvent>& axisEvent) const
 {
+    if (axisEvent == nullptr) {
+        DHLOGE("OnInputEvent failed, axisEvent is nullptr.");
+        return false;
+    }
     DHLOGI("onInputEvent, axisEvent");
     axisEvent->MarkProcessed();
     return true;
