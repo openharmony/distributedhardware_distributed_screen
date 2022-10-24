@@ -39,6 +39,143 @@ void ScreenRegionTest::TearDown(void)
 }
 
 /**
+ * @tc.name: OnTransError_001
+ * @tc.desc: Verify the OnTransError function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTest, OnTransError_001, TestSize.Level1)
+{
+    int32_t err = 0;
+    const std::string content = "ScreenRegionTest";
+    screenRegion_->OnTransError();
+    EXPECT_EQ(false, screenRegion_->isRunning);
+}
+
+/**
+ * @tc.name: SetMapRelation_001
+ * @tc.desc: Verify the SetMapRelation function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTest, SetMapRelation_001, TestSize.Level1)
+{
+    std::shared_ptr<DScreenMapRelation> mapRelation = std::make_shared<DScreenMapRelation>();
+    screenRegion_->SetMapRelation(mapRelation);
+    EXPECT_EQ(mapRelation, screenRegion_->mapRelation_);
+}
+
+/**
+ * @tc.name: GetScreenId_001
+ * @tc.desc: Verify the GetScreenId function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTest, GetScreenId_001, TestSize.Level1)
+{
+    screenRegion_->screenId_ = 5;
+    uint64_t ret = screenRegion_->GetScreenId();
+    EXPECT_EQ(screenRegion_->screenId_, ret);
+}
+
+/**
+ * @tc.name: GetDisplayId_001
+ * @tc.desc: Verify the GetDisplayId function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTest, GetDisplayId_001, TestSize.Level1)
+{
+    screenRegion_->displayId_ = 5;
+    uint64_t ret = screenRegion_->GetDisplayId();
+    EXPECT_EQ(screenRegion_->displayId_, ret);
+}
+
+/**
+ * @tc.name: GetRemoteDevId_001
+ * @tc.desc: Verify the GetRemoteDevId function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTest, GetRemoteDevId_001, TestSize.Level1)
+{
+    screenRegion_->remoteDevId_ = "remoteDevId";
+    std::string ret = screenRegion_->GetRemoteDevId();
+    EXPECT_EQ(screenRegion_->remoteDevId_, ret);
+}
+
+/**
+ * @tc.name: GetWindowId_001
+ * @tc.desc: Verify the GetWindowId function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTest, GetWindowId_001, TestSize.Level1)
+{
+    screenRegion_->windowId_ = 5;
+    int32_t ret = screenRegion_->GetWindowId();
+    EXPECT_EQ(screenRegion_->windowId_, ret);
+}
+
+/**
+ * @tc.name: GetVideoParam_001
+ * @tc.desc: Verify the GetVideoParam function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTest, GetVideoParam_001, TestSize.Level1)
+{
+    screenRegion_->videoParam_ = std::make_shared<VideoParam>();
+    std::shared_ptr<VideoParam> ret = screenRegion_->GetVideoParam();
+    EXPECT_EQ(screenRegion_->videoParam_, ret);
+}
+
+/**
+ * @tc.name: GetWindowProperty_001
+ * @tc.desc: Verify the GetWindowProperty function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTest, GetWindowProperty_001, TestSize.Level1)
+{
+    screenRegion_->windowProperty_ = std::make_shared<WindowProperty>();
+    std::shared_ptr<WindowProperty> ret = screenRegion_->GetWindowProperty();
+    EXPECT_EQ(screenRegion_->windowProperty_, ret);
+}
+
+/**
+ * @tc.name: SetUpWindow_001
+ * @tc.desc: Verify the SetUpWindow function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTest, SetUpWindow_001, TestSize.Level1)
+{
+    screenRegion_->mapRelation_ = nullptr;
+    int32_t ret = screenRegion_->SetUpWindow();
+    EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, ret);
+}
+
+/**
+ * @tc.name: SetUpWindow_002
+ * @tc.desc: Verify the SetUpWindow function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTest, SetUpWindow_002, TestSize.Level1)
+{
+    screenRegion_->mapRelation_ = std::make_shared<DScreenMapRelation>();
+    ScreenRect screenRect;
+    screenRect.startX = -1;
+    screenRect.startY = -1;
+    screenRect.width = 0;
+    screenRect.height = 0;
+    screenRegion_->mapRelation_->SetScreenRect(screenRect);
+    int32_t ret = screenRegion_->SetUpWindow();
+    EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, ret);
+}
+
+/**
  * @tc.name: SetUp_001
  * @tc.desc: Verify the SetUp function failed.
  * @tc.type: FUNC
@@ -62,6 +199,26 @@ HWTEST_F(ScreenRegionTest, SetUp_001, TestSize.Level1)
     videoParam->videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
     videoParam->fps_ = 30;
     screenRegion_->SetVideoParam(videoParam);
+    int32_t ret = screenRegion_->SetUp();
+
+    EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, ret);
+}
+
+/**
+ * @tc.name: SetUp_002
+ * @tc.desc: Verify the SetUp function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTest, SetUp_002, TestSize.Level1)
+{
+    screenRegion_->mapRelation_ = std::make_shared<DScreenMapRelation>();
+    ScreenRect screenRect;
+    screenRect.startX = -1;
+    screenRect.startY = -1;
+    screenRect.width = 0;
+    screenRect.height = 0;
+    screenRegion_->mapRelation_->SetScreenRect(screenRect);
     int32_t ret = screenRegion_->SetUp();
 
     EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, ret);
