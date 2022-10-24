@@ -15,6 +15,9 @@
 
 #define private public
 #include "dscreen_source_handler_test.h"
+#include "if_system_ability_manager.h"
+#include "iservice_registry.h"
+#include "dscreen_constants.h"
 #undef private
 
 using namespace testing;
@@ -238,6 +241,23 @@ HWTEST_F(DScreenSourceHandlerTest, ReleaseSource_001, TestSize.Level1)
     DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = nullptr;
     int32_t ret = DScreenSourceHandler::GetInstance().ReleaseSource();
     EXPECT_EQ(ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, ret);
+}
+
+/**
+ * @tc.name: OnRemoteDied_001
+ * @tc.desc: Verify the OnRemoteDied function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceHandlerTest, OnRemoteDied_001, TestSize.Level1)
+{
+    sptr<ISystemAbilityManager> samgr =
+            SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+
+    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    wptr<IRemoteObject> remote(remoteObject);
+    DScreenSourceHandler::GetInstance().sourceSvrRecipient_->OnRemoteDied(remote);
+    EXPECT_EQ(nullptr, DScreenSourceHandler::GetInstance().dScreenSourceProxy_);
 }
 }
 }

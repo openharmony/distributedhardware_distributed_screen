@@ -33,10 +33,7 @@ void ScreenRegionTest::SetUp(void)
     screenRegion_ = std::make_shared<ScreenRegion>(remoteDevId, screenId, displayId);
 }
 
-void ScreenRegionTest::TearDown(void)
-{
-    sleep(1);
-}
+void ScreenRegionTest::TearDown(void) {}
 
 /**
  * @tc.name: OnTransError_001
@@ -48,7 +45,7 @@ HWTEST_F(ScreenRegionTest, OnTransError_001, TestSize.Level1)
 {
     int32_t err = 0;
     const std::string content = "ScreenRegionTest";
-    screenRegion_->OnTransError();
+    screenRegion_->OnTransError(err, content);
     EXPECT_EQ(false, screenRegion_->isRunning);
 }
 
@@ -157,25 +154,6 @@ HWTEST_F(ScreenRegionTest, SetUpWindow_001, TestSize.Level1)
 }
 
 /**
- * @tc.name: SetUpWindow_002
- * @tc.desc: Verify the SetUpWindow function failed.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ScreenRegionTest, SetUpWindow_002, TestSize.Level1)
-{
-    screenRegion_->mapRelation_ = std::make_shared<DScreenMapRelation>();
-    ScreenRect screenRect;
-    screenRect.startX = -1;
-    screenRect.startY = -1;
-    screenRect.width = 0;
-    screenRect.height = 0;
-    screenRegion_->mapRelation_->SetScreenRect(screenRect);
-    int32_t ret = screenRegion_->SetUpWindow();
-    EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, ret);
-}
-
-/**
  * @tc.name: SetUp_001
  * @tc.desc: Verify the SetUp function failed.
  * @tc.type: FUNC
@@ -212,13 +190,7 @@ HWTEST_F(ScreenRegionTest, SetUp_001, TestSize.Level1)
  */
 HWTEST_F(ScreenRegionTest, SetUp_002, TestSize.Level1)
 {
-    screenRegion_->mapRelation_ = std::make_shared<DScreenMapRelation>();
-    ScreenRect screenRect;
-    screenRect.startX = -1;
-    screenRect.startY = -1;
-    screenRect.width = 0;
-    screenRect.height = 0;
-    screenRegion_->mapRelation_->SetScreenRect(screenRect);
+    screenRegion_->mapRelation_ = nullptr;
     int32_t ret = screenRegion_->SetUp();
 
     EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, ret);
