@@ -70,7 +70,7 @@ HWTEST_F(DScreenSourceHandlerTest, UnregisterDistributedHardware_001, TestSize.L
     const std::string dhId = "dhId";
     std::shared_ptr<UnregisterCallbackTest> callback = std::make_shared<UnregisterCallbackTest>();
     if (DScreenSourceHandler::GetInstance().dScreenSourceCallback_ == nullptr) {
-        DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = new (std::nothrow) DScreenSourceCallback();;
+        DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = new (std::nothrow) DScreenSourceCallback();
     }
     int32_t ret = DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, callback);
     EXPECT_EQ(ERR_DH_SCREEN_SA_DISABLE_FAILED, ret);
