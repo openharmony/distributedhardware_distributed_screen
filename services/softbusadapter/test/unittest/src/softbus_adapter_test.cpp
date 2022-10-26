@@ -15,6 +15,10 @@
 
 #include "softbus_adapter_test.h"
 
+#include "accesstoken_kit.h"
+#include "nativetoken_kit.h"
+#include "token_setproc.h"
+
 using namespace testing::ext;
 
 namespace OHOS {
@@ -23,9 +27,68 @@ void SoftbusAdapterTest::SetUpTestCase(void) {}
 
 void SoftbusAdapterTest::TearDownTestCase(void) {}
 
-void SoftbusAdapterTest::SetUp(void) {}
+void SoftbusAdapterTest::SetUp(void)
+{
+    uint64_t tokenId;
+    const char *perms[2];
+    perms[0] = OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER;
+    perms[1] = OHOS_PERMISSION_DISTRIBUTED_DATASYNC;
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = 2,
+        .aclsNum = 0,
+        .dcaps = NULL,
+        .perms = perms,
+        .acls = NULL,
+        .processName = "softbus_adapter_test",
+        .aplStr = "system_basic",
+    };
+    tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
+}
 
 void SoftbusAdapterTest::TearDown(void) {}
+
+static int32_t ScreenOnSoftbusSessionOpened(int32_t sessionId, int32_t result)
+{
+    return 0;
+}
+
+static void ScreenOnSoftbusSessionClosed(int32_t sessionId) {}
+
+static void ScreenOnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen) {}
+
+static void ScreenOnStreamReceived(int32_t sessionId, const StreamData *data, const StreamData *ext,
+    const StreamFrameInfo *frameInfo) {}
+
+static void ScreenOnMessageReceived(int sessionId, const void *data, unsigned int dataLen) {}
+
+static void ScreenOnQosEvent(int sessionId, int eventId, int tvCount, const QosTv *tvList) {}
+
+/**
+ * @tc.name: CreateSoftbusSessionServer_001
+ * @tc.desc: Verify the CreateSoftbusSessionServer function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_001, TestSize.Level1)
+{
+    softbusAdapter.sessListener_.OnSessionOpened = ScreenOnSoftbusSessionOpened;
+    softbusAdapter.sessListener_.OnSessionClosed = ScreenOnSoftbusSessionClosed;
+    softbusAdapter.sessListener_.OnBytesReceived = ScreenOnBytesReceived;
+    softbusAdapter.sessListener_.OnStreamReceived = ScreenOnStreamReceived;
+    softbusAdapter.sessListener_.OnMessageReceived = ScreenOnMessageReceived;
+    softbusAdapter.sessListener_.OnQosEvent = ScreenOnQosEvent;
+
+    std::string pkgname = PKG_NAME;
+    std::string sessionName = DATA_SESSION_NAME;
+    std::string peerDevId = "peerDevId";
+
+    int32_t actual = softbusAdapter.CreateSoftbusSessionServer(pkgname, sessionName, peerDevId);
+    EXPECT_EQ(DH_SUCCESS, actual);
+    softbusAdapter.RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
+}
 
 /**
  * @tc.name: RegisterSoftbusListener_001
