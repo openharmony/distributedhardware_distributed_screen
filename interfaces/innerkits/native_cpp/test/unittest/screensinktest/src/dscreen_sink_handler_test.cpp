@@ -35,6 +35,7 @@ void DScreenSinkHandlerTest::TearDown(void)
 {
     DScreenSinkHandler::GetInstance().ReleaseSink();
 }
+
 /**
  * @tc.name: LocalHardware_001
  * @tc.desc: Verify the SubscribeLocalHardware function.
@@ -47,8 +48,33 @@ HWTEST_F(DScreenSinkHandlerTest, LocalHardware_001, TestSize.Level1)
     const std::string param = "DScreenSinkHandlerTest";
     int32_t ret = DScreenSinkHandler::GetInstance().SubscribeLocalHardware(dhId, param);
     EXPECT_EQ(DH_SUCCESS, ret);
+
     ret = DScreenSinkHandler::GetInstance().UnsubscribeLocalHardware(dhId);
     EXPECT_EQ(DH_SUCCESS, ret);
+
+    DScreenSinkHandler::GetInstance().dScreenSinkProxy_ = nullptr;
+    ret = DScreenSinkHandler::GetInstance().UnsubscribeLocalHardware(dhId);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, ret);
+}
+
+/**
+ * @tc.name: OnRemoteSinkSvrDied_001
+ * @tc.desc: Verify the OnRemoteSinkSvrDied function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkHandlerTest, OnRemoteSinkSvrDied_001, TestSize.Level1)
+{
+    sptr<ISystemAbilityManager> samgr =
+            SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+
+    sptr<IRemoteObject> remoteObject =
+            samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID);
+
+    wptr<IRemoteObject> remote(remoteObject);
+
+    DScreenSinkHandler::GetInstance().sinkSvrRecipient_->OnRemoteDied(remote);
+    EXPECT_EQ(nullptr, DScreenSinkHandler::GetInstance().dScreenSinkProxy_);
 }
 }
 }
