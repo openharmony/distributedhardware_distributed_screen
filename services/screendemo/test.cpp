@@ -15,6 +15,7 @@
 
 #include <iostream>
 
+#include "accesstoken_kit.h"
 #include "display.h"
 #include "display_manager.h"
 #include "dscreen_source_handler.h"
@@ -42,6 +43,7 @@ using namespace OHOS;
 using namespace OHOS::DistributedHardware;
 using namespace OHOS::Rosen;
 using namespace OHOS::Media;
+using namespace OHOS::Security::AccessToken;
 
 namespace {
     static char const *g_pkgName = "ohos.dsoftbus.tool";
@@ -245,23 +247,22 @@ static void PrintNodeProperty(NodeBasicInfo *nodeInfo)
 static void QueryRemoteDeviceInfo()
 {
     uint64_t tokenId;
-    const char **perms = new const char *[1];
-    perms[0] = "ohos.permission.DISTRIBUTED_DATASYNC";
+    const char *perms[2];
+    perms[0] = OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER;
+    perms[1] = OHOS_PERMISSION_DISTRIBUTED_DATASYNC;
     NativeTokenInfoParams infoInstance = {
         .dcapsNum = 0,
-        .permsNum = 1,
-        .dcaps = nullptr,
+        .permsNum = 2,
+        .aclsNum = 0,
+        .dcaps = NULL,
         .perms = perms,
-        .aplStr = "system_basic",
+        .acls = NULL,
+        .processName = "dscreen_test_demo",
+        .aplStr = "system_core",
     };
-
-    infoInstance.acls = NULL;
-    infoInstance.aclsNum = 0;
-    infoInstance.processName = "test_attest";
     tokenId = GetAccessTokenId(&infoInstance);
-    cout << "tokenId ====== " << tokenId << endl;
-    int32_t ret = SetSelfTokenID(tokenId);
-    cout << "ret ======" << ret << endl;
+    SetSelfTokenID(tokenId);
+    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
 
     NodeBasicInfo localNodeinfo;
     NodeBasicInfo *remoteNodeInfo = nullptr;

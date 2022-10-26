@@ -62,6 +62,7 @@ ohos_executable("distributedScreenTest") {
   ]
 
   external_deps = [
+    "access_token:libaccesstoken_sdk",
     "hiviewdfx_hilog_native:libhilog",
     "multimedia_player_framework:media_client",
   ]
