@@ -53,7 +53,10 @@ ohos_unittest("ScreenSinkTest") {
     "//third_party/googletest:gtest_main",
   ]
 
-  external_deps = [ "c_utils:utils" ]
+  external_deps = [
+    "c_utils:utils",
+    "samgr:samgr_proxy",
+  ]
 }
 
 group("screen_sink_test") {
