@@ -196,7 +196,7 @@ int32_t ScreenRegion::Stop()
         return ret;
     }
 
-    ret = ScreenClient::GetInstance().RemoveWindow(windowId_);
+    ret = ScreenClient::GetInstance().DestroyAllWindow();
     if (ret != DH_SUCCESS) {
         DHLOGE("remove window failed.");
         return ret;

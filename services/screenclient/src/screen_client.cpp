@@ -22,26 +22,6 @@
 namespace OHOS {
 namespace DistributedHardware {
 IMPLEMENT_SINGLE_INSTANCE(ScreenClient);
-
-ScreenClient::~ScreenClient()
-{
-    DHLOGD("~ScreenClient");
-    {
-        std::lock_guard<std::mutex> dataLock(surfaceMapMutex_);
-        for (const auto &item : surfaceMap_) {
-            int32_t ret = ScreenClientWindowAdapter::GetInstance().RemoveWindow(item.first);
-            if (ret != DH_SUCCESS) {
-                DHLOGE("windowId (ID = %d) remove failed.", item.first);
-                return;
-            }
-        }
-        surfaceMap_.clear();
-        windowId_ = INVALID_WINDOW_ID;
-    }
-    DHLOGD("ScreenClient Destory.");
-    return;
-}
-
 int32_t ScreenClient::AddWindow(std::shared_ptr<WindowProperty> windowProperty)
 {
     if (windowProperty == nullptr) {
@@ -153,6 +133,21 @@ int32_t ScreenClient::RemoveWindow(int32_t windowId)
     }
     DHLOGD("windowId (ID = %d) remove success.", windowId);
     return ret;
+}
+
+int32_t ScreenClient::DestroyAllWindow()
+{
+    DHLOGD("DestroyAllWindow");
+    int32_t ret = ScreenClientWindowAdapter::GetInstance().DestroyAllWindow();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("DestroyAllWindow failed.");
+        return ret;
+    }
+    std::lock_guard<std::mutex> dataLock(surfaceMapMutex_);
+    surfaceMap_.clear();
+    windowId_ = INVALID_WINDOW_ID;
+    DHLOGD("DestroyAllWindow.");
+    return DH_SUCCESS;
 }
 } // namespace DistributedHardware
 } // namespace OHOS
