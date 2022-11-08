@@ -123,14 +123,14 @@ void DScreenManager::HandleScreenChange(const std::shared_ptr<DScreen> &changedS
     uint64_t screenId = changedScreen->GetScreenId();
     DHLOGI("DScreenManager::HandleScreenChange, screenId: %ulld, changeEvent: %", screenId, event);
     if (event == Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP) {
-        if (DH_SUCCESS != AddToGroup(changedScreen, screenId)) {
+        if (AddToGroup(changedScreen, screenId) != DH_SUCCESS) {
             DHLOGE("AddToGroup failed.");
             return;
         }
         NotifyRemoteSinkSetUp(changedScreen);
         PublishMessage(DHTopic::TOPIC_START_DSCREEN, changedScreen);
     } else if (event == Rosen::ScreenGroupChangeEvent::REMOVE_FROM_GROUP) {
-        if (DH_SUCCESS != RemoveFromGroup(changedScreen, screenId)) {
+        if (RemoveFromGroup(changedScreen, screenId) != DH_SUCCESS) {
             DHLOGE("RemoveFromGroup failed.");
         }
         PublishMessage(DHTopic::TOPIC_STOP_DSCREEN, changedScreen);

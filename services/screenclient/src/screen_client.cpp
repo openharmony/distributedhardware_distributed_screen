@@ -53,7 +53,7 @@ int32_t ScreenClient::ShowWindow(int32_t windowId)
         }
     }
     int32_t ret = ScreenClientWindowAdapter::GetInstance().ShowWindow(windowId);
-    if (DH_SUCCESS != ret) {
+    if (ret != DH_SUCCESS) {
         DHLOGE("Show window (ID = %d) failed.", windowId);
         return ret;
     }
@@ -72,7 +72,7 @@ int32_t ScreenClient::HideWindow(int32_t windowId)
         }
     }
     int32_t ret = ScreenClientWindowAdapter::GetInstance().HideWindow(windowId);
-    if (DH_SUCCESS != ret) {
+    if (ret != DH_SUCCESS) {
         DHLOGE("Hide window (ID = %d) failed.", windowId);
         return ret;
     }
@@ -91,7 +91,7 @@ int32_t ScreenClient::MoveWindow(int32_t windowId, int32_t startX, int32_t start
         }
     }
     int32_t ret = ScreenClientWindowAdapter::GetInstance().MoveWindow(windowId, startX, startY);
-    if (DH_SUCCESS != ret) {
+    if (ret != DH_SUCCESS) {
         DHLOGE("Move window (ID = %d) failed.", windowId);
         return ret;
     }

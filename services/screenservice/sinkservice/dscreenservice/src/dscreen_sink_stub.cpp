@@ -52,6 +52,7 @@ int32_t DScreenSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &data, Mes
 int32_t DScreenSinkStub::InitSinkInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)option;
     std::string param = data.ReadString();
     if (param.empty() || param.size() > PARAM_MAX_SIZE) {
         DHLOGE("InitSinkInner error: invalid parameter.");
@@ -65,6 +66,8 @@ int32_t DScreenSinkStub::InitSinkInner(MessageParcel &data, MessageParcel &reply
 int32_t DScreenSinkStub::ReleaseSinkInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)data;
+    (void)option;
     int32_t ret = ReleaseSink();
     reply.WriteInt32(ret);
     return DH_SUCCESS;
@@ -73,6 +76,7 @@ int32_t DScreenSinkStub::ReleaseSinkInner(MessageParcel &data, MessageParcel &re
 int32_t DScreenSinkStub::SubscribeDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)option;
     std::string dhId = data.ReadString();
     std::string param = data.ReadString();
     if (dhId.empty() || dhId.size() > DID_MAX_SIZE || param.empty() || param.size() > PARAM_MAX_SIZE) {
@@ -87,6 +91,7 @@ int32_t DScreenSinkStub::SubscribeDistributedHardwareInner(MessageParcel &data, 
 int32_t DScreenSinkStub::UnsubscribeDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)option;
     std::string dhId = data.ReadString();
     if (dhId.empty() || dhId.size() > DID_MAX_SIZE) {
         DHLOGE("UnsubscribeDistributedHardwareInner error: invalid parameter.");
@@ -100,6 +105,8 @@ int32_t DScreenSinkStub::UnsubscribeDistributedHardwareInner(MessageParcel &data
 int32_t DScreenSinkStub::DScreenNotifyInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)reply;
+    (void)option;
     std::string devId = data.ReadString();
     int32_t eventCode = data.ReadInt32();
     std::string eventContent = data.ReadString();

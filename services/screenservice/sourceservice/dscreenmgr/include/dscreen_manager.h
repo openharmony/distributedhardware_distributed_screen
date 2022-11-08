@@ -52,7 +52,7 @@ public:
 
     int32_t Init();
     int32_t UnInit();
-    int32_t EnableDistributedScreen(const std::string &devId, const std::string &dhId, const  std::string &param,
+    int32_t EnableDistributedScreen(const std::string &devId, const std::string &dhId, const  std::string &attrs,
         const std::string &reqId);
     int32_t DisableDistributedScreen(const std::string &devId, const std::string &dhId, const std::string &reqId);
     void HandleDScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent);

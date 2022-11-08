@@ -56,6 +56,7 @@ int32_t DScreenSourceStub::OnRemoteRequest(uint32_t code, MessageParcel &data, M
 int32_t DScreenSourceStub::InitSourceInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)option;
     std::string param = data.ReadString();
     if (param.empty() || param.size() > PARAM_MAX_SIZE) {
         DHLOGE("InitSourceInner error: invalid parameter");
@@ -80,6 +81,8 @@ int32_t DScreenSourceStub::InitSourceInner(MessageParcel &data, MessageParcel &r
 int32_t DScreenSourceStub::ReleaseSourceInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)data;
+    (void)option;
     int32_t ret = ReleaseSource();
     reply.WriteInt32(ret);
     return DH_SUCCESS;
@@ -88,6 +91,7 @@ int32_t DScreenSourceStub::ReleaseSourceInner(MessageParcel &data, MessageParcel
 int32_t DScreenSourceStub::RegisterDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)option;
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string version = data.ReadString();
@@ -109,6 +113,7 @@ int32_t DScreenSourceStub::RegisterDistributedHardwareInner(MessageParcel &data,
 int32_t DScreenSourceStub::UnregisterDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)option;
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string reqId = data.ReadString();
@@ -125,6 +130,7 @@ int32_t DScreenSourceStub::UnregisterDistributedHardwareInner(MessageParcel &dat
 int32_t DScreenSourceStub::ConfigDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)option;
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string key = data.ReadString();
@@ -142,6 +148,8 @@ int32_t DScreenSourceStub::ConfigDistributedHardwareInner(MessageParcel &data, M
 int32_t DScreenSourceStub::DScreenNotifyInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)reply;
+    (void)option;
     std::string devId = data.ReadString();
     int32_t eventCode = data.ReadInt32();
     std::string eventContent = data.ReadString();
@@ -156,7 +164,7 @@ int32_t DScreenSourceStub::DScreenNotifyInner(MessageParcel &data, MessageParcel
 }
 
 bool DScreenSourceStub::CheckRegParams(const std::string &devId, const std::string &dhId,
-    const std::string &version, const std::string &attrs, const std::string &reqId)
+    const std::string &version, const std::string &attrs, const std::string &reqId) const
 {
     if (devId.empty() || devId.size() > DID_MAX_SIZE || dhId.empty() || dhId.size() > DID_MAX_SIZE) {
         DHLOGE("DScreenSourceStub CheckRegParams devId or dhId is inlvalid.");
@@ -173,7 +181,8 @@ bool DScreenSourceStub::CheckRegParams(const std::string &devId, const std::stri
     return true;
 }
 
-bool DScreenSourceStub::CheckUnregParams(const std::string &devId, const std::string &dhId, const std::string &reqId)
+bool DScreenSourceStub::CheckUnregParams(const std::string &devId,
+    const std::string &dhId, const std::string &reqId) const
 {
     if (devId.empty() || devId.size() > DID_MAX_SIZE || dhId.empty() || dhId.size() > DID_MAX_SIZE) {
         DHLOGE("DScreenSourceStub CheckUnregParams devId or dhId is invalid.");
@@ -187,7 +196,7 @@ bool DScreenSourceStub::CheckUnregParams(const std::string &devId, const std::st
 }
 
 bool DScreenSourceStub::CheckConfigParams(const std::string &devId, const std::string &dhId,
-    const std::string &key, const std::string &value)
+    const std::string &key, const std::string &value) const
 {
     if (devId.empty() || devId.size() > DID_MAX_SIZE || dhId.empty() || dhId.size() > DID_MAX_SIZE) {
         DHLOGE("DScreenSourceStub CheckConfigParams devId or dhId is invalid.");

@@ -86,7 +86,7 @@ int32_t DScreenSourceCallbackProxy::OnNotifyUnregResult(const std::string &devId
 }
 
 bool DScreenSourceCallbackProxy::CheckParams(const std::string &devId, const std::string &dhId,
-    const std::string &reqId, const std::string &resultData)
+    const std::string &reqId, const std::string &resultData) const
 {
     if (devId.empty() || devId.size() > DID_MAX_SIZE || dhId.empty() || dhId.size() > DID_MAX_SIZE) {
         DHLOGE("DScreenSourceCallbackProxy CheckParams devId or dhId is invalid.");

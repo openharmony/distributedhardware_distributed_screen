@@ -20,7 +20,7 @@
 #include <mutex>
 #include <queue>
 #include <condition_variable>
-#include <stddef.h>
+#include <cstddef>
 
 #include "avsharedmemory.h"
 #include "avcodec_common.h"
@@ -38,7 +38,7 @@ namespace OHOS {
 namespace DistributedHardware {
 class ImageSinkDecoder : public std::enable_shared_from_this<ImageSinkDecoder> {
 public:
-    ImageSinkDecoder(const std::shared_ptr<IImageSinkProcessorListener> &imageListener)
+    explicit ImageSinkDecoder(const std::shared_ptr<IImageSinkProcessorListener> &imageListener)
         : imageProcessorListener_(imageListener) {};
     ~ImageSinkDecoder() = default;
 
