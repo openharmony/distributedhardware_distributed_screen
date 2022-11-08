@@ -31,15 +31,13 @@ namespace DistributedHardware {
 class DScreenSourceCallbackStub : public IRemoteStub<IDScreenSourceCallback> {
 public:
     DScreenSourceCallbackStub();
-    ~DScreenSourceCallbackStub() = default;
+    ~DScreenSourceCallbackStub() override = default;
     int32_t OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
         MessageOption &option) override;
 private:
     using DScreenFunc = int32_t (DScreenSourceCallbackStub::*)(MessageParcel &data, MessageParcel &reply,
         MessageOption &option);
     std::map<int32_t, DScreenFunc> memberFuncMap_;
-    const size_t DID_MAX_SIZE = 256;
-    const size_t PARAM_MAX_SIZE = 50 * 1024 * 1024;
 
     int32_t OnNotifyRegResultInner(MessageParcel &data, MessageParcel &reply,
         MessageOption &option);

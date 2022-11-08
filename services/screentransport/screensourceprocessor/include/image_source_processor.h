@@ -26,7 +26,7 @@ namespace DistributedHardware {
 class ImageSourceProcessor : public IImageSourceProcessor {
 public:
     ImageSourceProcessor() = default;
-    ~ImageSourceProcessor() = default;
+    ~ImageSourceProcessor() override = default;
 
     int32_t ConfigureImageProcessor(const VideoParam &localParam, const VideoParam &remoteParam,
         const std::shared_ptr<IImageSourceProcessorListener> &listener) override;

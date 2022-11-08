@@ -25,7 +25,7 @@ namespace DistributedHardware {
 class DScreenSourceStub : public IRemoteStub<IDScreenSource> {
 public:
     DScreenSourceStub();
-    virtual ~DScreenSourceStub() = default;
+    ~DScreenSourceStub() override = default;
     int32_t OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
         MessageOption &option) override;
 
@@ -50,9 +50,6 @@ private:
     using DScreenSourceFunc = int32_t (DScreenSourceStub::*)(MessageParcel &data, MessageParcel &reply,
         MessageOption &option);
     std::map<int32_t, DScreenSourceFunc> memberFuncMap_;
-
-    const size_t DID_MAX_SIZE = 256;
-    const size_t PARAM_MAX_SIZE = 50 * 1024 * 1024;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

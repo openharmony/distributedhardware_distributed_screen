@@ -34,7 +34,7 @@ public:
     {
     }
 
-    ~DScreenSourceProxy() {}
+    ~DScreenSourceProxy() override {}
     int32_t InitSource(const std::string &params, const sptr<IDScreenSourceCallback> &callback) override;
     int32_t ReleaseSource() override;
     int32_t RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
@@ -52,8 +52,6 @@ private:
     bool CheckUnregParams(const std::string &devId, const std::string &dhId, const std::string &reqId) const;
     bool CheckConfigParams(const std::string &devId, const std::string &dhId,
         const std::string &key, const std::string &value) const;
-    const size_t DID_MAX_SIZE = 256;
-    const size_t PARAM_MAX_SIZE = 50 * 1024 * 1024;
 };
 }
 }
