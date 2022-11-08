@@ -42,7 +42,7 @@ public:
     int32_t Release() override;
     int32_t Start() override;
     int32_t Stop() override;
-    int32_t RegisterStateCallback(const std::shared_ptr<IScreenSourceTransCallback> &callBack) override;
+    int32_t RegisterStateCallback(const std::shared_ptr<IScreenSourceTransCallback> &callback) override;
     sptr<Surface> &GetImageSurface() override;
 
     void OnSessionOpened() override;

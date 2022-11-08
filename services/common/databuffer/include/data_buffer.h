@@ -17,7 +17,7 @@
 #define OHOS_DATA_BUFFER_H
 
 #include <cstdint>
-#include <stddef.h>
+#include <cstddef>
 
 namespace OHOS {
 namespace DistributedHardware {

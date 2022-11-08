@@ -39,7 +39,7 @@ ScreenClientWindowAdapter::~ScreenClientWindowAdapter()
                 DHLOGE("window is nullptr(windowId = %d).", item.first);
                 return;
             }
-            if (OHOS::Rosen::WMError::WM_OK != window->Destroy()) {
+            if (window->Destroy() != OHOS::Rosen::WMError::WM_OK) {
                 DHLOGE("screenclientSurface is nullptr(windowId = %d).", item.first);
                 return;
             }
@@ -82,12 +82,12 @@ sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProp
         std::make_shared<ScreenClientInputEventListener>(ScreenClientInputEventListener());
     window->SetInputEventConsumer(listener);
     DHLOGD("Create window name is %s.", windowName.c_str());
-    if (OHOS::Rosen::WMError::WM_OK != window->Resize(windowProperty->width, windowProperty->height)) {
+    if (window->Resize(windowProperty->width, windowProperty->height) != OHOS::Rosen::WMError::WM_OK) {
         window->Destroy();
         DHLOGE("Window resize failed.");
         return nullptr;
     }
-    if (OHOS::Rosen::WMError::WM_OK != window->MoveTo(windowProperty->startX, windowProperty->startY)) {
+    if (window->MoveTo(windowProperty->startX, windowProperty->startY) != OHOS::Rosen::WMError::WM_OK) {
         window->Destroy();
         DHLOGE("Window moveto failed.");
         return nullptr;
@@ -116,7 +116,7 @@ int32_t ScreenClientWindowAdapter::ShowWindow(int32_t windowId)
         DHLOGE("Current window is null.");
         return ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR;
     }
-    if (OHOS::Rosen::WMError::WM_OK != window->Show()) {
+    if (window->Show() != OHOS::Rosen::WMError::WM_OK) {
         DHLOGE("Show window failed.");
         return ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR;
     }
@@ -140,7 +140,7 @@ int32_t ScreenClientWindowAdapter::HideWindow(int32_t windowId)
         DHLOGE("Current window is null.");
         return ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR;
     }
-    if (OHOS::Rosen::WMError::WM_OK != window->Hide()) {
+    if (window->Hide() != OHOS::Rosen::WMError::WM_OK) {
         DHLOGE("Hide window failed.");
         return ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR;
     }
@@ -164,7 +164,7 @@ int32_t ScreenClientWindowAdapter::MoveWindow(int32_t windowId, int32_t startX, 
         DHLOGE("Current window is null(windowId = %d).", windowId);
         return ERR_DH_SCREEN_SCREENCLIENT_MOVE_WINDOW_ERROR;
     }
-    if (OHOS::Rosen::WMError::WM_OK != window->MoveTo(startX, startY)) {
+    if (window->MoveTo(startX, startY) != OHOS::Rosen::WMError::WM_OK) {
         DHLOGE("Move window failed (windowId = %d).", windowId);
         return ERR_DH_SCREEN_SCREENCLIENT_MOVE_WINDOW_ERROR;
     }
@@ -189,11 +189,11 @@ int32_t ScreenClientWindowAdapter::RemoveWindow(int32_t windowId)
         DHLOGE("Current window is null(windowId = %d).", windowId);
         return ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR;
     }
-    if (OHOS::Rosen::WMError::WM_OK != window->Hide()) {
+    if (window->Hide() != OHOS::Rosen::WMError::WM_OK) {
         DHLOGE("Remove window window failed(windowId = %d).", windowId);
         return ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR;
     }
-    if (OHOS::Rosen::WMError::WM_OK != window->Destroy()) {
+    if (window->Destroy() != OHOS::Rosen::WMError::WM_OK) {
         DHLOGE("Remove window window failed(windowId = %d).", windowId);
         return ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR;
     }

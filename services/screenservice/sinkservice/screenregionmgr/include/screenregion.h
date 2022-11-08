@@ -32,7 +32,7 @@ class ScreenSinkTransCallback : public IScreenSinkTransCallback {
 public:
     ~ScreenSinkTransCallback() override {};
     virtual void OnTransError(int32_t err, const std::string &content) = 0;
-    virtual void OnError(int32_t err, const std::string &content) override
+    void OnError(int32_t err, const std::string &content) override
     {
         OnTransError(err, content);
     }
@@ -44,7 +44,7 @@ public:
     ~ScreenRegion();
     void OnTransError(int32_t err, const std::string &content) override;
     void SetVideoParam(std::shared_ptr<VideoParam> &videoParam);
-    void SetMapRelation(std::shared_ptr<DScreenMapRelation> &mapRElation);
+    void SetMapRelation(std::shared_ptr<DScreenMapRelation> &mapRelation);
     std::string GetRemoteDevId();
     uint64_t GetScreenId();
     uint64_t GetDisplayId();

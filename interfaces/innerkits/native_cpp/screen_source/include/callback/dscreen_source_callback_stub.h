@@ -31,7 +31,7 @@ namespace DistributedHardware {
 class DScreenSourceCallbackStub : public IRemoteStub<IDScreenSourceCallback> {
 public:
     DScreenSourceCallbackStub();
-    virtual ~DScreenSourceCallbackStub() = default;
+    ~DScreenSourceCallbackStub() = default;
     int32_t OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
         MessageOption &option) override;
 private:
@@ -46,7 +46,7 @@ private:
     int32_t OnNotifyUnregResultInner(MessageParcel &data, MessageParcel &reply,
         MessageOption &option);
     bool CheckParams(const std::string &devId, const std::string &dhId, const std::string &reqId,
-        const std::string &resultData);
+        const std::string &resultData) const;
 };
 }
 }
