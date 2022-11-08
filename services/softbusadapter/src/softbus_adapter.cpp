@@ -154,7 +154,7 @@ int32_t SoftbusAdapter::RemoveSoftbusSessionServer(const std::string &pkgname, c
 }
 
 int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, const std::string &peerSessionName,
-    const std::string &peerDevId)
+    const std::string &peerDevId) const
 {
     DHLOGI("%s: OpenSoftbusSession mysess:%s peersess:%s id:%s.", LOG_TAG, mySessionName.c_str(),
         peerSessionName.c_str(), GetAnonyString(peerDevId).c_str());
@@ -202,7 +202,7 @@ int32_t SoftbusAdapter::CloseSoftbusSession(const int32_t sessionId)
     return DH_SUCCESS;
 }
 
-int32_t SoftbusAdapter::SendSoftbusBytes(int32_t sessionId, const void *data, int32_t dataLen)
+int32_t SoftbusAdapter::SendSoftbusBytes(int32_t sessionId, const void *data, int32_t dataLen) const
 {
     DHLOGD("%s: SendSoftbusBytes, sessid:%d.", LOG_TAG, sessionId);
     int32_t ret = SendBytes(sessionId, data, dataLen);
@@ -215,7 +215,7 @@ int32_t SoftbusAdapter::SendSoftbusBytes(int32_t sessionId, const void *data, in
 }
 
 int32_t SoftbusAdapter::SendSoftbusStream(int32_t sessionId, const StreamData *data, const StreamData *ext,
-    const StreamFrameInfo *param)
+    const StreamFrameInfo *param) const
 {
     DHLOGD("%s: SendSoftbusStream, sessid:%d.", LOG_TAG, sessionId);
     int32_t ret = SendStream(sessionId, data, ext, param);
@@ -330,7 +330,7 @@ void SoftbusAdapter::OnStreamReceived(int32_t sessionId, const StreamData *data,
         DHLOGE("StreamData is null.");
         return;
     }
-    if (data->bufLen <= 0 || data->bufLen > (int32_t)DSCREEN_MAX_RECV_DATA_LEN) {
+    if (data->bufLen <= 0 || data->bufLen > static_cast<int32_t>(DSCREEN_MAX_RECV_DATA_LEN)) {
         DHLOGE("StreamData length is too large, dataLen:%d.", data->bufLen);
         return;
     }
@@ -343,13 +343,18 @@ void SoftbusAdapter::OnStreamReceived(int32_t sessionId, const StreamData *data,
     listener->OnStreamReceived(sessionId, data, ext, frameInfo);
 }
 
-void SoftbusAdapter::OnMessageReceived(int sessionId, const void *data, unsigned int dataLen)
+void SoftbusAdapter::OnMessageReceived(int sessionId, const void *data, unsigned int dataLen) const
 {
+    (void)data;
+    (void)dataLen;
     DHLOGD("%s OnMessageReceived, sessionId:%d.", LOG_TAG, sessionId);
 }
 
-void SoftbusAdapter::OnQosEvent(int sessionId, int eventId, int tvCount, const QosTv *tvList)
+void SoftbusAdapter::OnQosEvent(int sessionId, int eventId, int tvCount, const QosTv *tvList) const
 {
+    (void)eventId;
+    (void)tvCount;
+    (void)tvList;
     DHLOGD("%s OnQosEvent, sessionId:%d.", LOG_TAG, sessionId);
 }
 } // namespace DistributedHardware

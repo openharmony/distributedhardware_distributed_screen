@@ -115,7 +115,7 @@ int32_t ScreenDataChannelImpl::SendData(const std::shared_ptr<DataBuffer> &scree
     }
 
     StreamData data = {reinterpret_cast<char *>(screenData->Data()), screenData->Capacity()};
-    StreamData ext = {0};
+    StreamData ext = {nullptr};
     StreamFrameInfo frameInfo = {0};
 
     int32_t ret = SoftbusAdapter::GetInstance().SendSoftbusStream(sessionId_, &data, &ext, &frameInfo);

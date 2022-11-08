@@ -38,7 +38,7 @@ public:
 private:
     static inline BrokerDelegator<DScreenSourceCallbackProxy> delegator_;
     bool CheckParams(const std::string &devId, const std::string &dhId, const std::string &reqId,
-        const std::string &resultData);
+        const std::string &resultData) const;
     const size_t DID_MAX_SIZE = 256;
     const size_t PARAM_MAX_SIZE = 50 * 1024 * 1024;
 };

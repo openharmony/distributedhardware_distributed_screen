@@ -26,7 +26,7 @@ int32_t DScreenSourceCallback::OnNotifyRegResult(const std::string &devId, const
 {
     DHLOGI("DScreenSourceCallback OnNotifyRegResult devId: %s dhId: %s status: %d",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), status);
-    auto iter = registerCallbackMap_.find(reqId);
+    const auto iter = registerCallbackMap_.find(reqId);
     if (iter != registerCallbackMap_.end()) {
         if (iter->second == nullptr) {
             DHLOGE("DScreenSourceCallback Regcallback is null.");
@@ -45,7 +45,7 @@ int32_t DScreenSourceCallback::OnNotifyUnregResult(const std::string &devId, con
 {
     DHLOGI("DScreenSourceCallback OnNotifyUnregResult devId: %s dhId: %s status: %d",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), status);
-    auto iter = unregisterCallbackMap_.find(reqId);
+    const auto iter = unregisterCallbackMap_.find(reqId);
     if (iter != unregisterCallbackMap_.end()) {
         if (iter->second == nullptr) {
             DHLOGE("DScreenSourceCallback Unregcallback is null.");

@@ -48,10 +48,10 @@ public:
 private:
     static inline BrokerDelegator<DScreenSourceProxy> delegator_;
     bool CheckRegParams(const std::string &devId, const std::string &dhId,
-        const EnableParam &param, const std::string &reqId);
-    bool CheckUnregParams(const std::string &devId, const std::string &dhId, const std::string &reqId);
+        const EnableParam &param, const std::string &reqId) const;
+    bool CheckUnregParams(const std::string &devId, const std::string &dhId, const std::string &reqId) const;
     bool CheckConfigParams(const std::string &devId, const std::string &dhId,
-        const std::string &key, const std::string &value);
+        const std::string &key, const std::string &value) const;
     const size_t DID_MAX_SIZE = 256;
     const size_t PARAM_MAX_SIZE = 50 * 1024 * 1024;
 };

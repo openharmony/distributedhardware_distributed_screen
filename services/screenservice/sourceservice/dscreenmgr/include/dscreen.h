@@ -42,7 +42,7 @@ class ScreenSourceTransCallback : public IScreenSourceTransCallback {
 public:
     ~ScreenSourceTransCallback() override {};
     virtual void OnTransError(int32_t err, const std::string &content) = 0;
-    virtual void OnError(int32_t err, const std::string &content) override
+    void OnError(int32_t err, const std::string &content) override
     {
         OnTransError(err, content);
     }

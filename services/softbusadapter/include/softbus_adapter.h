@@ -42,11 +42,11 @@ public:
     int32_t RemoveSoftbusSessionServer(const std::string &pkgname, const std::string &sessionName,
         const std::string &peerDevId);
     int32_t OpenSoftbusSession(const std::string &mySessionName, const std::string &peerSessionName,
-        const std::string &peerDevId);
-    int32_t CloseSoftbusSession(int32_t sessionId);
-    int32_t SendSoftbusBytes(int32_t sessionId, const void *data, int32_t dataLen);
+        const std::string &peerDevId) const;
+    int32_t CloseSoftbusSession(const int32_t sessionId);
+    int32_t SendSoftbusBytes(int32_t sessionId, const void *data, int32_t dataLen) const;
     int32_t SendSoftbusStream(int32_t sessionId, const StreamData *data, const StreamData *ext,
-        const StreamFrameInfo *param);
+        const StreamFrameInfo *param) const;
     int32_t RegisterSoftbusListener(const std::shared_ptr<ISoftbusListener> &listener, const std::string &sessionName,
         const std::string &peerDevId);
     int32_t UnRegisterSoftbusListener(const std::string &sessionName, const std::string &peerDevId);
@@ -55,9 +55,9 @@ public:
     void OnSoftbusSessionClosed(int32_t sessionId);
     void OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen);
     void OnStreamReceived(int32_t sessionId, const StreamData *data, const StreamData *ext,
-        const StreamFrameInfo *StreamFrameInfo);
-    void OnMessageReceived(int sessionId, const void *data, unsigned int dataLen);
-    void OnQosEvent(int sessionId, int eventId, int tvCount, const QosTv *tvList);
+        const StreamFrameInfo *frameInfo);
+    void OnMessageReceived(int sessionId, const void *data, unsigned int dataLen) const;
+    void OnQosEvent(int sessionId, int eventId, int tvCount, const QosTv *tvList) const;
 
 private:
     SoftbusAdapter();

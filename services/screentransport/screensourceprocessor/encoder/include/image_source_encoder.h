@@ -37,7 +37,7 @@ public:
         : imageProcessorListener_(imageListener) {};
     ~ImageSourceEncoder() = default;
 
-    int32_t ConfigureEncoder(const VideoParam &cofigParam);
+    int32_t ConfigureEncoder(const VideoParam &configParam);
     int32_t ReleaseEncoder();
     int32_t StartEncoder();
     int32_t StopEncoder();
@@ -53,7 +53,7 @@ public:
 
 private:
     int32_t InitVideoEncoder(const VideoParam &configParam);
-    int32_t SetEncoderFormat(const VideoParam &cofigParam);
+    int32_t SetEncoderFormat(const VideoParam &configParam);
 
 private:
     static const constexpr char *LOG_TAG = "ImageSourceEncoder";

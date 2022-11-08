@@ -55,6 +55,8 @@ int32_t DScreenSourceCallbackStub::OnRemoteRequest(uint32_t code, MessageParcel 
 int32_t DScreenSourceCallbackStub::OnNotifyRegResultInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)reply;
+    (void)option;
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string reqId = data.ReadString();
@@ -71,6 +73,8 @@ int32_t DScreenSourceCallbackStub::OnNotifyRegResultInner(MessageParcel &data, M
 int32_t DScreenSourceCallbackStub::OnNotifyUnregResultInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
+    (void)reply;
+    (void)option;
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string reqId = data.ReadString();
@@ -85,7 +89,7 @@ int32_t DScreenSourceCallbackStub::OnNotifyUnregResultInner(MessageParcel &data,
 }
 
 bool DScreenSourceCallbackStub::CheckParams(const std::string &devId, const std::string &dhId,
-    const std::string &reqId, const std::string &resultData)
+    const std::string &reqId, const std::string &resultData) const
 {
     if (devId.empty() || devId.size() > DID_MAX_SIZE || dhId.empty() || dhId.size() > DID_MAX_SIZE) {
         DHLOGE("DScreenSourceCallbackStub CheckParams devId or dhId is invalid.");

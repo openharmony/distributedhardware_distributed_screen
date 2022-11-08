@@ -46,8 +46,7 @@ int32_t DScreenSourceProxy::InitSource(const std::string &params, const sptr<IDS
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 
-    if (!data.WriteString(params)
-        || !data.WriteRemoteObject(callback->AsObject())) {
+    if (!data.WriteString(params) || !data.WriteRemoteObject(callback->AsObject())) {
         DHLOGE("Write param failed.");
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
@@ -99,9 +98,8 @@ int32_t DScreenSourceProxy::RegisterDistributedHardware(const std::string &devId
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 
-    if (!data.WriteString(devId) || !data.WriteString(dhId)
-        || !data.WriteString(param.version) || !data.WriteString(param.attrs)
-        || !data.WriteString(reqId)) {
+    if (!data.WriteString(devId) || !data.WriteString(dhId) ||
+        !data.WriteString(param.version) || !data.WriteString(param.attrs) || !data.WriteString(reqId)) {
         DHLOGE("Write param failed.");
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
@@ -131,8 +129,7 @@ int32_t DScreenSourceProxy::UnregisterDistributedHardware(const std::string &dev
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 
-    if (!data.WriteString(devId) || !data.WriteString(dhId)
-        || !data.WriteString(reqId)) {
+    if (!data.WriteString(devId) || !data.WriteString(dhId) || !data.WriteString(reqId)) {
         DHLOGE("Write param failed.");
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
@@ -162,8 +159,7 @@ int32_t DScreenSourceProxy::ConfigDistributedHardware(const std::string &devId,
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 
-    if (!data.WriteString(devId) || !data.WriteString(dhId)
-        || !data.WriteString(key) || !data.WriteString(value)) {
+    if (!data.WriteString(devId) || !data.WriteString(dhId) || !data.WriteString(key) || !data.WriteString(value)) {
         DHLOGE("Write param failed.");
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
@@ -202,7 +198,7 @@ void DScreenSourceProxy::DScreenNotify(const std::string &devId, int32_t eventCo
 }
 
 bool DScreenSourceProxy::CheckRegParams(const std::string &devId, const std::string &dhId,
-    const EnableParam &param, const std::string &reqId)
+    const EnableParam &param, const std::string &reqId) const
 {
     if (devId.empty() || devId.size() > DID_MAX_SIZE || dhId.empty() || dhId.size() > DID_MAX_SIZE) {
         DHLOGE("DScreenSourceProxy CheckRegParams devId or dhId is invalid.");
@@ -220,7 +216,8 @@ bool DScreenSourceProxy::CheckRegParams(const std::string &devId, const std::str
     return true;
 }
 
-bool DScreenSourceProxy::CheckUnregParams(const std::string &devId, const std::string &dhId, const std::string &reqId)
+bool DScreenSourceProxy::CheckUnregParams(const std::string &devId,
+    const std::string &dhId, const std::string &reqId) const
 {
     if (devId.empty() || devId.size() > DID_MAX_SIZE || dhId.empty() || dhId.size() > DID_MAX_SIZE) {
         DHLOGE("DScreenSourceProxy CheckUnregParams devId or dhId is invalid.");
@@ -234,7 +231,7 @@ bool DScreenSourceProxy::CheckUnregParams(const std::string &devId, const std::s
 }
 
 bool DScreenSourceProxy::CheckConfigParams(const std::string &devId, const std::string &dhId,
-    const std::string &key, const std::string &value)
+    const std::string &key, const std::string &value) const
 {
     if (devId.empty() || devId.size() > DID_MAX_SIZE || dhId.empty() || dhId.size() > DID_MAX_SIZE) {
         DHLOGE("DScreenSourceProxy CheckConfigParams devId or dhId is invalid.");
