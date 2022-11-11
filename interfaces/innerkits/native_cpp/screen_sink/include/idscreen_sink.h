@@ -32,7 +32,7 @@ public:
     };
 
     IDScreenSink() = default;
-    virtual ~IDScreenSink() = default;
+    ~IDScreenSink() override = default;
     virtual int32_t InitSink(const std::string &params) = 0;
     virtual int32_t ReleaseSink() = 0;
     virtual int32_t SubscribeLocalHardware(const std::string &dhId, const std::string &param) = 0;

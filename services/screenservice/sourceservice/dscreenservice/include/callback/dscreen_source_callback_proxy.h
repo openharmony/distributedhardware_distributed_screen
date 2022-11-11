@@ -29,7 +29,7 @@ public:
     {
     }
 
-    ~DScreenSourceCallbackProxy() {}
+    ~DScreenSourceCallbackProxy() override {}
     int32_t OnNotifyRegResult(const std::string &devId, const std::string &dhId, const std::string &reqId,
         int32_t status, const std::string &resultData) override;
     int32_t OnNotifyUnregResult(const std::string &devId, const std::string &dhId, const std::string &reqId,
@@ -39,8 +39,6 @@ private:
     static inline BrokerDelegator<DScreenSourceCallbackProxy> delegator_;
     bool CheckParams(const std::string &devId, const std::string &dhId, const std::string &reqId,
         const std::string &resultData) const;
-    const size_t DID_MAX_SIZE = 256;
-    const size_t PARAM_MAX_SIZE = 50 * 1024 * 1024;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

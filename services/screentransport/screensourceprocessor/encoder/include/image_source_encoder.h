@@ -66,7 +66,6 @@ private:
     std::shared_ptr<Media::AVSharedMemory> videoSharedMemory_;
     std::shared_ptr<Media::AVCodecCallback> encodeVideoCallback_;
     std::weak_ptr<IImageSourceProcessorListener> imageProcessorListener_;
-    const size_t DATA_BUFFER_MAX_SIZE = 10 * 1024 * 1024;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

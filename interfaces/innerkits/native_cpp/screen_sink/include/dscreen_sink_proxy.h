@@ -34,7 +34,7 @@ public:
     {
     }
 
-    ~DScreenSinkProxy() {}
+    ~DScreenSinkProxy() override {}
     int32_t InitSink(const std::string &params) override;
     int32_t ReleaseSink() override;
     int32_t SubscribeLocalHardware(const std::string &dhId, const std::string &param) override;
@@ -43,9 +43,6 @@ public:
 
 private:
     static inline BrokerDelegator<DScreenSinkProxy> delegator_;
-
-    const size_t DID_MAX_SIZE = 256;
-    const size_t PARAM_MAX_SIZE = 50 * 1024 * 1024;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

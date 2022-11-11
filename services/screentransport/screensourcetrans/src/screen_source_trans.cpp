@@ -17,6 +17,7 @@
 
 #include <chrono>
 
+#include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
 #include "dscreen_hitrace.h"
