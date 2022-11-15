@@ -41,9 +41,10 @@ public:
     int32_t MoveWindow(int32_t windowId, int32_t startX, int32_t startY);
     int32_t RemoveWindow(int32_t windowId);
     int32_t HideWindow(int32_t windowId);
+    int32_t DestroyAllWindow();
 private:
     ScreenClient() = default;
-    ~ScreenClient();
+    ~ScreenClient() = default;
     std::map<int32_t, sptr<Surface>> surfaceMap_;
     std::atomic<int32_t> windowId_ = INVALID_WINDOW_ID;
     std::mutex surfaceMapMutex_;
