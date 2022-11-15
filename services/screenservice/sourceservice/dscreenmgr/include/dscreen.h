@@ -103,8 +103,6 @@ private:
     int32_t Start();
     int32_t Stop();
 
-    static constexpr uint8_t TASK_WAIT_SECONDS = 1;
-
     std::string devId_;
     std::string dhId_;
     uint64_t screenId_ = SCREEN_ID_INVALID;

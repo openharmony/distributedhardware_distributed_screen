@@ -30,7 +30,7 @@ class DScreenSourceService : public SystemAbility, public DScreenSourceStub,
 DECLARE_SYSTEM_ABILITY(DScreenSourceService);
 public:
     DScreenSourceService(int32_t saId, bool runOnCreate);
-    ~DScreenSourceService();
+    ~DScreenSourceService() override = default;
     int32_t InitSource(const std::string &params, const sptr<IDScreenSourceCallback> &callback) override;
     int32_t ReleaseSource() override;
     int32_t RegisterDistributedHardware(const std::string &devId, const std::string &dhId,

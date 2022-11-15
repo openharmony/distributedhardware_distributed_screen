@@ -140,6 +140,7 @@ constexpr int32_t DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID = 4808;
 constexpr uint64_t SCREEN_ID_INVALID = -1ULL;
 constexpr uint64_t SCREEN_ID_DEFAULT = 0;
 constexpr int32_t SCREEN_LOADSA_TIMEOUT_MS = 10000;
+constexpr uint8_t TASK_WAIT_SECONDS = 1;
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

@@ -187,15 +187,14 @@ int32_t ScreenClientWindowAdapter::DestroyAllWindow()
         auto window = item.second;
         if (window == nullptr) {
             DHLOGE("window is nullptr(windowId = %d).", item.first);
-            return ERR_DH_SCREEN_SCREENCLIENT_DESTROY_WINDOW_ERROR;
+            continue;
         }
         if (OHOS::Rosen::WMError::WM_OK != window->Destroy()) {
-            DHLOGE("screenclientSurface is nullptr(windowId = %d).", item.first);
-            return ERR_DH_SCREEN_SCREENCLIENT_DESTROY_WINDOW_ERROR;
+            DHLOGE("Destroy window(windowId = %d) failed .", item.first);
+            continue;
         }
     }
     windowIdMap_.clear();
-    DHLOGD("DestroyAllWindow.");
     return DH_SUCCESS;
 }
 

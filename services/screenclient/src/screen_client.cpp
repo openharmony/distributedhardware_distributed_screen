@@ -146,7 +146,6 @@ int32_t ScreenClient::DestroyAllWindow()
     std::lock_guard<std::mutex> dataLock(surfaceMapMutex_);
     surfaceMap_.clear();
     windowId_ = INVALID_WINDOW_ID;
-    DHLOGD("DestroyAllWindow.");
     return DH_SUCCESS;
 }
 } // namespace DistributedHardware
