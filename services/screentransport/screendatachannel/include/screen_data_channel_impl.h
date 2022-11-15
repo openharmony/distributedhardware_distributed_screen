@@ -30,7 +30,7 @@ class ScreenDataChannelImpl : public IScreenChannel,
     public std::enable_shared_from_this<ScreenDataChannelImpl> {
 public:
     explicit ScreenDataChannelImpl(std::string peerDevId) : peerDevId_(peerDevId) {};
-    ~ScreenDataChannelImpl() = default;
+    ~ScreenDataChannelImpl() override = default;
 
     int32_t CreateSession(const std::shared_ptr<IScreenChannelListener> &listener) override;
     int32_t ReleaseSession() override;

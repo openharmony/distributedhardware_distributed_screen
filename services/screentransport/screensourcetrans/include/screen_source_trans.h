@@ -36,7 +36,7 @@ class ScreenSourceTrans : public IScreenSourceTrans,
     public std::enable_shared_from_this<ScreenSourceTrans> {
 public:
     ScreenSourceTrans() = default;
-    ~ScreenSourceTrans() = default;
+    ~ScreenSourceTrans() override = default;
 
     int32_t SetUp(const VideoParam &localParam, const VideoParam &remoteParam, const std::string &peerDevId) override;
     int32_t Release() override;
@@ -61,9 +61,6 @@ private:
 
 private:
     static const constexpr char *LOG_TAG = "ScreenSourceTrans";
-    static constexpr uint8_t SESSION_WAIT_SECONDS = 5;
-    static constexpr uint8_t DATA_WAIT_SECONDS = 1;
-    static constexpr size_t DATA_QUEUE_MAX_SIZE = 1000;
 
     std::mutex sessionMtx_;
     std::mutex dataMtx_;

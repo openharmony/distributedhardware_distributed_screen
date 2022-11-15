@@ -34,7 +34,7 @@ public:
         DSCREEN_NOTIFY,
     };
 
-    virtual ~IDScreenSource() {}
+    ~IDScreenSource() override {}
     virtual int32_t InitSource(const std::string &params, const sptr<IDScreenSourceCallback> &callback) = 0;
     virtual int32_t ReleaseSource() = 0;
     virtual int32_t RegisterDistributedHardware(const std::string &devId, const std::string &dhId,

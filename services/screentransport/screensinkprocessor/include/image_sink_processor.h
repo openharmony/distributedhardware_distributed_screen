@@ -26,7 +26,7 @@ namespace DistributedHardware {
 class ImageSinkProcessor : public IImageSinkProcessor {
 public:
     ImageSinkProcessor() = default;
-    ~ImageSinkProcessor() = default;
+    ~ImageSinkProcessor() override = default;
 
     int32_t ConfigureImageProcessor(const VideoParam &localParam, const VideoParam &remoteParam,
         const std::shared_ptr<IImageSinkProcessorListener> &imageListener) override;

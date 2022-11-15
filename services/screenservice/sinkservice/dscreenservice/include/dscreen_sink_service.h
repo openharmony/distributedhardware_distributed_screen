@@ -29,7 +29,7 @@ class DScreenSinkService : public SystemAbility, public DScreenSinkStub,
 DECLARE_SYSTEM_ABILITY(DScreenSinkService);
 public:
     DScreenSinkService(int32_t saId, bool runOnCreate);
-    ~DScreenSinkService() = default;
+    ~DScreenSinkService() override = default;
     int32_t InitSink(const std::string &params) override;
     int32_t ReleaseSink() override;
     int32_t SubscribeLocalHardware(const std::string &dhId, const std::string &param) override;

@@ -27,7 +27,7 @@ namespace DistributedHardware {
 class DScreenSinkStub : public IRemoteStub<IDScreenSink> {
 public:
     DScreenSinkStub();
-    ~DScreenSinkStub() = default;
+    ~DScreenSinkStub() override = default;
     int32_t OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
         MessageOption &option) override;
 private:
@@ -45,9 +45,6 @@ private:
         MessageOption &option);
     int32_t DScreenNotifyInner(MessageParcel &data, MessageParcel &reply,
         MessageOption &option);
-
-    const size_t DID_MAX_SIZE = 256;
-    const size_t PARAM_MAX_SIZE = 50 * 1024 * 1024;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

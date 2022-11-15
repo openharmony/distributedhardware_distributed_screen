@@ -17,6 +17,7 @@
 
 #include "parcel.h"
 
+#include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"

@@ -140,6 +140,13 @@ constexpr int32_t DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID = 4808;
 constexpr uint64_t SCREEN_ID_INVALID = -1ULL;
 constexpr uint64_t SCREEN_ID_DEFAULT = 0;
 constexpr int32_t SCREEN_LOADSA_TIMEOUT_MS = 10000;
+constexpr size_t DID_MAX_SIZE = 256;
+constexpr size_t PARAM_MAX_SIZE = 50 * 1024 * 1024;
+constexpr uint8_t SESSION_WAIT_SECONDS = 5;
+constexpr uint8_t DATA_WAIT_SECONDS = 1;
+constexpr size_t DATA_QUEUE_MAX_SIZE = 1000;
+constexpr uint32_t DECODE_WAIT_MILLISECONDS = 5000;
+constexpr size_t DATA_BUFFER_MAX_SIZE = 10 * 1024 * 1024;
 constexpr uint8_t TASK_WAIT_SECONDS = 1;
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -32,7 +32,7 @@ class ScreenSinkTrans : public IScreenSinkTrans,
     public std::enable_shared_from_this<ScreenSinkTrans> {
 public:
     ScreenSinkTrans() = default;
-    ~ScreenSinkTrans() = default;
+    ~ScreenSinkTrans() override = default;
 
     int32_t SetUp(const VideoParam &localParam, const VideoParam &remoteParam, const std::string &peerDevId) override;
     int32_t Release() override;

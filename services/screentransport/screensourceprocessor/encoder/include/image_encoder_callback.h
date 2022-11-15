@@ -29,7 +29,7 @@ class ImageEncoderCallback : public Media::AVCodecCallback {
 public:
     explicit ImageEncoderCallback(const std::shared_ptr<ImageSourceEncoder> &encoder)
         : videoEncoder_(encoder) {};
-    ~ImageEncoderCallback() = default;
+    ~ImageEncoderCallback() override = default;
 
     void OnError(Media::AVCodecErrorType errorType, int32_t errorCode) override;
     void OnOutputBufferAvailable(uint32_t index, Media::AVCodecBufferInfo info, Media::AVCodecBufferFlag flag) override;

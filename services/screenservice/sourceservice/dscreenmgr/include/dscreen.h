@@ -77,7 +77,7 @@ private:
 
 class DScreen : public ScreenSourceTransCallback, public std::enable_shared_from_this<DScreen> {
 public:
-    ~DScreen();
+    ~DScreen() override;
     DScreen(const std::string &devId, const std::string &dhId, std::shared_ptr<IDScreenCallback> dscreenCallback);
     void OnTransError(int32_t err, const std::string &content) override;
 
