@@ -22,26 +22,6 @@
 namespace OHOS {
 namespace DistributedHardware {
 IMPLEMENT_SINGLE_INSTANCE(ScreenClient);
-
-ScreenClient::~ScreenClient()
-{
-    DHLOGD("~ScreenClient");
-    {
-        std::lock_guard<std::mutex> dataLock(surfaceMapMutex_);
-        for (const auto &item : surfaceMap_) {
-            int32_t ret = ScreenClientWindowAdapter::GetInstance().RemoveWindow(item.first);
-            if (ret != DH_SUCCESS) {
-                DHLOGE("windowId (ID = %" PRId32 ") remove failed.", item.first);
-                return;
-            }
-        }
-        surfaceMap_.clear();
-        windowId_ = INVALID_WINDOW_ID;
-    }
-    DHLOGD("ScreenClient Destory.");
-    return;
-}
-
 int32_t ScreenClient::AddWindow(std::shared_ptr<WindowProperty> windowProperty)
 {
     if (windowProperty == nullptr) {
@@ -58,7 +38,7 @@ int32_t ScreenClient::AddWindow(std::shared_ptr<WindowProperty> windowProperty)
         std::lock_guard<std::mutex> dataLock(surfaceMapMutex_);
         surfaceMap_.emplace(windowId, surface);
     }
-    DHLOGI("Add window (ID = %" PRId32 ") success.", windowId);
+    DHLOGI("Add window ID = %" PRId32 " success.", windowId);
     return windowId;
 }
 
@@ -68,16 +48,16 @@ int32_t ScreenClient::ShowWindow(int32_t windowId)
         std::lock_guard<std::mutex> dataLock(surfaceMapMutex_);
         auto iter = surfaceMap_.find(windowId);
         if (iter == surfaceMap_.end()) {
-            DHLOGE("windowId (ID = %" PRId32 ") is non-existent.", windowId);
+            DHLOGE("windowId ID = %" PRId32 " is non-existent.", windowId);
             return ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR;
         }
     }
     int32_t ret = ScreenClientWindowAdapter::GetInstance().ShowWindow(windowId);
     if (ret != DH_SUCCESS) {
-        DHLOGE("Show window (ID = %" PRId32 ") failed.", windowId);
+        DHLOGE("Show window ID = %" PRId32 " failed.", windowId);
         return ret;
     }
-    DHLOGI("Show window (ID = %" PRId32 ") success.", windowId);
+    DHLOGI("Show window ID = %" PRId32 " success.", windowId);
     return ret;
 }
 
@@ -87,16 +67,16 @@ int32_t ScreenClient::HideWindow(int32_t windowId)
         std::lock_guard<std::mutex> dataLock(surfaceMapMutex_);
         auto iter = surfaceMap_.find(windowId);
         if (iter == surfaceMap_.end()) {
-            DHLOGE("windowId (ID = %" PRId32 ") is non-existent.", windowId);
+            DHLOGE("windowId ID = %" PRId32 " is non-existent.", windowId);
             return ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR;
         }
     }
     int32_t ret = ScreenClientWindowAdapter::GetInstance().HideWindow(windowId);
     if (ret != DH_SUCCESS) {
-        DHLOGE("Hide window (ID = %" PRId32 ") failed.", windowId);
+        DHLOGE("Hide window ID = %" PRId32 " failed.", windowId);
         return ret;
     }
-    DHLOGI("Hide window (ID = %" PRId32 ") success.", windowId);
+    DHLOGI("Hide window ID = %" PRId32 " success.", windowId);
     return ret;
 }
 
@@ -106,16 +86,16 @@ int32_t ScreenClient::MoveWindow(int32_t windowId, int32_t startX, int32_t start
         std::lock_guard<std::mutex> dataLock(surfaceMapMutex_);
         auto iter = surfaceMap_.find(windowId);
         if (iter == surfaceMap_.end()) {
-            DHLOGE("windowId (ID = %" PRId32 ") is non-existent.", windowId);
+            DHLOGE("windowId ID = %" PRId32 " is non-existent.", windowId);
             return ERR_DH_SCREEN_SCREENCLIENT_MOVE_WINDOW_ERROR;
         }
     }
     int32_t ret = ScreenClientWindowAdapter::GetInstance().MoveWindow(windowId, startX, startY);
     if (ret != DH_SUCCESS) {
-        DHLOGE("Move window (ID = %" PRId32 ") failed.", windowId);
+        DHLOGE("Move window ID = %" PRId32 " failed.", windowId);
         return ret;
     }
-    DHLOGD("Move window (ID = %" PRId32 ") success.", windowId);
+    DHLOGD("Move window ID = %" PRId32 " success.", windowId);
     return ret;
 }
 
@@ -126,12 +106,12 @@ sptr<Surface> ScreenClient::GetSurface(int32_t windowId)
         std::lock_guard<std::mutex> dataLock(surfaceMapMutex_);
         auto iter = surfaceMap_.find(windowId);
         if (iter == surfaceMap_.end()) {
-            DHLOGE("windowId (ID = %" PRId32 ") is non-existent.", windowId);
+            DHLOGE("windowId ID = %" PRId32 " is non-existent.", windowId);
             return nullptr;
         }
         surface = iter->second;
     }
-    DHLOGD("Get surface (ID = %" PRId32 ") success.", windowId);
+    DHLOGD("Get surface ID = %" PRId32 " success.", windowId);
     return surface;
 }
 
@@ -141,18 +121,32 @@ int32_t ScreenClient::RemoveWindow(int32_t windowId)
         std::lock_guard<std::mutex> dataLock(surfaceMapMutex_);
         auto iter = surfaceMap_.find(windowId);
         if (iter == surfaceMap_.end()) {
-            DHLOGE("windowId (ID = %" PRId32 ") is non-existent.", windowId);
+            DHLOGE("windowId ID = %" PRId32 " is non-existent.", windowId);
             return ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR;
         }
         surfaceMap_.erase(windowId);
     }
     int32_t ret = ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
     if (ret != DH_SUCCESS) {
-        DHLOGE("windowId (ID = %" PRId32 ") remove failed.", windowId);
+        DHLOGE("windowId ID = %" PRId32 " remove failed.", windowId);
         return ret;
     }
-    DHLOGD("windowId (ID = %" PRId32 ") remove success.", windowId);
+    DHLOGD("windowId ID = %" PRId32 " remove success.", windowId);
     return ret;
+}
+
+int32_t ScreenClient::DestroyAllWindow()
+{
+    DHLOGD("DestroyAllWindow");
+    int32_t ret = ScreenClientWindowAdapter::GetInstance().DestroyAllWindow();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("DestroyAllWindow failed.");
+        return ret;
+    }
+    std::lock_guard<std::mutex> dataLock(surfaceMapMutex_);
+    surfaceMap_.clear();
+    windowId_ = INVALID_WINDOW_ID;
+    return DH_SUCCESS;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

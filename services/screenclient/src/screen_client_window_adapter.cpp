@@ -28,28 +28,6 @@
 namespace OHOS {
 namespace DistributedHardware {
 IMPLEMENT_SINGLE_INSTANCE(ScreenClientWindowAdapter);
-ScreenClientWindowAdapter::~ScreenClientWindowAdapter()
-{
-    DHLOGD("~ScreenClientWindowAdapter");
-    {
-        std::lock_guard<std::mutex> dataLock(windowIdMapMutex_);
-        for (const auto &item : windowIdMap_) {
-            auto window = item.second;
-            if (window == nullptr) {
-                DHLOGE("window is nullptr windowId = %" PRId32, item.first);
-                return;
-            }
-            if (window->Destroy() != OHOS::Rosen::WMError::WM_OK) {
-                DHLOGE("screenclientSurface is nullptr windowId = %" PRId32, item.first);
-                return;
-            }
-        }
-        windowIdMap_.clear();
-    }
-    DHLOGD("ScreenClientWindowAdapter Destory.");
-    return;
-}
-
 sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProperty> windowProperty,
     int32_t windowId)
 {
@@ -200,6 +178,26 @@ int32_t ScreenClientWindowAdapter::RemoveWindow(int32_t windowId)
     DHLOGD("Remove window success windowId = %" PRId32, windowId);
     return DH_SUCCESS;
 }
+
+int32_t ScreenClientWindowAdapter::DestroyAllWindow()
+{
+    DHLOGD("DestroyAllWindow");
+    std::lock_guard<std::mutex> dataLock(windowIdMapMutex_);
+    for (const auto &item : windowIdMap_) {
+        auto window = item.second;
+        if (window == nullptr) {
+            DHLOGE("window is nullptr. windowId = %" PRId32, item.first);
+            continue;
+        }
+        if (OHOS::Rosen::WMError::WM_OK != window->Destroy()) {
+            DHLOGE("Destroy window failed. windowId = %" PRId32, item.first);
+            continue;
+        }
+    }
+    windowIdMap_.clear();
+    return DH_SUCCESS;
+}
+
 
 bool ScreenClientInputEventListener::OnInputEvent(const std::shared_ptr<MMI::PointerEvent>& pointerEvent) const
 {

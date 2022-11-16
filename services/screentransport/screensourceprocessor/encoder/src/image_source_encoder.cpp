@@ -231,7 +231,7 @@ void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecB
     }
 
     size_t dataSize = static_cast<size_t>(info.size);
-    if (dataSize <= 0 || dataSize > DATA_BUFFER_MAX_SIZE) {
+    if (dataSize == 0 || dataSize > DATA_BUFFER_MAX_SIZE) {
         DHLOGE("%s:OnOutputBufferAvailable params invalid, size: %" PRId32, LOG_TAG, dataSize);
         return;
     }
