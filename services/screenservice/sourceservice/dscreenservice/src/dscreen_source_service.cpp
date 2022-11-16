@@ -54,7 +54,7 @@ void DScreenSourceService::OnStop()
     DHLOGI("dscreen source service stop.");
     int32_t ret = DScreenManager::GetInstance().UnInit();
     if (ret != DH_SUCCESS) {
-        DHLOGE("UnInit DScreenManager failed. err: %d", ret);
+        DHLOGE("UnInit DScreenManager failed. err: %" PRId32, ret);
     }
     registerToService_ = false;
 }
@@ -83,7 +83,7 @@ int32_t DScreenSourceService::InitSource(const std::string &params, const sptr<I
     DHLOGI("InitSource");
     int32_t ret = DScreenManager::GetInstance().Init();
     if (ret != DH_SUCCESS) {
-        DHLOGE("Init DScreenManager failed. err: %d", ret);
+        DHLOGE("Init DScreenManager failed. err: %" PRId32, ret);
         return ret;
     }
 
@@ -96,7 +96,7 @@ int32_t DScreenSourceService::ReleaseSource()
     DHLOGI("ReleaseSource");
     int32_t ret = DScreenManager::GetInstance().UnInit();
     if (ret != DH_SUCCESS) {
-        DHLOGE("UnInit DScreenManager failed. err: %d", ret);
+        DHLOGE("UnInit DScreenManager failed. err: %" PRId32, ret);
         return ret;
     }
     DHLOGI("exit source sa process");
@@ -146,7 +146,7 @@ int32_t DScreenSourceService::ConfigDistributedHardware(const std::string &devId
 void DScreenSourceService::DScreenNotify(const std::string &devId, const int32_t eventCode,
     const std::string &eventContent)
 {
-    DHLOGI("DScreenNotify, devId: %s, eventCode: %d", GetAnonyString(devId).c_str(), eventCode);
+    DHLOGI("DScreenNotify, devId: %s, eventCode: %" PRId32, GetAnonyString(devId).c_str(), eventCode);
     DScreenManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
 }
 

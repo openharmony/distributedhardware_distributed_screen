@@ -34,7 +34,7 @@ int32_t ImageSinkProcessor::ConfigureImageProcessor(
 
     int32_t ret = imageDecoder_->ConfigureDecoder(localParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: ConfigureDecoder failed ret:%d.", LOG_TAG, ret);
+        DHLOGE("%s: ConfigureDecoder failed ret:%" PRId32, LOG_TAG, ret);
         return ret;
     }
 
@@ -75,7 +75,7 @@ int32_t ImageSinkProcessor::StartImageProcessor()
     int32_t ret = imageDecoder_->StartDecoder();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: StartDecoder failed ret:%d.", LOG_TAG, ret);
+        DHLOGE("%s: StartDecoder failed ret:%" PRId32, LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "StartDecoder failed.");
         return ret;
     }
@@ -96,7 +96,7 @@ int32_t ImageSinkProcessor::StopImageProcessor()
     int32_t ret = imageDecoder_->StopDecoder();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: StopDecoder failed ret:%d.", LOG_TAG, ret);
+        DHLOGE("%s: StopDecoder failed ret:%" PRId32, LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "StopDecoder failed.");
         return ret;
     }
@@ -115,7 +115,7 @@ int32_t ImageSinkProcessor::SetImageSurface(sptr<Surface> &surface)
 
     int32_t ret = imageDecoder_->SetOutputSurface(surface);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: SetOutputSurface failed ret:%d.", LOG_TAG, ret);
+        DHLOGE("%s: SetOutputSurface failed ret:%" PRId32, LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "SetOutputSurface failed.");
         return ret;
     }
@@ -134,7 +134,7 @@ int32_t ImageSinkProcessor::ProcessImage(const std::shared_ptr<DataBuffer> &data
 
     int32_t ret = imageDecoder_->InputScreenData(data);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: InputScreenData failed ret:%d.", LOG_TAG, ret);
+        DHLOGE("%s: InputScreenData failed ret:%" PRId32, LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "InputScreenData failed.");
         return ret;
     }

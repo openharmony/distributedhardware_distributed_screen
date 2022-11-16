@@ -182,17 +182,17 @@ int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, con
     attr.attr.streamAttr.streamType = streamType;
     int32_t sessionId = OpenSession(mySessionName.c_str(), peerSessionName.c_str(), peerDevId.c_str(), "0", &attr);
     if (sessionId < 0) {
-        DHLOGE("%s: OpenSession failed sessionId:%d.", LOG_TAG, sessionId);
+        DHLOGE("%s: OpenSession failed sessionId:%" PRId32, LOG_TAG, sessionId);
         return ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL;
     }
 
-    DHLOGI("%s: OpenSoftbusSession success sessionId:%d.", LOG_TAG, sessionId);
+    DHLOGI("%s: OpenSoftbusSession success sessionId:%" PRId32, LOG_TAG, sessionId);
     return sessionId;
 }
 
 int32_t SoftbusAdapter::CloseSoftbusSession(const int32_t sessionId)
 {
-    DHLOGI("%s: CloseSoftbusSession, sessid:%d.", LOG_TAG, sessionId);
+    DHLOGI("%s: CloseSoftbusSession, sessid:%" PRId32, LOG_TAG, sessionId);
     CloseSession(sessionId);
 
     std::lock_guard<std::mutex> lisLock(listenerMtx_);
@@ -204,10 +204,10 @@ int32_t SoftbusAdapter::CloseSoftbusSession(const int32_t sessionId)
 
 int32_t SoftbusAdapter::SendSoftbusBytes(int32_t sessionId, const void *data, int32_t dataLen) const
 {
-    DHLOGD("%s: SendSoftbusBytes, sessid:%d.", LOG_TAG, sessionId);
+    DHLOGD("%s: SendSoftbusBytes, sessid:%" PRId32, LOG_TAG, sessionId);
     int32_t ret = SendBytes(sessionId, data, dataLen);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: SendBytes failed ret:%d.", LOG_TAG, ret);
+        DHLOGE("%s: SendBytes failed ret:%" PRId32, LOG_TAG, ret);
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
 
@@ -217,10 +217,10 @@ int32_t SoftbusAdapter::SendSoftbusBytes(int32_t sessionId, const void *data, in
 int32_t SoftbusAdapter::SendSoftbusStream(int32_t sessionId, const StreamData *data, const StreamData *ext,
     const StreamFrameInfo *param) const
 {
-    DHLOGD("%s: SendSoftbusStream, sessid:%d.", LOG_TAG, sessionId);
+    DHLOGD("%s: SendSoftbusStream, sessid:%" PRId32, LOG_TAG, sessionId);
     int32_t ret = SendStream(sessionId, data, ext, param);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: SendStream failed ret:%d.", LOG_TAG, ret);
+        DHLOGE("%s: SendStream failed ret:%" PRId32, LOG_TAG, ret);
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
 
@@ -233,12 +233,12 @@ std::shared_ptr<ISoftbusListener> &SoftbusAdapter::GetSoftbusListenerByName(int3
     char peerDevId[DSCREEN_MAX_DEVICE_ID_LEN] = "";
     int32_t ret = GetPeerSessionName(sessionId, sessionName, sizeof(sessionName));
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: GetPeerSessionName failed ret:%d.", LOG_TAG, ret);
+        DHLOGE("%s: GetPeerSessionName failed ret:%" PRId32, LOG_TAG, ret);
         return nullListener_;
     }
     ret = GetPeerDeviceId(sessionId, peerDevId, sizeof(peerDevId));
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: GetPeerDeviceId failed ret:%d.", LOG_TAG, ret);
+        DHLOGE("%s: GetPeerDeviceId failed ret:%" PRId32, LOG_TAG, ret);
         return nullListener_;
     }
 
@@ -269,7 +269,7 @@ std::shared_ptr<ISoftbusListener> &SoftbusAdapter::GetSoftbusListenerById(int32_
 
 int32_t SoftbusAdapter::OnSoftbusSessionOpened(int32_t sessionId, int32_t result)
 {
-    DHLOGI("%s: OnSessionOpened session:%d, result:%d.", LOG_TAG, sessionId, result);
+    DHLOGI("%s: OnSessionOpened session:%" PRId32", result:%" PRId32, LOG_TAG, sessionId, result);
     if (result != DH_SUCCESS) {
         DHLOGE("%s: OnSessionOpened failed.", LOG_TAG);
         return ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL;
@@ -290,7 +290,7 @@ int32_t SoftbusAdapter::OnSoftbusSessionOpened(int32_t sessionId, int32_t result
 
 void SoftbusAdapter::OnSoftbusSessionClosed(int32_t sessionId)
 {
-    DHLOGI("%s: OnSessionClosed sessionId:%d.", LOG_TAG, sessionId);
+    DHLOGI("%s: OnSessionClosed sessionId:%" PRId32, LOG_TAG, sessionId);
     std::shared_ptr<ISoftbusListener> &listener = GetSoftbusListenerById(sessionId);
     if (listener == nullptr) {
         DHLOGE("Get softbus listener failed.");
@@ -304,7 +304,7 @@ void SoftbusAdapter::OnSoftbusSessionClosed(int32_t sessionId)
 
 void SoftbusAdapter::OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen)
 {
-    DHLOGD("%s: OnBytesReceived, sessionId:%d.", LOG_TAG, sessionId);
+    DHLOGD("%s: OnBytesReceived, sessionId:%" PRId32, LOG_TAG, sessionId);
     if (data == nullptr) {
         DHLOGE("BytesData is null.");
         return;
@@ -325,13 +325,13 @@ void SoftbusAdapter::OnBytesReceived(int32_t sessionId, const void *data, uint32
 void SoftbusAdapter::OnStreamReceived(int32_t sessionId, const StreamData *data, const StreamData *ext,
     const StreamFrameInfo *frameInfo)
 {
-    DHLOGD("%s OnStreamReceived, sessionId:%d.", LOG_TAG, sessionId);
+    DHLOGD("%s OnStreamReceived, sessionId:%" PRId32, LOG_TAG, sessionId);
     if (data == nullptr) {
         DHLOGE("StreamData is null.");
         return;
     }
     if (data->bufLen <= 0 || data->bufLen > static_cast<int32_t>(DSCREEN_MAX_RECV_DATA_LEN)) {
-        DHLOGE("StreamData length is too large, dataLen:%d.", data->bufLen);
+        DHLOGE("StreamData length is too large, dataLen:%" PRId32, data->bufLen);
         return;
     }
 
@@ -347,7 +347,7 @@ void SoftbusAdapter::OnMessageReceived(int sessionId, const void *data, unsigned
 {
     (void)data;
     (void)dataLen;
-    DHLOGD("%s OnMessageReceived, sessionId:%d.", LOG_TAG, sessionId);
+    DHLOGD("%s OnMessageReceived, sessionId:%" PRId32, LOG_TAG, sessionId);
 }
 
 void SoftbusAdapter::OnQosEvent(int sessionId, int eventId, int tvCount, const QosTv *tvList) const
@@ -355,7 +355,7 @@ void SoftbusAdapter::OnQosEvent(int sessionId, int eventId, int tvCount, const Q
     (void)eventId;
     (void)tvCount;
     (void)tvList;
-    DHLOGD("%s OnQosEvent, sessionId:%d.", LOG_TAG, sessionId);
+    DHLOGD("%s OnQosEvent, sessionId:%" PRId32, LOG_TAG, sessionId);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

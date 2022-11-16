@@ -62,7 +62,7 @@ int32_t DScreenManager::Init()
         dScreenGroupListener_ = new (std::nothrow) DScreenGroupListener();
         int32_t ret = ScreenMgrAdapter::GetInstance().RegisterScreenGroupListener(dScreenGroupListener_);
         if (ret != DH_SUCCESS) {
-            DHLOGE("DScreenManager Init failed, err: %d", ret);
+            DHLOGE("DScreenManager Init failed, err: %" PRId32, ret);
             delete dScreenGroupListener_;
             dScreenGroupListener_ = nullptr;
             return ret;
@@ -81,7 +81,7 @@ int32_t DScreenManager::UnInit()
     DHLOGI("DScreenManager::UnInit");
     int32_t ret = ScreenMgrAdapter::GetInstance().UnregisterScreenGroupListener(dScreenGroupListener_);
     if (ret != DH_SUCCESS) {
-        DHLOGE("DScreenManager UnInit failed, err: %d", ret);
+        DHLOGE("DScreenManager UnInit failed, err: %" PRId32, ret);
     }
 
     dScreenCallback_ = nullptr;
@@ -101,7 +101,7 @@ int32_t DScreenManager::UnInit()
 
 void DScreenGroupListener::OnChange(const std::vector<uint64_t> &screenIds, Rosen::ScreenGroupChangeEvent event)
 {
-    DHLOGI("On Screen change, screenIds size: %d", screenIds.size());
+    DHLOGI("On Screen change, screenIds size: %" PRId32, screenIds.size());
     for (uint64_t screenId : screenIds) {
         std::shared_ptr<DScreen> changedScreen = DScreenManager::GetInstance().FindDScreenByScreenId(screenId);
         if (changedScreen == nullptr) {
@@ -386,19 +386,19 @@ void DScreenManager::GetScreenDumpInfo(std::string &result)
 void DScreenManager::HandleDScreenNotify(const std::string &devId, int32_t eventCode,
     const std::string &eventContent)
 {
-    DHLOGI("HandleDScreenNotify, devId: %s, eventCode: %d", GetAnonyString(devId).c_str(), eventCode);
+    DHLOGI("HandleDScreenNotify, devId: %s, eventCode: %" PRId32, GetAnonyString(devId).c_str(), eventCode);
     if (eventCode == NOTIFY_SOURCE_SETUP_RESULT) {
         HandleNotifySetUpResult(devId, eventContent);
         return;
     }
 
-    DHLOGE("invalid eventCode, eventCode: %d", eventCode);
+    DHLOGE("invalid eventCode, eventCode: %" PRId32, eventCode);
 }
 
 int32_t DScreenManager::NotifyRemoteScreenService(const std::string &devId, int32_t eventCode,
     const std::string &eventContent)
 {
-    DHLOGI("Notify remote sink screen service, remote devId: %s, eventCode: %d",
+    DHLOGI("Notify remote sink screen service, remote devId: %s, eventCode: %" PRId32,
         GetAnonyString(devId).c_str(), eventCode);
     sptr<IDScreenSink> remoteSinkSA = GetDScreenSinkSA(devId);
     if (remoteSinkSA == nullptr) {
@@ -525,7 +525,7 @@ void DScreenManager::HandleNotifySetUpResult(const std::string &remoteDevId, con
     }
 
     if (errCode != DH_SUCCESS) {
-        DHLOGE("remote sink set up failed, errCode: %d, reason: %s", errCode, errContent.c_str());
+        DHLOGE("remote sink set up failed, errCode: %" PRId32", reason: %s", errCode, errContent.c_str());
         dScreens_[dScreenIdx]->SetState(ENABLED);
         return;
     }
