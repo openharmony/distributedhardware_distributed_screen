@@ -40,7 +40,7 @@ ScreenClientWindowAdapter::~ScreenClientWindowAdapter()
                 return;
             }
             if (window->Destroy() != OHOS::Rosen::WMError::WM_OK) {
-                DHLOGE("screenclientSurface is nullptr windowId = %"PRId32, item.first);
+                DHLOGE("screenclientSurface is nullptr windowId = %" PRId32, item.first);
                 return;
             }
         }
@@ -107,7 +107,7 @@ int32_t ScreenClientWindowAdapter::ShowWindow(int32_t windowId)
         std::lock_guard<std::mutex> dataLock(windowIdMapMutex_);
         auto iter = windowIdMap_.find(windowId);
         if (iter == windowIdMap_.end()) {
-            DHLOGE("Invalid windowId (windowId = %)."PRId32, windowId);
+            DHLOGE("Invalid windowId windowId = %" PRId32, windowId);
             return ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR;
         }
         window = iter->second;
