@@ -24,7 +24,7 @@ namespace DistributedHardware {
 int32_t DScreenSourceCallback::OnNotifyRegResult(const std::string &devId, const std::string &dhId,
     const std::string &reqId, int32_t status, const std::string &data)
 {
-    DHLOGI("DScreenSourceCallback OnNotifyRegResult devId: %s dhId: %s status: %d",
+    DHLOGI("DScreenSourceCallback OnNotifyRegResult devId: %s dhId: %s status: %" PRId32,
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), status);
     const auto iter = registerCallbackMap_.find(reqId);
     if (iter != registerCallbackMap_.end()) {
@@ -43,7 +43,7 @@ int32_t DScreenSourceCallback::OnNotifyRegResult(const std::string &devId, const
 int32_t DScreenSourceCallback::OnNotifyUnregResult(const std::string &devId, const std::string &dhId,
     const std::string &reqId, int32_t status, const std::string &data)
 {
-    DHLOGI("DScreenSourceCallback OnNotifyUnregResult devId: %s dhId: %s status: %d",
+    DHLOGI("DScreenSourceCallback OnNotifyUnregResult devId: %s dhId: %s status: %" PRId32,
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), status);
     const auto iter = unregisterCallbackMap_.find(reqId);
     if (iter != unregisterCallbackMap_.end()) {

@@ -27,7 +27,7 @@ namespace DistributedHardware {
 void DScreenSourceLoadCallback::OnLoadSystemAbilitySuccess(
     int32_t systemAbilityId, const sptr<IRemoteObject> &remoteObject)
 {
-    DHLOGI("load screen SA success, systemAbilityId:%d, remoteObject result:%s",
+    DHLOGI("load screen SA success, systemAbilityId:%," PRId32 " remoteObject result:%s",
         systemAbilityId, (remoteObject != nullptr) ? "true" : "false");
     if (systemAbilityId != DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID) {
         DHLOGE("start systemabilityId is not sourceSAId!");
@@ -42,7 +42,7 @@ void DScreenSourceLoadCallback::OnLoadSystemAbilitySuccess(
 
 void DScreenSourceLoadCallback::OnLoadSystemAbilityFail(int32_t systemAbilityId)
 {
-    DHLOGE("load screen SA failed, systemAbilityId:%d", systemAbilityId);
+    DHLOGE("load screen SA failed, systemAbilityId:%" PRId32, systemAbilityId);
     ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, systemAbilityId,
         "dscreen source OnLoadSystemAbilityFail.");
 }

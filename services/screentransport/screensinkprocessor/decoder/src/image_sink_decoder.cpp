@@ -234,7 +234,7 @@ int32_t ImageSinkDecoder::InputScreenData(const std::shared_ptr<DataBuffer> &dat
 
 void ImageSinkDecoder::OnError(Media::AVCodecErrorType errorType, int32_t errorCode)
 {
-    DHLOGI("%s: OnImageDecodeError, errorType(%d), errorCode(%d)", LOG_TAG, errorType, errorCode);
+    DHLOGI("%s: OnImageDecodeError, errorType:%" PRId32", errorCode:%" PRId32, LOG_TAG, errorType, errorCode);
     std::shared_ptr<IImageSinkProcessorListener> listener = imageProcessorListener_.lock();
     if (listener == nullptr) {
         DHLOGE("%s: Listener is null.", LOG_TAG);

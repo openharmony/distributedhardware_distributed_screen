@@ -29,7 +29,7 @@ int32_t ImageSourceProcessor::ConfigureImageProcessor(const VideoParam &localPar
     imageEncoder_ = std::make_shared<ImageSourceEncoder>(listener);
     int32_t ret = imageEncoder_->ConfigureEncoder(localParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Configure screen encoder failed ret: %d.", LOG_TAG, ret);
+        DHLOGE("%s: Configure screen encoder failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
 
@@ -51,7 +51,7 @@ int32_t ImageSourceProcessor::ReleaseImageProcessor()
     int32_t ret = imageEncoder_->ReleaseEncoder();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Release screen encoder failed ret: %d.", LOG_TAG, ret);
+        DHLOGE("%s: Release screen encoder failed ret: %" PRId32, LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "Release screen encoder failed.");
         return ret;
     }
@@ -72,7 +72,7 @@ int32_t ImageSourceProcessor::StartImageProcessor()
     int32_t ret = imageEncoder_->StartEncoder();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Start screen encoder failed ret: %d.", LOG_TAG, ret);
+        DHLOGE("%s: Start screen encoder failed ret: %" PRId32, LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "Start screen encoder failed.");
         return ret;
     }
@@ -93,7 +93,7 @@ int32_t ImageSourceProcessor::StopImageProcessor()
     int32_t ret = imageEncoder_->StopEncoder();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Stop screen encoder failed ret: %d.", LOG_TAG, ret);
+        DHLOGE("%s: Stop screen encoder failed ret: %" PRId32, LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "Stop screen encoder failed.");
         return ret;
     }

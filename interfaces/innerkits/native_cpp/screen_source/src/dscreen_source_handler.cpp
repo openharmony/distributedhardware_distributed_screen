@@ -72,7 +72,7 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
         StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_LOAD_SYSTEM_ABILITY_START);
         int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, loadCallback);
         if (ret != ERR_OK) {
-            DHLOGE("Failed to Load systemAbility, systemAbilityId:%d, ret code:%d",
+            DHLOGE("Failed to Load systemAbility, systemAbilityId:%" PRId32 ", ret code:%" PRId32,
                 DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, ret);
             ReportSaFail(DSCREEN_INIT_FAIL, ret, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
                 "dscreen source LoadSystemAbility call failed.");
