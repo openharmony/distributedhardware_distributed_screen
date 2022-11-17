@@ -41,7 +41,7 @@ public:
 class ScreenRegion : public ScreenSinkTransCallback, public std::enable_shared_from_this<ScreenRegion> {
 public:
     ScreenRegion(const std::string &remoteDevId, uint64_t screenId, uint64_t displayId);
-    ~ScreenRegion();
+    ~ScreenRegion() override;
     void OnTransError(int32_t err, const std::string &content) override;
     void SetVideoParam(std::shared_ptr<VideoParam> &videoParam);
     void SetMapRelation(std::shared_ptr<DScreenMapRelation> &mapRelation);

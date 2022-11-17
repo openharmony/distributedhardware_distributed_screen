@@ -42,9 +42,10 @@ public:
     int32_t HideWindow(int32_t windowId);
     int32_t MoveWindow(int32_t windowId, int32_t startX, int32_t startY);
     int32_t RemoveWindow(int32_t windowId);
+    int32_t DestroyAllWindow();
 private:
     ScreenClientWindowAdapter() = default;
-    ~ScreenClientWindowAdapter();
+    ~ScreenClientWindowAdapter() = default;
     std::map<int32_t, sptr<Rosen::Window>> windowIdMap_;
     std::mutex windowIdMapMutex_;
 };

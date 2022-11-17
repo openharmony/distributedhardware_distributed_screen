@@ -38,11 +38,6 @@ DScreenSourceService::DScreenSourceService(int32_t saId, bool runOnCreate) : Sys
     DHLOGI("dscreen source service create.");
 }
 
-DScreenSourceService::~DScreenSourceService()
-{
-    DHLOGI("~DScreenSourceService.");
-}
-
 void DScreenSourceService::OnStart()
 {
     DHLOGI("dscreen source service start.");
