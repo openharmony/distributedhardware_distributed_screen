@@ -53,8 +53,8 @@ config("module_private_config") {
   ]
 }
 
-## UnitTest DscreenSinkServiceTest
-ohos_unittest("DscreenSinkServiceTest") {
+## UnitTest DscreenRegionMgrTest
+ohos_unittest("DscreenRegionMgrTest") {
   module_out_path = module_out_path
 
   sources = [
