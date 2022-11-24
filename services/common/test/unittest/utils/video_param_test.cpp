@@ -131,5 +131,68 @@ HWTEST_F(VideoParamTest, GetVideoFormat_001, TestSize.Level1)
     uint8_t actual = videoParam_->GetVideoFormat();
     EXPECT_EQ(videoFormat, actual);
 }
+
+/**
+ * @tc.name: to_json_001
+ * @tc.desc: Verify the to_json function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(VideoParamTest, to_json_001, TestSize.Level1)
+{
+    json j;
+    uint32_t screenWidth = 100;
+    uint32_t screenHeight = 100;
+    uint32_t videoWidth = 100;
+    uint32_t videoHeight = 100;
+    uint32_t fps = 30;
+    uint8_t codecType = DEFAULT_CODECTYPE;
+    uint8_t videoFormat = DEFAULT_VIDEO_FORMAT;
+
+    VideoParam videoParam;
+    videoParam.SetScreenWidth(screenWidth);
+    videoParam.SetScreenHeight(screenHeight);
+    videoParam.SetVideoWidth(videoWidth);
+    videoParam.SetVideoHeight(videoHeight);
+    videoParam.SetFps(fps);
+    videoParam.SetCodecType(codecType);
+    videoParam.SetVideoFormat(videoFormat);
+    to_json(j, videoParam);
+
+    uint32_t jsonVideoWidth = 0;
+    j.at(KEY_VIDEO_WIDTH).get_to(jsonVideoWidth);
+    EXPECT_EQ(videoWidth, jsonVideoWidth);
+}
+
+/**
+ * @tc.name: from_json_001
+ * @tc.desc: Verify the from_json function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(VideoParamTest, from_json_001, TestSize.Level1)
+{
+    json j;
+    uint32_t screenWidth = 100;
+    uint32_t screenHeight = 100;
+    uint32_t videoWidth = 100;
+    uint32_t videoHeight = 100;
+    uint32_t fps = 30;
+    uint8_t codecType = DEFAULT_CODECTYPE;
+    uint8_t videoFormat = DEFAULT_VIDEO_FORMAT;
+
+    VideoParam videoParam;
+    videoParam.SetScreenWidth(screenWidth);
+    videoParam.SetScreenHeight(screenHeight);
+    videoParam.SetVideoWidth(videoWidth);
+    videoParam.SetVideoHeight(videoHeight);
+    videoParam.SetFps(fps);
+    videoParam.SetCodecType(codecType);
+    videoParam.SetVideoFormat(videoFormat);
+    to_json(j, videoParam);
+    VideoParam jsonVideoParam;
+    from_json(j, jsonVideoParam);
+    EXPECT_EQ(videoWidth, jsonVideoParam.GetVideoWidth());
+}
 } // namespace DistributedHardware
 } // namespace OHOS
