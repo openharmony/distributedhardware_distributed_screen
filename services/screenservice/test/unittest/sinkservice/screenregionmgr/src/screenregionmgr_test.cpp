@@ -68,6 +68,27 @@ HWTEST_F(ScreenRegionManagerTest, NotifyRemoteScreenService_001, TestSize.Level1
 }
 
 /**
+ * @tc.name: HandleNotifySetUp_001
+ * @tc.desc: Verify the HandleNotifySetUp function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionManagerTest, HandleNotifySetUp_001, TestSize.Level1)
+{
+    ScreenRegionManager::GetInstance().screenRegions_.clear();
+    const std::string remoteDevId = "sourceDevId";
+    const std::string eventContent = "{\"dhId\":\"SCREEN#0\",\"mapRelation\":{\"displayId\":0,\
+        \"displayRect\":{\"height\":1280,\"startX\":0,\"startY\":0,\"width\":720},\"screenId\":2,\
+        \"screenRect\":{\"height\":1280,\"startX\":0,\"startY\":0,\"width\":720}},\"screenId\":2,\
+        \"videoParam\":{\"codecType\":2,\"colorFormat\":3,\"fps\":30,\"screenHeight\":1280,\
+        \"screenWidth\":720,\"videoHeight\":1280,\"videoWidth\":720}}";
+    ScreenRegionManager::GetInstance().HandleNotifySetUp(remoteDevId, eventContent);
+
+    EXPECT_NE(0, ScreenRegionManager::GetInstance().screenRegions_.size());
+    ScreenRegionManager::GetInstance().screenRegions_.clear();
+}
+
+/**
  * @tc.name: GetDScreenSourceSA_001
  * @tc.desc: Verify the GetDScreenSourceSA function failed.
  * @tc.type: FUNC
