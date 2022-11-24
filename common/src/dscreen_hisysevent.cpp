@@ -24,7 +24,7 @@ namespace OHOS {
 namespace DistributedHardware {
 void ReportSaFail(const std::string &eventName, int32_t errCode, int32_t saId, const std::string &errMsg)
 {
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+    int32_t res = HiSysEventWrite(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
         eventName,
         OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
@@ -39,7 +39,7 @@ void ReportSaFail(const std::string &eventName, int32_t errCode, int32_t saId, c
 void ReportRegisterFail(const std::string &eventName, int32_t errCode, const std::string &devId,
     const std::string &dhId, const std::string &errMsg)
 {
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+    int32_t res = HiSysEventWrite(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
         eventName,
         OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
@@ -55,7 +55,7 @@ void ReportRegisterFail(const std::string &eventName, int32_t errCode, const std
 void ReportUnRegisterFail(const std::string &eventName, int32_t errCode, const std::string &devId,
     const std::string &dhId, const std::string &errMsg)
 {
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+    int32_t res = HiSysEventWrite(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
         eventName,
         OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
@@ -70,7 +70,7 @@ void ReportUnRegisterFail(const std::string &eventName, int32_t errCode, const s
 
 void ReportOptFail(const std::string &eventName, int32_t errCode, const std::string &errMsg)
 {
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+    int32_t res = HiSysEventWrite(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
         eventName,
         OHOS::HiviewDFX::HiSysEvent::EventType::FAULT,
@@ -83,7 +83,7 @@ void ReportOptFail(const std::string &eventName, int32_t errCode, const std::str
 
 void ReportSaEvent(const std::string &eventName, int32_t saId, const std::string &errMsg)
 {
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+    int32_t res = HiSysEventWrite(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
         eventName,
         OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
@@ -97,7 +97,7 @@ void ReportSaEvent(const std::string &eventName, int32_t saId, const std::string
 void ReportRegisterScreenEvent(const std::string &eventName, const std::string &devId, const std::string &dhId,
     const std::string &errMsg)
 {
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+    int32_t res = HiSysEventWrite(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
         eventName,
         OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
@@ -112,7 +112,7 @@ void ReportRegisterScreenEvent(const std::string &eventName, const std::string &
 void ReportUnRegisterScreenEvent(const std::string &eventName, const std::string &devId, const std::string &dhId,
     const std::string &errMsg)
 {
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+    int32_t res = HiSysEventWrite(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
         eventName,
         OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
@@ -127,7 +127,7 @@ void ReportUnRegisterScreenEvent(const std::string &eventName, const std::string
 void ReportScreenMirrorEvent(const std::string &eventName, const std::string &devId, const std::string &dhId,
     const std::string &errMsg)
 {
-    int32_t res = OHOS::HiviewDFX::HiSysEvent::Write(
+    int32_t res = HiSysEventWrite(
         OHOS::HiviewDFX::HiSysEvent::Domain::DISTRIBUTED_SCREEN,
         eventName,
         OHOS::HiviewDFX::HiSysEvent::EventType::BEHAVIOR,
