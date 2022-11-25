@@ -27,7 +27,7 @@ void DScreenFwkKitTest::SetUpTestCase(void) {}
 
 void DScreenFwkKitTest::TearDownTestCase(void) {}
 
-void DScreenFwkKitTest::SetUp(){}
+void DScreenFwkKitTest::SetUp() {}
 
 void DScreenFwkKitTest::TearDown() {}
 
