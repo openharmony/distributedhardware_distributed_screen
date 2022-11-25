@@ -231,12 +231,11 @@ void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecB
     }
 
     size_t dataSize = static_cast<size_t>(info.size);
-    if (dataSize <= 0 || dataSize > DATA_BUFFER_MAX_SIZE) {
+    if (dataSize == 0 || dataSize > DATA_BUFFER_MAX_SIZE) {
         DHLOGE("%s:OnOutputBufferAvailable params invalid, size: %d.", LOG_TAG, dataSize);
         return;
     }
     auto dataBuf = std::make_shared<DataBuffer>(dataSize);
-
     int32_t ret = memcpy_s(dataBuf->Data(), dataBuf->Capacity(), videoSharedMemory_->GetBase(), dataSize);
     if (ret != EOK) {
         DHLOGE("%s: Copy data failed.", LOG_TAG);
