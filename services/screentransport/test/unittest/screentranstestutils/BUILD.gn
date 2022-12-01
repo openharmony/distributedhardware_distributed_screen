@@ -1,0 +1,82 @@
+# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/test.gni")
+import(
+    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+
+module_out_path = "distributed_screen/screen_callback_test"
+
+config("module_private_config") {
+  visibility = [ ":*" ]
+  include_dirs = [
+    "//third_party/json/include",
+    "${fwk_common_path}/log/include",
+    "${fwk_common_path}/utils/include",
+    "${fwk_utils_path}/include/",
+    "${fwk_utils_path}/include/log",
+  ]
+
+  include_dirs += [
+    "./include",
+    "${services_path}/screentransport/test/unittest/screentranstestutils/include",
+    "${common_path}/include",
+    "${services_path}/common/databuffer/include",
+    "${services_path}/common/screen_channel/include",
+    "${services_path}/common/utils/include",
+    "${services_path}/screentransport/screensinktrans/include",
+    "${services_path}/screentransport/screensinkprocessor/include",
+    "${services_path}/screentransport/test/unittest/screensourcetrans/include",
+    "${services_path}/screentransport/screensourcetrans/include",
+    "${services_path}/screentransport/screendatachannel/include",
+    "${services_path}/screentransport/screensourceprocessor/include",
+    "${services_path}/screentransport/screensourceprocessor/encoder/include",
+    "${services_path}/screentransport/screensinkprocessor/include",
+    "${services_path}/screentransport/screensinkprocessor/decoder/include",
+    "${services_path}/softbusadapter/include",
+    "//drivers/peripheral/display/interfaces/include",
+    "//drivers/peripheral/base",
+    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
+    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
+    "//foundation/multimedia/player_framework/interfaces/inner_api/native",
+    "//foundation/communication/dsoftbus/interfaces/kits/transport",
+  ]
+}
+
+## UnitTest screen_callback_test
+ohos_unittest("ScreenCallbackTest") {
+  module_out_path = module_out_path
+
+  sources = [ "${services_path}/screentransport/test/unittest/screentranstestutils/src/screen_callback_test.cpp" ]
+
+  configs = [ ":module_private_config" ]
+
+  deps = [
+    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
+    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "multimedia_player_framework:media_client",
+  ]
+}
+
+group("screen_callback_test") {
+  testonly = true
+  deps = [ ":ScreenCallbackTest" ]
+}
