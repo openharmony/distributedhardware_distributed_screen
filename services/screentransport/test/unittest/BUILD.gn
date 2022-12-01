@@ -19,5 +19,6 @@ group("screen_transport_test") {
     "screensinktrans:sink_trans_test",
     "screensourceprocessor:source_processor_test",
     "screensourcetrans:source_trans_test",
+    "screentranstestutils:screen_callback_test",
   ]
 }
