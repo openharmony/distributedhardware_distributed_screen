@@ -57,5 +57,19 @@ HWTEST_F(DScreenHandlerTest, RegisterPluginListener_001, TestSize.Level1)
     EXPECT_EQ(listener, DScreenHandler::GetInstance().listener_);
 }
 
+/**
+ * @tc.name: RegisterPluginListener_002
+ * @tc.desc: Verify the RegisterPluginListener function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenHandlerTest, RegisterPluginListener_002, TestSize.Level1)
+{
+    std::shared_ptr<PluginListener> listener = nullptr;
+    DScreenHandler::GetInstance().listener_ = nullptr;
+    DScreenHandler::GetInstance().RegisterPluginListener(listener);
+
+    EXPECT_EQ(listener, DScreenHandler::GetInstance().listener_);
+}
 }
 }
