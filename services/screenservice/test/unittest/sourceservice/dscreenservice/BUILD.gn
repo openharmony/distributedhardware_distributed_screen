@@ -24,7 +24,8 @@ config("module_private_config") {
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
     "${common_path}/include",
-    "${services_path}/screenservice/screen_source/dscreenservice/include",
+    "${services_path}/screenservice/sourceservice/dscreenservice/include",
+    "${services_path}/screenservice/sourceservice/dscreenservice/include/callback",
   ]
 }
 

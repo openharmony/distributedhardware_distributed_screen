@@ -20,7 +20,7 @@
 #include <gmock/gmock.h>
 
 #include "dscreen_errcode.h"
-#include "dscreen_source_callback_proxy"
+#include "dscreen_source_callback_proxy.h"
 #include "dscreen_source_callback.h"
 #include "dscreen_source_proxy.h"
 #include "dscreen_source_stub.h"
