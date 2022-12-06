@@ -50,6 +50,22 @@ HWTEST_F(ScreenRegionManagerTest, ReleaseAllRegions_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: ReleaseAllRegions_002
+ * @tc.desc: Verify the ReleaseAllRegions function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionManagerTest, ReleaseAllRegions_002, TestSize.Level1)
+{
+    const std::string remoteDevId = "sourceDevId";
+    std::shared_ptr<ScreenRegion> screenRegion = nullptr;
+    ScreenRegionManager::GetInstance().screenRegions_[remoteDevId] = screenRegion;
+    int32_t ret = ScreenRegionManager::GetInstance().ReleaseAllRegions();
+
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+/**
  * @tc.name: NotifyRemoteScreenService_001
  * @tc.desc: Verify the NotifyRemoteScreenService function failed.
  * @tc.type: FUNC
@@ -86,6 +102,26 @@ HWTEST_F(ScreenRegionManagerTest, HandleNotifySetUp_001, TestSize.Level1)
 
     EXPECT_NE(0, ScreenRegionManager::GetInstance().screenRegions_.size());
     ScreenRegionManager::GetInstance().screenRegions_.clear();
+}
+
+/**
+ * @tc.name: HandleNotifySetUp_002
+ * @tc.desc: Verify the HandleNotifySetUp function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionManagerTest, HandleNotifySetUp_002, TestSize.Level1)
+{
+    ScreenRegionManager::GetInstance().screenRegions_.clear();
+    const std::string remoteDevId = "sourceDevId";
+    const std::string eventContent = "{\"dhIds\":\"SCREEN#0\",\"mapRelations\":{\"displayIds\":0,\
+        \"displayRects\":{\"heights\":1280,\"startXs\":0,\"startYs\":0,\"widths\":720},\"screenIds\":2,\
+        \"screenRects\":{\"heights\":1280,\"startXs\":0,\"startYs\":0,\"widths\":720}},\"screenIds\":2,\
+        \"videoParams\":{\"codecTypes\":2,\"colorFormats\":3,\"fpss\":30,\"screenHeights\":1280,\
+        \"screenWidths\":720,\"videoHeights\":1280,\"videoWidths\":720}}";
+    ScreenRegionManager::GetInstance().HandleNotifySetUp(remoteDevId, eventContent);
+
+    EXPECT_EQ(0, ScreenRegionManager::GetInstance().screenRegions_.size());
 }
 
 /**
