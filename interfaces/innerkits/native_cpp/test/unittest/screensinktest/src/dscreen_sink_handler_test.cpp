@@ -37,6 +37,35 @@ void DScreenSinkHandlerTest::TearDown(void)
 }
 
 /**
+ * @tc.name: InitSink_001
+ * @tc.desc: Verify the InitSink function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkHandlerTest, InitSink_001, TestSize.Level1)
+{
+    const std::string param = "";
+    int32_t ret = DScreenSinkHandler::GetInstance().InitSink(param);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+}
+
+/**
+ * @tc.name: InitSink_002
+ * @tc.desc: Verify the InitSink function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkHandlerTest, InitSink_002, TestSize.Level1)
+{
+    const std::string param = "DScreenSinkHandlerTestDScreenSinkHandlerTestDScreenSinkHandlerTestDScreenSinkHandler \
+        TestDScreenSinkHandlerTestDScreenSinkHandlerTestDScreenSinkHandlerTestDScreenSinkHandler \
+        TestDScreenSinkHandlerTestDScreenSinkHandlerTestDScreenSinkHandlerTestDScreenSinkHandler \
+        TestDScreenSinkHandlerTestDScreenSinkHandlerTestDScreenSinkHandlerTest";
+    int32_t ret = DScreenSinkHandler::GetInstance().InitSink(param);
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+/**
  * @tc.name: LocalHardware_001
  * @tc.desc: Verify the SubscribeLocalHardware function.
  * @tc.type: FUNC
@@ -55,6 +84,23 @@ HWTEST_F(DScreenSinkHandlerTest, LocalHardware_001, TestSize.Level1)
     DScreenSinkHandler::GetInstance().dScreenSinkProxy_ = nullptr;
     ret = DScreenSinkHandler::GetInstance().UnsubscribeLocalHardware(dhId);
     EXPECT_EQ(ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, ret);
+}
+
+/**
+ * @tc.name: SubscribeLocalHardware_001
+ * @tc.desc: Verify the SubscribeLocalHardware function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkHandlerTest, SubscribeLocalHardware_001, TestSize.Level1)
+{
+    const std::string dhId = "";
+    const std::string param = "DScreenSinkHandlerTest";
+    int32_t ret = DScreenSinkHandler::GetInstance().SubscribeLocalHardware(dhId, param);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = DScreenSinkHandler::GetInstance().UnsubscribeLocalHardware(dhId);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 }
 
 /**

@@ -63,6 +63,22 @@ HWTEST_F(ImageSourceEncoderTest, ConfigureEncoder_002, TestSize.Level1)
 }
 
 /**
+ * @tc.name: ConfigureEncoder_003
+ * @tc.desc: Verify the ConfigureEncoder function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSourceEncoderTest, ConfigureEncoder_003, TestSize.Level1)
+{
+    VideoParam configParam;
+    configParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    configParam.videoFormat_ = -1;
+
+    int32_t actual = encoder->ConfigureEncoder(configParam);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
+}
+
+/**
  * @tc.name: ReleaseEncoder_001
  * @tc.desc: Verify the ReleaseEncoder function.
  * @tc.type: FUNC
@@ -171,6 +187,36 @@ HWTEST_F(ImageSourceEncoderTest, InitVideoEncoder_002, TestSize.Level1)
 }
 
 /**
+ * @tc.name: InitVideoEncoder_003
+ * @tc.desc: Verify the InitVideoEncoder function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSourceEncoderTest, InitVideoEncoder_003, TestSize.Level1)
+{
+    VideoParam configParam;
+    configParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H265;
+
+    int32_t actual = encoder->InitVideoEncoder(configParam);
+    EXPECT_EQ(DH_SUCCESS, actual);
+}
+
+/**
+ * @tc.name: InitVideoEncoder_004
+ * @tc.desc: Verify the InitVideoEncoder function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSourceEncoderTest, InitVideoEncoder_004, TestSize.Level1)
+{
+    VideoParam configParam;
+    configParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
+
+    int32_t actual = encoder->InitVideoEncoder(configParam);
+    EXPECT_EQ(DH_SUCCESS, actual);
+}
+
+/**
  * @tc.name: SetEncoderFormat_001
  * @tc.desc: Verify the SetEncoderFormat function.
  * @tc.type: FUNC
@@ -179,9 +225,6 @@ HWTEST_F(ImageSourceEncoderTest, InitVideoEncoder_002, TestSize.Level1)
 HWTEST_F(ImageSourceEncoderTest, SetEncoderFormat_001, TestSize.Level1)
 {
     VideoParam configParam;
-    configParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
-    configParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
-
     int32_t actual = encoder->SetEncoderFormat(configParam);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, actual);
 }
@@ -195,10 +238,96 @@ HWTEST_F(ImageSourceEncoderTest, SetEncoderFormat_001, TestSize.Level1)
 HWTEST_F(ImageSourceEncoderTest, SetEncoderFormat_002, TestSize.Level1)
 {
     VideoParam configParam;
+    configParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    int32_t actual = encoder->InitVideoEncoder(configParam);
     configParam.codecType_ = -1;
-
-    int32_t actual = encoder->SetEncoderFormat(configParam);
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, actual);
+    actual = encoder->SetEncoderFormat(configParam);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
 }
+
+/**
+ * @tc.name: SetEncoderFormat_003
+ * @tc.desc: Verify the SetEncoderFormat function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSourceEncoderTest, SetEncoderFormat_003, TestSize.Level1)
+{
+    VideoParam configParam;
+    configParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    configParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    int32_t actual = encoder->InitVideoEncoder(configParam);
+    actual = encoder->SetEncoderFormat(configParam);
+
+    EXPECT_EQ(DH_SUCCESS, actual);
+}
+
+/**
+ * @tc.name: SetEncoderFormat_004
+ * @tc.desc: Verify the SetEncoderFormat function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSourceEncoderTest, SetEncoderFormat_004, TestSize.Level1)
+{
+    VideoParam configParam;
+    configParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H265;
+    configParam.videoFormat_ = VIDEO_DATA_FORMAT_NV12;
+    int32_t actual = encoder->InitVideoEncoder(configParam);
+    actual = encoder->SetEncoderFormat(configParam);
+
+    EXPECT_EQ(DH_SUCCESS, actual);
+}
+
+/**
+ * @tc.name: SetEncoderFormat_005
+ * @tc.desc: Verify the SetEncoderFormat function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSourceEncoderTest, SetEncoderFormat_005, TestSize.Level1)
+{
+    VideoParam configParam;
+    configParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
+    configParam.videoFormat_ = VIDEO_DATA_FORMAT_NV21;
+    int32_t actual = encoder->InitVideoEncoder(configParam);
+    actual = encoder->SetEncoderFormat(configParam);
+
+    EXPECT_EQ(DH_SUCCESS, actual);
+}
+
+/**
+ * @tc.name: SetEncoderFormat_006
+ * @tc.desc: Verify the SetEncoderFormat function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSourceEncoderTest, SetEncoderFormat_006, TestSize.Level1)
+{
+    VideoParam configParam;
+    configParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
+    configParam.videoFormat_ = VIDEO_DATA_FORMAT_RGBA8888;
+    int32_t actual = encoder->InitVideoEncoder(configParam);
+    actual = encoder->SetEncoderFormat(configParam);
+
+    EXPECT_EQ(DH_SUCCESS, actual);
+}
+
+/**
+ * @tc.name: SetEncoderFormat_007
+ * @tc.desc: Verify the SetEncoderFormat function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSourceEncoderTest, SetEncoderFormat_007, TestSize.Level1)
+{
+    VideoParam configParam;
+    configParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
+    configParam.videoFormat_ = -1;
+    int32_t actual = encoder->InitVideoEncoder(configParam);
+    actual = encoder->SetEncoderFormat(configParam);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
+}
+
 } // DistributedHardware
 } // OHOS
