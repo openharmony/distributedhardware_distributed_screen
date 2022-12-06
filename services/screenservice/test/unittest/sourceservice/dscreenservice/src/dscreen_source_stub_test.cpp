@@ -130,7 +130,9 @@ HWTEST_F(DScreenSourceStubTest, RegisterDistributedHardware_001, TestSize.Level1
     DScreenSourceProxy sourceProxy(sourceStubPtr);
     std::string devId = "devId000";
     std::string dhId = "dhId000";
-    std::string param = "param000";
+    EnableParam param;
+    param.version = "1";
+    param.attrs = "attrs";
     std::string reqId = "reqId000";
     int32_t ret = sourceProxy.RegisterDistributedHardware(devId, dhId, param, reqId);
     EXPECT_EQ(DH_SUCCESS, ret);
