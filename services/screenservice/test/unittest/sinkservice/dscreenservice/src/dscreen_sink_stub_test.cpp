@@ -66,9 +66,9 @@ int32_t DScreenSinkStubTest::TestDScreenSinkStub::UnsubscribeLocalHardware(const
 void DScreenSinkStubTest::TestDScreenSinkStub::DScreenNotify(const std::string &devId, int32_t eventCode,
     const std::string &eventContent)
 {
-        devId_ = devId;
-        eventCode_ = eventCode;
-        eventContent_ = eventContent;
+    devId_ = devId;
+    eventCode_ = eventCode;
+    eventContent_ = eventContent;
 }
 
 /**
