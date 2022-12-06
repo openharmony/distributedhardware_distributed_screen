@@ -24,6 +24,7 @@ config("module_private_config") {
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
     "${common_path}/include",
+    "${fwk_common_path}/utils/include",
     "${services_path}/screenservice/sourceservice/dscreenservice/include",
     "${services_path}/screenservice/sourceservice/dscreenservice/include/callback",
   ]
@@ -33,15 +34,13 @@ config("module_private_config") {
 ohos_unittest("DScreenSourceStubTest") {
   module_out_path = module_out_path
 
-  sources = [
-    "${services_path}/screenservice/test/unittest/sourceservice/dscreenservice/src/dscreen_source_stub_test.cpp",
-  ]
+  sources = [ "${services_path}/screenservice/test/unittest/sourceservice/dscreenservice/src/dscreen_source_stub_test.cpp" ]
 
   configs = [ ":module_private_config" ]
 
   deps = [
-    "${services_path}/screenservice/sourceservice:distributed_screen_source",
     "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
+    "${services_path}/screenservice/sourceservice:distributed_screen_source",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]

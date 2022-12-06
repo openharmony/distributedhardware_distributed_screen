@@ -32,15 +32,13 @@ config("module_private_config") {
 ohos_unittest("DScreenSinkStubTest") {
   module_out_path = module_out_path
 
-  sources = [
-    "${services_path}/screenservice/test/unittest/sinkservice/dscreenservice/src/dscreen_sink_stub_test.cpp",
-  ]
+  sources = [ "${services_path}/screenservice/test/unittest/sinkservice/dscreenservice/src/dscreen_sink_stub_test.cpp" ]
 
   configs = [ ":module_private_config" ]
 
   deps = [
-    "${services_path}/screenservice/sinkservice:distributed_screen_sink",
     "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
+    "${services_path}/screenservice/sinkservice:distributed_screen_sink",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
