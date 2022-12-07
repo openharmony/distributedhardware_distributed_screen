@@ -68,7 +68,7 @@ HWTEST_F(ScreenClientWindowAdapterTest, CreateWindow_002, TestSize.Level1)
  */
 HWTEST_F(ScreenClientWindowAdapterTest, ShowWindow_001, TestSize.Level1)
 {
-    int32_t windowId = 0;
+    int32_t windowId = 100;
     int32_t actual = ScreenClientWindowAdapter::GetInstance().ShowWindow(windowId);
     EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR, actual);
 }
@@ -82,13 +82,28 @@ HWTEST_F(ScreenClientWindowAdapterTest, ShowWindow_001, TestSize.Level1)
 HWTEST_F(ScreenClientWindowAdapterTest, ShowWindow_002, TestSize.Level1)
 {
     std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
-    int32_t windowId = 0;
+    int32_t windowId = 100;
     ScreenClientWindowAdapter::GetInstance().CreateWindow(windowProperty, windowId);
     int32_t actual = ScreenClientWindowAdapter::GetInstance().ShowWindow(windowId);
     EXPECT_EQ(DH_SUCCESS, actual);
     ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
 }
 
+/**
+ * @tc.name: ShowWindow_003
+ * @tc.desc: Verify the ShowWindow function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenClientWindowAdapterTest, ShowWindow_003, TestSize.Level1)
+{
+    int32_t windowId = 0;
+    sptr<Rosen::Window> window = nullptr;
+    ScreenClientWindowAdapter::GetInstance().windowIdMap_.emplace(windowId, window);
+    int32_t actual = ScreenClientWindowAdapter::GetInstance().ShowWindow(windowId);
+    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR, actual);
+    ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
+}
 /**
  * @tc.name: HideWindow_001
  * @tc.desc: Verify the HideWindow function.
@@ -115,6 +130,22 @@ HWTEST_F(ScreenClientWindowAdapterTest, HideWindow_002, TestSize.Level1)
     ScreenClientWindowAdapter::GetInstance().CreateWindow(windowProperty, windowId);
     int32_t actual = ScreenClientWindowAdapter::GetInstance().HideWindow(windowId);
     EXPECT_EQ(DH_SUCCESS, actual);
+    ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
+}
+
+/**
+ * @tc.name: HideWindow_003
+ * @tc.desc: Verify the HideWindow function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenClientWindowAdapterTest, HideWindow_003, TestSize.Level1)
+{
+    int32_t windowId = 0;
+    sptr<Rosen::Window> window = nullptr;
+    ScreenClientWindowAdapter::GetInstance().windowIdMap_.emplace(windowId, window);
+    int32_t actual = ScreenClientWindowAdapter::GetInstance().HideWindow(windowId);
+    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR, actual);
     ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
 }
 
@@ -152,6 +183,24 @@ HWTEST_F(ScreenClientWindowAdapterTest, MoveWindow_002, TestSize.Level1)
 }
 
 /**
+ * @tc.name: MoveWindow_003
+ * @tc.desc: Verify the MoveWindow function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenClientWindowAdapterTest, MoveWindow_003, TestSize.Level1)
+{
+    int32_t windowId = 0;
+    int32_t startX = 0;
+    int32_t startY = 0;
+    sptr<Rosen::Window> window = nullptr;
+    ScreenClientWindowAdapter::GetInstance().windowIdMap_.emplace(windowId, window);
+    int32_t actual = ScreenClientWindowAdapter::GetInstance().MoveWindow(windowId, startX, startY);
+    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_MOVE_WINDOW_ERROR, actual);
+    ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
+}
+
+/**
  * @tc.name: RemoveWindow_001
  * @tc.desc: Verify the RemoveWindow function.
  * @tc.type: FUNC
@@ -176,6 +225,36 @@ HWTEST_F(ScreenClientWindowAdapterTest, RemoveWindow_002, TestSize.Level1)
     int32_t windowId = 0;
     ScreenClientWindowAdapter::GetInstance().CreateWindow(windowProperty, windowId);
     int32_t actual = ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
+    EXPECT_EQ(DH_SUCCESS, actual);
+}
+
+/**
+ * @tc.name: RemoveWindow_003
+ * @tc.desc: Verify the RemoveWindow function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenClientWindowAdapterTest, RemoveWindow_003, TestSize.Level1)
+{
+    int32_t windowId = 0;
+    sptr<Rosen::Window> window = nullptr;
+    ScreenClientWindowAdapter::GetInstance().windowIdMap_.emplace(windowId, window);
+    int32_t actual = ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
+    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR, actual);
+}
+
+/**
+ * @tc.name: DestroyAllWindow_001
+ * @tc.desc: Verify the DestroyAllWindow function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenClientWindowAdapterTest, DestroyAllWindow_001, TestSize.Level1)
+{
+    int32_t windowId = 0;
+    sptr<Rosen::Window> window = nullptr;
+    ScreenClientWindowAdapter::GetInstance().windowIdMap_.emplace(windowId, window);
+    int32_t actual = ScreenClientWindowAdapter::GetInstance().DestroyAllWindow();
     EXPECT_EQ(DH_SUCCESS, actual);
 }
 } // DistributedHardware
