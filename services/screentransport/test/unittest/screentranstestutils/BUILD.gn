@@ -15,57 +15,68 @@ import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
 
-module_out_path = "distributed_screen/soft_bus_adapter_test"
+module_out_path = "distributed_screen/screen_callback_test"
 
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "//third_party/json/include",
+    "${fwk_common_path}/log/include",
     "${fwk_common_path}/utils/include",
     "${fwk_utils_path}/include/",
+    "${fwk_utils_path}/include/log",
   ]
 
   include_dirs += [
     "./include",
+    "${services_path}/screentransport/test/unittest/screentranstestutils/include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",
     "${services_path}/common/screen_channel/include",
     "${services_path}/common/utils/include",
+    "${services_path}/screentransport/screensinktrans/include",
+    "${services_path}/screentransport/screensinkprocessor/include",
     "${services_path}/screentransport/test/unittest/screensourcetrans/include",
     "${services_path}/screentransport/screensourcetrans/include",
     "${services_path}/screentransport/screendatachannel/include",
     "${services_path}/screentransport/screensourceprocessor/include",
     "${services_path}/screentransport/screensourceprocessor/encoder/include",
+    "${services_path}/screentransport/screensinkprocessor/include",
+    "${services_path}/screentransport/screensinkprocessor/decoder/include",
     "${services_path}/softbusadapter/include",
-    "//foundation/communication/dsoftbus/interfaces/kits/bus_center",
-    "//foundation/communication/dsoftbus/interfaces/kits/common",
+    "//drivers/peripheral/display/interfaces/include",
+    "//drivers/peripheral/base",
+    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
+    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
+    "//foundation/multimedia/player_framework/interfaces/inner_api/native",
     "//foundation/communication/dsoftbus/interfaces/kits/transport",
   ]
 }
 
-## UnitTest screen_soft_bus_adapter_test
-ohos_unittest("SoftBusAdapterTest") {
+## UnitTest screen_callback_test
+ohos_unittest("ScreenCallbackTest") {
   module_out_path = module_out_path
 
-  sources = [ "${services_path}/softbusadapter/test/unittest/src/softbus_adapter_test.cpp" ]
+  sources = [ "${services_path}/screentransport/test/unittest/screentranstestutils/src/screen_callback_test.cpp" ]
 
   configs = [ ":module_private_config" ]
 
   deps = [
+    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
-    "access_token:libaccesstoken_sdk",
-    "access_token:libnativetoken",
-    "access_token:libtoken_setproc",
     "c_utils:utils",
+    "multimedia_player_framework:media_client",
   ]
 }
 
-group("soft_bus_adapter_test") {
+group("screen_callback_test") {
   testonly = true
-  deps = [ ":SoftBusAdapterTest" ]
+  deps = [ ":ScreenCallbackTest" ]
 }
