@@ -37,7 +37,7 @@ ohos_unittest("DScreenSourceStubTest") {
 
   sources = [
     "${services_path}/screenservice/test/unittest/sourceservice/dscreenservice/src/callback/dscreen_source_callback_stub_test.cpp",
-    "${services_path}/screenservice/test/unittest/sourceservice/dscreenservice/src/dscreen_source_stub_test.cpp"
+    "${services_path}/screenservice/test/unittest/sourceservice/dscreenservice/src/dscreen_source_stub_test.cpp",
   ]
 
   configs = [ ":module_private_config" ]
