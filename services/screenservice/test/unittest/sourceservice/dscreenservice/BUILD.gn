@@ -21,6 +21,7 @@ config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "./include",
+    "./include/callback",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
     "${common_path}/include",
@@ -35,8 +36,8 @@ ohos_unittest("DScreenSourceStubTest") {
   module_out_path = module_out_path
 
   sources = [
-    "${services_path}/screenservice/test/unittest/sourceservice/dscreenservice/src/dscreen_source_callback_stub_test.cpp",
-    "${services_path}/screenservice/test/unittest/sourceservice/dscreenservice/src/dscreen_source_stub_test.cpp"
+    "${services_path}/screenservice/test/unittest/sourceservice/dscreenservice/src/dscreen_source_stub_test.cpp",
+    "${services_path}/screenservice/test/unittest/sourceservice/dscreenservice/src/callback/dscreen_source_callback_stub_test.cpp"
   ]
 
   configs = [ ":module_private_config" ]
