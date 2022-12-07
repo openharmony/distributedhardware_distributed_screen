@@ -61,16 +61,6 @@ HWTEST_F(ScreenClientWindowAdapterTest, CreateWindow_002, TestSize.Level1)
 }
 
 /**
- * @tc.name: CreateWindow_003
- * @tc.desc: Verify the CreateWindow function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ScreenClientWindowAdapterTest, CreateWindow_003, TestSize.Level1)
-{
-    
-}
-/**
  * @tc.name: ShowWindow_001
  * @tc.desc: Verify the ShowWindow function.
  * @tc.type: FUNC
@@ -112,7 +102,7 @@ HWTEST_F(ScreenClientWindowAdapterTest, ShowWindow_003, TestSize.Level1)
     ScreenClientWindowAdapter::GetInstance().windowIdMap_.emplace(windowId, window);
     int32_t actual = ScreenClientWindowAdapter::GetInstance().ShowWindow(windowId);
     EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR, actual);
-    creenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
+    ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
 }
 /**
  * @tc.name: HideWindow_001
@@ -155,8 +145,8 @@ HWTEST_F(ScreenClientWindowAdapterTest, HideWindow_003, TestSize.Level1)
     sptr<Rosen::Window> window = nullptr;
     ScreenClientWindowAdapter::GetInstance().windowIdMap_.emplace(windowId, window);
     int32_t actual = ScreenClientWindowAdapter::GetInstance().HideWindow(windowId);
-    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR, actual);
-    creenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
+    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR, actual);
+    ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
 }
 
 /**
@@ -205,9 +195,9 @@ HWTEST_F(ScreenClientWindowAdapterTest, MoveWindow_003, TestSize.Level1)
     int32_t startY = 0;
     sptr<Rosen::Window> window = nullptr;
     ScreenClientWindowAdapter::GetInstance().windowIdMap_.emplace(windowId, window);
-    int32_t actual = ScreenClientWindowAdapter::GetInstance().MoveWindow(windowId, startX, startX);
-    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR, actual);
-    creenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
+    int32_t actual = ScreenClientWindowAdapter::GetInstance().MoveWindow(windowId, startX, startY);
+    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_MOVE_WINDOW_ERROR, actual);
+    ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
 }
 
 /**
@@ -250,7 +240,7 @@ HWTEST_F(ScreenClientWindowAdapterTest, RemoveWindow_003, TestSize.Level1)
     sptr<Rosen::Window> window = nullptr;
     ScreenClientWindowAdapter::GetInstance().windowIdMap_.emplace(windowId, window);
     int32_t actual = ScreenClientWindowAdapter::GetInstance().RemoveWindow(windowId);
-    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR, actual);
+    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR, actual);
 }
 
 /**

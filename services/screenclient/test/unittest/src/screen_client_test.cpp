@@ -111,7 +111,7 @@ HWTEST_F(ScreenClientTest, HideWindow_001, TestSize.Level1)
 {
     int32_t windowId = 0;
     int32_t actual = ScreenClient::GetInstance().HideWindow(windowId);
-    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR, actual);
+    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR, actual);
 }
 
 /**
@@ -141,7 +141,7 @@ HWTEST_F(ScreenClientTest, HideWindow_003, TestSize.Level1)
     sptr<Surface> surface = nullptr;
     ScreenClient::GetInstance().surfaceMap_.emplace(windowId, surface);
     int32_t actual = ScreenClient::GetInstance().HideWindow(windowId);
-    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR, actual);
+    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR, actual);
     ScreenClient::GetInstance().RemoveWindow(windowId);
 }
 
