@@ -49,6 +49,35 @@ HWTEST_F(ScreenSourceTransTest, SetUp_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: SetUp_002
+ * @tc.desc: Verify the SetUp function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, SetUp_002, TestSize.Level1)
+{
+    VideoParam localParam;
+    localParam.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
+    localParam.SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
+    localParam.SetVideoHeight(100);
+    localParam.SetVideoWidth(100);
+    localParam.SetScreenHeight(100);
+    localParam.SetScreenWidth(100);
+    VideoParam remoteParam;
+    remoteParam.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
+    remoteParam.SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
+    remoteParam.SetVideoHeight(100);
+    remoteParam.SetVideoWidth(100);
+    remoteParam.SetScreenHeight(100);
+    remoteParam.SetScreenWidth(100);
+    std::string peerDevId = "peerDevId";
+
+    int32_t actual = trans->SetUp(localParam, remoteParam, peerDevId);
+
+    EXPECT_EQ(-1, actual);
+}
+
+/**
  * @tc.name: InitScreenTrans_001
  * @tc.desc: Verify the InitScreenTrans function.
  * @tc.type: FUNC
@@ -399,6 +428,21 @@ HWTEST_F(ScreenSourceTransTest, OnSessionOpened_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: OnSessionOpened_002
+ * @tc.desc: Verify the OnSessionOpened function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, OnSessionOpened_002, TestSize.Level1)
+{
+    trans->imageProcessor_ = nullptr;
+
+    trans->OnSessionOpened();
+
+    EXPECT_EQ(false, trans->isChannelReady_);
+}
+
+/**
  * @tc.name: OnSessionClosed_001
  * @tc.desc: Verify the OnSessionClosed function.
  * @tc.type: FUNC
@@ -422,7 +466,25 @@ HWTEST_F(ScreenSourceTransTest, OnSessionClosed_001, TestSize.Level1)
 HWTEST_F(ScreenSourceTransTest, OnImageProcessDone_001, TestSize.Level1)
 {
     std::shared_ptr<DataBuffer> data = nullptr;
-    int32_t queueSize = trans->dataQueue_.size();
+    uint32_t queueSize = trans->dataQueue_.size();
+    trans->OnImageProcessDone(data);
+
+    EXPECT_NE(queueSize, trans->dataQueue_.size());
+}
+
+/**
+ * @tc.name: OnImageProcessDone_002
+ * @tc.desc: Verify the OnImageProcessDone function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, OnImageProcessDone_002, TestSize.Level1)
+{
+    std::shared_ptr<DataBuffer> data = nullptr;
+    uint32_t queueSize = trans->dataQueue_.size();
+    for (uint32_t i = 0; i < ScreenSourceTrans::DATA_QUEUE_MAX_SIZE + 1; i++) {
+        trans->dataQueue_.push(data);
+    }
     trans->OnImageProcessDone(data);
 
     EXPECT_NE(queueSize, trans->dataQueue_.size());
