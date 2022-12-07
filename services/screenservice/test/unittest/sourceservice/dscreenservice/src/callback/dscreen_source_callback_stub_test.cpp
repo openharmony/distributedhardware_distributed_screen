@@ -108,7 +108,7 @@ HWTEST_F(DScreenSourceCallbackStubTest, OnNotifyRegResult_001, TestSize.Level1)
 HWTEST_F(DScreenSourceCallbackStubTest, OnNotifyUnregResult_001, TestSize.Level1)
 {
     sptr<IRemoteObject> sourceCbkStubPtr = new TestDScreenSourceCallbackStub();
-    DScreenSourceCallbackProxy sourceProxy(sourceCbkStubPtr);
+    DScreenSourceCallbackProxy sourceCbkProxy(sourceCbkStubPtr);
 
     int32_t ret = sourceCbkProxy.OnNotifyUnregResult("", "dhId000", "reqId000", 0, "data000");
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);

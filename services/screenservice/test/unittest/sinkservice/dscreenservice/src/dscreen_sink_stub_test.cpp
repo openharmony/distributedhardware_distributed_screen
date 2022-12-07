@@ -170,12 +170,15 @@ HWTEST_F(DScreenSinkStubTest, DScreenNotify_001, TestSize.Level1)
 
     sinkProxy.DScreenNotify("devId000", 0, "");
 
-    std::string devId = R"(dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dh
-        Id000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
-        hId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000)";
-    sinkProxy.DScreenNotify(devId, 0, "eventContent000");
+    std::string longString = R"(dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId00
+        Id000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d0dh
+        hId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId0000dh)";
+    sinkProxy.DScreenNotify(longString, 0, "eventContent000");
 
-    sinkProxy.DScreenNotify("devId000", 0, "eventContent000");
+    std::string devId = "devId000";
+    int32_t eventCode = 0;
+    std::string eventContent = "eventContent000";
+    sinkProxy.DScreenNotify(devId, eventCode, eventContent);
     EXPECT_STREQ(devId.c_str(), ((sptr<TestDScreenSinkStub> &)sinkStubPtr)->devId_.c_str());
     EXPECT_EQ(eventCode, ((sptr<TestDScreenSinkStub> &)sinkStubPtr)->eventCode_);
     EXPECT_STREQ(eventContent.c_str(), ((sptr<TestDScreenSinkStub> &)sinkStubPtr)->eventContent_.c_str());
