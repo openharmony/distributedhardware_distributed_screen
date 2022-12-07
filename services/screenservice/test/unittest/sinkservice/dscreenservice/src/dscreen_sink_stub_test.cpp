@@ -81,9 +81,12 @@ HWTEST_F(DScreenSinkStubTest, InitSink_001, TestSize.Level1)
 {
     sptr<IRemoteObject> sinkStubPtr = new TestDScreenSinkStub();
     DScreenSinkProxy sinkProxy(sinkStubPtr);
-    std::string params = "params000";
-    int32_t ret = sinkProxy.InitSink(params);
+
+    int32_t ret = sinkProxy.InitSink("params000");
     EXPECT_EQ(DH_SUCCESS, ret);
+    
+    ret = sinkProxy.InitSink("");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 }
 
 /**
@@ -96,6 +99,7 @@ HWTEST_F(DScreenSinkStubTest, ReleaseSink_001, TestSize.Level1)
 {
     sptr<IRemoteObject> sinkStubPtr = new TestDScreenSinkStub();
     DScreenSinkProxy sinkProxy(sinkStubPtr);
+
     int32_t ret = sinkProxy.ReleaseSink();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
@@ -110,10 +114,21 @@ HWTEST_F(DScreenSinkStubTest, SubscribeLocalHardware_001, TestSize.Level1)
 {
     sptr<IRemoteObject> sinkStubPtr = new TestDScreenSinkStub();
     DScreenSinkProxy sinkProxy(sinkStubPtr);
-    std::string dhId = "dhId000";
-    std::string param = "param000";
-    int32_t ret = sinkProxy.SubscribeLocalHardware(dhId, param);
+
+    int32_t ret = sinkProxy.SubscribeLocalHardware("dhId000", "param000");
     EXPECT_EQ(DH_SUCCESS, ret);
+
+    ret = sinkProxy.SubscribeLocalHardware("", "param000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sinkProxy.SubscribeLocalHardware("dhId000", "");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    std::string dhId = R"(dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dh
+        Id000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
+        hId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000)";
+    ret = sinkProxy.SubscribeLocalHardware(dhId, "param000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 }
 
 /**
@@ -126,9 +141,18 @@ HWTEST_F(DScreenSinkStubTest, UnsubscribeLocalHardware_001, TestSize.Level1)
 {
     sptr<IRemoteObject> sinkStubPtr = new TestDScreenSinkStub();
     DScreenSinkProxy sinkProxy(sinkStubPtr);
-    std::string dhId = "dhId000";
-    int32_t ret = sinkProxy.UnsubscribeLocalHardware(dhId);
+
+    int32_t ret = sinkProxy.UnsubscribeLocalHardware("dhId000");
     EXPECT_EQ(DH_SUCCESS, ret);
+
+    ret = sinkProxy.UnsubscribeLocalHardware("");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    std::string dhId = R"(dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dh
+        Id000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
+        hId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000)";
+    ret = sinkProxy.UnsubscribeLocalHardware(dhId);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 }
 
 /**
@@ -141,10 +165,17 @@ HWTEST_F(DScreenSinkStubTest, DScreenNotify_001, TestSize.Level1)
 {
     sptr<IRemoteObject> sinkStubPtr = new TestDScreenSinkStub();
     DScreenSinkProxy sinkProxy(sinkStubPtr);
-    std::string devId = "devId000";
-    int32_t eventCode = 0;
-    std::string eventContent = "eventContent000";
-    sinkProxy.DScreenNotify(devId, eventCode, eventContent);
+
+    sinkProxy.DScreenNotify("", 0, "eventContent000");
+
+    sinkProxy.DScreenNotify("devId000", 0, "");
+
+    std::string devId = R"(dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dh
+        Id000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
+        hId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000)";
+    sinkProxy.DScreenNotify(devId, 0, "eventContent000");
+
+    sinkProxy.DScreenNotify("devId000", 0, "eventContent000");
     EXPECT_STREQ(devId.c_str(), ((sptr<TestDScreenSinkStub> &)sinkStubPtr)->devId_.c_str());
     EXPECT_EQ(eventCode, ((sptr<TestDScreenSinkStub> &)sinkStubPtr)->eventCode_);
     EXPECT_STREQ(eventContent.c_str(), ((sptr<TestDScreenSinkStub> &)sinkStubPtr)->eventContent_.c_str());
