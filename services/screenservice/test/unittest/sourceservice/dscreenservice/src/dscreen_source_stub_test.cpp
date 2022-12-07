@@ -98,9 +98,16 @@ HWTEST_F(DScreenSourceStubTest, InitSource_001, TestSize.Level1)
 {
     sptr<IRemoteObject> sourceStubPtr = new TestDScreenSourceStub();
     DScreenSourceProxy sourceProxy(sourceStubPtr);
-    std::string params = "params000";
-    sptr<DScreenSourceCallback> callback = new DScreenSourceCallback();
-    int32_t ret = sourceProxy.InitSource(params, callback);
+
+    sptr<DScreenSourceCallback> callback;
+    int32_t ret = sourceProxy.InitSource("", callback);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.InitSource("params000", callback);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    callback = new DScreenSourceCallback();
+    ret = sourceProxy.InitSource("params000", callback);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
@@ -128,13 +135,40 @@ HWTEST_F(DScreenSourceStubTest, RegisterDistributedHardware_001, TestSize.Level1
 {
     sptr<IRemoteObject> sourceStubPtr = new TestDScreenSourceStub();
     DScreenSourceProxy sourceProxy(sourceStubPtr);
-    std::string devId = "devId000";
-    std::string dhId = "dhId000";
+
     EnableParam param;
+    param.version = "";
+    param.attrs = "";
+    int32_t ret = sourceProxy.RegisterDistributedHardware("", "dhId000", param, "reqId000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    std::string devId = R"(dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
+        Id000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
+        hId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000)";
+    ret = sourceProxy.RegisterDistributedHardware(devId, "dhId000", param, "reqId000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.RegisterDistributedHardware("devId000", "", param, "reqId000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.RegisterDistributedHardware("devId000", devId, param, "reqId000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.RegisterDistributedHardware("devId000", "dhId000", param, "");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.RegisterDistributedHardware("devId000", "dhId000", param, devId);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.RegisterDistributedHardware("devId000", "dhId000", param, "reqId000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
     param.version = "1";
+    ret = sourceProxy.RegisterDistributedHardware("devId000", "dhId000", param, "reqId000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
     param.attrs = "attrs";
-    std::string reqId = "reqId000";
-    int32_t ret = sourceProxy.RegisterDistributedHardware(devId, dhId, param, reqId);
+    ret = sourceProxy.RegisterDistributedHardware("devId000", "dhId000", param, "reqId000");
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
@@ -148,10 +182,29 @@ HWTEST_F(DScreenSourceStubTest, UnregisterDistributedHardware_001, TestSize.Leve
 {
     sptr<IRemoteObject> sourceStubPtr = new TestDScreenSourceStub();
     DScreenSourceProxy sourceProxy(sourceStubPtr);
-    std::string devId = "devId000";
-    std::string dhId = "dhId000";
-    std::string reqId = "reqId000";
-    int32_t ret = sourceProxy.UnregisterDistributedHardware(devId, dhId, reqId);
+
+    int32_t ret = sourceProxy.UnregisterDistributedHardware("", "dhId000", "reqId000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    std::string devId = R"(dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
+        Id000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
+        hId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000)";
+    ret = sourceProxy.UnregisterDistributedHardware(devId, "dhId000", "reqId000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.UnregisterDistributedHardware("devId000", "", "reqId000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.UnregisterDistributedHardware("devId000", devId, "reqId000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.UnregisterDistributedHardware("devId000", "dhId000", "");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.UnregisterDistributedHardware("devId000", "dhId000", devId);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.UnregisterDistributedHardware("devId000", "dhId000", "reqId000");
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
@@ -165,11 +218,29 @@ HWTEST_F(DScreenSourceStubTest, ConfigDistributedHardware_001, TestSize.Level1)
 {
     sptr<IRemoteObject> sourceStubPtr = new TestDScreenSourceStub();
     DScreenSourceProxy sourceProxy(sourceStubPtr);
-    std::string devId = "devId000";
-    std::string dhId = "dhId000";
-    std::string key = "key000";
-    std::string value = "value000";
-    int32_t ret = sourceProxy.ConfigDistributedHardware(devId, dhId, key, value);
+
+    int32_t ret = sourceProxy.ConfigDistributedHardware("", "dhId000", "key000", "value000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    std::string devId = R"(dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
+        Id000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
+        hId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000)";
+    ret = sourceProxy.ConfigDistributedHardware(devId, "dhId000", "key000", "value000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.ConfigDistributedHardware("devId000", "", "key000", "value000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.ConfigDistributedHardware("devId000", devId, "key000", "value000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.ConfigDistributedHardware("devId000", "dhId000", "", "value000");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.ConfigDistributedHardware("devId000", "dhId000", "key000", "");
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    ret = sourceProxy.ConfigDistributedHardware("devId000", "dhId000", "key000", "value000");
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
@@ -183,10 +254,17 @@ HWTEST_F(DScreenSourceStubTest, DScreenNotify_001, TestSize.Level1)
 {
     sptr<IRemoteObject> sourceStubPtr = new TestDScreenSourceStub();
     DScreenSourceProxy sourceProxy(sourceStubPtr);
-    std::string devId = "devId000";
-    int32_t eventCode = 0;
-    std::string eventContent = "eventContent000";
-    sourceProxy.DScreenNotify(devId, eventCode, eventContent);
+
+    sourceProxy.DScreenNotify("", 0, "eventContent000");
+
+    std::string devId = R"(dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
+        Id000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
+        hId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000)";
+    sourceProxy.DScreenNotify(devId, 0, "eventContent000");
+
+    sourceProxy.DScreenNotify("devId000", 0, "");
+
+    sourceProxy.DScreenNotify("devId000", 0, "eventContent000");
     EXPECT_STREQ(devId.c_str(), ((sptr<TestDScreenSourceStub> &)sourceStubPtr)->devId_.c_str());
     EXPECT_EQ(eventCode, ((sptr<TestDScreenSourceStub> &)sourceStubPtr)->eventCode_);
     EXPECT_STREQ(eventContent.c_str(), ((sptr<TestDScreenSourceStub> &)sourceStubPtr)->eventContent_.c_str());
