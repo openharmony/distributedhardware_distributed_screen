@@ -14,6 +14,7 @@
  */
 
 #define private public
+#include "dscreen_sink_load_callback.h"
 #include "dscreen_sink_handler_test.h"
 #undef private
 
@@ -75,6 +76,9 @@ HWTEST_F(DScreenSinkHandlerTest, LocalHardware_001, TestSize.Level1)
 {
     const std::string dhId = "DScreenSinkHandlerTest";
     const std::string param = "DScreenSinkHandlerTest";
+    sptr<DScreenSinkLoadCallback> loadCallback = new DScreenSinkLoadCallback(param);
+    loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, nullptr);
+    loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, nullptr);
     int32_t ret = DScreenSinkHandler::GetInstance().SubscribeLocalHardware(dhId, param);
     EXPECT_EQ(DH_SUCCESS, ret);
 

@@ -84,7 +84,25 @@ HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_001, TestSize.Level1)
     std::string pkgname = PKG_NAME;
     std::string sessionName = DATA_SESSION_NAME;
     std::string peerDevId = "peerDevId";
-
+    int32_t sessionId = 0;
+    void *data = nullptr;
+    uint32_t dataLen = 0;
+    StreamData sData;
+    sData.bufLen = 0;
+    sData.buf = reinterpret_cast<char*>(&dataLen);
+    StreamData *streamData = nullptr;
+    StreamData *ext = nullptr;
+    StreamFrameInfo *frameInfo = nullptr;
+    softbusAdapter.OnBytesReceived(sessionId, data, dataLen);
+    softbusAdapter.OnStreamReceived(sessionId, streamData, ext, frameInfo);
+    data = reinterpret_cast<void*>(&dataLen);
+    streamData = &sData;
+    softbusAdapter.OnBytesReceived(sessionId, data, dataLen);
+    softbusAdapter.OnStreamReceived(sessionId, streamData, ext, frameInfo);
+    dataLen = 100;
+    sData.bufLen = 100;
+    softbusAdapter.OnBytesReceived(sessionId, data, dataLen);
+    softbusAdapter.OnStreamReceived(sessionId, streamData, ext, frameInfo);
     int32_t actual = softbusAdapter.CreateSoftbusSessionServer(pkgname, sessionName, peerDevId);
     EXPECT_EQ(DH_SUCCESS, actual);
     softbusAdapter.RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
