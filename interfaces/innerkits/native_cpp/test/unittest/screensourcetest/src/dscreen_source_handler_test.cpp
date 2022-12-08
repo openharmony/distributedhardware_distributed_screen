@@ -16,6 +16,7 @@
 #define private public
 #include "dscreen_source_handler_test.h"
 #include "if_system_ability_manager.h"
+#include "dscreen_source_load_callback.h"
 #include "iservice_registry.h"
 #include "dscreen_constants.h"
 #undef private
@@ -82,6 +83,9 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_001, TestSize.Lev
     EnableParam param;
     param.version = "1";
     param.attrs = "attrs";
+    std::string callbackParam = "callbackParam";
+    sptr<DScreenSourceLoadCallback> loadCallback = new DScreenSourceLoadCallback(callbackParam);
+    loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, nullptr);
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -100,6 +104,9 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_002, TestSize.Lev
     EnableParam param;
     param.version = "1";
     param.attrs = "attrs";
+    std::string callbackParam = "callbackParam";
+    sptr<DScreenSourceLoadCallback> loadCallback = new DScreenSourceLoadCallback(callbackParam);
+    loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, nullptr);
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = nullptr;
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);

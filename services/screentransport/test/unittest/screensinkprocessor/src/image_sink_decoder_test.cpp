@@ -71,6 +71,18 @@ HWTEST_F(ImageSinkDecoderTest, configure_decoder_test_002, TestSize.Level1)
 }
 
 /**
+ * @tc.name: configure_decoder_test_003
+ * @tc.desc: Verify the ConfigureDecoder function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, configure_decoder_test_003, TestSize.Level1)
+{
+    param_.videoFormat_ = VIDEO_CODEC_TYPE_INVALID;
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_OPERATION, imageDecoder_->ConfigureDecoder(param_));
+}
+
+/**
  * @tc.name: release_decoder_test_001
  * @tc.desc: Verify the ReleaseDecoder function.
  * @tc.type: FUNC
@@ -164,6 +176,18 @@ HWTEST_F(ImageSinkDecoderTest, init_video_decoder_test_003, TestSize.Level1)
 }
 
 /**
+ * @tc.name: init_video_decoder_test_004
+ * @tc.desc: Verify the InitVideoDecoder function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, init_video_decoder_test_004, TestSize.Level1)
+{
+    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
+    EXPECT_EQ(DH_SUCCESS, imageDecoder_->InitVideoDecoder(param_));
+}
+
+/**
  * @tc.name: set_decoder_format_test_001
  * @tc.desc: Verify the SetDecoderFormat function.
  * @tc.type: FUNC
@@ -182,8 +206,9 @@ HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_001, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_002, TestSize.Level1)
 {
-    imageDecoder_->videoDecoder_ = nullptr;
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->SetDecoderFormat(param_));
+    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H265;
+    param_.videoFormat_ = VIDEO_DATA_FORMAT_NV12;
+    EXPECT_EQ(DH_SUCCESS, imageDecoder_->SetDecoderFormat(param_));
 }
 
 /**
@@ -194,8 +219,59 @@ HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_002, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_003, TestSize.Level1)
 {
+    imageDecoder_->videoDecoder_ = nullptr;
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->SetDecoderFormat(param_));
+}
+
+/**
+ * @tc.name: set_decoder_format_test_004
+ * @tc.desc: Verify the SetDecoderFormat function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_004, TestSize.Level1)
+{
     param_.codecType_ = VIDEO_CODEC_TYPE_INVALID;
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_OPERATION, imageDecoder_->SetDecoderFormat(param_));
+}
+
+/**
+ * @tc.name: set_decoder_format_test_005
+ * @tc.desc: Verify the SetDecoderFormat function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_005, TestSize.Level1)
+{
+    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H265;
+    param_.videoFormat_ = VIDEO_CODEC_TYPE_INVALID;
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_OPERATION, imageDecoder_->SetDecoderFormat(param_));
+}
+
+/**
+ * @tc.name: set_decoder_format_test_006
+ * @tc.desc: Verify the SetDecoderFormat function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_006, TestSize.Level1)
+{
+    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
+    param_.videoFormat_ = VIDEO_DATA_FORMAT_NV21;
+    EXPECT_EQ(DH_SUCCESS, imageDecoder_->SetDecoderFormat(param_));
+}
+
+/**
+ * @tc.name: set_decoder_format_test_007
+ * @tc.desc: Verify the SetDecoderFormat function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_007, TestSize.Level1)
+{
+    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
+    param_.videoFormat_ = VIDEO_DATA_FORMAT_RGBA8888;
+    EXPECT_EQ(DH_SUCCESS, imageDecoder_->SetDecoderFormat(param_));
 }
 
 /**
@@ -301,6 +377,19 @@ HWTEST_F(ImageSinkDecoderTest, on_output_format_changed_test_001, TestSize.Level
     imageDecoder_->OnOutputFormatChanged(format);
 
     EXPECT_EQ(false, imageDecoder_->isDecoderReady_);
+}
+
+/**
+ * @tc.name: ProcessData_001
+ * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, ProcessData_001, TestSize.Level1)
+{
+    std::shared_ptr<DataBuffer> screenData = std::make_shared<DataBuffer>(100);
+    int32_t ret = imageDecoder_->ProcessData(screenData, 0);
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, ret);
 }
 
 /**
