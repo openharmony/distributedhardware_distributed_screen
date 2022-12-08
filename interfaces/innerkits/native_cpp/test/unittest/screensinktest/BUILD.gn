@@ -33,6 +33,7 @@ config("module_private_config") {
     "${services_path}/common/screen_channel/include",
     "${services_path}/common/utils/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
     "${interfaces_path}/innerkits/native_cpp/test/unittest/screensinktest/include",
     "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
     "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy/include",
