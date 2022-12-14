@@ -182,6 +182,7 @@ void DScreen::HandleTask(const std::shared_ptr<Task> &task)
 
 void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
 {
+    DHLOGI("DScreen::HandleEnable, param: %s, taskId: %s", param.c_str(), taskId.c_str());
     if (dscreenCallback_ == nullptr) {
         DHLOGE("DScreen::HandleEnable, dscreenCallback_ is nullptr");
         return;
@@ -289,6 +290,10 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
     }
 
     if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
+        CODEC_NAME_H265) != codecTypeCandidates.end()) {
+        videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H265);
+        videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
+    } else if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
         CODEC_NAME_H264) != codecTypeCandidates.end()) {
         videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
         videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
@@ -388,13 +393,13 @@ int32_t DScreen::SetUp()
         return ret;
     }
 
-    sptr<OHOS::Surface> surface = sourceTrans_->GetImageSurface();
-    if (surface == nullptr) {
+    sptr<OHOS::Surface> windowSurface = sourceTrans_->GetImageSurface();
+    if (windowSurface == nullptr) {
         DHLOGE("DScreen SetUp failed.");
         return ERR_DH_SCREEN_SA_DSCREEN_SETUP_FAILED;
     }
 
-    ScreenMgrAdapter::GetInstance().SetImageSurface(screenId_, surface);
+    ScreenMgrAdapter::GetInstance().SetImageSurface(screenId_, windowSurface);
     DHLOGI("DScreen SetUp success.");
     return DH_SUCCESS;
 }
