@@ -30,6 +30,7 @@ config("module_private_config") {
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "${distributedhardwarefwk_path}/common/utils/include",
     "//foundation/multimodalinput/input/interfaces/native/innerkits/event/include/",
+    "${mediastandard_path}/interfaces/inner_api/native",
   ]
 
   include_dirs += [
@@ -53,6 +54,7 @@ ohos_unittest("DscreenMgrTest") {
   module_out_path = module_out_path
 
   sources = [
+    "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/src/dscreen_manager_test.cpp",
     "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/src/dscreen_test.cpp",
     "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/src/screen_manager_adapter_test.cpp",
   ]
@@ -61,8 +63,10 @@ ohos_unittest("DscreenMgrTest") {
 
   deps = [
     "${distributedscreen_path}/common:distributed_screen_utils",
+    "${mediastandard_path}/interfaces/inner_api/native:media_client",
     "${services_path}/screenservice/sourceservice:distributed_screen_source",
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
+    "${windowmanager_path}/dm:libdm",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
