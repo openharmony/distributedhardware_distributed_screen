@@ -70,7 +70,7 @@ static void DHLogOut(DHLogLevel logLevel, const char *logBuf)
 
 void DHLog(DHLogLevel logLevel, const char *fmt, ...)
 {
-    char logBuf[LOG_MAX_LEN] = {0};
+    char logBuf[DSCREEN_MAX_LEN] = {0};
     va_list arg;
 
     (void)memset_s(&arg, sizeof(va_list), 0, sizeof(va_list));

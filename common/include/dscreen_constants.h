@@ -84,7 +84,7 @@ constexpr uint32_t DSCREEN_MAX_SCREEN_DATA_HEIGHT = 2772;
 
 /* YUV420 buffer size max size */
 constexpr int64_t MAX_YUV420_BUFFER_SIZE = 2560 * 1600 * (3 / 2) * 2;
-constexpr int32_t LOG_MAX_LEN = 4096;
+constexpr int32_t DSCREEN_MAX_LEN = 4096;
 
 constexpr int32_t INVALID_WINDOW_ID = -1;
 
