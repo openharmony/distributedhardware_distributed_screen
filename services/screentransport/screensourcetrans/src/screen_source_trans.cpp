@@ -17,6 +17,7 @@
 
 #include <chrono>
 
+#include "distributed_hardware_errno.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_fwkkit.h"
@@ -106,7 +107,10 @@ int32_t ScreenSourceTrans::Start()
     DHLOGI("%s: Source start enable low latency.", LOG_TAG);
     std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DScreenFwkKit::GetInstance().GetDHFwkKit();
     if (dhFwkKit != nullptr) {
-        dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, ENABLE_LOW_LATENCY.dump());
+        ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, ENABLE_LOW_LATENCY.dump());
+        if (ret != DH_FWK_SUCCESS) {
+            DHLOGE("%s: Source start enable low latency failed ret: %d.", LOG_TAG, ret);
+        }
     }
 
     DHLOGI("%s: Start success.", LOG_TAG);
@@ -132,7 +136,10 @@ int32_t ScreenSourceTrans::Stop()
     DHLOGI("%s: Source stop enable low latency.", LOG_TAG);
     std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DScreenFwkKit::GetInstance().GetDHFwkKit();
     if (dhFwkKit != nullptr) {
-        dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, DISABLE_LOW_LATENCY.dump());
+        ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, DISABLE_LOW_LATENCY.dump());
+        if (ret != DH_FWK_SUCCESS) {
+            DHLOGE("%s: Source stop enable low latency failed ret: %d.", LOG_TAG, ret);
+        }
     }
 
     StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_CLOSE_SESSION_START);
