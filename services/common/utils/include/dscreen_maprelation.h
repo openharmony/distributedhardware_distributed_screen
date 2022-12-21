@@ -25,8 +25,8 @@ namespace DistributedHardware {
 struct ScreenRect {
     int32_t startX;
     int32_t startY;
-    uint16_t width;
-    uint16_t height;
+    uint32_t width;
+    uint32_t height;
 };
 struct DisplayRect {
     int32_t startX;

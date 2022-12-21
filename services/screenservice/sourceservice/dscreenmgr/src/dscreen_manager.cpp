@@ -24,6 +24,7 @@
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_fwkkit.h"
+#include "dscreen_json_util.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 #include "idscreen_sink.h"
@@ -496,6 +497,20 @@ void DScreenManager::NotifyRemoteSinkSetUp(const std::shared_ptr<DScreen> &dScre
     NotifyRemoteScreenService(devId, eventCode, eventContent);
 }
 
+bool DScreenManager::CheckContent(json &eventContent)
+{
+    if (!IsString(eventContent, KEY_DH_ID)) {
+        return false;
+    }
+    if (!IsInt32(eventContent, KEY_ERR_CODE)) {
+        return false;
+    }
+    if (!IsString(eventContent, KEY_ERR_CONTENT)) {
+        return false;
+    }
+    return true;
+}
+
 void DScreenManager::HandleNotifySetUpResult(const std::string &remoteDevId, const std::string &eventContent)
 {
     DHLOGI("HandleNotifySetUpResult, remoteDevId:%s", GetAnonyString(remoteDevId).c_str());
@@ -505,16 +520,14 @@ void DScreenManager::HandleNotifySetUpResult(const std::string &remoteDevId, con
         return;
     }
 
-    if (!eventContentJson.contains(KEY_DH_ID) ||
-        !eventContentJson.contains(KEY_ERR_CODE) ||
-        !eventContentJson.contains(KEY_ERR_CONTENT)) {
+    if (!CheckContent(eventContentJson)) {
         DHLOGE("HandleNotifySetUpResult, eventContent is invalid");
         return;
     }
 
-    std::string dhId = eventContentJson[KEY_DH_ID];
-    int32_t errCode = eventContentJson[KEY_ERR_CODE];
-    std::string errContent = eventContentJson[KEY_ERR_CONTENT];
+    std::string dhId = eventContentJson[KEY_DH_ID].get<std::string>();
+    int32_t errCode = eventContentJson[KEY_ERR_CODE].get<int32_t>();
+    std::string errContent = eventContentJson[KEY_ERR_CONTENT].get<std::string>();
 
     std::string dScreenIdx = remoteDevId + SEPERATOR + dhId;
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);

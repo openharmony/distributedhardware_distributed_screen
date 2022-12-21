@@ -78,6 +78,7 @@ private:
     sptr<IDScreenSink> GetDScreenSinkSA(const std::string &devId);
     int32_t NotifyRemoteScreenService(const std::string &devId, int32_t eventCode, const std::string &eventContent);
     void NotifyRemoteSinkSetUp(const std::shared_ptr<DScreen> &dScreen);
+    bool CheckContent(json &eventContent);
     void HandleNotifySetUpResult(const std::string &remoteDevId, const std::string &eventContent);
 };
 } // namespace DistributedHardware

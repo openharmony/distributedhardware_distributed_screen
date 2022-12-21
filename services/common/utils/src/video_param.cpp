@@ -15,6 +15,7 @@
 #include "video_param.h"
 
 #include "dscreen_constants.h"
+#include "dscreen_json_util.h"
 
 using json = nlohmann::json;
 
@@ -105,13 +106,19 @@ void to_json(json &j, const DistributedHardware::VideoParam &videoParam)
 
 void from_json(const json &j, DistributedHardware::VideoParam &videoParam)
 {
-    j.at(KEY_SCREEN_WIDTH).get_to(videoParam.screenWidth_);
-    j.at(KEY_SCREEN_HEIGHT).get_to(videoParam.screenHeight_);
-    j.at(KEY_VIDEO_WIDTH).get_to(videoParam.videoWidth_);
-    j.at(KEY_VIDEO_HEIGHT).get_to(videoParam.videoHeight_);
-    j.at(KEY_FPS).get_to(videoParam.fps_);
-    j.at(KEY_CODECTYPE).get_to(videoParam.codecType_);
-    j.at(KEY_COLOR_FORMAT).get_to(videoParam.videoFormat_);
+    if (!IsUInt32(j, KEY_SCREEN_WIDTH) || !IsUInt32(j, KEY_SCREEN_HEIGHT) ||
+        !IsUInt32(j, KEY_VIDEO_WIDTH) || !IsUInt32(j, KEY_VIDEO_HEIGHT) ||
+        !IsUInt32(j, KEY_FPS) || !IsUInt8(j, KEY_CODECTYPE) || !IsUInt8(j, KEY_COLOR_FORMAT)) {
+        return;
+    }
+
+    videoParam.screenWidth_ = j[KEY_SCREEN_WIDTH].get<uint32_t>();
+    videoParam.screenHeight_ = j[KEY_SCREEN_HEIGHT].get<uint32_t>();
+    videoParam.videoWidth_ = j[KEY_VIDEO_WIDTH].get<uint32_t>();
+    videoParam.videoHeight_ = j[KEY_VIDEO_HEIGHT].get<uint32_t>();
+    videoParam.fps_ = j[KEY_FPS].get<uint32_t>();
+    videoParam.codecType_ = j[KEY_CODECTYPE].get<uint8_t>();
+    videoParam.videoFormat_ = j[KEY_COLOR_FORMAT].get<uint8_t>();
 }
 } // namespace DistributedHardware
 } // namespace OHOS
