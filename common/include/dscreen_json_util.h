@@ -13,19 +13,21 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DSCREEN_CLIENT_COMMON_H
-#define OHOS_DSCREEN_CLIENT_COMMON_H
+#ifndef OHOS_DSCREEN_JSON_UTIL_H
+#define OHOS_DSCREEN_JSON_UTIL_H
+
+#include "nlohmann/json.hpp"
 
 namespace OHOS {
 namespace DistributedHardware {
-struct WindowProperty {
-    int32_t type;
-    uint64_t displayId;
-    int32_t startX;
-    int32_t startY;
-    uint32_t width;
-    uint32_t height;
-};
+bool IsString(const nlohmann::json &jsonObj, const std::string &key);
+bool IsUInt8(const nlohmann::json &jsonObj, const std::string &key);
+bool IsInt32(const nlohmann::json &jsonObj, const std::string &key);
+bool IsUInt32(const nlohmann::json &jsonObj, const std::string &key);
+bool IsInt64(const nlohmann::json &jsonObj, const std::string &key);
+bool IsUInt64(const nlohmann::json &jsonObj, const std::string &key);
+bool IsArray(const nlohmann::json &jsonObj, const std::string &key);
+bool IsBool(const nlohmann::json &jsonObj, const std::string &key);
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

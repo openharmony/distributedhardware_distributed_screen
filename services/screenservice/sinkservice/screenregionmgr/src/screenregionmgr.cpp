@@ -23,6 +23,7 @@
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_fwkkit.h"
+#include "dscreen_json_util.h"
 #include "dscreen_log.h"
 #include "dscreen_maprelation.h"
 #include "dscreen_util.h"
@@ -112,6 +113,17 @@ void ScreenRegionManager::GetScreenDumpInfo(std::string &result)
     result.append("    }\n]");
 }
 
+bool ScreenRegionManager::CheckContentJson(json &eventContentJson)
+{
+    if (!IsUInt64(eventContentJson, KEY_SCREEN_ID)) {
+        return false;
+    }
+    if (!IsString(eventContentJson, KEY_DH_ID)) {
+        return false;
+    }
+    return true;
+}
+
 void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, const std::string &eventContent)
 {
     DHLOGI("HandleNotifySetUp, remoteDevId: %s", GetAnonyString(remoteDevId).c_str());
@@ -121,14 +133,15 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
         return;
     }
 
-    if (!eventContentJson.contains(KEY_SCREEN_ID) || !eventContentJson.contains(KEY_DH_ID) ||
-        !eventContentJson.contains(KEY_VIDEO_PARAM) || !eventContentJson.contains(KEY_MAPRELATION)) {
+    if (!CheckContentJson(eventContentJson) || !eventContentJson.contains(KEY_VIDEO_PARAM) ||
+        !eventContentJson.contains(KEY_MAPRELATION)) {
         NotifyRemoteSourceSetUpResult(remoteDevId, "", ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
         return;
     }
 
-    uint64_t screenId = eventContentJson[KEY_SCREEN_ID];
-    std::string dhId = eventContentJson[KEY_DH_ID];
+    uint64_t screenId = eventContentJson[KEY_SCREEN_ID].get<uint64_t>();
+    std::string dhId = eventContentJson[KEY_DH_ID].get<std::string>();
+
     std::shared_ptr<VideoParam> videoParam =
         std::make_shared<VideoParam>(eventContentJson[KEY_VIDEO_PARAM].get<VideoParam>());
     std::shared_ptr<DScreenMapRelation> mapRelation =

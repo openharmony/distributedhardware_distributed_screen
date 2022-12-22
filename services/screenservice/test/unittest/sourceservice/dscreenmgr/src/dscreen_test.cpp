@@ -257,8 +257,10 @@ HWTEST_F(DScreenTest, CheckJsonData_002, TestSize.Level1)
 HWTEST_F(DScreenTest, CheckJsonData_003, TestSize.Level1)
 {
     json attrJson;
-    attrJson["screenWidth"] = 100;
-    attrJson["screenHeight"] = 100;
+    uint32_t width = 100;
+    uint32_t heigth = 100;
+    attrJson["screenWidth"] = width;
+    attrJson["screenHeight"] = heigth;
     attrJson["codecType"] = 0;
 
     std::string devId = "devId";

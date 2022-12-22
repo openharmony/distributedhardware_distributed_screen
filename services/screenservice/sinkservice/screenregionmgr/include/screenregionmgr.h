@@ -46,6 +46,7 @@ private:
     sptr<IDScreenSource> GetDScreenSourceSA(const std::string &devId);
     int32_t NotifyRemoteScreenService(const std::string &remoteDevId, const std::string &dhId,
         int32_t eventCode, const std::string &eventContent);
+    bool CheckContentJson(json &eventContentJson);
     void HandleNotifySetUp(const std::string &remoteDevId, const std::string &eventContent);
     void NotifyRemoteSourceSetUpResult(const std::string &remoteDevId, const std::string &dhId,
         int32_t errCode, const std::string &errContent);
