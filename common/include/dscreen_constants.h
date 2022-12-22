@@ -130,6 +130,7 @@ const std::string SINK_PROJ_SHOW_HEIGHT = "sinkProjShowHeight";
 const std::string SINK_WIN_SHOW_X = "sinkWinShowX";
 const std::string SINK_WIN_SHOW_Y = "sinkWinShowY";
 
+constexpr uint32_t MAX_MESSAGE_LEN = 40 * 1024 * 1024;
 constexpr float DEFAULT_DENSITY = 2.0;
 constexpr int32_t DEFAULT_SCREEN_FLAGS = 0;
 constexpr uint32_t DEFAULT_FPS = 30;

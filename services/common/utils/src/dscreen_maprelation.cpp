@@ -17,6 +17,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_json_util.h"
 
 using json = nlohmann::json;
 
@@ -78,8 +79,12 @@ void to_json(json &j, const DScreenMapRelation &dScreenMapRelation)
 
 void from_json(const json &j, DScreenMapRelation &dScreenMapRelation)
 {
-    j.at(KEY_DISPLAY_ID).get_to(dScreenMapRelation.displayId_);
-    j.at(KEY_SCREEN_ID).get_to(dScreenMapRelation.screenId_);
+    if (!IsUInt64(j, KEY_DISPLAY_ID) || !IsUInt64(j, KEY_SCREEN_ID)) {
+        return;
+    }
+    dScreenMapRelation.displayId_ = j[KEY_DISPLAY_ID].get<uint64_t>();
+    dScreenMapRelation.screenId_ = j[KEY_SCREEN_ID].get<uint64_t>();
+
     from_json(j.at(KEY_DISPLAY_RECT), dScreenMapRelation.displayRect_);
     from_json(j.at(KEY_SCREEN_RECT), dScreenMapRelation.screenRect_);
 }
@@ -96,10 +101,14 @@ void to_json(json &j, const DisplayRect &rect)
 
 void from_json(const json &j, DisplayRect &rect)
 {
-    j.at(KEY_POINT_START_X).get_to(rect.startX);
-    j.at(KEY_POINT_START_Y).get_to(rect.startY);
-    j.at(KEY_WIDTH).get_to(rect.width);
-    j.at(KEY_HEIGHT).get_to(rect.height);
+    if (!IsInt32(j, KEY_POINT_START_X) || !IsInt32(j, KEY_POINT_START_Y) ||
+        !IsInt32(j, KEY_WIDTH) || !IsInt32(j, KEY_HEIGHT)) {
+        return;
+    }
+    rect.startX = j[KEY_POINT_START_X].get<int32_t>();
+    rect.startY = j[KEY_POINT_START_Y].get<int32_t>();
+    rect.width = j[KEY_WIDTH].get<int32_t>();
+    rect.height = j[KEY_HEIGHT].get<int32_t>();
 }
 
 void to_json(json &j, const ScreenRect &rect)
@@ -114,10 +123,14 @@ void to_json(json &j, const ScreenRect &rect)
 
 void from_json(const json &j, ScreenRect &rect)
 {
-    j.at(KEY_POINT_START_X).get_to(rect.startX);
-    j.at(KEY_POINT_START_Y).get_to(rect.startY);
-    j.at(KEY_WIDTH).get_to(rect.width);
-    j.at(KEY_HEIGHT).get_to(rect.height);
+    if (!IsInt32(j, KEY_POINT_START_X) || !IsInt32(j, KEY_POINT_START_Y) ||
+        !IsUInt32(j, KEY_WIDTH) || !IsUInt32(j, KEY_HEIGHT)) {
+        return;
+    }
+    rect.startX = j[KEY_POINT_START_X].get<int32_t>();
+    rect.startY = j[KEY_POINT_START_Y].get<int32_t>();
+    rect.width = j[KEY_WIDTH].get<int32_t>();
+    rect.height = j[KEY_HEIGHT].get<int32_t>();
 }
 } // namespace DistributedHardware
 } // namespace OHOS
