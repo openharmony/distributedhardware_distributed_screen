@@ -243,7 +243,7 @@ int32_t DScreen::CheckJsonData(json &attrJson)
     }
 
     if (!IsUInt32(attrJson, KEY_SCREEN_WIDTH) || !IsUInt32(attrJson, KEY_SCREEN_HEIGHT) ||
-        !attrJson.contains(KEY_CODECTYPE)) {
+        !IsString(attrJson, KEY_CODECTYPE)) {
         DHLOGE("enable param is invalid.");
         return ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR;
     }
