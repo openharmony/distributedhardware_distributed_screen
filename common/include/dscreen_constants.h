@@ -84,7 +84,7 @@ constexpr uint32_t DSCREEN_MAX_SCREEN_DATA_HEIGHT = 2772;
 
 /* YUV420 buffer size max size */
 constexpr int64_t MAX_YUV420_BUFFER_SIZE = 2560 * 1600 * (3 / 2) * 2;
-constexpr int32_t LOG_MAX_LEN = 4096;
+constexpr int32_t DSCREEN_MAX_LEN = 4096;
 
 constexpr int32_t INVALID_WINDOW_ID = -1;
 
@@ -130,7 +130,7 @@ const std::string SINK_PROJ_SHOW_HEIGHT = "sinkProjShowHeight";
 const std::string SINK_WIN_SHOW_X = "sinkWinShowX";
 const std::string SINK_WIN_SHOW_Y = "sinkWinShowY";
 
-constexpr uint32_t MAX_MESSAGE_LEN = 40 * 1024 * 1024;
+constexpr uint32_t MAX_MESSAGES_LEN = 40 * 1024 * 1024;
 constexpr float DEFAULT_DENSITY = 2.0;
 constexpr int32_t DEFAULT_SCREEN_FLAGS = 0;
 constexpr uint32_t DEFAULT_FPS = 30;

@@ -22,7 +22,7 @@ namespace OHOS {
 namespace DistributedHardware {
 bool IsString(const nlohmann::json &jsonObj, const std::string &key)
 {
-    bool res = jsonObj.contains(key) && jsonObj[key].is_string() && jsonObj[key].size() <= MAX_MESSAGE_LEN;
+    bool res = jsonObj.contains(key) && jsonObj[key].is_string() && jsonObj[key].size() <= MAX_MESSAGES_LEN;
     if (!res) {
         DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
     }
