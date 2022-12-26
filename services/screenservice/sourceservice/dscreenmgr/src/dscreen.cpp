@@ -21,6 +21,7 @@
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
+#include "dscreen_json_util.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 #include "screen_manager_adapter.h"
@@ -204,8 +205,8 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         return;
     }
 
-    videoParam_->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH]);
-    videoParam_->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT]);
+    videoParam_->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH].get<uint32_t>());
+    videoParam_->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT].get<uint32_t>());
 
     // negotiate codecType
     ret = NegotiateCodecType(attrJson[KEY_CODECTYPE]);
@@ -241,8 +242,8 @@ int32_t DScreen::CheckJsonData(json &attrJson)
         return ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR;
     }
 
-    if (!attrJson.contains(KEY_SCREEN_WIDTH) || !attrJson.contains(KEY_SCREEN_HEIGHT) ||
-        !attrJson.contains(KEY_CODECTYPE)) {
+    if (!IsUInt32(attrJson, KEY_SCREEN_WIDTH) || !IsUInt32(attrJson, KEY_SCREEN_HEIGHT) ||
+        !IsString(attrJson, KEY_CODECTYPE)) {
         DHLOGE("enable param is invalid.");
         return ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR;
     }
