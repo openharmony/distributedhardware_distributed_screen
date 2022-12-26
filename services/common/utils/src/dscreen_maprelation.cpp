@@ -129,8 +129,8 @@ void from_json(const json &j, ScreenRect &rect)
     }
     rect.startX = j[KEY_POINT_START_X].get<int32_t>();
     rect.startY = j[KEY_POINT_START_Y].get<int32_t>();
-    rect.width = j[KEY_WIDTH].get<int32_t>();
-    rect.height = j[KEY_HEIGHT].get<int32_t>();
+    rect.width = j[KEY_WIDTH].get<uint32_t>();
+    rect.height = j[KEY_HEIGHT].get<uint32_t>();
 }
 } // namespace DistributedHardware
 } // namespace OHOS
