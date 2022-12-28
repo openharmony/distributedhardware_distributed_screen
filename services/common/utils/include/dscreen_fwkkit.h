@@ -18,11 +18,22 @@
 
 #include <mutex>
 
+#include "constants.h"
+#include "device_type.h"
 #include "distributed_hardware_fwk_kit.h"
+#include "nlohmann/json.hpp"
 #include "single_instance.h"
 
 namespace OHOS {
 namespace DistributedHardware {
+const nlohmann::json ENABLE_LOW_LATENCY = {
+    {DH_TYPE, DHType::SCREEN},
+    {LOW_LATENCY_ENABLE, true},
+};
+const nlohmann::json DISABLE_LOW_LATENCY = {
+    {DH_TYPE, DHType::SCREEN},
+    {LOW_LATENCY_ENABLE, false},
+};
 class DScreenFwkKit {
 DECLARE_SINGLE_INSTANCE_BASE(DScreenFwkKit);
 public:

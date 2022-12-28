@@ -15,7 +15,9 @@
 
 #include "screen_sink_trans.h"
 
+#include "distributed_hardware_errno.h"
 #include "dscreen_errcode.h"
+#include "dscreen_fwkkit.h"
 #include "dscreen_hisysevent.h"
 #include "dscreen_hitrace.h"
 #include "dscreen_log.h"
@@ -279,12 +281,27 @@ int32_t ScreenSinkTrans::RegisterProcessorListener(const VideoParam &localParam,
 
 void ScreenSinkTrans::OnSessionOpened()
 {
-    DHLOGI("%s: OnChannelSessionOpened.", LOG_TAG);
+    DHLOGI("%s: OnChannelSessionOpened and start enable low latency", LOG_TAG);
+    std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DScreenFwkKit::GetInstance().GetDHFwkKit();
+    if (dhFwkKit != nullptr) {
+        int32_t ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, ENABLE_LOW_LATENCY.dump());
+        if (ret != DH_FWK_SUCCESS) {
+            DHLOGE("%s: Sink start enable low latency failed ret: %d.", LOG_TAG, ret);
+        }
+    }
 }
 
 void ScreenSinkTrans::OnSessionClosed()
 {
-    DHLOGI("%s:OnChannelSessionClosed.", LOG_TAG);
+    DHLOGI("%s: OnChannelSessionClosed and stop enable low latency", LOG_TAG);
+    std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DScreenFwkKit::GetInstance().GetDHFwkKit();
+    if (dhFwkKit != nullptr) {
+        int32_t ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, DISABLE_LOW_LATENCY.dump());
+        if (ret != DH_FWK_SUCCESS) {
+            DHLOGE("%s: Sink stop enable low latency failed ret: %d.", LOG_TAG, ret);
+        }
+    }
+
     std::shared_ptr<IScreenSinkTransCallback> callback = transCallback_.lock();
     if (callback == nullptr) {
         DHLOGE("%s: Trans callback is null.", LOG_TAG);
