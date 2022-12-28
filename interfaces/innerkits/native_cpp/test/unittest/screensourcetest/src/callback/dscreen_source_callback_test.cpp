@@ -74,6 +74,26 @@ HWTEST_F(DScreenSourceCallbackTest, OnNotifyRegResult_002, TestSize.Level1)
 }
 
 /**
+ * @tc.name: OnNotifyRegResult_003
+ * @tc.desc: Verify the OnNotifyRegResult function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceCallbackTest, OnNotifyRegResult_003, TestSize.Level1)
+{
+    const std::string devId = "devId";
+    const std::string dhId = "dhId";
+    const std::string reqId = "reqIdReg";
+    int32_t status = 0;
+    const std::string data = "data";
+    std::shared_ptr<RegisterCallback> callback = nullptr;
+    dScreenSourceCallback_->PushRegRegisterCallback(reqId, callback);
+    int32_t ret = dScreenSourceCallback_->OnNotifyRegResult(devId, dhId, reqId, status, data);
+    dScreenSourceCallback_->PopRegRegisterCallback(reqId);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_REGISTERCALLBACK_NOT_FOUND, ret);
+}
+
+/**
  * @tc.name: OnNotifyUnregResult_001
  * @tc.desc: Verify the OnNotifyUnregResult function.
  * @tc.type: FUNC
@@ -107,6 +127,26 @@ HWTEST_F(DScreenSourceCallbackTest, OnNotifyUnregResult_002, TestSize.Level1)
     int32_t status = 0;
     const std::string data = "data";
     int32_t ret = dScreenSourceCallback_->OnNotifyUnregResult(devId, dhId, reqId, status, data);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_UNREGISTERCALLBACK_NOT_FOUND, ret);
+}
+
+/**
+ * @tc.name: OnNotifyUnregResult_003
+ * @tc.desc: Verify the OnNotifyUnregResult function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceCallbackTest, OnNotifyUnregResult_003, TestSize.Level1)
+{
+    const std::string devId = "devId";
+    const std::string dhId = "dhId";
+    const std::string reqId = "reqIdUnreg";
+    int32_t status = 0;
+    const std::string data = "data";
+    std::shared_ptr<UnregisterCallback> callback = nullptr;
+    dScreenSourceCallback_->PushUnregisterCallback(reqId, callback);
+    int32_t ret = dScreenSourceCallback_->OnNotifyUnregResult(devId, dhId, reqId, status, data);
+    dScreenSourceCallback_->PopUnregisterCallback(reqId);
     EXPECT_EQ(ERR_DH_SCREEN_SA_UNREGISTERCALLBACK_NOT_FOUND, ret);
 }
 

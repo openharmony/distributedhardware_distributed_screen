@@ -22,10 +22,12 @@ ohos_shared_library("distributed_screen_utils") {
     "include",
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
+    "//third_party/json/include",
   ]
 
   sources = [
     "src/dscreen_hisysevent.cpp",
+    "src/dscreen_json_util.cpp",
     "src/dscreen_log.cpp",
     "src/dscreen_sa_process_state.cpp",
     "src/dscreen_util.cpp",

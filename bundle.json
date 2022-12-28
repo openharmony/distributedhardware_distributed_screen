@@ -83,12 +83,17 @@
             ],
             "test":[
                 "//foundation/distributedhardware/distributed_screen/services/screendemo:distributedScreenTest",
+                "//foundation/distributedhardware/distributed_screen/common/test/unittest:ScreenCommonTest",
                 "//foundation/distributedhardware/distributed_screen/screenhandler/test/unittest/screenhandler:DscreenHandlerTest",
-                "//foundation/distributedhardware/distributed_screen/services/screenservice/test/unittest/sinkservice/screenregionmgr:DscreenSinkServiceTest",
+                "//foundation/distributedhardware/distributed_screen/services/screenservice/test/unittest/sinkservice/dscreenservice:DScreenSinkStubTest",
+                "//foundation/distributedhardware/distributed_screen/services/screenservice/test/unittest/sinkservice/screenregionmgr:DscreenRegionMgrTest",
+                "//foundation/distributedhardware/distributed_screen/services/screenservice/test/unittest/sourceservice/dscreenservice:DScreenSourceStubTest",
+                "//foundation/distributedhardware/distributed_screen/services/screenservice/test/unittest/sourceservice/dscreenmgr:DscreenMgrTest",
                 "//foundation/distributedhardware/distributed_screen/services/screentransport/test/unittest:screen_transport_test",
                 "//foundation/distributedhardware/distributed_screen/services/softbusadapter/test/unittest:SoftBusAdapterTest",
                 "//foundation/distributedhardware/distributed_screen/services/common/test/unittest:service_common_test",
                 "//foundation/distributedhardware/distributed_screen/interfaces/innerkits/native_cpp/test/unittest:screen_interface_test",
+                "//foundation/distributedhardware/distributed_screen/services/screenclient/test/unittest:ScreenClientTest",
                 "//foundation/distributedhardware/distributed_screen/screenhandler/test/fuzztest:fuzztest",
                 "//foundation/distributedhardware/distributed_screen/interfaces/innerkits/native_cpp/test/fuzztest:fuzztest"
             ]

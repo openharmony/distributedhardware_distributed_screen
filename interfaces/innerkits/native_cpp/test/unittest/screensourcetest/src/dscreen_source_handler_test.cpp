@@ -16,6 +16,7 @@
 #define private public
 #include "dscreen_source_handler_test.h"
 #include "if_system_ability_manager.h"
+#include "dscreen_source_load_callback.h"
 #include "iservice_registry.h"
 #include "dscreen_constants.h"
 #undef private
@@ -40,6 +41,36 @@ void DScreenSourceHandlerTest::TearDown(void)
 }
 
 /**
+ * @tc.name: InitSource_001
+ * @tc.desc: Verify the InitSource function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceHandlerTest, InitSource_001, TestSize.Level1)
+{
+    std::string params = "";
+    int32_t ret = DScreenSourceHandler::GetInstance().InitSource(params);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+}
+
+/**
+ * @tc.name: InitSource_002
+ * @tc.desc: Verify the InitSource function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceHandlerTest, InitSource_002, TestSize.Level1)
+{
+    std::string params = "DScreenSourceHandlerTestDScreenSourceHandlerTestDScreenSourceHandlerTest \
+        DScreenSourceHandlerTestDScreenSourceHandlerTestDScreenSourceHandlerTestDScreenSourceHandlerTest \
+        DScreenSourceHandlerTestDScreenSourceHandlerTestDScreenSourceHandlerTestDScreenSourceHandlerTest \
+        DScreenSourceHandlerTestDScreenSourceHandlerTestDScreenSourceHandlerTestDScreenSourceHandlerTest";
+    int32_t ret = DScreenSourceHandler::GetInstance().InitSource(params);
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+
+/**
  * @tc.name: RegisterDistributedHardware_001
  * @tc.desc: Verify the RegisterDistributedHardware function.
  * @tc.type: FUNC
@@ -52,6 +83,9 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_001, TestSize.Lev
     EnableParam param;
     param.version = "1";
     param.attrs = "attrs";
+    std::string callbackParam = "callbackParam";
+    sptr<DScreenSourceLoadCallback> loadCallback = new DScreenSourceLoadCallback(callbackParam);
+    loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, nullptr);
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -70,6 +104,9 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_002, TestSize.Lev
     EnableParam param;
     param.version = "1";
     param.attrs = "attrs";
+    std::string callbackParam = "callbackParam";
+    sptr<DScreenSourceLoadCallback> loadCallback = new DScreenSourceLoadCallback(callbackParam);
+    loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, nullptr);
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = nullptr;
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
@@ -129,6 +166,30 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_005, TestSize.Lev
     std::shared_ptr<RegisterCallback> callback = nullptr;
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
     EXPECT_EQ(ERR_DH_SCREEN_REGISTER_CALLBACK_NOT_INIT, ret);
+}
+
+/**
+ * @tc.name: RegisterDistributedHardware_006
+ * @tc.desc: Verify the RegisterDistributedHardware function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_006, TestSize.Level1)
+{
+    const std::string devId = "devIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevId \
+        devIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevId \
+        devIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevId \
+        devIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevId";
+    const std::string dhId = "dhId";
+    EnableParam param;
+    param.version = "1";
+    param.attrs = "attrs";
+    std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
+    if (DScreenSourceHandler::GetInstance().dScreenSourceCallback_ == nullptr) {
+        DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = new (std::nothrow) DScreenSourceCallback();
+    }
+    int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 }
 
 /**
@@ -211,6 +272,27 @@ HWTEST_F(DScreenSourceHandlerTest, UnregisterDistributedHardware_005, TestSize.L
 
     int32_t ret = DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, callback);
     EXPECT_EQ(ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, ret);
+}
+
+/**
+ * @tc.name: UnregisterDistributedHardware_006
+ * @tc.desc: Verify the UnregisterDistributedHardware function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceHandlerTest, UnregisterDistributedHardware_006, TestSize.Level1)
+{
+    const std::string devId = "devIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevId \
+        devIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevId \
+        devIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevId \
+        devIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevId";
+    const std::string dhId = "dhId";
+    std::shared_ptr<UnregisterCallbackTest> callback = std::make_shared<UnregisterCallbackTest>();
+    if (DScreenSourceHandler::GetInstance().dScreenSourceCallback_ == nullptr) {
+        DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = new (std::nothrow) DScreenSourceCallback();
+    }
+    int32_t ret = DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, callback);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 }
 
 /**

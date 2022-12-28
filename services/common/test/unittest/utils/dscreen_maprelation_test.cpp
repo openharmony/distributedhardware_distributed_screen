@@ -93,5 +93,55 @@ HWTEST_F(DScreenMapRelationTest, GetScreenRect_001, TestSize.Level1)
     ScreenRect actual = dscreenMapRelation->GetScreenRect();
     EXPECT_EQ(startX, actual.startX);
 }
+
+/**
+ * @tc.name: to_json_001
+ * @tc.desc: Verify the to_json function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenMapRelationTest, to_json_001, TestSize.Level1)
+{
+    json j;
+    uint64_t displayId = 1;
+    uint64_t screenId = 2;
+    DisplayRect displayRect = {0, 0, 100, 100};
+    ScreenRect screenRect = {0, 0, 200, 200};
+    DScreenMapRelation dScreenMapRelation;
+    dScreenMapRelation.SetDisplayId(displayId);
+    dScreenMapRelation.SetScreenId(screenId);
+    dScreenMapRelation.SetDisplayRect(displayRect);
+    dScreenMapRelation.SetScreenRect(screenRect);
+    to_json(j, dScreenMapRelation);
+
+    uint64_t jsonDisplayId = 0;
+    j.at(KEY_DISPLAY_ID).get_to(jsonDisplayId);
+    EXPECT_EQ(displayId, jsonDisplayId);
+}
+
+/**
+ * @tc.name: from_json_001
+ * @tc.desc: Verify the from_json function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenMapRelationTest, from_json_001, TestSize.Level1)
+{
+    json j;
+    uint64_t displayId = 1;
+    uint64_t screenId = 2;
+    DisplayRect displayRect = {0, 0, 100, 100};
+    ScreenRect screenRect = {0, 0, 200, 200};
+    DScreenMapRelation dScreenMapRelation;
+    dScreenMapRelation.SetDisplayId(displayId);
+    dScreenMapRelation.SetScreenId(screenId);
+    dScreenMapRelation.SetDisplayRect(displayRect);
+    dScreenMapRelation.SetScreenRect(screenRect);
+    to_json(j, dScreenMapRelation);
+
+    DScreenMapRelation jsonDScreenMapRelation;
+    from_json(j, jsonDScreenMapRelation);
+    EXPECT_EQ(displayId, jsonDScreenMapRelation.GetDisplayId());
+}
 } // namespace DistributedHardware
 } // namespace OHOS

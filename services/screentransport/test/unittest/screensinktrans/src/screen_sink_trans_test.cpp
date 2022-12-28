@@ -77,6 +77,19 @@ HWTEST_F(ScreenSinkTransTest, register_processor_listener_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: register_processor_listener_002
+ * @tc.desc: Verify the RegisterChannelListener function success.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSinkTransTest, register_processor_listener_002, TestSize.Level1)
+{
+    trans_->imageProcessor_ = nullptr;
+    int32_t ret = trans_->RegisterProcessorListener(param_, param_, peerDevId_);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
+}
+
+/**
  * @tc.name: release_test_001
  * @tc.desc: Verify the Release function success.
  * @tc.type: FUNC

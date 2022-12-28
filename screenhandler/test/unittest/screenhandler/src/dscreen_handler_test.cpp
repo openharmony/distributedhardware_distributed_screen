@@ -14,6 +14,7 @@
  */
 
 #define private public
+#include "dscreen_constants.h"
 #include "dscreen_handler_test.h"
 #undef private
 
@@ -39,7 +40,19 @@ void DScreenHandlerTest::TearDown(void) {}
 HWTEST_F(DScreenHandlerTest, Initialize_001, TestSize.Level1)
 {
     int32_t ret = DScreenHandler::GetInstance().Initialize();
+    uint64_t screenId = SCREEN_ID_DEFAULT;
+    DScreenHandler::GetInstance().screenListener_->OnConnect(screenId);
+    screenId = 1;
+    DScreenHandler::GetInstance().screenListener_->OnConnect(screenId);
 
+    const std::string dhId = "dhId";
+    const std::string attr = "attr";
+    DScreenHandler::GetInstance().listener_ = nullptr;
+    DScreenHandler::GetInstance().PluginHardware(dhId, attr);
+    DScreenHandler::GetInstance().UnPluginHardware(dhId);
+    DScreenHandler::GetInstance().listener_ = std::make_shared<MockPluginListener>();
+    DScreenHandler::GetInstance().PluginHardware(dhId, attr);
+    DScreenHandler::GetInstance().UnPluginHardware(dhId);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
@@ -57,5 +70,32 @@ HWTEST_F(DScreenHandlerTest, RegisterPluginListener_001, TestSize.Level1)
     EXPECT_EQ(listener, DScreenHandler::GetInstance().listener_);
 }
 
+/**
+ * @tc.name: RegisterPluginListener_002
+ * @tc.desc: Verify the RegisterPluginListener function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenHandlerTest, RegisterPluginListener_002, TestSize.Level1)
+{
+    std::shared_ptr<PluginListener> listener = nullptr;
+    DScreenHandler::GetInstance().listener_ = nullptr;
+    DScreenHandler::GetInstance().RegisterPluginListener(listener);
+
+    EXPECT_EQ(listener, DScreenHandler::GetInstance().listener_);
+}
+
+/**
+ * @tc.name: QueryCodecInfo_001
+ * @tc.desc: Verify the QueryCodecInfo function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenHandlerTest, QueryCodecInfo_001, TestSize.Level1)
+{
+    DScreenHandler::GetInstance().codecInfoStr_ = "codecInfoStr_";
+    std::string ret = DScreenHandler::GetInstance().QueryCodecInfo();
+    EXPECT_EQ(DScreenHandler::GetInstance().codecInfoStr_, ret);
+}
 }
 }
