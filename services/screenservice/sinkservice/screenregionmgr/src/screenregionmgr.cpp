@@ -57,7 +57,7 @@ int32_t ScreenRegionManager::ReleaseAllRegions()
         }
         int32_t ret = screenRegion->Stop();
         if (ret != DH_SUCCESS) {
-            DHLOGE("Release region failed, remoteDevId: %s, err: %d",
+            DHLOGE("Release region failed, remoteDevId: %s, err: %" PRId32,
                 GetAnonyString(screenRegion->GetRemoteDevId()).c_str(), ret);
         }
     }
@@ -68,7 +68,7 @@ int32_t ScreenRegionManager::ReleaseAllRegions()
 void ScreenRegionManager::HandleDScreenNotify(const std::string &remoteDevId, int32_t eventCode,
     const std::string &eventContent)
 {
-    DHLOGI("HandleDScreenNotify, remoteDevId: %s, eventCode: %d", GetAnonyString(remoteDevId).c_str(), eventCode);
+    DHLOGI("HandleDScreenNotify, remoteDevId: %s, eventCode: %" PRId32, GetAnonyString(remoteDevId).c_str(), eventCode);
     if (eventCode == NOTIFY_SINK_SETUP) {
         HandleNotifySetUp(remoteDevId, eventContent);
         return;
@@ -160,7 +160,7 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
         }
 
         if (ret != DH_SUCCESS) {
-            DHLOGE("screenRegion stop failed, remoteDevId: %s, err: %d",
+            DHLOGE("screenRegion stop failed, remoteDevId: %s, err: %" PRId32,
                 GetAnonyString(screenRegions_[remoteDevId]->GetRemoteDevId()).c_str(), ret);
             NotifyRemoteSourceSetUpResult(remoteDevId, dhId, ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
             return;
@@ -190,7 +190,7 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
 void ScreenRegionManager::NotifyRemoteSourceSetUpResult(const std::string &remoteDevId, const std::string &dhId,
     int32_t errCode, const std::string &errContent)
 {
-    DHLOGI("NotifyRemoteSourceSetUpResult, sourceDevId: %s, dhId: %s, errCode: %d",
+    DHLOGI("NotifyRemoteSourceSetUpResult, sourceDevId: %s, dhId: %s, errCode: %" PRId32,
         GetAnonyString(remoteDevId).c_str(), GetAnonyString(dhId).c_str(), errCode);
     int32_t eventCode = NOTIFY_SOURCE_SETUP_RESULT;
 
@@ -207,7 +207,7 @@ void ScreenRegionManager::NotifyRemoteSourceSetUpResult(const std::string &remot
 int32_t ScreenRegionManager::NotifyRemoteScreenService(const std::string &remoteDevId, const std::string &dhId,
     int32_t eventCode, const std::string &eventContent)
 {
-    DHLOGI("Notify remote source screen service, remote devId: %s, eventCode: %d",
+    DHLOGI("Notify remote source screen service, remote devId: %s, eventCode: %" PRId32,
         GetAnonyString(remoteDevId).c_str(), eventCode);
     sptr<IDScreenSource> remoteSourceSA = GetDScreenSourceSA(remoteDevId);
     if (remoteSourceSA == nullptr) {

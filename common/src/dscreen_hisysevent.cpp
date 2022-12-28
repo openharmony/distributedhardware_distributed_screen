@@ -32,7 +32,7 @@ void ReportSaFail(const std::string &eventName, int32_t errCode, int32_t saId, c
         "SAID", saId,
         "MSG", errMsg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
+        DHLOGE("Write HiSysEvent error, res:%" PRId32, res);
     }
 }
 
@@ -48,7 +48,7 @@ void ReportRegisterFail(const std::string &eventName, int32_t errCode, const std
         "DHID", dhId,
         "MSG", errMsg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
+        DHLOGE("Write HiSysEvent error, res:%" PRId32, res);
     }
 }
 
@@ -64,7 +64,7 @@ void ReportUnRegisterFail(const std::string &eventName, int32_t errCode, const s
         "DHID", dhId,
         "MSG", errMsg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
+        DHLOGE("Write HiSysEvent error, res:%" PRId32, res);
     }
 }
 
@@ -77,7 +77,7 @@ void ReportOptFail(const std::string &eventName, int32_t errCode, const std::str
         "ERRCODE", errCode,
         "MSG", errMsg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
+        DHLOGE("Write HiSysEvent error, res:%" PRId32, res);
     }
 }
 
@@ -90,7 +90,7 @@ void ReportSaEvent(const std::string &eventName, int32_t saId, const std::string
         "SAID", saId,
         "MSG", errMsg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
+        DHLOGE("Write HiSysEvent error, res:%" PRId32, res);
     }
 }
 
@@ -105,7 +105,7 @@ void ReportRegisterScreenEvent(const std::string &eventName, const std::string &
         "DHID", dhId,
         "MSG", errMsg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
+        DHLOGE("Write HiSysEvent error, res:%" PRId32, res);
     }
 }
 
@@ -120,7 +120,7 @@ void ReportUnRegisterScreenEvent(const std::string &eventName, const std::string
         "DHID", dhId,
         "MSG", errMsg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
+        DHLOGE("Write HiSysEvent error, res:%" PRId32, res);
     }
 }
 
@@ -135,7 +135,7 @@ void ReportScreenMirrorEvent(const std::string &eventName, const std::string &de
         "DHID", dhId,
         "MSG", errMsg);
     if (res != DH_SUCCESS) {
-        DHLOGE("Write HiSysEvent error, res:%d", res);
+        DHLOGE("Write HiSysEvent error, res:%" PRId32, res);
     }
 }
 } // namespace DistributedHardware

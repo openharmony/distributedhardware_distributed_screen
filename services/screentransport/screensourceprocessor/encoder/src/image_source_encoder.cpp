@@ -30,13 +30,13 @@ int32_t ImageSourceEncoder::ConfigureEncoder(const VideoParam &configParam)
     DHLOGI("%s: ConfigureEncoder.", LOG_TAG);
     int32_t ret = InitVideoEncoder(configParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Init encoder failed ret:%d.", LOG_TAG, ret);
+        DHLOGE("%s: Init encoder failed ret:%" PRId32, LOG_TAG, ret);
         return ret;
     }
 
     ret = SetEncoderFormat(configParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Set encoder format failed ret:%d.", LOG_TAG, ret);
+        DHLOGE("%s: Set encoder format failed ret:%" PRId32, LOG_TAG, ret);
         return ret;
     }
 
@@ -200,7 +200,7 @@ int32_t ImageSourceEncoder::SetEncoderFormat(const VideoParam &configParam)
 
 void ImageSourceEncoder::OnError(Media::AVCodecErrorType errorType, int32_t errorCode)
 {
-    DHLOGI("%s: Encoder error, errorType(%d), errorCode(%d)", LOG_TAG, errorType, errorCode);
+    DHLOGI("%s: Encoder error, errorType:%" PRId32", errorCode:%" PRId32, LOG_TAG, errorType, errorCode);
     std::shared_ptr<IImageSourceProcessorListener> listener = imageProcessorListener_.lock();
     if (listener == nullptr) {
         DHLOGE("%s: Processor listener is null", LOG_TAG);
@@ -232,7 +232,7 @@ void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecB
 
     size_t dataSize = static_cast<size_t>(info.size);
     if (dataSize == 0 || dataSize > DATA_BUFFER_MAX_SIZE) {
-        DHLOGE("%s:OnOutputBufferAvailable params invalid, size: %d.", LOG_TAG, dataSize);
+        DHLOGE("%s:OnOutputBufferAvailable params invalid, size: %" PRId32, LOG_TAG, dataSize);
         return;
     }
     auto dataBuf = std::make_shared<DataBuffer>(dataSize);

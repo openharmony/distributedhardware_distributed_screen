@@ -278,9 +278,9 @@ static void QueryRemoteDeviceInfo()
         printf("GetAllNodeDeviceInfo Fail!\n");
         return;
     }
-    printf("Device Num = %d\n", infoNum);
+    printf("Device Num = %" PRId32 "\n", infoNum);
     for (int i = 0; i < infoNum; ++i) {
-        printf("\n[No.%d]", i + 1);
+        printf("\n[No.%" PRId32 "]", i + 1);
         PrintNodeProperty(remoteNodeInfo + i);
     }
     FreeNodeInfo(remoteNodeInfo);

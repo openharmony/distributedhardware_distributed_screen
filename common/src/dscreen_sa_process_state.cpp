@@ -38,7 +38,7 @@ void SetSinkProcessExit()
     DHLOGI("set sink process exit.");
     std::lock_guard<std::mutex> autoLock(g_saProcessState);
     g_sinkSAState = DSCREEN_SA_EXIT_STATE_STOP;
-    DHLOGI("g_sourceSAState = %d g_sinkSAState = %d", g_sourceSAState, g_sinkSAState);
+    DHLOGI("g_sourceSAState = %" PRId32 ", g_sinkSAState = %" PRId32, g_sourceSAState, g_sinkSAState);
     if (g_sourceSAState == DSCREEN_SA_EXIT_STATE_START || g_sinkSAState == DSCREEN_SA_EXIT_STATE_START) {
         return;
     }
@@ -52,7 +52,7 @@ void SetSourceProcessExit()
     DHLOGI("set sources process exit.");
     std::lock_guard<std::mutex> autoLock(g_saProcessState);
     g_sourceSAState = DSCREEN_SA_EXIT_STATE_STOP;
-    DHLOGI("g_sourceSAState = %d g_sinkSAState = %d", g_sourceSAState, g_sinkSAState);
+    DHLOGI("g_sourceSAState = %" PRId32 ", g_sinkSAState = %" PRId32, g_sourceSAState, g_sinkSAState);
     if (g_sourceSAState == DSCREEN_SA_EXIT_STATE_START || g_sinkSAState == DSCREEN_SA_EXIT_STATE_START) {
         return;
     }

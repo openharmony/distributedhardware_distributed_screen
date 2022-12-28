@@ -38,7 +38,7 @@ int32_t GetLocalDeviceNetworkId(std::string &networkId)
     NodeBasicInfo basicInfo = { { 0 } };
     int32_t ret = GetLocalNodeDeviceInfo(PKG_NAME.c_str(), &basicInfo);
     if (ret != DH_SUCCESS) {
-        DHLOGE("GetLocalDeviceNetworkId failed ret: %d", ret);
+        DHLOGE("GetLocalDeviceNetworkId failed ret: %" PRId32, ret);
         return ret;
     }
 

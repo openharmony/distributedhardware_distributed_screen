@@ -16,6 +16,7 @@
 #ifndef OHOS_DSCREEN_LOG_H
 #define OHOS_DSCREEN_LOG_H
 
+#include <cinttypes>
 namespace OHOS {
 namespace DistributedHardware {
 typedef enum {

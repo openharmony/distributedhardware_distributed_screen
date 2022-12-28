@@ -56,7 +56,7 @@ DScreen::~DScreen()
         ret = sourceTrans_->Release();
     }
     if (ret != DH_SUCCESS) {
-        DHLOGE("source trans release failed. ret: %d", ret);
+        DHLOGE("source trans release failed. ret: %" PRId32, ret);
     }
 
     if (screenId_ != SCREEN_ID_INVALID) {
@@ -73,7 +73,7 @@ DScreen::~DScreen()
 
 void DScreen::OnTransError(int32_t err, const std::string &content)
 {
-    DHLOGD("OnTransError, err: %d", err);
+    DHLOGD("OnTransError, err: %" PRId32, err);
     AddTask(std::make_shared<Task>(TaskType::TASK_DISCONNECT, ""));
     ScreenMgrAdapter::GetInstance().RemoveScreenFromGroup(screenId_);
 }
@@ -122,7 +122,7 @@ int32_t DScreen::AddTask(const std::shared_ptr<Task> &task)
         DHLOGE("AddTask, task is invalid.");
         return ERR_DH_SCREEN_SA_DSCREEN_TASK_NOT_VALID;
     }
-    DHLOGI("AddTask, task type: %d", task->GetTaskType());
+    DHLOGI("AddTask, task type: %" PRId32, task->GetTaskType());
     {
         std::lock_guard<std::mutex> lock(taskQueueMtx_);
         taskQueue_.push(task);
@@ -161,7 +161,7 @@ void DScreen::TaskThreadLoop()
 void DScreen::HandleTask(const std::shared_ptr<Task> &task)
 {
     int32_t taskType = task->GetTaskType();
-    DHLOGI("HandleTask, devId: %s, dhId: %s, task type: %d", GetAnonyString(devId_).c_str(),
+    DHLOGI("HandleTask, devId: %s, dhId: %s, task type: %" PRId32, GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str(), taskType);
     switch (taskType) {
         case TaskType::TASK_ENABLE:

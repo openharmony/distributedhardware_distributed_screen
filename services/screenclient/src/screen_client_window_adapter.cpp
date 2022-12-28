@@ -74,7 +74,7 @@ sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProp
         std::lock_guard<std::mutex> dataLock(windowIdMapMutex_);
         windowIdMap_.emplace(windowId, window);
     }
-    DHLOGD("Get surface(windowId = %d) success.", windowId);
+    DHLOGD("Get surface windowId = %" PRId32 " success.", windowId);
     return surface;
 }
 
@@ -85,7 +85,7 @@ int32_t ScreenClientWindowAdapter::ShowWindow(int32_t windowId)
         std::lock_guard<std::mutex> dataLock(windowIdMapMutex_);
         auto iter = windowIdMap_.find(windowId);
         if (iter == windowIdMap_.end()) {
-            DHLOGE("Invalid windowId (windowId = %d).", windowId);
+            DHLOGE("Invalid windowId windowId = %" PRId32, windowId);
             return ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR;
         }
         window = iter->second;
@@ -98,7 +98,7 @@ int32_t ScreenClientWindowAdapter::ShowWindow(int32_t windowId)
         DHLOGE("Show window failed.");
         return ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR;
     }
-    DHLOGD("Show window (windowId = %d) success.", windowId);
+    DHLOGD("Show window windowId = %" PRId32 " success.", windowId);
     return DH_SUCCESS;
 }
 
@@ -109,7 +109,7 @@ int32_t ScreenClientWindowAdapter::HideWindow(int32_t windowId)
         std::lock_guard<std::mutex> dataLock(windowIdMapMutex_);
         auto iter = windowIdMap_.find(windowId);
         if (iter == windowIdMap_.end()) {
-            DHLOGE("Invalid windowId (windowId = %d).", windowId);
+            DHLOGE("Invalid windowId windowId = %" PRId32, windowId);
             return ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR;
         }
         window = iter->second;
@@ -122,7 +122,7 @@ int32_t ScreenClientWindowAdapter::HideWindow(int32_t windowId)
         DHLOGE("Hide window failed.");
         return ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR;
     }
-    DHLOGD("Hide window (windowId = %d) success.", windowId);
+    DHLOGD("Hide window windowId = %" PRId32 " success.", windowId);
     return DH_SUCCESS;
 }
 
@@ -133,20 +133,20 @@ int32_t ScreenClientWindowAdapter::MoveWindow(int32_t windowId, int32_t startX, 
         std::lock_guard<std::mutex> dataLock(windowIdMapMutex_);
         auto iter = windowIdMap_.find(windowId);
         if (iter == windowIdMap_.end()) {
-            DHLOGE("Invalid windowId (windowId = %d).", windowId);
+            DHLOGE("Invalid windowId windowId = %" PRId32, windowId);
             return ERR_DH_SCREEN_SCREENCLIENT_MOVE_WINDOW_ERROR;
         }
         window = iter->second;
     }
     if (window == nullptr) {
-        DHLOGE("Current window is null(windowId = %d).", windowId);
+        DHLOGE("Current window is null windowId = %" PRId32, windowId);
         return ERR_DH_SCREEN_SCREENCLIENT_MOVE_WINDOW_ERROR;
     }
     if (window->MoveTo(startX, startY) != OHOS::Rosen::WMError::WM_OK) {
-        DHLOGE("Move window failed (windowId = %d).", windowId);
+        DHLOGE("Move window failed windowId = %" PRId32, windowId);
         return ERR_DH_SCREEN_SCREENCLIENT_MOVE_WINDOW_ERROR;
     }
-    DHLOGD("MoveTo window (windowId = %d) success.", windowId);
+    DHLOGD("MoveTo window windowId = %" PRId32 " success.", windowId);
     return DH_SUCCESS;
 }
 
@@ -157,25 +157,25 @@ int32_t ScreenClientWindowAdapter::RemoveWindow(int32_t windowId)
         std::lock_guard<std::mutex> dataLock(windowIdMapMutex_);
         auto iter = windowIdMap_.find(windowId);
         if (iter == windowIdMap_.end()) {
-            DHLOGE("Invalid windowId(windowId = %d).", windowId);
+            DHLOGE("Invalid windowId windowId = %" PRId32, windowId);
             return ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR;
         }
         window = iter->second;
         windowIdMap_.erase(windowId);
     }
     if (window == nullptr) {
-        DHLOGE("Current window is null(windowId = %d).", windowId);
+        DHLOGE("Current window is null windowId = %" PRId32, windowId);
         return ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR;
     }
     if (window->Hide() != OHOS::Rosen::WMError::WM_OK) {
-        DHLOGE("Remove window window failed(windowId = %d).", windowId);
+        DHLOGE("Remove window window failed windowId = %" PRId32, windowId);
         return ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR;
     }
     if (window->Destroy() != OHOS::Rosen::WMError::WM_OK) {
-        DHLOGE("Remove window window failed(windowId = %d).", windowId);
+        DHLOGE("Remove window window failed windowId = %" PRId32, windowId);
         return ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR;
     }
-    DHLOGD("Remove window success(windowId = %d).", windowId);
+    DHLOGD("Remove window success windowId = %" PRId32, windowId);
     return DH_SUCCESS;
 }
 
@@ -186,11 +186,11 @@ int32_t ScreenClientWindowAdapter::DestroyAllWindow()
     for (const auto &item : windowIdMap_) {
         auto window = item.second;
         if (window == nullptr) {
-            DHLOGE("window is nullptr(windowId = %d).", item.first);
+            DHLOGE("window is nullptr. windowId = %" PRId32, item.first);
             continue;
         }
         if (OHOS::Rosen::WMError::WM_OK != window->Destroy()) {
-            DHLOGE("Destroy window(windowId = %d) failed .", item.first);
+            DHLOGE("Destroy window failed. windowId = %" PRId32, item.first);
             continue;
         }
     }

@@ -101,7 +101,7 @@ int32_t DScreenSinkService::UnsubscribeLocalHardware(const std::string &dhId)
 
 void DScreenSinkService::DScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent)
 {
-    DHLOGI("DScreenNotify, devId:%s, eventCode: %d, eventContent:%s", GetAnonyString(devId).c_str(),
+    DHLOGI("DScreenNotify, devId:%s, eventCode: %" PRId32 ", eventContent:%s", GetAnonyString(devId).c_str(),
         eventCode, eventContent.c_str());
     ScreenRegionManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
 }
