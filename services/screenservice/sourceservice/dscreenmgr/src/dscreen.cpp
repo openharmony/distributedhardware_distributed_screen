@@ -182,7 +182,6 @@ void DScreen::HandleTask(const std::shared_ptr<Task> &task)
 
 void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
 {
-    DHLOGI("DScreen::HandleEnable, param: %s, taskId: %s", param.c_str(), taskId.c_str());
     if (dscreenCallback_ == nullptr) {
         DHLOGE("DScreen::HandleEnable, dscreenCallback_ is nullptr");
         return;
