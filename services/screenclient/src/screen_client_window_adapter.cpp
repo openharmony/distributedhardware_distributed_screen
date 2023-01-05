@@ -28,7 +28,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 IMPLEMENT_SINGLE_INSTANCE(ScreenClientWindowAdapter);
-sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProperty> windowProperty,
+sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProperty> &windowProperty,
     int32_t windowId)
 {
     if (windowProperty == nullptr) {
