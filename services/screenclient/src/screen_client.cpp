@@ -22,7 +22,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 IMPLEMENT_SINGLE_INSTANCE(ScreenClient);
-int32_t ScreenClient::AddWindow(std::shared_ptr<WindowProperty> windowProperty)
+int32_t ScreenClient::AddWindow(std::shared_ptr<WindowProperty> &windowProperty)
 {
     if (windowProperty == nullptr) {
         DHLOGE("windowProperty is nullptr.");

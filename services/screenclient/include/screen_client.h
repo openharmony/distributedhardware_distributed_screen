@@ -35,7 +35,7 @@ namespace DistributedHardware {
 class ScreenClient {
 DECLARE_SINGLE_INSTANCE_BASE(ScreenClient);
 public:
-    int32_t AddWindow(std::shared_ptr<WindowProperty> windowProperty);
+    int32_t AddWindow(std::shared_ptr<WindowProperty> &windowProperty);
     sptr<Surface> GetSurface(int32_t windowId);
     int32_t ShowWindow(int32_t windowId);
     int32_t MoveWindow(int32_t windowId, int32_t startX, int32_t startY);
