@@ -30,6 +30,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr static int32_t videoDataNum = 100;
 void DScreenTest::SetUpTestCase(void) {}
 
 void DScreenTest::TearDownTestCase(void) {}
@@ -40,6 +41,15 @@ void DScreenTest::SetUp(void)
     std::string dhId = "dhId";
     std::shared_ptr<DScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
     dScreen_ = std::make_shared<DScreen>(devId, dhId, dScreenCallback);
+    dScreen_->videoParam_ = std::make_shared<VideoParam>();
+    dScreen_->videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
+    dScreen_->videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
+    dScreen_->videoParam_->SetVideoHeight(videoDataNum);
+    dScreen_->videoParam_->SetVideoWidth(videoDataNum);
+    dScreen_->videoParam_->SetScreenHeight(videoDataNum);
+    dScreen_->videoParam_->SetScreenWidth(videoDataNum);
+    dScreen_->videoParam_->SetFps(videoDataNum);
+    dScreen_->devId_ = "peerDevId";
 }
 
 void DScreenTest::TearDown(void) {}
@@ -84,10 +94,10 @@ HWTEST_F(DScreenTest, AddTask_002, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
+
     std::shared_ptr<Task> task = std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs);
     int32_t ret = dScreen_->AddTask(task);
     EXPECT_EQ(DH_SUCCESS, ret);
-
     task = std::make_shared<Task>(TaskType::TASK_DISABLE, reqId, attrs);
     dScreen_->HandleTask(task);
     task = std::make_shared<Task>(TaskType::TASK_CONNECT, reqId, attrs);
