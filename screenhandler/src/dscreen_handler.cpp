@@ -48,8 +48,8 @@ int32_t DScreenHandler::Initialize()
     if (screenListener_ == nullptr) {
         screenListener_ = new (std::nothrow) ScreenListener();
     }
-    bool ret = Rosen::ScreenManager::GetInstance().RegisterScreenListener(screenListener_);
-    if (!ret) {
+    Rosen::DMError ret = Rosen::ScreenManager::GetInstance().RegisterScreenListener(screenListener_);
+    if (ret != Rosen::DMError::DM_OK) {
         DHLOGE("register screen listener failed.");
         return DSCREEN_INIT_ERR;
     }
@@ -110,7 +110,8 @@ std::vector<DHItem> DScreenHandler::Query()
 {
     DHLOGI("DScreenHandler query hardware info");
     std::vector<DHItem> dhItemVec;
-    std::vector<sptr<Rosen::Screen>> screens = Rosen::ScreenManager::GetInstance().GetAllScreens();
+    std::vector<sptr<Rosen::Screen>> screens;
+    Rosen::ScreenManager::GetInstance().GetAllScreens(screens);
     DHLOGI("screens size is: %" PRId32, screens.size());
     for (const auto &screen : screens) {
         if (screen == nullptr) {
@@ -182,7 +183,7 @@ std::string DScreenHandler::QueryCodecInfo()
     }
     std::vector<std::shared_ptr<Media::VideoCaps>> caps = codecList->GetVideoEncoderCaps();
     json codecTypeArray = json::array();
-    
+
     for (const auto &cap : caps) {
         if (cap == nullptr) {
             continue;

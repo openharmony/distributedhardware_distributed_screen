@@ -55,7 +55,8 @@ namespace {
 
 vector<sptr<Screen>> QueryRemoteScreenInfo()
 {
-    vector<sptr<Screen>> allScreens = ScreenManager::GetInstance().GetAllScreens();
+    vector<sptr<Screen>> allScreens;
+    ScreenManager::GetInstance().GetAllScreens(allScreens);
     sptr<Display> defaultDisplay = DisplayManager::GetInstance().GetDefaultDisplay();
     vector<sptr<Screen>> remoteScreens;
     for (const auto &screen : allScreens) {
@@ -115,7 +116,8 @@ static void StartMirror()
     cout << "mirror screen Id is " << mirrorId << endl;
     vector<uint64_t> mirrorIds;
     mirrorIds.push_back(mirrorId);
-    ScreenManager::GetInstance().MakeMirror(defaultDisplay->GetScreenId(), mirrorIds);
+    ScreenId screenGroupId;
+    ScreenManager::GetInstance().MakeMirror(defaultDisplay->GetScreenId(), mirrorIds, screenGroupId);
 }
 
 static void StopMirror()
@@ -184,7 +186,8 @@ static void StartExpand()
     cout << endl << "------------start expand----------" << endl;
     cout << "expand screen Id is " << expandId << endl;
     vector<ExpandOption> options = {{defaultDisplay->GetScreenId(), 0, 0}, {expandId, defaultDisplay->GetWidth(), 0}};
-    ScreenManager::GetInstance().MakeExpand(options);
+    ScreenId screenGroupId;
+    ScreenManager::GetInstance().MakeExpand(options, screenGroupId);
 }
 
 static void StopExpand()

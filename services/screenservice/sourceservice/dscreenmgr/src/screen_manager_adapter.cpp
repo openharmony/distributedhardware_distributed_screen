@@ -85,8 +85,8 @@ int32_t ScreenMgrAdapter::RegisterScreenGroupListener(sptr<Rosen::ScreenManager:
         DHLOGI("already registered listener.");
         return DH_SUCCESS;
     }
-    bool ret = Rosen::ScreenManager::GetInstance().RegisterScreenGroupListener(listener);
-    if (!ret) {
+    Rosen::DMError ret = Rosen::ScreenManager::GetInstance().RegisterScreenGroupListener(listener);
+    if (ret != Rosen::DMError::DM_OK) {
         DHLOGE("RegisterScreenGroupListener Failed.");
         return ERR_DH_SCREEN_SA_REGISTER_SCREENLISTENER_FAIL;
     }
@@ -105,8 +105,8 @@ int32_t ScreenMgrAdapter::UnregisterScreenGroupListener(sptr<Rosen::ScreenManage
         DHLOGI("listener already unregistered.");
         return DH_SUCCESS;
     }
-    bool ret = Rosen::ScreenManager::GetInstance().UnregisterScreenGroupListener(listener);
-    if (!ret) {
+    Rosen::DMError ret = Rosen::ScreenManager::GetInstance().UnregisterScreenGroupListener(listener);
+    if (ret != Rosen::DMError::DM_OK) {
         DHLOGE("UnregisterScreenGroupListener Failed.");
         return ERR_DH_SCREEN_SA_UNREGISTER_SCREENLISTENER_FAIL;
     }
