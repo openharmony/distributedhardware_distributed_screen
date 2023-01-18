@@ -48,7 +48,9 @@ using namespace OHOS::Security::AccessToken;
 namespace {
     static char const *g_pkgName = "ohos.dsoftbus.tool";
     const uint32_t MAX_WINDOW_WIDTH = 2560;
-    const uint32_t MAX_WINDOW_HEIGHT = 1600;
+    const uint32_t MAX_WINDOW_HEIGHT = 2772;
+    const uint32_t DCODE_WIDTH = 1920;
+    const uint32_t DCODE_HEIGHT = 1080;
 }
 
 vector<sptr<Screen>> QueryRemoteScreenInfo()
@@ -317,7 +319,7 @@ static void CreateWindow()
 
     auto vdec = make_shared<VDecDemo>();
 
-    vdec->SetWindowSize(windowWidth, windowHeight);
+    vdec->SetWindowSize(DCODE_WIDTH, DCODE_HEIGHT);
     vdec->SetOutputSurface(surface);
     cout << "start run decoder" << endl;
     vdec->RunCase();
