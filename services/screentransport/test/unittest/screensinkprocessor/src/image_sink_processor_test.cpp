@@ -20,6 +20,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "iconsumer_surface.h"
 
 using namespace testing::ext;
 
@@ -148,8 +149,10 @@ HWTEST_F(ImageSinkProcessorTest, stop_image_processor_test_002, TestSize.Level1)
  */
 HWTEST_F(ImageSinkProcessorTest, set_image_surface_test_001, TestSize.Level1)
 {
-    sptr<Surface> surface = Surface::CreateSurfaceAsConsumer("test");
-    EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, processor_->SetImageSurface(surface));
+    sptr<IConsumerSurface> surface = IConsumerSurface::Create("test");
+    sptr<IBufferProducer> bp = surface->GetProducer();
+    sptr<Surface> pSurface = Surface::CreateSurfaceAsProducer(bp);
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, processor_->SetImageSurface(pSurface));
 }
 
 /**
@@ -161,8 +164,10 @@ HWTEST_F(ImageSinkProcessorTest, set_image_surface_test_001, TestSize.Level1)
 HWTEST_F(ImageSinkProcessorTest, set_image_surface_test_002, TestSize.Level1)
 {
     processor_->imageDecoder_ = nullptr;
-    sptr<Surface> surface = Surface::CreateSurfaceAsConsumer("test");
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, processor_->SetImageSurface(surface));
+    sptr<IConsumerSurface> surface = IConsumerSurface::Create("test");
+    sptr<IBufferProducer> bp = surface->GetProducer();
+    sptr<Surface> pSurface = Surface::CreateSurfaceAsProducer(bp);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, processor_->SetImageSurface(pSurface));
 }
 
 /**

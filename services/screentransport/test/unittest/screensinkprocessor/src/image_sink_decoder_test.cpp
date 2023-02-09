@@ -21,6 +21,7 @@
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
+#include "iconsumer_surface.h"
 
 using namespace testing::ext;
 
@@ -282,9 +283,11 @@ HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_007, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, set_output_surface_test_001, TestSize.Level1)
 {
-    sptr<Surface> surface = Surface::CreateSurfaceAsConsumer("test");
+    sptr<IConsumerSurface> surface = IConsumerSurface::Create("test");
+    sptr<IBufferProducer> bp = surface->GetProducer();
+    sptr<Surface> pSurface = Surface::CreateSurfaceAsProducer(bp);
     imageDecoder_->videoDecoder_ = nullptr;
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->SetOutputSurface(surface));
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->SetOutputSurface(pSurface));
 }
 
 /**

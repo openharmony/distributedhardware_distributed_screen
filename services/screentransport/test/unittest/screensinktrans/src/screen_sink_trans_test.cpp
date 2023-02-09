@@ -18,6 +18,7 @@
 #include <chrono>
 
 #include "dscreen_errcode.h"
+#include "iconsumer_surface.h"
 #include "image_sink_processor.h"
 #include "screen_data_channel_impl.h"
 
@@ -32,10 +33,13 @@ void ScreenSinkTransTest::TearDownTestCase(void) {}
 void ScreenSinkTransTest::SetUp(void)
 {
     peerDevId_ = "test";
+    sptr<IConsumerSurface> cSurface = IConsumerSurface::Create("test");
+    sptr<IBufferProducer> bp = cSurface->GetProducer();
+    sptr<Surface> pSurface = Surface::CreateSurfaceAsProducer(bp);
     trans_ = std::make_shared<ScreenSinkTrans>();
     trans_->imageProcessor_ = std::make_shared<ImageSinkProcessor>();
     trans_->screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId_);
-    trans_->decoderSurface_ = Surface::CreateSurfaceAsConsumer("test");
+    trans_->decoderSurface_ = pSurface;
     trans_->transCallback_ = std::make_shared<MockIScreenSinkTransCallback>();
 
     param_.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
@@ -168,8 +172,10 @@ HWTEST_F(ScreenSinkTransTest, register_state_callback_test_002, TestSize.Level1)
  */
 HWTEST_F(ScreenSinkTransTest, set_image_surface_test_001, TestSize.Level1)
 {
-    sptr<Surface> surface = Surface::CreateSurfaceAsConsumer("test");
-    EXPECT_EQ(DH_SUCCESS, trans_->SetImageSurface(surface));
+    sptr<IConsumerSurface> surface = IConsumerSurface::Create("test");
+    sptr<IBufferProducer> bufferProducer = surface->GetProducer();
+    sptr<Surface> producerSurface = Surface::CreateSurfaceAsProducer(bufferProducer);
+    EXPECT_EQ(DH_SUCCESS, trans_->SetImageSurface(producerSurface));
 }
 
 /**
