@@ -72,7 +72,6 @@ ohos_unittest("SinkTransTest") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  remove_configs = [ "//build/config/compiler:no_rtti" ]
   cflags = [ "-frtti" ]
   cflags_cc = cflags
 }
