@@ -50,7 +50,7 @@ HWTEST_F(ScreenCommonTest, common_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenCommonTest, common_002, TestSize.Level1) 
+HWTEST_F(ScreenCommonTest, common_002, TestSize.Level1)
 {
     DHLOGW("common_002.");
     ReportSaFail(eventName, errCode, saId, errMsg);
