@@ -16,7 +16,6 @@
 
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
-#include "dscreen_sa_process_state.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 using namespace testing::ext;
@@ -40,7 +39,6 @@ void ScreenCommonTest::TearDown() {}
 HWTEST_F(ScreenCommonTest, common_001, TestSize.Level1)
 {
     DHLOGW("common_001.");
-    SetSourceProcessExit();
     std::string networkId = "networkId";
     int32_t ret = GetLocalDeviceNetworkId(networkId);
     EXPECT_NE(DH_SUCCESS, ret);
@@ -52,7 +50,7 @@ HWTEST_F(ScreenCommonTest, common_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenCommonTest, common_002, TestSize.Level1)
+HWTEST_F(ScreenCommonTest, common_002, TestSize.Level1) 
 {
     DHLOGW("common_002.");
     ReportSaFail(eventName, errCode, saId, errMsg);
