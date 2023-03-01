@@ -80,12 +80,14 @@ int32_t DScreenSinkService::ReleaseSink()
     ScreenRegionManager::GetInstance().ReleaseAllRegions();
     DHLOGI("exit sink sa process");
     auto systemAbilityMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (systemAbilityMgr != nullptr) {
-        int32_t ret = systemAbilityMgr->UnloadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID);
-        if (ret != DH_SUCCESS) {
-            DHLOGE("sink systemAbilityMgr UnLoadSystemAbility failed, ret: %d", ret);
-            return DSCREEN_BAD_VALUE;
-        }
+    if (systemAbilityMgr == nullptr) {
+       DHLOGE("systemAbilityMgr is null");
+       return;
+    }
+    int32_t ret = systemAbilityMgr->UnloadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("sink systemAbilityMgr UnLoadSystemAbility failed, ret: %d", ret);
+        return DSCREEN_BAD_VALUE;
     }
     DHLOGI("sink systemAbilityMgr UnLoadSystemAbility success");
     return DH_SUCCESS;
