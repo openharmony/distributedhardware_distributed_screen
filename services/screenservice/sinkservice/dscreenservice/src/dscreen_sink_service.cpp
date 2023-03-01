@@ -86,7 +86,7 @@ int32_t DScreenSinkService::ReleaseSink()
     }
     int32_t ret = systemAbilityMgr->UnloadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID);
     if (ret != DH_SUCCESS) {
-        DHLOGE("sink systemAbilityMgr UnLoadSystemAbility failed, ret: %d", ret);
+        DHLOGE("sink systemAbilityMgr UnLoadSystemAbility failed, ret: %" PRId32, ret);
         return DSCREEN_BAD_VALUE;
     }
     DHLOGI("sink systemAbilityMgr UnLoadSystemAbility success");

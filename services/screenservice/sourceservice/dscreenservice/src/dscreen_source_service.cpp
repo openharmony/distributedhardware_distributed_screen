@@ -101,7 +101,7 @@ int32_t DScreenSourceService::ReleaseSource()
     }
     ret = systemAbilityMgr->UnloadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
     if (ret != DH_SUCCESS) {
-        DHLOGE("source systemAbilityMgr UnLoadSystemAbility failed, ret: %d", ret);
+        DHLOGE("source systemAbilityMgr UnLoadSystemAbility failed, ret: %" PRId32, ret);
         return DSCREEN_BAD_VALUE;
     }
     DHLOGI("source systemAbilityMgr UnLoadSystemAbility success");

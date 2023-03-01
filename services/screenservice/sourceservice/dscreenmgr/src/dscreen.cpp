@@ -199,6 +199,10 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     }
 
     json attrJson = json::parse(param, nullptr, false);
+    if (attrJson.is_discarded()) {
+        DHLOGE("HandleEnable attrJson is invalid");
+        return;
+    }
     int32_t ret = CheckJsonData(attrJson);
     if (ret != DH_SUCCESS) {
         DHLOGE("check json data failed.");
