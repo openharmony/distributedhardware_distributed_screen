@@ -95,12 +95,14 @@ int32_t DScreenSourceService::ReleaseSource()
     }
     DHLOGI("exit source sa process");
     auto systemAbilityMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (systemAbilityMgr != nullptr) {
-        ret = systemAbilityMgr->UnloadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
-        if (ret != DH_SUCCESS) {
-            DHLOGE("source systemAbilityMgr UnLoadSystemAbility failed, ret: %d", ret);
-            return DSCREEN_BAD_VALUE;
-        }
+    if (systemAbilityMgr == nullptr) {
+        DHLOGE("systemAbilityMgr is null");
+        return DSCREEN_INIT_ERR;
+    }
+    ret = systemAbilityMgr->UnloadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("source systemAbilityMgr UnLoadSystemAbility failed, ret: %d", ret);
+        return DSCREEN_BAD_VALUE;
     }
     DHLOGI("source systemAbilityMgr UnLoadSystemAbility success");
     return DH_SUCCESS;
