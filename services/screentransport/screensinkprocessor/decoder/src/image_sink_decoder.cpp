@@ -278,8 +278,7 @@ int32_t ImageSinkDecoder::StartInputThread()
     isDecoderReady_ = true;
     decodeThread_ = std::thread(&ImageSinkDecoder::DecodeScreenData, this);
     int32_t ret =  pthread_setname_np(decodeThread_.native_handle(), DECODE_THREAD);
-    if (ret != DH_SUCCESS)
-    {
+    if (ret != DH_SUCCESS) {
         DHLOGE("ImageSinkDecoder set thread name failed, ret %" PRId32, ret);
     }
     return DH_SUCCESS;
