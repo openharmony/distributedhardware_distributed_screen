@@ -65,6 +65,7 @@ ohos_unittest("SourceProcessorTest") {
 
   external_deps = [
     "c_utils:utils",
+    "graphic_standard:surface",
     "multimedia_player_framework:media_client",
   ]
 }
