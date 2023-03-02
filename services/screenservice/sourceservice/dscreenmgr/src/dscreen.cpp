@@ -17,7 +17,6 @@
 
 #include "avcodec_info.h"
 #include "avcodec_list.h"
-#include <pthread.h>
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
@@ -42,10 +41,6 @@ DScreen::DScreen(const std::string &devId, const std::string &dhId,
     SetState(DISABLED);
     taskThreadRunning_ = true;
     taskQueueThread_ = std::thread(&DScreen::TaskThreadLoop, this);
-    int32_t ret =  pthread_setname_np(taskQueueThread_.native_handle(), TASK_THREAD);
-    if (ret != DH_SUCCESS) {
-        DHLOGE("Dscreen set thread name failed, ret %" PRId32, ret);
-    }
 }
 
 DScreen::~DScreen()

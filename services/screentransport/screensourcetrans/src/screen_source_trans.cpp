@@ -337,10 +337,6 @@ void ScreenSourceTrans::OnSessionOpened()
     isChannelReady_ = true;
     DHLOGI("%s: Start thread.", LOG_TAG);
     sendDataThread_ = std::thread(&ScreenSourceTrans::FeedChannelData, this);
-    ret =  pthread_setname_np(sendDataThread_.native_handle(), FDATA_THREAD);
-    if (ret != DH_SUCCESS) {
-        DHLOGE("ScreenSourceTrans set thread name failed, ret %" PRId32, ret);
-    }
     std::unique_lock<std::mutex> lck(sessionMtx_);
     sessionCond_.notify_all();
 }
