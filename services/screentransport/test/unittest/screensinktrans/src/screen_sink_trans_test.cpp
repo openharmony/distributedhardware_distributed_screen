@@ -161,6 +161,9 @@ HWTEST_F(ScreenSinkTransTest, register_state_callback_test_001, TestSize.Level1)
 HWTEST_F(ScreenSinkTransTest, register_state_callback_test_002, TestSize.Level1)
 {
     std::shared_ptr<IScreenSinkTransCallback> callback = nullptr;
+    int32_t state = DH_SUCCESS;
+    trans_->transCallback_ = callback;
+    trans_->OnProcessorStateNotify(state);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, trans_->RegisterStateCallback(callback));
 }
 
@@ -187,6 +190,12 @@ HWTEST_F(ScreenSinkTransTest, set_image_surface_test_001, TestSize.Level1)
 HWTEST_F(ScreenSinkTransTest, set_image_surface_test_002, TestSize.Level1)
 {
     sptr<Surface> surface = nullptr;
+    trans_->transCallback_ = std::make_shared<MockIScreenSinkTransCallback>();
+    trans_->OnSessionClosed();
+    int32_t state = DH_SUCCESS;
+    trans_->OnProcessorStateNotify(state);
+    std::shared_ptr<DataBuffer> dataBuffer = nullptr;
+    trans_->OnDataReceived(dataBuffer);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, trans_->SetImageSurface(surface));
 }
 
@@ -221,57 +230,6 @@ HWTEST_F(ScreenSinkTransTest, check_trans_param_test_001, TestSize.Level1)
     param_.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
     param_.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
     EXPECT_EQ(DH_SUCCESS, trans_->CheckTransParam(param_, param_, peerDevId_));
-}
-
-/**
- * @tc.name: on_session_closed_test_001
- * @tc.desc: Verify the OnSessionClosed function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ScreenSinkTransTest, on_session_closed_test_001, TestSize.Level1)
-{
-    trans_->transCallback_ = std::make_shared<MockIScreenSinkTransCallback>();
-    trans_->OnSessionClosed();
-}
-
-/**
- * @tc.name: on_data_received_test_001
- * @tc.desc: Verify the OnDataReceived function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ScreenSinkTransTest, on_data_received_test_001, TestSize.Level1)
-{
-    std::shared_ptr<DataBuffer> dataBuffer = nullptr;
-    trans_->OnDataReceived(dataBuffer);
-}
-
-/**
- * @tc.name: on_processor_state_notify_test_001
- * @tc.desc: Verify the RegisterChannelListener function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ScreenSinkTransTest, on_processor_state_notify_test_001, TestSize.Level1)
-{
-    int32_t state = DH_SUCCESS;
-    trans_->transCallback_ = std::make_shared<MockIScreenSinkTransCallback>();
-    trans_->OnProcessorStateNotify(state);
-}
-
-/**
- * @tc.name: on_processor_state_notify_test_002
- * @tc.desc: Verify the RegisterChannelListener function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ScreenSinkTransTest, on_processor_state_notify_test_002, TestSize.Level1)
-{
-    int32_t state = DH_SUCCESS;
-    std::shared_ptr<IScreenSinkTransCallback> callback = nullptr;
-    trans_->transCallback_ = callback;
-    trans_->OnProcessorStateNotify(state);
 }
 }
 }

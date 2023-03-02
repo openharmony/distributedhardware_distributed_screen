@@ -288,33 +288,8 @@ HWTEST_F(ImageSinkDecoderTest, set_output_surface_test_001, TestSize.Level1)
     sptr<Surface> pSurface = Surface::CreateSurfaceAsProducer(bp);
     imageDecoder_->videoDecoder_ = nullptr;
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->SetOutputSurface(pSurface));
-}
-
-/**
- * @tc.name: on_error_test_001
- * @tc.desc: Verify the OnError function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ImageSinkDecoderTest, on_error_test_001, TestSize.Level1)
-{
     Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_EXTEND_START;
     int32_t errorCode = DH_SUCCESS;
-    imageDecoder_->OnError(errorType, errorCode);
-}
-
-/**
- * @tc.name: on_error_test_002
- * @tc.desc: Verify the OnError function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ImageSinkDecoderTest, on_error_test_002, TestSize.Level1)
-{
-    Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_EXTEND_START;
-    int32_t errorCode = DH_SUCCESS;
-    std::shared_ptr<IImageSinkProcessorListener> listener= nullptr;
-    imageDecoder_->imageProcessorListener_ = listener;
     imageDecoder_->OnError(errorType, errorCode);
 }
 
@@ -330,6 +305,11 @@ HWTEST_F(ImageSinkDecoderTest, on_input_buffer_available_test_001, TestSize.Leve
     unsigned int len = 1;
     imageDecoder_->OnInputBufferAvailable(index);
     EXPECT_EQ(len, imageDecoder_->bufferIndexQueue_.size());
+    Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_EXTEND_START;
+    int32_t errorCode = DH_SUCCESS;
+    std::shared_ptr<IImageSinkProcessorListener> listener= nullptr;
+    imageDecoder_->imageProcessorListener_ = listener;
+    imageDecoder_->OnError(errorType, errorCode);
 }
 
 /**

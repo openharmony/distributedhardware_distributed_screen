@@ -94,7 +94,6 @@ HWTEST_F(DScreenTest, AddTask_002, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
-
     std::shared_ptr<Task> task = std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs);
     int32_t ret = dScreen_->AddTask(task);
     EXPECT_EQ(DH_SUCCESS, ret);
