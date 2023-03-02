@@ -26,7 +26,6 @@
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
-#include "dscreen_sa_process_state.h"
 #include "dscreen_util.h"
 
 namespace OHOS {
@@ -95,7 +94,17 @@ int32_t DScreenSourceService::ReleaseSource()
         return ret;
     }
     DHLOGI("exit source sa process");
-    SetSourceProcessExit();
+    auto systemAbilityMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (systemAbilityMgr == nullptr) {
+        DHLOGE("systemAbilityMgr is null");
+        return DSCREEN_INIT_ERR;
+    }
+    ret = systemAbilityMgr->UnloadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("source systemAbilityMgr UnLoadSystemAbility failed, ret: %" PRId32, ret);
+        return DSCREEN_BAD_VALUE;
+    }
+    DHLOGI("source systemAbilityMgr UnLoadSystemAbility success");
     return DH_SUCCESS;
 }
 

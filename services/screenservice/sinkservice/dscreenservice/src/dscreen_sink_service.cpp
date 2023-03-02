@@ -25,7 +25,6 @@
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
-#include "dscreen_sa_process_state.h"
 #include "dscreen_util.h"
 
 namespace OHOS {
@@ -80,7 +79,17 @@ int32_t DScreenSinkService::ReleaseSink()
     DHLOGI("ReleaseSink");
     ScreenRegionManager::GetInstance().ReleaseAllRegions();
     DHLOGI("exit sink sa process");
-    SetSinkProcessExit();
+    auto systemAbilityMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (systemAbilityMgr == nullptr) {
+       DHLOGE("systemAbilityMgr is null");
+       return DSCREEN_INIT_ERR;
+    }
+    int32_t ret = systemAbilityMgr->UnloadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("sink systemAbilityMgr UnLoadSystemAbility failed, ret: %" PRId32, ret);
+        return DSCREEN_BAD_VALUE;
+    }
+    DHLOGI("sink systemAbilityMgr UnLoadSystemAbility success");
     return DH_SUCCESS;
 }
 
