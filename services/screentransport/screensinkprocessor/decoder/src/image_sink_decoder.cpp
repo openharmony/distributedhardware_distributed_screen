@@ -25,7 +25,6 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-constexpr const char* DECODE_THREAD = "DecodeData";
 int32_t ImageSinkDecoder::ConfigureDecoder(const VideoParam &configParam)
 {
     DHLOGI("%s: ConfigureDecoder.", LOG_TAG);

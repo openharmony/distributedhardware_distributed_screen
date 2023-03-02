@@ -29,7 +29,6 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-constexpr const char* FDATA_THREAD = "FeedData";
 int32_t ScreenSourceTrans::SetUp(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::string &peerDevId)
 {

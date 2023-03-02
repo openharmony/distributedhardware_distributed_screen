@@ -29,7 +29,6 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-constexpr const char* TASK_THREAD = "TaskThread";
 DScreen::DScreen(const std::string &devId, const std::string &dhId,
     std::shared_ptr<IDScreenCallback> dscreenCallback)
 {
