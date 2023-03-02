@@ -42,10 +42,6 @@ DScreen::DScreen(const std::string &devId, const std::string &dhId,
     SetState(DISABLED);
     taskThreadRunning_ = true;
     taskQueueThread_ = std::thread(&DScreen::TaskThreadLoop, this);
-    int32_t ret =  pthread_setname_np(taskQueueThread_.native_handle(), TASK_THREAD);
-    if (ret != DH_SUCCESS) {
-        DHLOGE("Dscreen set thread name failed, ret %" PRId32, ret);
-    }
 }
 
 DScreen::~DScreen()
@@ -141,6 +137,10 @@ void DScreen::TaskThreadLoop()
 {
     DHLOGI("DScreen taskThread start. devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
+    int32_t ret =  pthread_setname_np(pthread_self(), TASK_THREAD);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("Dscreen set thread name failed, ret %" PRId32, ret);
+    }
     while (taskThreadRunning_) {
         std::shared_ptr<Task> task;
         {

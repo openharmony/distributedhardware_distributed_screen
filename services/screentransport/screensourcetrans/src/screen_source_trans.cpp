@@ -338,10 +338,6 @@ void ScreenSourceTrans::OnSessionOpened()
     isChannelReady_ = true;
     DHLOGI("%s: Start thread.", LOG_TAG);
     sendDataThread_ = std::thread(&ScreenSourceTrans::FeedChannelData, this);
-    ret =  pthread_setname_np(sendDataThread_.native_handle(), FDATA_THREAD);
-    if (ret != DH_SUCCESS) {
-        DHLOGE("ScreenSourceTrans set thread name failed, ret %" PRId32, ret);
-    }
     std::unique_lock<std::mutex> lck(sessionMtx_);
     sessionCond_.notify_all();
 }
@@ -393,6 +389,10 @@ void ScreenSourceTrans::OnProcessorStateNotify(int32_t state)
 
 void ScreenSourceTrans::FeedChannelData()
 {
+    int32_t ret =  pthread_setname_np(pthread_self(), FDATA_THREAD);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("ScreenSourceTrans set thread name failed, ret %" PRId32, ret);
+    }
     while (isChannelReady_) {
         std::shared_ptr<DataBuffer> screenData;
         {
@@ -416,7 +416,7 @@ void ScreenSourceTrans::FeedChannelData()
         }
 
         DHLOGD("%s: FeedChannelData.", LOG_TAG);
-        int32_t ret = screenChannel_->SendData(screenData);
+        ret = screenChannel_->SendData(screenData);
         if (ret != DH_SUCCESS) {
             DHLOGD("%s:Send data failed.", LOG_TAG);
         }
