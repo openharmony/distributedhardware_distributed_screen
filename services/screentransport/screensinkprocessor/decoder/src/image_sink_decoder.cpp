@@ -16,6 +16,7 @@
 #include "image_sink_decoder.h"
 
 #include <chrono>
+#include <pthread.h>
 #include <securec.h>
 
 #include "dscreen_constants.h"
@@ -25,6 +26,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr const char* DECODE_THREAD = "DecodeData";
 int32_t ImageSinkDecoder::ConfigureDecoder(const VideoParam &configParam)
 {
     DHLOGI("%s: ConfigureDecoder.", LOG_TAG);
@@ -276,7 +278,10 @@ int32_t ImageSinkDecoder::StartInputThread()
     DHLOGI("%s: StartInputThread.", LOG_TAG);
     isDecoderReady_ = true;
     decodeThread_ = std::thread(&ImageSinkDecoder::DecodeScreenData, this);
-
+    int32_t ret =  pthread_setname_np(decodeThread_.native_handle(), DECODE_THREAD);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("ImageSinkDecoder set thread name failed, ret %" PRId32, ret);
+    }
     return DH_SUCCESS;
 }
 
