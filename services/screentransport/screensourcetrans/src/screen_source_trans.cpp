@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,7 +30,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-constexpr const char* FDATA_THREAD = "FeedData";
+constexpr const char* FDATA_THREAD = "FeedDataThread";
 int32_t ScreenSourceTrans::SetUp(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::string &peerDevId)
 {
@@ -389,7 +389,7 @@ void ScreenSourceTrans::OnProcessorStateNotify(int32_t state)
 
 void ScreenSourceTrans::FeedChannelData()
 {
-    int32_t ret =  pthread_setname_np(pthread_self(), FDATA_THREAD);
+    int32_t ret = pthread_setname_np(pthread_self(), FDATA_THREAD);
     if (ret != DH_SUCCESS) {
         DHLOGE("ScreenSourceTrans set thread name failed, ret %" PRId32, ret);
     }
