@@ -192,12 +192,10 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
         return;
     }
-
     SetState(ENABLING);
     if (videoParam_ == nullptr) {
         videoParam_ = std::make_shared<VideoParam>();
     }
-
     json attrJson = json::parse(param, nullptr, false);
     if (attrJson.is_discarded()) {
         DHLOGE("HandleEnable attrJson is invalid");
@@ -212,11 +210,8 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
             GetAnonyString(dhId_).c_str(), "check json data failed.");
         return;
     }
-
     videoParam_->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH].get<uint32_t>());
     videoParam_->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT].get<uint32_t>());
-
-    // negotiate codecType
     ret = NegotiateCodecType(attrJson[KEY_CODECTYPE]);
     if (ret != DH_SUCCESS) {
         DHLOGE("negotiate codec type failed.");
