@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,6 +17,7 @@
 
 #include "avcodec_info.h"
 #include "avcodec_list.h"
+#include <pthread.h>
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
@@ -29,6 +30,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr const char* TASK_THREAD = "TaskThread";
 DScreen::DScreen(const std::string &devId, const std::string &dhId,
     std::shared_ptr<IDScreenCallback> dscreenCallback)
 {
@@ -135,6 +137,10 @@ void DScreen::TaskThreadLoop()
 {
     DHLOGI("DScreen taskThread start. devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
+    int32_t ret = pthread_setname_np(pthread_self(), TASK_THREAD);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("Dscreen set thread name failed, ret %" PRId32, ret);
+    }
     while (taskThreadRunning_) {
         std::shared_ptr<Task> task;
         {

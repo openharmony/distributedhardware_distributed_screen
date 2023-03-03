@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,6 +16,7 @@
 #include "image_sink_decoder.h"
 
 #include <chrono>
+#include <pthread.h>
 #include <securec.h>
 
 #include "dscreen_constants.h"
@@ -25,6 +26,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr const char* DECODE_THREAD = "DecodeThread";
 int32_t ImageSinkDecoder::ConfigureDecoder(const VideoParam &configParam)
 {
     DHLOGI("%s: ConfigureDecoder.", LOG_TAG);
@@ -276,7 +278,6 @@ int32_t ImageSinkDecoder::StartInputThread()
     DHLOGI("%s: StartInputThread.", LOG_TAG);
     isDecoderReady_ = true;
     decodeThread_ = std::thread(&ImageSinkDecoder::DecodeScreenData, this);
-
     return DH_SUCCESS;
 }
 
@@ -301,6 +302,10 @@ int32_t ImageSinkDecoder::StopInputThread()
 void ImageSinkDecoder::DecodeScreenData()
 {
     DHLOGI("%s: DecodeScreenData.", LOG_TAG);
+    int32_t ret = pthread_setname_np(pthread_self(), DECODE_THREAD);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("ImageSinkDecoder set thread name failed, ret %" PRId32, ret);
+    }
     while (isDecoderReady_) {
         std::shared_ptr<DataBuffer> screenData;
         int32_t bufferIndex = 0;
@@ -319,7 +324,7 @@ void ImageSinkDecoder::DecodeScreenData()
             videoDataQueue_.pop();
         }
 
-        int32_t ret = ProcessData(screenData, bufferIndex);
+        ret = ProcessData(screenData, bufferIndex);
         if (ret == ERR_DH_SCREEN_TRANS_NULL_VALUE) {
             return;
         } else if (ret != DH_SUCCESS) {

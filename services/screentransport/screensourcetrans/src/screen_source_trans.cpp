@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,6 +16,7 @@
 #include "screen_source_trans.h"
 
 #include <chrono>
+#include <pthread.h>
 
 #include "distributed_hardware_errno.h"
 #include "dscreen_constants.h"
@@ -29,6 +30,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr const char* FDATA_THREAD = "FeedDataThread";
 int32_t ScreenSourceTrans::SetUp(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::string &peerDevId)
 {
@@ -336,7 +338,6 @@ void ScreenSourceTrans::OnSessionOpened()
     isChannelReady_ = true;
     DHLOGI("%s: Start thread.", LOG_TAG);
     sendDataThread_ = std::thread(&ScreenSourceTrans::FeedChannelData, this);
-
     std::unique_lock<std::mutex> lck(sessionMtx_);
     sessionCond_.notify_all();
 }
@@ -388,6 +389,10 @@ void ScreenSourceTrans::OnProcessorStateNotify(int32_t state)
 
 void ScreenSourceTrans::FeedChannelData()
 {
+    int32_t ret = pthread_setname_np(pthread_self(), FDATA_THREAD);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("ScreenSourceTrans set thread name failed, ret %" PRId32, ret);
+    }
     while (isChannelReady_) {
         std::shared_ptr<DataBuffer> screenData;
         {
@@ -411,7 +416,7 @@ void ScreenSourceTrans::FeedChannelData()
         }
 
         DHLOGD("%s: FeedChannelData.", LOG_TAG);
-        int32_t ret = screenChannel_->SendData(screenData);
+        ret = screenChannel_->SendData(screenData);
         if (ret != DH_SUCCESS) {
             DHLOGD("%s:Send data failed.", LOG_TAG);
         }
