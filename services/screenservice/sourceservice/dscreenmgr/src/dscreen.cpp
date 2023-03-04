@@ -192,10 +192,12 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
         return;
     }
+
     SetState(ENABLING);
     if (videoParam_ == nullptr) {
         videoParam_ = std::make_shared<VideoParam>();
     }
+
     json attrJson = json::parse(param, nullptr, false);
     if (attrJson.is_discarded()) {
         DHLOGE("HandleEnable attrJson is invalid");
@@ -203,18 +205,19 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     }
     int32_t ret = CheckJsonData(attrJson);
     if (ret != DH_SUCCESS) {
-        DHLOGE("check json data failed.");
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
             "enable param json is invalid.");
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
             GetAnonyString(dhId_).c_str(), "check json data failed.");
         return;
     }
+
     videoParam_->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH].get<uint32_t>());
     videoParam_->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT].get<uint32_t>());
+
+    // negotiate codecType
     ret = NegotiateCodecType(attrJson[KEY_CODECTYPE]);
     if (ret != DH_SUCCESS) {
-        DHLOGE("negotiate codec type failed.");
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
             "negotiate codec type failed.");
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
@@ -224,7 +227,6 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
 
     uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId_, dhId_, videoParam_);
     if (screenId == SCREEN_ID_INVALID) {
-        DHLOGE("create virtual screen failed.");
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
             "create virtual screen failed.");
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
