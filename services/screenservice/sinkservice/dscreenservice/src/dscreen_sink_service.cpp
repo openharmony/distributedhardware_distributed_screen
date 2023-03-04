@@ -81,8 +81,8 @@ int32_t DScreenSinkService::ReleaseSink()
     DHLOGI("exit sink sa process");
     auto systemAbilityMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (systemAbilityMgr == nullptr) {
-       DHLOGE("systemAbilityMgr is null");
-       return DSCREEN_INIT_ERR;
+        DHLOGE("systemAbilityMgr is null");
+        return DSCREEN_INIT_ERR;
     }
     int32_t ret = systemAbilityMgr->UnloadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID);
     if (ret != DH_SUCCESS) {
