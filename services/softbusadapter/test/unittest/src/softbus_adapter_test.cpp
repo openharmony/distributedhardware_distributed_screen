@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -291,9 +291,7 @@ HWTEST_F(SoftbusAdapterTest, SendSoftbusBytes_001, TestSize.Level1)
     int32_t sessionId = 0;
     void *data = nullptr;
     int32_t dataLen = 0;
-
     int32_t actual = softbusAdapter.SendSoftbusBytes(sessionId, data, dataLen);
-
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, actual);
 }
 
@@ -324,10 +322,9 @@ HWTEST_F(SoftbusAdapterTest, SendSoftbusStream_001, TestSize.Level1)
 HWTEST_F(SoftbusAdapterTest, GetSoftbusListener_001, TestSize.Level1)
 {
     int32_t sessionId = 0;
-
     std::shared_ptr<ISoftbusListener> actual = softbusAdapter.GetSoftbusListenerById(sessionId);
-
     EXPECT_EQ(nullptr, actual);
+    softbusAdapter.OnSoftbusSessionClosed(sessionId);
 }
 
 /**
@@ -347,8 +344,8 @@ HWTEST_F(SoftbusAdapterTest, GetSoftbusListener_002, TestSize.Level1)
     std::shared_ptr<ISoftbusListener> listener = nullptr;
     softbusAdapter.mapListeners_["hello_world"] = listener;
     std::shared_ptr<ISoftbusListener> actual = softbusAdapter.GetSoftbusListenerById(sessionId);
-
     EXPECT_EQ(nullptr, actual);
+    softbusAdapter.OnSoftbusSessionClosed(sessionId);
 }
 
 /**
@@ -381,39 +378,6 @@ HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionOpened_002, TestSize.Level1)
     int32_t actual = softbusAdapter.OnSoftbusSessionOpened(sessionId, result);
 
     EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL, actual);
-}
-
-/**
- * @tc.name: OnSoftbusSessionClosed_001
- * @tc.desc: Verify the OnSoftbusSessionClosed function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionClosed_001, TestSize.Level1)
-{
-    int32_t sessionId = 0;
-
-    softbusAdapter.OnSoftbusSessionClosed(sessionId);
-}
-
-/**
- * @tc.name: OnSoftbusSessionClosed_002
- * @tc.desc: Verify the OnSoftbusSessionClosed function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionClosed_002, TestSize.Level1)
-{
-    int32_t sessionId = 0;
-
-    SessionInfo sessionInfo;
-    sessionInfo.sessionName = "hello";
-    sessionInfo.peerDevId = "world";
-    softbusAdapter.mapSessionInfos_[sessionId] = sessionInfo;
-    std::shared_ptr<ISoftbusListener> listener = nullptr;
-    softbusAdapter.mapListeners_["hello_world"] = listener;
-
-    softbusAdapter.OnSoftbusSessionClosed(sessionId);
 }
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -54,7 +54,8 @@ HWTEST_F(ScreenClientTest, AddWindow_002, TestSize.Level1)
     int32_t windowId = 0;
     int32_t actual = ScreenClient::GetInstance().AddWindow(windowProperty);
     EXPECT_EQ(windowId, actual);
-    ScreenClient::GetInstance().RemoveWindow(actual);
+    actual = ScreenClient::GetInstance().RemoveWindow(actual);
+    EXPECT_EQ(DH_SUCCESS, actual);
 }
 
 /**
@@ -82,7 +83,8 @@ HWTEST_F(ScreenClientTest, ShowWindow_002, TestSize.Level1)
     int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty);
     int32_t actual = ScreenClient::GetInstance().ShowWindow(windowId);
     EXPECT_EQ(DH_SUCCESS, actual);
-    ScreenClient::GetInstance().RemoveWindow(windowId);
+    actual = ScreenClient::GetInstance().RemoveWindow(windowId);
+    EXPECT_EQ(DH_SUCCESS, actual);
 }
 
 /**
@@ -98,7 +100,8 @@ HWTEST_F(ScreenClientTest, ShowWindow_003, TestSize.Level1)
     ScreenClient::GetInstance().surfaceMap_.emplace(windowId, surface);
     int32_t actual = ScreenClient::GetInstance().ShowWindow(windowId);
     EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_SHOW_WINDOW_ERROR, actual);
-    ScreenClient::GetInstance().RemoveWindow(windowId);
+    actual = ScreenClient::GetInstance().RemoveWindow(windowId);
+    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR, actual);
 }
 
 /**
@@ -126,7 +129,8 @@ HWTEST_F(ScreenClientTest, HideWindow_002, TestSize.Level1)
     int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty);
     int32_t actual = ScreenClient::GetInstance().HideWindow(windowId);
     EXPECT_EQ(DH_SUCCESS, actual);
-    ScreenClient::GetInstance().RemoveWindow(windowId);
+    actual = ScreenClient::GetInstance().RemoveWindow(windowId);
+    EXPECT_EQ(DH_SUCCESS, actual);
 }
 
 /**
@@ -142,7 +146,8 @@ HWTEST_F(ScreenClientTest, HideWindow_003, TestSize.Level1)
     ScreenClient::GetInstance().surfaceMap_.emplace(windowId, surface);
     int32_t actual = ScreenClient::GetInstance().HideWindow(windowId);
     EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_HIDE_WINDOW_ERROR, actual);
-    ScreenClient::GetInstance().RemoveWindow(windowId);
+    actual = ScreenClient::GetInstance().RemoveWindow(windowId);
+    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR, actual);
 }
 
 /**
@@ -174,7 +179,8 @@ HWTEST_F(ScreenClientTest, MoveWindow_002, TestSize.Level1)
     int32_t startY = 0;
     int32_t actual = ScreenClient::GetInstance().MoveWindow(windowId, startX, startY);
     EXPECT_EQ(DH_SUCCESS, actual);
-    ScreenClient::GetInstance().RemoveWindow(windowId);
+    actual = ScreenClient::GetInstance().RemoveWindow(windowId);
+    EXPECT_EQ(DH_SUCCESS, actual);
 }
 
 /**
@@ -192,7 +198,8 @@ HWTEST_F(ScreenClientTest, MoveWindow_003, TestSize.Level1)
     int32_t startY = 0;
     int32_t actual = ScreenClient::GetInstance().MoveWindow(windowId, startX, startY);
     EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_MOVE_WINDOW_ERROR, actual);
-    ScreenClient::GetInstance().RemoveWindow(windowId);
+    actual = ScreenClient::GetInstance().RemoveWindow(windowId);
+    EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR, actual);
 }
 
 /**
@@ -235,7 +242,6 @@ HWTEST_F(ScreenClientTest, RemoveWindow_003, TestSize.Level1)
     ScreenClient::GetInstance().surfaceMap_.emplace(windowId, surface);
     int32_t actual = ScreenClient::GetInstance().RemoveWindow(windowId);
     EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_REMOVE_WINDOW_ERROR, actual);
-    ScreenClient::GetInstance().RemoveWindow(windowId);
 }
 
 /**
@@ -263,7 +269,8 @@ HWTEST_F(ScreenClientTest, GetSurface_002, TestSize.Level1)
     int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty);
     sptr<Surface> actualSurface = ScreenClient::GetInstance().GetSurface(windowId);
     EXPECT_NE(nullptr, actualSurface);
-    ScreenClient::GetInstance().RemoveWindow(windowId);
+    int32_t actual = ScreenClient::GetInstance().RemoveWindow(windowId);
+    EXPECT_EQ(DH_SUCCESS, actual);
 }
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -94,7 +94,6 @@ HWTEST_F(DScreenTest, AddTask_002, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
-
     std::shared_ptr<Task> task = std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs);
     int32_t ret = dScreen_->AddTask(task);
     EXPECT_EQ(DH_SUCCESS, ret);
