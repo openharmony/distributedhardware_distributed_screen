@@ -283,14 +283,14 @@ HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_007, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, set_output_surface_test_001, TestSize.Level1)
 {
+    Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_EXTEND_START;
+    int32_t errorCode = DH_SUCCESS;
+    imageDecoder_->OnError(errorType, errorCode);
     sptr<IConsumerSurface> surface = IConsumerSurface::Create("test");
     sptr<IBufferProducer> bp = surface->GetProducer();
     sptr<Surface> pSurface = Surface::CreateSurfaceAsProducer(bp);
     imageDecoder_->videoDecoder_ = nullptr;
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->SetOutputSurface(pSurface));
-    Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_EXTEND_START;
-    int32_t errorCode = DH_SUCCESS;
-    imageDecoder_->OnError(errorType, errorCode);
 }
 
 /**
@@ -301,15 +301,14 @@ HWTEST_F(ImageSinkDecoderTest, set_output_surface_test_001, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, on_input_buffer_available_test_001, TestSize.Level1)
 {
-    uint32_t index = 0;
-    unsigned int len = 1;
-    imageDecoder_->OnInputBufferAvailable(index);
-    EXPECT_EQ(len, imageDecoder_->bufferIndexQueue_.size());
     Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_EXTEND_START;
     int32_t errorCode = DH_SUCCESS;
     std::shared_ptr<IImageSinkProcessorListener> listener= nullptr;
     imageDecoder_->imageProcessorListener_ = listener;
     imageDecoder_->OnError(errorType, errorCode);
+    unsigned int len = 1;
+    imageDecoder_->OnInputBufferAvailable(0);
+    EXPECT_EQ(len, imageDecoder_->bufferIndexQueue_.size());
 }
 
 /**
@@ -342,7 +341,6 @@ HWTEST_F(ImageSinkDecoderTest, on_output_buffer_available_test_002, TestSize.Lev
     Media::AVCodecBufferInfo info;
     info.presentationTimeUs = 1;
     imageDecoder_->decoderBufferInfo_.presentationTimeUs = 0;
-
     imageDecoder_->videoDecoder_ = nullptr;
     imageDecoder_->OnOutputBufferAvailable(index, info, flag);
     EXPECT_NE(info.presentationTimeUs, imageDecoder_->decoderBufferInfo_.presentationTimeUs);

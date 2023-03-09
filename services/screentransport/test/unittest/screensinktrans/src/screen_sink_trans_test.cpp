@@ -161,9 +161,8 @@ HWTEST_F(ScreenSinkTransTest, register_state_callback_test_001, TestSize.Level1)
 HWTEST_F(ScreenSinkTransTest, register_state_callback_test_002, TestSize.Level1)
 {
     std::shared_ptr<IScreenSinkTransCallback> callback = nullptr;
-    int32_t state = DH_SUCCESS;
     trans_->transCallback_ = callback;
-    trans_->OnProcessorStateNotify(state);
+    trans_->OnProcessorStateNotify(DH_SUCCESS);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, trans_->RegisterStateCallback(callback));
 }
 
@@ -189,14 +188,11 @@ HWTEST_F(ScreenSinkTransTest, set_image_surface_test_001, TestSize.Level1)
  */
 HWTEST_F(ScreenSinkTransTest, set_image_surface_test_002, TestSize.Level1)
 {
-    sptr<Surface> surface = nullptr;
     trans_->transCallback_ = std::make_shared<MockIScreenSinkTransCallback>();
     trans_->OnSessionClosed();
-    int32_t state = DH_SUCCESS;
-    trans_->OnProcessorStateNotify(state);
-    std::shared_ptr<DataBuffer> dataBuffer = nullptr;
-    trans_->OnDataReceived(dataBuffer);
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, trans_->SetImageSurface(surface));
+    trans_->OnProcessorStateNotify(DH_SUCCESS);
+    trans_->OnDataReceived(nullptr);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, trans_->SetImageSurface(nullptr));
 }
 
 /**
