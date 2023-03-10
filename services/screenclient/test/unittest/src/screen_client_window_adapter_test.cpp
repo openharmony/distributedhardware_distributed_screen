@@ -38,8 +38,7 @@ void ScreenClientWindowAdapterTest::TearDown() {}
 HWTEST_F(ScreenClientWindowAdapterTest, CreateWindow_001, TestSize.Level1)
 {
     std::shared_ptr<WindowProperty> windowProperty = nullptr;
-    sptr<Surface> actualSurface = ScreenClientWindowAdapter::GetInstance().CreateWindow(windowProperty, 0);
-    EXPECT_EQ(nullptr, actualSurface);
+    EXPECT_EQ(nullptr, ScreenClientWindowAdapter::GetInstance().CreateWindow(windowProperty, 0));
 }
 
 /**

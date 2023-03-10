@@ -237,8 +237,7 @@ HWTEST_F(ScreenClientTest, RemoveWindow_003, TestSize.Level1)
  */
 HWTEST_F(ScreenClientTest, GetSurface_001, TestSize.Level1)
 {
-    sptr<Surface> actualSurface = ScreenClient::GetInstance().GetSurface(0);
-    EXPECT_EQ(nullptr, actualSurface);
+    EXPECT_EQ(nullptr, ScreenClient::GetInstance().GetSurface(0));
 }
 
 /**
