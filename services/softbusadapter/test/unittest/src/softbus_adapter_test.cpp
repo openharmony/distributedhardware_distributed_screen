@@ -242,9 +242,7 @@ HWTEST_F(SoftbusAdapterTest, OpenSoftbusSession_001, TestSize.Level1)
     std::string mySessionName = DATA_SESSION_NAME;
     std::string peerSessionName = DATA_SESSION_NAME;
     std::string peerDevId = "testDevId";
-
     int32_t actual = softbusAdapter.OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
-
     EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL, actual);
 }
 
@@ -259,9 +257,7 @@ HWTEST_F(SoftbusAdapterTest, OpenSoftbusSession_002, TestSize.Level1)
     std::string mySessionName = "mySessionName";
     std::string peerSessionName = DATA_SESSION_NAME;
     std::string peerDevId = "testDevId";
-
     int32_t actual = softbusAdapter.OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
-
     EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL, actual);
 }
 
@@ -273,10 +269,7 @@ HWTEST_F(SoftbusAdapterTest, OpenSoftbusSession_002, TestSize.Level1)
  */
 HWTEST_F(SoftbusAdapterTest, CloseSoftbusSession_001, TestSize.Level1)
 {
-    int32_t sessionId = 0;
-
-    int32_t actual = softbusAdapter.CloseSoftbusSession(sessionId);
-
+    int32_t actual = softbusAdapter.CloseSoftbusSession(0);
     EXPECT_EQ(DH_SUCCESS, actual);
 }
 
@@ -307,9 +300,7 @@ HWTEST_F(SoftbusAdapterTest, SendSoftbusStream_001, TestSize.Level1)
     StreamData *data = nullptr;
     StreamData *ext = nullptr;
     StreamFrameInfo *param = nullptr;
-
     int32_t actual = softbusAdapter.SendSoftbusStream(sessionId, data, ext, param);
-
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, actual);
 }
 
@@ -321,10 +312,9 @@ HWTEST_F(SoftbusAdapterTest, SendSoftbusStream_001, TestSize.Level1)
  */
 HWTEST_F(SoftbusAdapterTest, GetSoftbusListener_001, TestSize.Level1)
 {
-    int32_t sessionId = 0;
-    std::shared_ptr<ISoftbusListener> actual = softbusAdapter.GetSoftbusListenerById(sessionId);
+    softbusAdapter.OnSoftbusSessionClosed(0);
+    std::shared_ptr<ISoftbusListener> actual = softbusAdapter.GetSoftbusListenerById(0);
     EXPECT_EQ(nullptr, actual);
-    softbusAdapter.OnSoftbusSessionClosed(sessionId);
 }
 
 /**
@@ -336,7 +326,6 @@ HWTEST_F(SoftbusAdapterTest, GetSoftbusListener_001, TestSize.Level1)
 HWTEST_F(SoftbusAdapterTest, GetSoftbusListener_002, TestSize.Level1)
 {
     int32_t sessionId = 0;
-
     SessionInfo sessionInfo;
     sessionInfo.sessionName = "hello";
     sessionInfo.peerDevId = "world";
@@ -345,7 +334,6 @@ HWTEST_F(SoftbusAdapterTest, GetSoftbusListener_002, TestSize.Level1)
     softbusAdapter.mapListeners_["hello_world"] = listener;
     std::shared_ptr<ISoftbusListener> actual = softbusAdapter.GetSoftbusListenerById(sessionId);
     EXPECT_EQ(nullptr, actual);
-    softbusAdapter.OnSoftbusSessionClosed(sessionId);
 }
 
 /**
@@ -373,10 +361,14 @@ HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionOpened_001, TestSize.Level1)
 HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionOpened_002, TestSize.Level1)
 {
     int32_t sessionId = 0;
+    SessionInfo sessionInfo;
+    sessionInfo.sessionName = "hello";
+    sessionInfo.peerDevId = "world";
+    softbusAdapter.mapSessionInfos_[sessionId] = sessionInfo;
+    softbusAdapter.mapListeners_["hello_world"] = nullptr;
+    softbusAdapter.OnSoftbusSessionClosed(sessionId);
     int32_t result = -1;
-
     int32_t actual = softbusAdapter.OnSoftbusSessionOpened(sessionId, result);
-
     EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL, actual);
 }
 

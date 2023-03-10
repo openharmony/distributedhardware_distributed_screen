@@ -283,14 +283,13 @@ HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_007, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, set_output_surface_test_001, TestSize.Level1)
 {
+    Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_EXTEND_START;
+    imageDecoder_->OnError(errorType, DH_SUCCESS);
     sptr<IConsumerSurface> surface = IConsumerSurface::Create("test");
     sptr<IBufferProducer> bp = surface->GetProducer();
     sptr<Surface> pSurface = Surface::CreateSurfaceAsProducer(bp);
     imageDecoder_->videoDecoder_ = nullptr;
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->SetOutputSurface(pSurface));
-    Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_EXTEND_START;
-    int32_t errorCode = DH_SUCCESS;
-    imageDecoder_->OnError(errorType, errorCode);
 }
 
 /**
@@ -301,15 +300,14 @@ HWTEST_F(ImageSinkDecoderTest, set_output_surface_test_001, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, on_input_buffer_available_test_001, TestSize.Level1)
 {
-    uint32_t index = 0;
-    unsigned int len = 1;
-    imageDecoder_->OnInputBufferAvailable(index);
-    EXPECT_EQ(len, imageDecoder_->bufferIndexQueue_.size());
     Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_EXTEND_START;
     int32_t errorCode = DH_SUCCESS;
     std::shared_ptr<IImageSinkProcessorListener> listener= nullptr;
     imageDecoder_->imageProcessorListener_ = listener;
     imageDecoder_->OnError(errorType, errorCode);
+    unsigned int len = 1;
+    imageDecoder_->OnInputBufferAvailable(0);
+    EXPECT_EQ(len, imageDecoder_->bufferIndexQueue_.size());
 }
 
 /**
@@ -324,7 +322,6 @@ HWTEST_F(ImageSinkDecoderTest, on_output_buffer_available_test_001, TestSize.Lev
     Media::AVCodecBufferFlag flag = Media::AVCODEC_BUFFER_FLAG_CODEC_DATA;
     Media::AVCodecBufferInfo info;
     info.presentationTimeUs = 1;
-
     imageDecoder_->OnOutputBufferAvailable(index, info, flag);
     EXPECT_EQ(info.presentationTimeUs, imageDecoder_->decoderBufferInfo_.presentationTimeUs);
 }
@@ -342,7 +339,6 @@ HWTEST_F(ImageSinkDecoderTest, on_output_buffer_available_test_002, TestSize.Lev
     Media::AVCodecBufferInfo info;
     info.presentationTimeUs = 1;
     imageDecoder_->decoderBufferInfo_.presentationTimeUs = 0;
-
     imageDecoder_->videoDecoder_ = nullptr;
     imageDecoder_->OnOutputBufferAvailable(index, info, flag);
     EXPECT_NE(info.presentationTimeUs, imageDecoder_->decoderBufferInfo_.presentationTimeUs);
@@ -358,7 +354,6 @@ HWTEST_F(ImageSinkDecoderTest, on_output_format_changed_test_001, TestSize.Level
 {
     Media::Format format;
     imageDecoder_->OnOutputFormatChanged(format);
-
     EXPECT_EQ(false, imageDecoder_->isDecoderReady_);
 }
 
@@ -384,10 +379,8 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_001, TestSize.Level1)
 HWTEST_F(ImageSinkDecoderTest, start_input_thread_test_001, TestSize.Level1)
 {
     imageDecoder_->videoDecoder_ = nullptr;
-
     imageDecoder_->StartInputThread();
     EXPECT_EQ(true, imageDecoder_->isDecoderReady_);
-
     imageDecoder_->StopInputThread();
     EXPECT_EQ(false, imageDecoder_->isDecoderReady_);
 }

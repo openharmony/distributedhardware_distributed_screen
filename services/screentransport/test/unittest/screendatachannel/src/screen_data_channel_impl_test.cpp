@@ -79,9 +79,7 @@ HWTEST_F(ScreenDataChannelImplTest, close_session_test_001, TestSize.Level1)
  */
 HWTEST_F(ScreenDataChannelImplTest, close_session_test_002, TestSize.Level1)
 {
-    std::shared_ptr<IScreenChannelListener> listener =
-    std::make_shared<MockIScreenChannelListener>();
-    dataChannelImpl_->channelListener_ = listener;
+    dataChannelImpl_->channelListener_ = std::make_shared<MockIScreenChannelListener>();
 
     StreamData *ext = nullptr;
     StreamFrameInfo *param = nullptr;
@@ -108,8 +106,7 @@ HWTEST_F(ScreenDataChannelImplTest, send_data_test_002, TestSize.Level1)
     std::shared_ptr<IScreenChannelListener> listener = nullptr;
     dataChannelImpl_->channelListener_ = listener;
     int32_t sessionId = 0;
-    int32_t result = 0;
-    dataChannelImpl_->OnSessionOpened(sessionId, result);
+    dataChannelImpl_->OnSessionOpened(sessionId, 0);
     dataChannelImpl_->OnSessionClosed(sessionId);
     std::shared_ptr<DataBuffer> data = nullptr;
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, dataChannelImpl_->SendData(data));
@@ -123,13 +120,11 @@ HWTEST_F(ScreenDataChannelImplTest, send_data_test_002, TestSize.Level1)
  */
 HWTEST_F(ScreenDataChannelImplTest, on_session_opened_test_001, TestSize.Level1)
 {
-    std::shared_ptr<IScreenChannelListener> listener =
-        std::make_shared<MockIScreenChannelListener>();
+    std::shared_ptr<IScreenChannelListener> listener = std::make_shared<MockIScreenChannelListener>();
     dataChannelImpl_->channelListener_ = listener;
     int32_t sessionId = 1;
-    int32_t result = 0;
-    dataChannelImpl_->OnSessionOpened(sessionId, result);
-    EXPECT_EQ(1, dataChannelImpl_->sessionId_);
+    dataChannelImpl_->OnSessionOpened(sessionId, 0);
+    EXPECT_EQ(sessionId, dataChannelImpl_->sessionId_);
 }
 
 /**
@@ -140,12 +135,8 @@ HWTEST_F(ScreenDataChannelImplTest, on_session_opened_test_001, TestSize.Level1)
  */
 HWTEST_F(ScreenDataChannelImplTest, on_session_opened_test_002, TestSize.Level1)
 {
-    std::shared_ptr<IScreenChannelListener> listener =
-        std::make_shared<MockIScreenChannelListener>();
-    dataChannelImpl_->channelListener_ = listener;
-    int32_t sessionId = -1;
-    int32_t result = -1;
-    dataChannelImpl_->OnSessionOpened(sessionId, result);
+    dataChannelImpl_->channelListener_ = std::make_shared<MockIScreenChannelListener>();
+    dataChannelImpl_->OnSessionOpened(-1, -1);
     EXPECT_EQ(0, dataChannelImpl_->sessionId_);
 }
 } // DistributedHardware
