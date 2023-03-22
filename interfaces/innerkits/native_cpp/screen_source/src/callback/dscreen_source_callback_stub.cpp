@@ -47,7 +47,7 @@ int32_t DScreenSourceCallbackStub::OnRemoteRequest(uint32_t code, MessageParcel 
     std::map<int32_t, DScreenFunc>::iterator iter = memberFuncMap_.find(code);
     if (iter == memberFuncMap_.end()) {
         DHLOGE("invalid request code.");
-        return ERR_DH_SCREEN_SA_REQUEST_CODE_INVALID;
+        return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
     }
     DScreenFunc &func = iter->second;
     return (this->*func)(data, reply, option);

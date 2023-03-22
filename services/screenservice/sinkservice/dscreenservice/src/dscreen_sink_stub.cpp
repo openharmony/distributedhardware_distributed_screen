@@ -43,7 +43,7 @@ int32_t DScreenSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &data, Mes
     const auto &iter = memberFuncMap_.find(code);
     if (iter == memberFuncMap_.end()) {
         DHLOGE("invalid request code.");
-        return ERR_DH_SCREEN_SA_INVALID_IPC_CALL;
+        return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
     }
     DScreenSinkFunc &func = iter->second;
     return (this->*func)(data, reply, option);
