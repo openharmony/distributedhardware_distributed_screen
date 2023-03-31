@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -210,14 +210,14 @@ int32_t ScreenSinkTrans::InitScreenTrans(const VideoParam &localParam, const Vid
     const std::string &peerDevId)
 {
     switch (atoi(version_.c_str())) {
-        case 1:
+        case ONE:
             screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
             break;
-        case 2:
+        case TWO:
             screenChannel_ = std::make_shared<ScreenRefreshChannelImpl>(peerDevId);
             break;
         default:
-            break;  
+            break;
     }
     int32_t ret = RegisterChannelListener();
     if (ret != DH_SUCCESS) {
@@ -294,7 +294,7 @@ void ScreenSinkTrans::OnSessionOpened()
     if (dhFwkKit != nullptr) {
         int32_t ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, ENABLE_LOW_LATENCY.dump());
         if (ret != DH_FWK_SUCCESS) {
-            DHLOGE("%s: Sink start enable low latency failed ret: %.", PRId32, LOG_TAG, ret);
+            DHLOGE("%s: Sink start enable low latency failed ret: %." PRId32, LOG_TAG, ret);
         }
     }
 }
@@ -306,7 +306,7 @@ void ScreenSinkTrans::OnSessionClosed()
     if (dhFwkKit != nullptr) {
         int32_t ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, DISABLE_LOW_LATENCY.dump());
         if (ret != DH_FWK_SUCCESS) {
-            DHLOGE("%s: Sink stop enable low latency failed ret: %.", PRId32, LOG_TAG, ret);
+            DHLOGE("%s: Sink stop enable low latency failed ret: %." PRId32, LOG_TAG, ret);
         }
     }
 

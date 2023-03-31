@@ -32,13 +32,13 @@ public:
     bool IsDirtyRectValid(const std::vector<OHOS::Rect> &damages);
     bool JudgeDirtyThreshold(const std::vector<OHOS::Rect> &damages);
     bool LimitTime(uint32_t timethreshold);
-    int32_t InputBufferDmage(sptr<SurfaceBuffer> &surfaceBuffer, const std::vector<OHOS::Rect> &damages);
+    int32_t InputBufferImage(sptr<SurfaceBuffer> &surfaceBuffer, const std::vector<OHOS::Rect> &damages);
     int32_t ConfigureDecisionCenter(std::shared_ptr<IImageSourceProcessorListener> &listener,
             std::shared_ptr<IImageSourceProcessor> &imageProcessor);
     int32_t SetJpegSurface(sptr<Surface> &surface);
 
 private:
-    static const constexpr int32_t ARE_THRESHOLD = 260000;
+    static const constexpr int32_t DIRTY_REGION_ARE_THRESHOLD = 260000;
     static const constexpr int32_t THRESHOLD = 10;
     static const constexpr char *LOG_TAG = "ScreenDecisionCenter";
     std::shared_ptr<ScreenImageJpeg> imageJpeg_ = nullptr;

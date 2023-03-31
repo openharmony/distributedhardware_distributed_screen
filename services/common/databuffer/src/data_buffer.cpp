@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -36,9 +36,12 @@ DataBuffer::DataBuffer(size_t capacity)
 DataBuffer::~DataBuffer()
 {
     if (data_ != nullptr) {
-        delete []data_;
+        delete [] data_;
         data_ = nullptr;
     }
+    dirtyRectVec_.clear();
+    dataType_ = 0;
+    frameNumber_ = 0;
     capacity_ = 0;
 }
 
@@ -51,70 +54,79 @@ uint8_t *DataBuffer::Data() const
 {
     return data_;
 }
+
 void DataBuffer::SetSize(size_t size)
 {
     capacity_ = size;
 }
+
 void DataBuffer::SetDataType(uint8_t dataType)
 {
     dataType_ = dataType;
 }
+
 uint8_t DataBuffer::DataType()
 {
     return dataType_;
 }
+
 void DataBuffer::SetDataNumber(size_t number)
 {
-    dataNumber_ = number;
+    frameNumber_ = number;
 }
+
 size_t DataBuffer::DataNumber()
 {
-    return dataNumber_;
+    return frameNumber_;
 }
-void DataBuffer::ReapplyCapcity(size_t capacity)
+
+void DataBuffer::ResetCapcity(size_t capacity)
 {
-    DHLOGI("%s: ReapplyCapcity.", LOG_TAG);
+    DHLOGI("%s: ResetCapcity.", LOG_TAG);
     if (capacity < capacity_) {
         return;
     }
     delete [] data_;
     data_ = new (std::nothrow) uint8_t[capacity] {0};
-    if (data_ != nullptr) {
+    if (data_ == nullptr) {
+        capacity_ = 0;
+    } else {
         capacity_ = capacity;
     }
 }
+
 void DataBuffer::AddData(size_t dataSize, unsigned char* &inputData)
 {
-    DHLOGI("%s: AddData.", LOG_TAG);
     if (inputData == nullptr) {
         return;
     }
     int32_t ret = memcpy_s(data_ + capacity_, dataSize, inputData, dataSize);
     if (ret != EOK) {
-        DHLOGE("%s: in AddData memcpy data failed, ret: %.", PRId32, LOG_TAG, ret);
+        DHLOGE("%s: in AddData memcpy data failed, ret: %." PRId32, LOG_TAG, ret);
         return;
     }
     capacity_ += dataSize;
 }
+
 void DataBuffer::AddDirtyRect(DirtyRect rect)
 {
-    DHLOGI("%s: AddDirtyRect.", LOG_TAG);
     dirtyRectVec_.push_back(rect);
 }
-std::vector<DirtyRect> DataBuffer::DirtyRectVec()
+
+std::vector<DirtyRect> DataBuffer::GetDirtyRectVec()
 {
     return dirtyRectVec_;
 }
+
 int32_t DataBuffer::GetData(int32_t offset, int32_t datasize, uint8_t* &output)
 {
-    DHLOGI("%s: GetData.", LOG_TAG);
     if (offset + datasize > capacity_ || output == nullptr) {
-        DHLOGE("DataBuffer GetData parameter invalied.");
+        DHLOGE("DataBuffer GetData parameter invalid.");
         return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
     }
     int32_t ret = memcpy_s(output, datasize, data_ + offset, datasize);
     if (ret != EOK) {
-        DHLOGE("GetData memcpy data failed, ret: %.", PRId32, ret);
+        DHLOGE("GetData memcpy data failed, ret: %." PRId32, ret);
         return ret;
     }
     return DH_SUCCESS;

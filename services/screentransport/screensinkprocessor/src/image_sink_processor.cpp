@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -145,7 +145,7 @@ int32_t ImageSinkProcessor::ProcessImage(const std::shared_ptr<DataBuffer> &data
             ReportOptFail(DSCREEN_OPT_FAIL, ret, "InputScreenData failed.");
             return ret;
         }
-    } else if (data->DataType() == VIDEO_PART_SCREEN_DATA){
+    } else if (data->DataType() == VIDEO_PART_SCREEN_DATA) {
         int32_t ret = imageJpeg_->MergeDirtyImagetoSurface(data, imageDecoder_->GetLastFrame());
         if (ret != DH_SUCCESS) {
             DHLOGE("%s: MergeDirtyImagetoSurface failed ret:%" PRId32, LOG_TAG, ret);
@@ -153,8 +153,8 @@ int32_t ImageSinkProcessor::ProcessImage(const std::shared_ptr<DataBuffer> &data
             return ret;
         }
     } else {
-         DHLOGE("%s: data type is invalid.", LOG_TAG);
-         return ERR_DH_SCREEN_DATA_TYPE_INVALID;
+        DHLOGE("%s: data type is invalid.", LOG_TAG);
+        return ERR_DH_SCREEN_DATA_TYPE_INVALID;
     }
     return DH_SUCCESS;
 }

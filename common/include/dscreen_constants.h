@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -73,10 +73,10 @@ constexpr int32_t YR_PARAM = 66;
 constexpr int32_t YG_PARAM = 129;
 constexpr int32_t YB_PARAM = 25;
 constexpr int32_t UR_PARAM = -38;
-constexpr int32_t UG_PARAM = -74;
+constexpr int32_t UG_PARAM = 74;
 constexpr int32_t UB_PARAM = 112;
-constexpr int32_t VG_PARAM = -94;
-constexpr int32_t VB_PARAM = -18;
+constexpr int32_t VG_PARAM = 94;
+constexpr int32_t VB_PARAM = 18;
 constexpr int32_t YA_PARAM = 16;
 constexpr int32_t UA_PARAM = 128;
 constexpr int32_t YUV_PARAM = 255;
@@ -84,8 +84,10 @@ constexpr int32_t MOVEBITS = 8;
 /* RGBA */
 constexpr uint32_t RGBA_CHROMA = 4;
 constexpr uint32_t RGB_CHROMA = 3;
-constexpr uint32_t ODD = 1;
-constexpr uint32_t EVEN = 2;
+constexpr uint32_t ONE = 1;
+constexpr uint32_t TWO = 2;
+constexpr uint32_t THREE = 3;
+constexpr uint32_t ZERO = 0;
 constexpr uint32_t ALIGNEDBITS = 32;
 /* Screen session name max len */
 constexpr uint32_t DSCREEN_MAX_SESSION_NAME_LEN = 50;

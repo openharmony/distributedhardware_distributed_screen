@@ -18,9 +18,13 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include "jpeglib.h"
 #include <securec.h>
 #include <string>
-#include "jpeglib.h"
+
+#ifdef LIBYUV
+#include <libyuv/convert_from_argb.h>
+#endif
 
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
@@ -43,10 +47,10 @@ int32_t ScreenImageJpeg::MergeDirtyImagetoSurface(const std::shared_ptr<DataBuff
         DHLOGE("%s: imageSurface_ is nullptr.", LOG_TAG);
         return ERR_DH_SCREEN_SURFACE_INVALIED;
     }
-    int32_t lastFrameSize = configParam_.GetScreenWidth() * configParam_.GetScreenHeight() * RGB_CHROMA / EVEN;
+    int32_t lastFrameSize = configParam_.GetScreenWidth() * configParam_.GetScreenHeight() * RGB_CHROMA / TWO;
     int32_t ret = MergeImage(data, lastFrame);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Merge dirty failed, ret: %.", PRId32, LOG_TAG, ret);
+        DHLOGE("%s: Merge dirty failed, ret: %." PRId32, LOG_TAG, ret);
         return ret;
     }
     sptr<OHOS::SurfaceBuffer> windowSurfaceBuffer = nullptr;
@@ -60,7 +64,7 @@ int32_t ScreenImageJpeg::MergeDirtyImagetoSurface(const std::shared_ptr<DataBuff
     };
     SurfaceError surfaceErr = imageSurface_->RequestBuffer(windowSurfaceBuffer, releaseFence, requestConfig);
     if (surfaceErr != SURFACE_ERROR_OK || windowSurfaceBuffer == nullptr) {
-        DHLOGE("%s:imageSurface request buffer failed, surfaceErr: %.", PRId32, LOG_TAG, surfaceErr);
+        DHLOGE("%s: imageSurface request buffer failed, surfaceErr: %." PRId32, LOG_TAG, surfaceErr);
         imageSurface_->CancelBuffer(windowSurfaceBuffer);
         return surfaceErr;
     }
@@ -68,14 +72,14 @@ int32_t ScreenImageJpeg::MergeDirtyImagetoSurface(const std::shared_ptr<DataBuff
     auto windowSurfaceAddr = static_cast<uint8_t*>(windowSurfaceBuffer->GetVirAddr());
     ret = memcpy_s(windowSurfaceAddr, surfaceBuffeSize, lastFrame, lastFrameSize);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: memcpy lastFrame failed,ret: %.", PRId32, LOG_TAG, ret);
+        DHLOGE("%s: memcpy lastFrame failed,ret: %." PRId32, LOG_TAG, ret);
         imageSurface_->CancelBuffer(windowSurfaceBuffer);
         return ret;
     }
     BufferFlushConfig flushConfig = { {0, 0, windowSurfaceBuffer->GetWidth(), windowSurfaceBuffer-> GetHeight()}, 0};
     surfaceErr = imageSurface_->FlushBuffer(windowSurfaceBuffer, -1, flushConfig);
     if (surfaceErr != SURFACE_ERROR_OK) {
-        DHLOGE("%s:imageSurface flush buffer failed, surfaceErr: %.", PRId32, LOG_TAG, surfaceErr);
+        DHLOGE("%s: imageSurface flush buffer failed, surfaceErr: %." PRId32, LOG_TAG, surfaceErr);
         imageSurface_->CancelBuffer(windowSurfaceBuffer);
         return surfaceErr;
     }
@@ -107,7 +111,8 @@ int32_t ScreenImageJpeg::SetImageProcessListener(std::shared_ptr<IImageSourcePro
     imageProcessorListener_ = imageProcessorListener;
     return DH_SUCCESS;
 }
-void ScreenImageJpeg::CodecImage(sptr<SurfaceBuffer> &surfaceBuffer, const OHOS::Rect &damage, std::shared_ptr<DataBuffer> &data)
+void ScreenImageJpeg::CodecImage(sptr<SurfaceBuffer> &surfaceBuffer,
+    const OHOS::Rect &damage, std::shared_ptr<DataBuffer> &data)
 {
     DHLOGI("%s: CodecImage.", LOG_TAG);
     int32_t partialSize = damage.w * damage.h *RGBA_CHROMA;
@@ -127,7 +132,7 @@ void ScreenImageJpeg::CodecImage(sptr<SurfaceBuffer> &surfaceBuffer, const OHOS:
         surfaceAddrIdx += configParam_.GetScreenWidth() * RGBA_CHROMA;
     }
     uint32_t jpegSize = CompressRgbaToJpeg(damage, partialBuffer, data);
-    DHLOGI("CodecImage jpegSize %.", PRId32, jpegSize);
+    DHLOGI("CodecImage jpegSize %." PRId32, jpegSize);
     delete [] partialBuffer;
 }
 
@@ -135,14 +140,14 @@ void ScreenImageJpeg::CodecImage(sptr<SurfaceBuffer> &surfaceBuffer, const OHOS:
 int32_t ScreenImageJpeg::MergeImage(const std::shared_ptr<DataBuffer> &data, uint8_t *lastFrame)
 {
     DHLOGI("%s: MergeDirtyImagetoSurface.", LOG_TAG);
-    std::vector<DirtyRect> dirtyRectVec = data->DirtyRectVec();
+    std::vector<DirtyRect> dirtyRectVec = data->GetDirtyRectVec();
     int32_t offset = 0;
     int32_t screenWidth = configParam_.GetScreenWidth();
     int32_t screenHeight = configParam_.GetScreenHeight();
     for (auto item : dirtyRectVec) {
         if (item.xPos > screenWidth || item.yPos > screenHeight ||
             item.width > screenWidth - item.xPos || item.height > screenHeight - item.yPos) {
-            DHLOGE("%s: Dirty rect invalied.", LOG_TAG);
+            DHLOGE("%s: Dirty rect invalid.", LOG_TAG);
             return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
         }
         uint8_t *jpegData = new uint8_t [item.dirtySize] {0};
@@ -153,10 +158,12 @@ int32_t ScreenImageJpeg::MergeImage(const std::shared_ptr<DataBuffer> &data, uin
         }
         offset += item.dirtySize;
         uint8_t *dirtyImageData = new uint8_t[item.width * item.height * RGB_CHROMA] {0};
+        DHLOGI("%s: CompressRgbaToJpeg.", LOG_TAG);
         DecompressJpegToNV12(item.dirtySize, jpegData, dirtyImageData);
+        DHLOGI("%s: DecompressJpegToNV12 success.", LOG_TAG);
         ret = PastImage(lastFrame, dirtyImageData, item);
         if (ret != DH_SUCCESS) {
-            DHLOGE("PastImage failed, ret: %.", PRId32, ret);
+            DHLOGE("PastImage failed, ret: %." PRId32, ret);
             delete [] jpegData;
             delete [] dirtyImageData;
             return ret;
@@ -164,6 +171,7 @@ int32_t ScreenImageJpeg::MergeImage(const std::shared_ptr<DataBuffer> &data, uin
         delete [] jpegData;
         delete [] dirtyImageData;
     }
+    DHLOGI("%s: MergeDirtyImagetoSurface success.", LOG_TAG);
     return DH_SUCCESS;
 }
 
@@ -173,7 +181,7 @@ int32_t ScreenImageJpeg::PastImage(uint8_t *lastFrame, uint8_t *dirtyImageData, 
     uint8_t *lastFrameIdx = lastFrame;
     uint8_t *yData = lastFrameIdx + configParam_.GetScreenWidth() * rect.yPos + rect.xPos;
     uint8_t *uData = lastFrameIdx + configParam_.GetScreenWidth() * configParam_.GetScreenHeight() +
-                configParam_.GetScreenWidth() * (rect.yPos / EVEN) + rect.xPos;
+                configParam_.GetScreenWidth() * (rect.yPos / TWO) + rect.xPos;
     uint8_t *yDirtyData = dirtyImageData;
     uint8_t *uDirtyData = dirtyImageData + rect.width * rect.height;
     uint8_t *yTempData = nullptr;
@@ -186,8 +194,8 @@ int32_t ScreenImageJpeg::PastImage(uint8_t *lastFrame, uint8_t *dirtyImageData, 
             return ret;
         }
         yDirtyData += rect.width;
-        if (i % EVEN) {
-            uTempData = uData + configParam_.GetScreenWidth() * (i / EVEN);
+        if (i % TWO) {
+            uTempData = uData + configParam_.GetScreenWidth() * (i / TWO);
             ret = memcpy_s(uTempData, rect.width, uDirtyData, rect.width);
             if (ret != EOK) {
                 DHLOGE("%s: memcpy uData failed.", LOG_TAG);
@@ -201,7 +209,6 @@ int32_t ScreenImageJpeg::PastImage(uint8_t *lastFrame, uint8_t *dirtyImageData, 
 
 uint32_t ScreenImageJpeg::CompressRgbaToJpeg(const OHOS::Rect &damage, uint8_t *inputData, std::shared_ptr<DataBuffer> &data)
 {
-    DHLOGI("%s: CompressRgbaToJpeg.", LOG_TAG);
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     JSAMPROW row_pointer[1];
@@ -223,7 +230,7 @@ uint32_t ScreenImageJpeg::CompressRgbaToJpeg(const OHOS::Rect &damage, uint8_t *
     unsigned char rgb_buffer[damage.w * RGB_CHROMA];
     unsigned char *pB = inputData;
     unsigned char *pG = inputData + 1;
-    unsigned char *pR = inputData + 2;
+    unsigned char *pR = inputData + TWO;
     while (cinfo.next_scanline < cinfo.image_height) {
         int index = 0;
         for (int i = 0 ; i < damage.w ; i++) {
@@ -248,26 +255,21 @@ uint32_t ScreenImageJpeg::CompressRgbaToJpeg(const OHOS::Rect &damage, uint8_t *
     }
     return (uint32_t)outSize;
 }
+
 void ScreenImageJpeg::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputData, uint8_t *outputData)
 {
-    DHLOGI("%s: DecompressJpegToNV12.", LOG_TAG);
     jpeg_decompress_struct cinfo;
     jpeg_error_mgr jerr;
-    JSAMPARRAY buffer;
-    int32_t row_stride = 0;
     cinfo.err = jpeg_std_error(&jerr);
     jpeg_create_decompress(&cinfo);
     jpeg_mem_src(&cinfo, inputData, jpegSize);
     (void)jpeg_read_header(&cinfo, TRUE);
     (void)jpeg_start_decompress(&cinfo);
-    row_stride = cinfo.output_width * cinfo.output_components;
-    buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo, JPOOL_IMAGE, row_stride, 1);
+    int32_t row_stride = cinfo.output_width * cinfo.output_components;
+    JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo, JPOOL_IMAGE, row_stride, 1);
     int32_t i = 0;
     int32_t yIndex = 0;
     int32_t uvIndex = cinfo.output_width * cinfo.output_height;
-    int32_t y = 0;
-    int32_t u = 0;
-    int32_t v = 0;
 #ifdef LIBYUV
     int32_t rgbSize = cinfo.output_width * cinfo.output_height * RGBA_CHROMA;
     uint8_t *rgb = new uint8_t[rgbSize];
@@ -277,19 +279,19 @@ void ScreenImageJpeg::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputData, 
         (void)jpeg_read_scanlines(&cinfo, buffer, 1);
         for (int j = 0 ; j < cinfo.output_width ; j++) {
 #ifdef LIBYUV
-            rgb[rgbIndex++] = buffer[0][j * RGB_CHROMA + 2];
+            rgb[rgbIndex++] = buffer[0][j * RGB_CHROMA + TWO];
             rgb[rgbIndex++] = buffer[0][j * RGB_CHROMA + 1];
             rgb[rgbIndex++] = buffer[0][j * RGB_CHROMA];
             rgb[rgbIndex++] = 0xff;
 #else
-            y = ((YR_PARAM * buffer[0][j * RGB_CHROMA] + YG_PARAM * buffer[0][j * RGB_CHROMA + 1] +
-                YB_PARAM * buffer[0][j * RGB_CHROMA + 2] + UA_PARAM) >> MOVEBITS) + YA_PARAM;
-            u = ((UR_PARAM * buffer[0][j * RGB_CHROMA] - UG_PARAM * buffer[0][j * RGB_CHROMA + 1] +
-                UB_PARAM * buffer[0][j * RGB_CHROMA + 2] + UA_PARAM) >> MOVEBITS) + UA_PARAM;
-            v = ((UB_PARAM * buffer[0][j * RGB_CHROMA] - VG_PARAM * buffer[0][j * RGB_CHROMA + 1] -
-                VB_PARAM * buffer[0][j * RGB_CHROMA + 2] + UA_PARAM) >> MOVEBITS) + UA_PARAM;
-            outputData[yIndex++] = static_cast<uint8_t>((y < 0) ? 0 : (y > YUV_PARAM) ? YUV_PARAM : y);
-            if ((i % EVEN == 0) && (j % EVEN == 0)) {
+            int32_t y = ((YR_PARAM * buffer[0][j * RGB_CHROMA] + YG_PARAM * buffer[0][j * RGB_CHROMA + 1] +
+                YB_PARAM * buffer[0][j * RGB_CHROMA + TWO] + UA_PARAM) >> MOVEBITS) + YA_PARAM;
+            int32_t u = ((UR_PARAM * buffer[0][j * RGB_CHROMA] - UG_PARAM * buffer[0][j * RGB_CHROMA + 1] +
+                UB_PARAM * buffer[0][j * RGB_CHROMA + TWO] + UA_PARAM) >> MOVEBITS) + UA_PARAM;
+            int32_t v = ((UB_PARAM * buffer[0][j * RGB_CHROMA] - VG_PARAM * buffer[0][j * RGB_CHROMA + 1] -
+                VB_PARAM * buffer[0][j * RGB_CHROMA + TWO] + UA_PARAM) >> MOVEBITS) + UA_PARAM;
+            outputData[ ++] = static_cast<uint8_t>((y < 0) ? 0 : (y > YUV_PARAM) ? YUV_PARAM : y);
+            if ((i % TWO == 0) && (j % TWO == 0)) {
                 outputData[uvIndex++] = static_cast<uint8_t>((u < 0) ? 0 : (u > YUV_PARAM) ? YUV_PARAM : u);
                 outputData[uvIndex++] = static_cast<uint8_t>((v < 0) ? 0 : (v > YUV_PARAM) ? YUV_PARAM : v);
             }
@@ -302,8 +304,8 @@ void ScreenImageJpeg::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputData, 
 #ifdef LIBYUV
     libyuv::ARGBToNV12(rgb, cinfo.output_width * RGBA_CHROMA, outputData, cinfo.output_width,
         outputData + uvIndex, cinfo.output_width, cinfo.output_width, cinfo.output_height);
+    delete [] rgb;
 #endif
-    DHLOGI("%s: DecompressJpegToNV12 success.", LOG_TAG);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

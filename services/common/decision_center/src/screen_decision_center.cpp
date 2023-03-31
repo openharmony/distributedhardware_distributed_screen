@@ -28,22 +28,22 @@ bool ScreenDecisionCenter::IsDirtyRectValid(const std::vector<OHOS::Rect> &damag
         DHLOGE("%s: damages size is empty.", LOG_TAG);
         return false;
     }
+    int32_t screenWidth = configParam_.GetScreenWidth();
+    int32_t screenHeight = configParam_.GetScreenHeight();
     for (const auto &damage : damages) {
-        if (damage.x < 0 || damage.x > configParam_.GetScreenWidth() ||
-            damage.y < 0 || damage.y > configParam_.GetScreenHeight()) {
-            DHLOGE("%s: dirty x and y invalied.", LOG_TAG);
+        if (damage.x < 0 || damage.x > screenWidth || damage.y < 0 ||
+            damage.y > screenHeight || damage.x % TWO == 1 || damage.w % TWO == 1) {
+            DHLOGE("%s: dirty x:%" PRId32 ", y:%" PRId32 ", w:%" PRId32 ", h:%" PRId32,
+                LOG_TAG, damage.x, damage.y, damage.w, damage.h);
             return false;
         }
-        int32_t width = configParam_.GetScreenWidth() - damage.x;
-        int32_t height = configParam_.GetScreenHeight() - damage.y;
-        if (damage.x % EVEN == ODD || damage.w % EVEN == ODD) {
-            DHLOGE("%s: dirty x and w invalied.", LOG_TAG);
-            return false;
-        }
+        int32_t width = screenWidth - damage.x;
+        int32_t height = screenHeight - damage.y;
         if (damage.w < 0 || damage.w > width || damage.h < 0 || damage.h > height) {
-            DHLOGE("%s: dirty invalied.", LOG_TAG);
+            DHLOGE("%s: dirty x:%" PRId32 ", y:%" PRId32 ", w:%" PRId32 ", h:%" PRId32,
+                LOG_TAG, damage.x, damage.y, damage.w, damage.h);
             return false;
-        }    
+        }
     }
     return true;
 }
@@ -54,8 +54,8 @@ bool ScreenDecisionCenter::JudgeDirtyThreshold(const std::vector<OHOS::Rect> &da
     for (const auto &damage : damages) {
         int32_t dirtyArea = damage.w * damage.h;
         allDirtyArea += dirtyArea;
-        if (dirtyArea > ARE_THRESHOLD || allDirtyArea > ARE_THRESHOLD) {
-            DHLOGE("%s: dirtyArea is %.", PRId32, LOG_TAG, dirtyArea);
+        if (dirtyArea > DIRTY_REGION_ARE_THRESHOLD || allDirtyArea > DIRTY_REGION_ARE_THRESHOLD) {
+            DHLOGE("%s: dirtyArea is %." PRId32, LOG_TAG, dirtyArea);
             return false;
         }
     }
@@ -66,10 +66,10 @@ bool ScreenDecisionCenter::LimitTime(uint32_t timethreshold)
     return difftime(time(nullptr), sendFullTime_) >= timethreshold;
 }
 
-int32_t ScreenDecisionCenter::InputBufferDmage(sptr<SurfaceBuffer> &surfaceBuffer,
+int32_t ScreenDecisionCenter::InputBufferImage(sptr<SurfaceBuffer> &surfaceBuffer,
     const std::vector<OHOS::Rect> &damages)
 {
-    DHLOGI("%s: InputBufferDmage.", LOG_TAG);
+    DHLOGI("%s: InputBufferImage.", LOG_TAG);
     if (surfaceBuffer == nullptr) {
         DHLOGE("%s: surfaceBuffer is null.", LOG_TAG);
         return ERR_DH_SCREEN_SURFACE_BUFFER_INVALIED;
@@ -115,7 +115,7 @@ int32_t ScreenDecisionCenter::SetJpegSurface(sptr<Surface> &surface)
         DHLOGE("%s: JPEG set surface failed.", LOG_TAG);
         return ret;
     }
-    return DH_SUCCESS;  
+    return DH_SUCCESS;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

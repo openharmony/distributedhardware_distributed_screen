@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -187,13 +187,13 @@ int32_t ScreenRefreshChannelImpl::SendData(const std::shared_ptr<DataBuffer> &sc
     if (dataType == VIDEO_PART_SCREEN_DATA) {
         int32_t ret = SendDirtyData(screenData);
         if (ret != DH_SUCCESS) {
-            DHLOGE("%s: send dirty data failed, ret: %.", PRId32, LOG_TAG, ret);
+            DHLOGE("%s: send dirty data failed, ret: %." PRId32, LOG_TAG, ret);
             return ret;
         }
     } else if (dataType == VIDEO_FULL_SCREEN_DATA) {
         int32_t ret = SendFullData(screenData);
         if (ret != DH_SUCCESS) {
-            DHLOGE("%s: send full data failed, ret: %.", PRId32, LOG_TAG, ret);
+            DHLOGE("%s: send full data failed, ret: %." PRId32, LOG_TAG, ret);
             return ret;
         }
     }
@@ -202,7 +202,7 @@ int32_t ScreenRefreshChannelImpl::SendData(const std::shared_ptr<DataBuffer> &sc
 
 int32_t ScreenRefreshChannelImpl::SendFullData(const std::shared_ptr<DataBuffer> &screenData)
 {
-    DHLOGI("%s: SendFullData sessionId: %.", PRId32, LOG_TAG, sessionId_);
+    DHLOGI("%s: SendFullData sessionId: %." PRId32, LOG_TAG, sessionId_);
     if (screenData == nullptr) {
         DHLOGE("%s: Screen data is null", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
@@ -220,13 +220,13 @@ int32_t ScreenRefreshChannelImpl::SendFullData(const std::shared_ptr<DataBuffer>
 }
 int32_t ScreenRefreshChannelImpl::SendDirtyData(const std::shared_ptr<DataBuffer> &screenData)
 {
-    DHLOGI("%s: SendDirtyData sessionId: %.", PRId32, LOG_TAG, jpegSessionId_);
+    DHLOGI("%s: SendDirtyData sessionId: %." PRId32, LOG_TAG, jpegSessionId_);
     if (screenData == nullptr) {
         DHLOGE("%s: Screen data is null", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     nlohmann::json rectJson;
-    std::vector<DirtyRect> dirtyRectVec = screenData->DirtyRectVec();
+    std::vector<DirtyRect> dirtyRectVec = screenData->GetDirtyRectVec();
     rectJson["dataType"] = screenData->DataType();
     rectJson["dirtySize"] = static_cast<uint8_t>(dirtyRectVec.size());
     int32_t rectIndex = 0;
@@ -304,66 +304,85 @@ void ScreenRefreshChannelImpl::OnBytesReceived(int32_t sessionId, const void *da
     DHLOGD("%s: OnScreenBytesReceived data channel not support yet", LOG_TAG);
 }
 
-void ScreenRefreshChannelImpl::OnStreamReceived(int32_t sessionId, const StreamData *data, const StreamData *ext,
-    const StreamFrameInfo *param)
+void ScreenRefreshChannelImpl::ProcessDullData(const StreamData *data, std::shared_ptr<DataBuffer> dataBuffer)
+{
+    DHLOGI("%s: ProcessDullData.", LOG_TAG);
+    std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
+    if (listener == nullptr) {
+        DHLOGE("%s: Channel listener is null.", LOG_TAG);
+        return;
+    }
+    int32_t ret = memcpy_s(dataBuffer->Data(), dataBuffer->Capacity(),
+        reinterpret_cast<uint8_t*>(data->buf), data->bufLen);
+    if (ret != EOK) {
+        DHLOGE("%s: Full data memcpy failed.", LOG_TAG);
+        return;
+    }
+    dataBuffer->SetDataType(VIDEO_FULL_SCREEN_DATA);
+    listener->OnDataReceived(dataBuffer);   
+}
+
+void ScreenRefreshChannelImpl::ProcessDirtyData(const StreamData *data,
+    std::shared_ptr<DataBuffer> dataBuffer, const StreamData *ext)
+{
+    DHLOGI("%s: ProcessDirtyData.", LOG_TAG);
+    std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
+    if (listener == nullptr) {
+        DHLOGE("%s: Channel listener is null.", LOG_TAG);
+        return;
+    }
+    int32_t ret = memcpy_s(dataBuffer->Data(), dataBuffer->Capacity(),
+        reinterpret_cast<uint8_t*>(data->buf), data->bufLen);
+    if (ret != EOK) {
+        DHLOGE("%s: Dirty data memcpy_s failed.", LOG_TAG);
+        return;
+    }
+    nlohmann::json rectJson = nlohmann::json::parse(ext->buf, nullptr, false);
+    if (rectJson.is_discarded()) {
+        DHLOGE("%s: OnStreamReceived rectJson invalid", LOG_TAG);
+        return;
+    }
+    if (!IsInt32(rectJson, "dirtySize") || !IsInt32(rectJson, "dataType")) {
+        return;
+    }
+    int32_t dirtySize = rectJson["dirtySize"].get<int32_t>();
+    int32_t dataType = rectJson["dataType"].get<int32_t>();
+    uint8_t num = 0;
+    while (num < dirtySize) {
+        auto item = std::to_string(num);
+        if (!rectJson.contains(item)) {
+            return;
+        }
+        int32_t X = rectJson[item][0].get<int32_t>();
+        int32_t Y = rectJson[item][1].get<int32_t>();
+        int32_t W = rectJson[item][2].get<int32_t>();
+        int32_t H = rectJson[item][3].get<int32_t>();
+        int32_t Size = rectJson[item][4].get<int32_t>();
+        DirtyRect rect = {X, Y, W, H, Size};
+        dataBuffer->AddDirtyRect(rect);
+        num++;
+    }
+    dataBuffer->SetDataType(dataType);
+    listener->OnDataReceived(dataBuffer);
+}
+
+
+void ScreenRefreshChannelImpl::OnStreamReceived(int32_t sessionId, const StreamData *data,
+    const StreamData *ext, const StreamFrameInfo *param)
 {
     DHLOGI("%s: OnStreamReceived.", LOG_TAG);
     if (data == nullptr) {
         DHLOGE("%s: Stream data is null", LOG_TAG);
         return;
     }
-
-    std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
-    if (listener == nullptr) {
-        DHLOGE("%s: Channel listener is null.", LOG_TAG);
-        return;
-    }
+    auto dataBuffer = std::make_shared<DataBuffer>(data->bufLen);
     if (ext->bufLen == 0) {
         DHLOGI("sink received full data.");
-        auto dataBuffer = std::make_shared<DataBuffer>(data->bufLen);
-        int32_t ret = memcpy_s(dataBuffer->Data(), dataBuffer->Capacity(), reinterpret_cast<uint8_t*>(data->buf), data->bufLen);
-        if (ret != EOK) {
-            DHLOGE("%s: Full data memcpy failed.", LOG_TAG);
-            return;
-        }
-        dataBuffer->SetDataType(VIDEO_FULL_SCREEN_DATA);
-        listener->OnDataReceived(dataBuffer);
+        ProcessDullData(data, dataBuffer);
         return;
     } else {
         DHLOGI("sink received dirty data.");
-        auto dataBuffer = std::make_shared<DataBuffer>(data->bufLen);
-        int32_t ret = memcpy_s(dataBuffer->Data(), dataBuffer->Capacity(), reinterpret_cast<uint8_t*>(data->buf), data->bufLen);
-        if (ret != EOK) {
-            DHLOGE("%s: Dirty data memcpy_s failed.", LOG_TAG);
-            return;
-        }
-        nlohmann::json rectJson = nlohmann::json::parse(ext->buf, nullptr, false);
-        if (rectJson.is_discarded()) {
-            DHLOGE("%s: OnStreamReceived rectJson invalied", LOG_TAG);
-            return;
-        }
-        if (!IsInt32(rectJson, "dirtySize") || !IsInt32(rectJson, "dataType")) {
-            return;
-        }
-        int32_t dirtySize = rectJson["dirtySize"].get<int32_t>();
-        int32_t dataType = rectJson["dataType"].get<int32_t>();
-        uint8_t num = 0;
-        while (num < dirtySize) {
-            auto item = std::to_string(num);
-            if (!rectJson.contains(item)) {
-                return;
-            }
-            int32_t X = rectJson[item][0].get<int32_t>();
-            int32_t Y = rectJson[item][1].get<int32_t>();
-            int32_t W = rectJson[item][2].get<int32_t>();
-            int32_t H = rectJson[item][3].get<int32_t>();
-            int32_t Size = rectJson[item][4].get<int32_t>();
-            DirtyRect rect = {X, Y, W, H, Size};
-            dataBuffer->AddDirtyRect(rect);
-            num++;
-        }
-        dataBuffer->SetDataType(dataType);
-        listener->OnDataReceived(dataBuffer);
+        ProcessDirtyData(data, dataBuffer, ext);
     }
 }
 } // namespace DistributedHardware

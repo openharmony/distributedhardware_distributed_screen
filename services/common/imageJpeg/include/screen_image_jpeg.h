@@ -20,15 +20,15 @@
 #include <mutex>
 #include <condition_variable>
 
-#include "iimage_source_processor_listener.h"
-#include "surface.h"
-#include "video_param.h"
 #include "data_buffer.h"
 #include "dscreen_constants.h"
+#include "iimage_source_processor_listener.h"
 
+#include "surface.h"
+#include "video_param.h"
 namespace OHOS {
 namespace DistributedHardware {
-class ScreenImageJpeg : public std::enable_shared_from_this<ScreenImageJpeg>{
+class ScreenImageJpeg : public std::enable_shared_from_this<ScreenImageJpeg> {
 public:
     explicit ScreenImageJpeg(const VideoParam &configParam) : configParam_(configParam){};
     ~ScreenImageJpeg() = default;

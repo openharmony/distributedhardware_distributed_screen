@@ -44,11 +44,11 @@ int32_t ImageSinkDecoder::ConfigureDecoder(const VideoParam &configParam)
     configParam_ = configParam;
     ret = AddSurface();
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Add surface failed ret: %.", PRId32, LOG_TAG, ret);
+        DHLOGE("%s: Add surface failed ret: %." PRId32, LOG_TAG, ret);
         consumerSurface_ = nullptr;
         producerSurface_ = nullptr;
         return ret;
-    } 
+    }
     alignedHeight_ = configParam_.GetVideoHeight();
     if (alignedHeight_ % ALIGNEDBITS != 0) {
         alignedHeight_ = ((alignedHeight_ / ALIGNEDBITS) + 1) * ALIGNEDBITS;
@@ -81,7 +81,7 @@ int32_t ImageSinkDecoder::AddSurface()
         consumerBufferListener_ = new ConsumBufferListener(shared_from_this());
     }
     consumerSurface_->RegisterConsumerListener(consumerBufferListener_);
-    lastFrameSize_ = configParam_.GetVideoWidth() * configParam_.GetVideoHeight() * RGB_CHROMA / EVEN;
+    lastFrameSize_ = configParam_.GetVideoWidth() * configParam_.GetVideoHeight() * RGB_CHROMA / TWO;
     lastFrame_ = new uint8_t[lastFrameSize_];
     return DH_SUCCESS;
 }
@@ -147,7 +147,7 @@ void ImageSinkDecoder::OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<Sur
     }
     dstDataOffset = chromaOffset;
     srcDataOffset = alignedWidth * alignedHeight_;
-    for (int32_t uvh = 0 ; uvh < configParam_.GetVideoHeight() / EVEN; uvh++) {
+    for (int32_t uvh = 0 ; uvh < configParam_.GetVideoHeight() / TWO; uvh++) {
         int32_t ret = memcpy_s(windowSurfaceAddr + dstDataOffset, size - dstDataOffset,
             surfaceAddr + srcDataOffset, configParam_.GetVideoWidth());
         if (ret != EOK) {

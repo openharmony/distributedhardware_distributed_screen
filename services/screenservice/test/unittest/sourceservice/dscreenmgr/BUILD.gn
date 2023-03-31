@@ -35,7 +35,7 @@ config("module_private_config") {
 
   include_dirs += [
     "./include",
-    "${services_path}/common/decision_centrt/include",
+    "${services_path}/common/decision_center/include",
     "${services_path}/screenservice/sourceservice/dscreenmgr/include",
     "${services_path}/common/utils/include",
     "${services_path}/common/databuffer/include",

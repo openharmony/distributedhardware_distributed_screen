@@ -130,7 +130,7 @@ int32_t ScreenSourceTrans::Start()
     if (dhFwkKit != nullptr) {
         ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, ENABLE_LOW_LATENCY.dump());
         if (ret != DH_FWK_SUCCESS) {
-            DHLOGE("%s: Source start enable low latency failed ret: %.", PRId32, LOG_TAG, ret);
+            DHLOGE("%s: Source start enable low latency failed ret: %." PRId32, LOG_TAG, ret);
         }
     }
 
@@ -159,7 +159,7 @@ int32_t ScreenSourceTrans::Stop()
     if (dhFwkKit != nullptr) {
         ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, DISABLE_LOW_LATENCY.dump());
         if (ret != DH_FWK_SUCCESS) {
-            DHLOGE("%s: Source stop enable low latency failed ret: %.", PRId32, LOG_TAG, ret);
+            DHLOGE("%s: Source stop enable low latency failed ret: %." PRId32, LOG_TAG, ret);
         }
     }
 
@@ -284,7 +284,7 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
             screenChannel_ = std::make_shared<ScreenRefreshChannelImpl>(peerDevId);
             break;
         default:
-            break;  
+            break;
     }
     int32_t ret = RegisterChannelListener();
     if (ret != DH_SUCCESS) {
@@ -351,7 +351,7 @@ int32_t ScreenSourceTrans::RegisterProcessorListener(const VideoParam &localPara
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Config decision center failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
-    }  
+    }
     return DH_SUCCESS;
 }
 
@@ -406,16 +406,16 @@ void ScreenSourceTrans::OnDamageProcessDone(sptr<SurfaceBuffer> &surfaceBuffer, 
     }
     int32_t ret = DH_SUCCESS;
     switch (atoi(version_.c_str())) {
-        case 1:
+        case ONE:
             DHLOGI("%s: ProcessFullImage.", LOG_TAG);
             ret = imageProcessor_->ProcessFullImage(surfaceBuffer);
             break;
-        case 2:
-            DHLOGI("%s: InputBufferDmage.", LOG_TAG);
-            ret = screenDecisionCenter_->InputBufferDmage(surfaceBuffer, damages);
+        case TWO:
+            DHLOGI("%s: InputBufferImage.", LOG_TAG);
+            ret = screenDecisionCenter_->InputBufferImage(surfaceBuffer, damages);
             break;
         default:
-            break;  
+            break;
     }
 }
 

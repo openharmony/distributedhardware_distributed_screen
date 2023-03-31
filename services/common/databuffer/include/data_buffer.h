@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -41,14 +41,12 @@ public:
     void SetSize(size_t size);
     void SetDataType(uint8_t dataType);
     uint8_t DataType();
-    DirtyRect GetDirtyRect();
-    void SetDirtyRect(DirtyRect &rect);
     void SetDataNumber(size_t number);
     size_t DataNumber();
-    void ReapplyCapcity(size_t capacity);
+    void ResetCapcity(size_t capacity);
     void AddData(size_t dataSize, unsigned char* &inputData);
     void AddDirtyRect(DirtyRect rec);
-    std::vector<DirtyRect> DirtyRectVec();
+    std::vector<DirtyRect> GetDirtyRectVec();
     int32_t GetData(int32_t offset, int32_t datasize, uint8_t* &output);
 private:
     static const constexpr char *LOG_TAG = "DataBuffer";
@@ -56,7 +54,7 @@ private:
     size_t capacity_ = 0;
     uint8_t *data_ = nullptr;
     uint8_t dataType_ = 0;
-    size_t dataNumber_ = 0;
+    size_t frameNumber_ = 0;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

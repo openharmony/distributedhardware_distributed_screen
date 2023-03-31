@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,10 +19,10 @@
 #include <fstream>
 #include <iostream>
 #include <securec.h>
-#include <setjmp.h>
+#include <csetjmp>
 #include <stddef.h>
 #include <string>
-#include <time.h>
+#include <ctime>
 
 #include "display_type.h"
 #include "dscreen_constants.h"
@@ -84,11 +84,10 @@ void ImageSourceEncoder::ConsumeSurface()
     sptr<SurfaceBuffer> surfaceBuffer = nullptr;
     int32_t fence = -1;
     int64_t timestamp = 0;
-    OHOS::Rect damage = {0, 0, 0, 0};
-    std::vector<OHOS::Rect> damages;
+    OHOS::Rect damage = {0, 0, 0, 0}; 
     SurfaceError surfaceErr = consumerSurface_->AcquireBuffer(surfaceBuffer, fence, timestamp, damage);
     if (surfaceErr != SURFACE_ERROR_OK) {
-        DHLOGE("%s: consumerSurface_ acquire buffer failed, errcode: %", PRId32, LOG_TAG, surfaceErr);
+        DHLOGE("%s: consumerSurface_ acquire buffer failed, errcode: %" PRId32, LOG_TAG, surfaceErr);
         consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
         return;
     }
@@ -130,7 +129,7 @@ int32_t ImageSourceEncoder::ConfigureEncoder(const VideoParam &configParam)
     configParam_ = configParam;
     ret = AddSurface();
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Add surface failed ret: %.", PRId32, LOG_TAG, ret);
+        DHLOGE("%s: Add surface failed ret: %." PRId32, LOG_TAG, ret);
         consumerSurface_ = nullptr;
         producerSurface_ = nullptr;
         return ret;
@@ -143,12 +142,12 @@ int32_t ImageSourceEncoder::AddSurface()
     DHLOGI("%s: AddSurface.", LOG_TAG);
     consumerSurface_ = IConsumerSurface::Create();
     if (consumerSurface_ == nullptr) {
-        DHLOGE("%s: creat consumer surface failed: %.", PRId32, LOG_TAG);
+        DHLOGE("%s: creat consumer surface failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
     sptr<IBufferProducer> producer = consumerSurface_->GetProducer();
     if (producer == nullptr) {
-        DHLOGE("%s: Creat producer surface failed: %.", PRId32, LOG_TAG);
+        DHLOGE("%s: Creat producer surface failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
     producerSurface_ = Surface::CreateSurfaceAsProducer(producer);
@@ -182,10 +181,10 @@ std::vector<OHOS::Rect> ImageSourceEncoder::VecToDamage(std::vector<std::vector<
     std::vector<OHOS::Rect> damages;
     for (auto item : eventContent) {
         OHOS::damage = {0, 0, 0, 0};
-        damage.x = item.at(0);
-        damage.y = item.at(1);
-        damage.w = item.at(2);
-        damage.h = item.at(3);
+        damage.x = item.at(ZERO);
+        damage.y = item.at(ONE);
+        damage.w = item.at(TWO);
+        damage.h = item.at(THREE);
         damages.push_back(damage);
     }
     return damages;

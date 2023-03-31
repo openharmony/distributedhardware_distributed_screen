@@ -43,6 +43,8 @@ public:
     void OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen) override;
     void OnStreamReceived(int32_t sessionId, const StreamData *data, const StreamData *ext,
         const StreamFrameInfo *param) override;
+    void ProcessDullData(const StreamData *data, std::shared_ptr<DataBuffer> screenData);
+    void ProcessDirtyData(const StreamData *data, std::shared_ptr<DataBuffer> screenData, const StreamData *ext);
 
     int32_t OpenDataSession();
     int32_t OpenJpegSession();
