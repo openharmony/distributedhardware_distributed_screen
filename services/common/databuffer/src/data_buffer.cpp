@@ -15,7 +15,10 @@
 
 #include "data_buffer.h"
 
+#include "dscreen_errcode.h"
+#include "dscreen_log.h"
 #include <new>
+#include <securec.h>
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -27,6 +30,7 @@ DataBuffer::DataBuffer(size_t capacity)
             capacity_ = capacity;
         }
     }
+    dataType_ = 0;
 }
 
 DataBuffer::~DataBuffer()
@@ -35,7 +39,6 @@ DataBuffer::~DataBuffer()
         delete []data_;
         data_ = nullptr;
     }
-
     capacity_ = 0;
 }
 
@@ -47,6 +50,74 @@ size_t DataBuffer::Capacity() const
 uint8_t *DataBuffer::Data() const
 {
     return data_;
+}
+void DataBuffer::SetSize(size_t size)
+{
+    capacity_ = size;
+}
+void DataBuffer::SetDataType(uint8_t dataType)
+{
+    dataType_ = dataType;
+}
+uint8_t DataBuffer::DataType()
+{
+    return dataType_;
+}
+void DataBuffer::SetDataNumber(size_t number)
+{
+    dataNumber_ = number;
+}
+size_t DataBuffer::DataNumber()
+{
+    return dataNumber_;
+}
+void DataBuffer::ReapplyCapcity(size_t capacity)
+{
+    DHLOGI("%s: ReapplyCapcity.", LOG_TAG);
+    if (capacity < capacity_) {
+        return;
+    }
+    delete [] data_;
+    data_ = new (std::nothrow) uint8_t[capacity] {0};
+    if (data_ != nullptr) {
+        capacity_ = capacity;
+    }
+}
+void DataBuffer::AddData(size_t dataSize, unsigned char* &inputData)
+{
+    DHLOGI("%s: AddData.", LOG_TAG);
+    if (inputData == nullptr) {
+        return;
+    }
+    int32_t ret = memcpy_s(data_ + capacity_, dataSize, inputData, dataSize);
+    if (ret != EOK) {
+        DHLOGE("%s: in AddData memcpy data failed, ret: %.", PRId32, LOG_TAG, ret);
+        return;
+    }
+    capacity_ += dataSize;
+}
+void DataBuffer::AddDirtyRect(DirtyRect rect)
+{
+    DHLOGI("%s: AddDirtyRect.", LOG_TAG);
+    dirtyRectVec_.push_back(rect);
+}
+std::vector<DirtyRect> DataBuffer::DirtyRectVec()
+{
+    return dirtyRectVec_;
+}
+int32_t DataBuffer::GetData(int32_t offset, int32_t datasize, uint8_t* &output)
+{
+    DHLOGI("%s: GetData.", LOG_TAG);
+    if (offset + datasize > capacity_ || output == nullptr) {
+        DHLOGE("DataBuffer GetData parameter invalied.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
+    int32_t ret = memcpy_s(output, datasize, data_ + offset, datasize);
+    if (ret != EOK) {
+        DHLOGE("GetData memcpy data failed, ret: %.", PRId32, ret);
+        return ret;
+    }
+    return DH_SUCCESS;
 }
 } // namespace DistributedHardware
 } // namespcae OHOS

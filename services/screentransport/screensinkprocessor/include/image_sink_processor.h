@@ -20,6 +20,7 @@
 #include "image_sink_decoder.h"
 #include "video_param.h"
 #include "data_buffer.h"
+#include "screen_image_jpeg.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -40,7 +41,8 @@ private:
     static const constexpr char *LOG_TAG = "ImageSinkProcessor";
     VideoParam localParam_;
     VideoParam remoteParam_;
-    std::shared_ptr<ImageSinkDecoder> imageDecoder_;
+    std::shared_ptr<ImageSinkDecoder> imageDecoder_ = nullptr;
+    std::shared_ptr<ScreenImageJpeg> imageJpeg_ = nullptr;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

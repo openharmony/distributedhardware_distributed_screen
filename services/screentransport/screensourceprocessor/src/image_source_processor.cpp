@@ -101,10 +101,30 @@ int32_t ImageSourceProcessor::StopImageProcessor()
     return DH_SUCCESS;
 }
 
-sptr<Surface> &ImageSourceProcessor::GetImageSurface()
+sptr<Surface> ImageSourceProcessor::GetImageSurface()
 {
     DHLOGI("%s: GetImageSurface.", LOG_TAG);
     return imageEncoder_->GetInputSurface();
+}
+
+sptr<Surface> ImageSourceProcessor::GetConsumerSurface()
+{
+    DHLOGI("%s: GetConsumerSurface.", LOG_TAG);
+    return imageEncoder_->GetConsumerSurface();
+}
+
+int32_t ImageSourceProcessor::ProcessFullImage(sptr<SurfaceBuffer> &surfaceBuffer)
+{
+    if (surfaceBuffer == nullptr) {
+        DHLOGE("%s: Process surfaceBuffer is null.", LOG_TAG);
+        return ERR_DH_SCREEN_SURFACE_BUFFER_INVALIED;
+    }
+    int32_t ret = imageEncoder_->FeedEncoderData(surfaceBuffer);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("%s: FeedEncoderData failed.", LOG_TAG);
+        return ERR_DH_SCREEN_TRANS_ERROR;
+    }
+    return DH_SUCCESS;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

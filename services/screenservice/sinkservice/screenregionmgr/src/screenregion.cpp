@@ -128,7 +128,15 @@ int32_t ScreenRegion::SetUpWindow()
 
     return DH_SUCCESS;
 }
-
+void ScreenRegion::SetScreenVersion(std::string version)
+{
+    DHLOGD("ScreenRegion SetScreenVersion");
+    version_ = version;
+}
+std::string ScreenRegion::GetScreenVersion()
+{
+    return version_;
+}
 
 int32_t ScreenRegion::SetUp()
 {
@@ -142,7 +150,7 @@ int32_t ScreenRegion::SetUp()
     if (sinkTrans_ == nullptr) {
         sinkTrans_ = std::make_shared<ScreenSinkTrans>();
     }
-
+    sinkTrans_->SetScreenVersion(version_);
     sinkTrans_->RegisterStateCallback(shared_from_this());
     sinkTrans_->SetImageSurface(surface_);
     ret = sinkTrans_->SetUp(*videoParam_, *videoParam_, remoteDevId_);

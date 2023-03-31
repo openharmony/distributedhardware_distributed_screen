@@ -106,6 +106,15 @@ uint64_t DScreen::GetScreenId() const
     return screenId_;
 }
 
+void DScreen::SetScreenVersion(std::string &version)
+{
+    version_ = version;
+}
+std::string DScreen::GetScreenVersion()
+{
+    return version_;
+}
+
 std::string DScreen::GetDHId() const
 {
     return dhId_;
@@ -392,21 +401,13 @@ int32_t DScreen::SetUp()
     if (sourceTrans_ == nullptr) {
         sourceTrans_ = std::make_shared<ScreenSourceTrans>();
     }
-
+    sourceTrans_->SetScreenVersion(version_);
     sourceTrans_->RegisterStateCallback(shared_from_this());
     int32_t ret = sourceTrans_->SetUp(*videoParam_, *videoParam_, devId_);
     if (ret != DH_SUCCESS) {
         DHLOGE("source trans SetUp failed.");
         return ret;
     }
-
-    sptr<OHOS::Surface> windowSurface = sourceTrans_->GetImageSurface();
-    if (windowSurface == nullptr) {
-        DHLOGE("DScreen SetUp failed.");
-        return ERR_DH_SCREEN_SA_DSCREEN_SETUP_FAILED;
-    }
-
-    ScreenMgrAdapter::GetInstance().SetImageSurface(screenId_, windowSurface);
     DHLOGI("DScreen SetUp success.");
     return DH_SUCCESS;
 }
@@ -419,12 +420,17 @@ int32_t DScreen::Start()
         DHLOGE("source trans not init.");
         return ERR_DH_SCREEN_SA_SOURCETRANS_NOT_INIT;
     }
-
     int32_t ret = sourceTrans_->Start();
     if (ret != DH_SUCCESS) {
         DHLOGE("source trans start failed.");
         return ret;
     }
+    sptr<OHOS::Surface> windowSurface = sourceTrans_->GetImageSurface();
+    if (windowSurface == nullptr) {
+        DHLOGE("DScreen SetUp failed.");
+        return ERR_DH_SCREEN_SA_DSCREEN_SETUP_FAILED;
+    }
+    ScreenMgrAdapter::GetInstance().SetImageSurface(screenId_, windowSurface);
     return DH_SUCCESS;
 }
 

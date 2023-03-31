@@ -112,6 +112,8 @@ int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &dev
     const EnableParam &param, const std::string &reqId)
 {
     std::string attrs = param.attrs;
+    std::string version = param.version;
+    DScreenManager::GetInstance().SetScreenVersion(version);
     int ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, attrs, reqId);
     if (ret != DH_SUCCESS) {
         DHLOGE("enable distributedScreen failed. devId: %s, dhId: %s, reqId: %s, attrs: %s",

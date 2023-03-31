@@ -39,6 +39,7 @@ ohos_shared_library("distributed_screen_handler") {
   deps = [
     "${common_path}:distributed_screen_utils",
     "${windowmanager_path}/dm:libdm",
+    "${mediastandard_path}/interfaces/inner_api/native:media_client",
   ]
 
   defines = [

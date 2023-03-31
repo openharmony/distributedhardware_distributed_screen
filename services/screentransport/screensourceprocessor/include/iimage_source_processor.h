@@ -17,7 +17,7 @@
 #define OHOS_IIMAGE_SOURCE_PROCESSOR_H
 
 #include "surface.h"
-
+#include "surface_buffer.h"
 #include <memory>
 
 #include "data_buffer.h"
@@ -35,7 +35,9 @@ public:
     virtual int32_t ReleaseImageProcessor() = 0;
     virtual int32_t StartImageProcessor() = 0;
     virtual int32_t StopImageProcessor() = 0;
-    virtual sptr<Surface> &GetImageSurface() = 0;
+    virtual sptr<Surface> GetImageSurface() = 0;
+    virtual sptr<Surface> GetConsumerSurface() = 0;
+    virtual int32_t ProcessFullImage(sptr<SurfaceBuffer> &surfaceBuffer) = 0;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

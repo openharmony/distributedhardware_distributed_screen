@@ -27,7 +27,7 @@
 #include "dscreen_log.h"
 #include "image_source_processor.h"
 #include "screen_data_channel_impl.h"
-
+#include "screen_refresh_channel_impl.h"
 namespace OHOS {
 namespace DistributedHardware {
 constexpr const char* FDATA_THREAD = "FeedDataThread";
@@ -40,14 +40,33 @@ int32_t ScreenSourceTrans::SetUp(const VideoParam &localParam, const VideoParam 
         DHLOGE("%s: SetUp failed param error ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
-
     ret = InitScreenTrans(localParam, remoteParam, peerDevId);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: SetUp failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
-
+    ret = SetConsumerSurface();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("sourcetrans set image surface failed.");
+        return ret;
+    }
+    ret = screenDecisionCenter_->SetJpegSurface(consumerSurface_);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("screenDecisionCenter set jpeg surface failed.");
+        return ret;
+    }
     DHLOGI("%s: SetUp success.", LOG_TAG);
+    return DH_SUCCESS;
+}
+
+int32_t ScreenSourceTrans::SetConsumerSurface()
+{
+    DHLOGI("%s: SetConsumerSurface.", LOG_TAG);
+    consumerSurface_ = imageProcessor_->GetConsumerSurface();
+    if (consumerSurface_ == nullptr) {
+        DHLOGE("%s: consumerSurface is nullptr", LOG_TAG);
+        return ERR_DH_SCREEN_SURFACE_INVALIED;
+    }
     return DH_SUCCESS;
 }
 
@@ -111,7 +130,7 @@ int32_t ScreenSourceTrans::Start()
     if (dhFwkKit != nullptr) {
         ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, ENABLE_LOW_LATENCY.dump());
         if (ret != DH_FWK_SUCCESS) {
-            DHLOGE("%s: Source start enable low latency failed ret: %d.", LOG_TAG, ret);
+            DHLOGE("%s: Source start enable low latency failed ret: %.", PRId32, LOG_TAG, ret);
         }
     }
 
@@ -140,7 +159,7 @@ int32_t ScreenSourceTrans::Stop()
     if (dhFwkKit != nullptr) {
         ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, DISABLE_LOW_LATENCY.dump());
         if (ret != DH_FWK_SUCCESS) {
-            DHLOGE("%s: Source stop enable low latency failed ret: %d.", LOG_TAG, ret);
+            DHLOGE("%s: Source stop enable low latency failed ret: %.", PRId32, LOG_TAG, ret);
         }
     }
 
@@ -176,10 +195,19 @@ int32_t ScreenSourceTrans::RegisterStateCallback(const std::shared_ptr<IScreenSo
     return DH_SUCCESS;
 }
 
-sptr<Surface> &ScreenSourceTrans::GetImageSurface()
+sptr<Surface> ScreenSourceTrans::GetImageSurface()
 {
     DHLOGI("%s:GetImageSurface.", LOG_TAG);
-    return encoderSurface_;
+    return imageProcessor_->GetImageSurface();
+}
+
+void ScreenSourceTrans::SetScreenVersion(std::string &version)
+{
+    version_ = version;
+}
+std::string ScreenSourceTrans::GetScreenVersion()
+{
+    return version_;
 }
 
 int32_t ScreenSourceTrans::CheckVideoParam(const VideoParam &param)
@@ -248,17 +276,24 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
     const std::string &peerDevId)
 {
     DHLOGI("%s:InitScreenTrans.", LOG_TAG);
-    screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
-
+    switch (atoi(version_.c_str())) {
+        case 1:
+            screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
+            break;
+        case 2:
+            screenChannel_ = std::make_shared<ScreenRefreshChannelImpl>(peerDevId);
+            break;
+        default:
+            break;  
+    }
     int32_t ret = RegisterChannelListener();
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Register channel listener failed ret: %" PRId32, LOG_TAG, ret);
         screenChannel_ = nullptr;
         return ret;
     }
-
+    screenDecisionCenter_ = std::make_shared<ScreenDecisionCenter>(localParam);
     imageProcessor_ = std::make_shared<ImageSourceProcessor>();
-
     ret = RegisterProcessorListener(localParam, remoteParam);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Register data processor listener failed ret: %" PRId32, LOG_TAG, ret);
@@ -312,13 +347,11 @@ int32_t ScreenSourceTrans::RegisterProcessorListener(const VideoParam &localPara
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "Config image processor failed.");
         return ret;
     }
-
-    encoderSurface_ = imageProcessor_->GetImageSurface();
-    if (encoderSurface_ == nullptr) {
-        DHLOGE("%s: Surface is null.", LOG_TAG);
-        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
-    }
-
+    ret = screenDecisionCenter_->ConfigureDecisionCenter(listener, imageProcessor_);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("%s: Config decision center failed ret: %" PRId32, LOG_TAG, ret);
+        return ret;
+    }  
     return DH_SUCCESS;
 }
 
@@ -362,6 +395,28 @@ void ScreenSourceTrans::OnDataReceived(const std::shared_ptr<DataBuffer> &data)
 {
     (void) data;
     DHLOGI("%s: OnChannelDataReceived source trans not support.", LOG_TAG);
+}
+
+void ScreenSourceTrans::OnDamageProcessDone(sptr<SurfaceBuffer> &surfaceBuffer, const std::vector<OHOS::Rect> &damages)
+{
+    DHLOGI("%s: OnDamageProcessDone.", LOG_TAG);
+    if (surfaceBuffer == nullptr) {
+        DHLOGE("%s: Trans surfaceBuffer is null.", LOG_TAG);
+        return;
+    }
+    int32_t ret = DH_SUCCESS;
+    switch (atoi(version_.c_str())) {
+        case 1:
+            DHLOGI("%s: ProcessFullImage.", LOG_TAG);
+            ret = imageProcessor_->ProcessFullImage(surfaceBuffer);
+            break;
+        case 2:
+            DHLOGI("%s: InputBufferDmage.", LOG_TAG);
+            ret = screenDecisionCenter_->InputBufferDmage(surfaceBuffer, damages);
+            break;
+        default:
+            break;  
+    }
 }
 
 void ScreenSourceTrans::OnImageProcessDone(const std::shared_ptr<DataBuffer> &data)

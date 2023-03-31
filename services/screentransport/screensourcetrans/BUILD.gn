@@ -20,12 +20,15 @@ ohos_shared_library("distributed_screen_sourcetrans") {
   include_dirs = [
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//third_party/json/include",
-    "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
     "${fwk_common_path}/utils/include",
     "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "${fwk_interfaces_path}/inner_kits/include",
     "${ipc_interfaces_path}/innerkits/ipc_core/include",
     "${services_path}/common/utils/include",
+    "//third_party/libjpeg-turbo",
+    "//third_party/libyuv/files/include",
+    "//foundation/ability/dmsfwk/utils/native/include",
   ]
 
   include_dirs += [
@@ -38,6 +41,8 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "${services_path}/screentransport/screensourceprocessor/include",
     "${services_path}/screentransport/screensourceprocessor/encoder/include",
     "${services_path}/softbusadapter/include",
+    "${services_path}/common/imageJpeg/include",
+    "${services_path}/common/decision_center/include",
   ]
 
   sources = [
@@ -45,10 +50,13 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "${services_path}/common/utils/src/dscreen_fwkkit.cpp",
     "${services_path}/common/utils/src/video_param.cpp",
     "${services_path}/screentransport/screendatachannel/src/screen_data_channel_impl.cpp",
+    "${services_path}/screentransport/screendatachannel/src/screen_refresh_channel_impl.cpp",
     "${services_path}/screentransport/screensourceprocessor/encoder/src/image_encoder_callback.cpp",
     "${services_path}/screentransport/screensourceprocessor/encoder/src/image_source_encoder.cpp",
     "${services_path}/screentransport/screensourceprocessor/src/image_source_processor.cpp",
     "${services_path}/softbusadapter/src/softbus_adapter.cpp",
+    "${services_path}/common/imageJpeg/src/screen_image_jpeg.cpp",
+    "${services_path}/common/decision_center/src/screen_decision_center.cpp",
     "./src/screen_source_trans.cpp",
   ]
 
@@ -56,6 +64,8 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "${common_path}:distributed_screen_utils",
     "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
     "//foundation/graphic/graphic_2d/frameworks/surface:surface",
+    "//third_party/libjpeg-turbo:turbojpeg_static",
+    "//third_party/libyuv:yuv",
   ]
 
   defines = [

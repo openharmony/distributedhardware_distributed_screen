@@ -40,6 +40,8 @@ config("module_private_config") {
     "${services_path}/screentransport/screensinkprocessor/include",
     "${services_path}/screentransport/screensinkprocessor/decoder/include",
     "${services_path}/softbusadapter/include",
+    "${services_path}/common/imageJpeg/include",
+    "${services_path}/screentransport/screensourceprocessor/include",
   ]
 }
 

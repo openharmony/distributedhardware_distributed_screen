@@ -55,6 +55,7 @@ sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProp
         DHLOGE("surface is nullptr");
         return nullptr;
     }
+    surface_ = surface;
     Rosen::RSTransactionProxy::GetInstance()->FlushImplicitTransaction();
     std::shared_ptr<Rosen::IInputEventConsumer> listener =
         std::make_shared<ScreenClientInputEventListener>(ScreenClientInputEventListener());

@@ -17,7 +17,7 @@
 #define OHOS_IIMAGE_SOURCE_PROCESSOR_LISTENER_H
 
 #include "data_buffer.h"
-
+#include "surface_buffer.h"
 namespace OHOS {
 namespace DistributedHardware {
 class IImageSourceProcessorListener {
@@ -26,6 +26,7 @@ public:
 
     virtual void OnImageProcessDone(const std::shared_ptr<DataBuffer> &data) = 0;
     virtual void OnProcessorStateNotify(int32_t state) = 0;
+    virtual void OnDamageProcessDone(sptr<SurfaceBuffer> &surfaceBuffer, const std::vector<OHOS::Rect> &damages) = 0;
 };
 } // namespace DistributedHardware
 } // namsspace OHOS

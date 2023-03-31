@@ -33,7 +33,9 @@ public:
     int32_t ReleaseImageProcessor() override;
     int32_t StartImageProcessor() override;
     int32_t StopImageProcessor() override;
-    sptr<Surface> &GetImageSurface() override;
+    sptr<Surface> GetImageSurface() override;
+    sptr<Surface> GetConsumerSurface() override;
+    int32_t ProcessFullImage(sptr<SurfaceBuffer> &surfaceBuffer) override;
 
 private:
     static const constexpr char *LOG_TAG = "ImageSourceProcessor";

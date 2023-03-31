@@ -15,37 +15,229 @@
 
 #include "image_source_encoder.h"
 
+#include <dlfcn.h>
+#include <fstream>
+#include <iostream>
 #include <securec.h>
+#include <setjmp.h>
 #include <stddef.h>
+#include <string>
+#include <time.h>
 
+#include "display_type.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
-
+#include "jpeglib.h"
+#ifdef __LP64__
+const std::string LIB_LOAD_PATH = "/system/lib64/libdistributed_screen_dbg_itf.z.so";
+#else
+const std::string LIB_LOAD_PATH = "/system/lib/libdistributed_screen_dbg_itf.z.so";
+#endif
+using GetDscreenDBGItfFunc = OHOS::DistributedHardware::IDScreenDBGItf* (*)();
+using GetImageDirtyFunc = OHOS::DistributedHardware::IImageSetDirty* (*)();
 namespace OHOS {
 namespace DistributedHardware {
+void ConsumerBufferListener::OnBufferAvailable()
+{
+    DHLOGI("%s: OnBufferAvailable.", LOG_TAG);
+    encoder_->ConsumeSurface();
+}
+
+void ImageSourceEncoder::InitDscreenDBG()
+{
+    char path[PATH_MAX + 1] = {0x00};
+    if (LIB_LOAD_PATH.length() > PATH_MAX || realpath(LIB_LOAD_PATH.c_str(), path) == nullptr) {
+        DHLOGE("File connicailization failed.");
+        return;
+    }
+    pHandler_ = dlopen(path, RTLD_LAZY | RTLD_NODELETE | RTLD_GLOBAL);
+    if (pHandler_ == nullptr) {
+        DHLOGE("%s: handler load failed, fail reason: %s.", path, dlerror());
+        return;
+    }
+    GetDscreenDBGItfFunc getDscreenDBGItfFunc = (GetDscreenDBGItfFunc)dlsym(pHandler_, GET_DBG_ITF_FUNC.c_str());
+    GetImageDirtyFunc getImageDirtyFunc = (GetImageDirtyFunc)dlsym(pHandler_, GET_IMAGE_DIRTY_FUNC.c_str());
+    if (getDscreenDBGItfFunc == nullptr || getImageDirtyFunc ==nullptr) {
+        DHLOGE("get FUNC failed, failed reason: %s.", dlerror());
+        return;
+    }
+    dscreenDbgItfPtr_ = getDscreenDBGItfFunc();
+    imageSetDirtyPtr_ = getImageDirtyFunc();
+    if (dscreenDbgItfPtr_ == nullptr || imageSetDirtyPtr_ == nullptr) {
+        DHLOGE("Get interface failed.");
+        return;
+    }
+    DHLOGI("InitDscreenDBG success.");
+    dscreenDbgItfPtr_->Init();
+}
+
+void ImageSourceEncoder::ConsumeSurface()
+{
+    DHLOGI("%s: ConsumeSurface.", LOG_TAG);
+    std::unique_lock<std::mutex> bufLock(bufferMtx_);
+    if (consumerSurface_ == nullptr) {
+        DHLOGE("%s: consumerSurface_ is nullptr.", LOG_TAG);
+        return;
+    }
+    sptr<SurfaceBuffer> surfaceBuffer = nullptr;
+    int32_t fence = -1;
+    int64_t timestamp = 0;
+    OHOS::Rect damage = {0, 0, 0, 0};
+    std::vector<OHOS::Rect> damages;
+    SurfaceError surfaceErr = consumerSurface_->AcquireBuffer(surfaceBuffer, fence, timestamp, damage);
+    if (surfaceErr != SURFACE_ERROR_OK) {
+        DHLOGE("%s: consumerSurface_ acquire buffer failed, errcode: %", PRId32, LOG_TAG, surfaceErr);
+        consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
+        return;
+    }
+    if (pHandler_ != nullptr) {
+        eventContent_.clear();
+        eventContent_ = imageSetDirtyPtr_->GetDamage();
+    }
+    std::vector<OHOS::Rect> damages = VecToDamage(eventContent_);
+    std::shared_ptr<IImageSourceProcessorListener> listener = imageProcessorListener_.lock();
+    if (listener == nullptr) {
+        DHLOGE("%s: Processor listener is null", LOG_TAG);
+        consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
+        return;
+    }
+    listener->OnDamageProcessDone(surfaceBuffer, damages);
+    consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
+}
+
 int32_t ImageSourceEncoder::ConfigureEncoder(const VideoParam &configParam)
 {
     DHLOGI("%s: ConfigureEncoder.", LOG_TAG);
     int32_t ret = InitVideoEncoder(configParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Init encoder failed ret:%" PRId32, LOG_TAG, ret);
+        DHLOGE("%s: Init encoder failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
 
     ret = SetEncoderFormat(configParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Set encoder format failed ret:%" PRId32, LOG_TAG, ret);
+        DHLOGE("%s: Set encoder format failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
 
-    videoSurface_ = videoEncoder_->CreateInputSurface();
-    if (videoSurface_ == nullptr) {
+    encoderSurface_ = videoEncoder_->CreateInputSurface();
+    if (encoderSurface_ == nullptr) {
         DHLOGE("%s: Create encoder surface failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
+    configParam_ = configParam;
+    ret = AddSurface();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("%s: Add surface failed ret: %.", PRId32, LOG_TAG, ret);
+        consumerSurface_ = nullptr;
+        producerSurface_ = nullptr;
+        return ret;
+    }
+    return DH_SUCCESS;
+}
 
+int32_t ImageSourceEncoder::AddSurface()
+{
+    DHLOGI("%s: AddSurface.", LOG_TAG);
+    consumerSurface_ = IConsumerSurface::Create();
+    if (consumerSurface_ == nullptr) {
+        DHLOGE("%s: creat consumer surface failed: %.", PRId32, LOG_TAG);
+        return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+    }
+    sptr<IBufferProducer> producer = consumerSurface_->GetProducer();
+    if (producer == nullptr) {
+        DHLOGE("%s: Creat producer surface failed: %.", PRId32, LOG_TAG);
+        return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+    }
+    producerSurface_ = Surface::CreateSurfaceAsProducer(producer);
+    if (producerSurface_ == nullptr) {
+        DHLOGE("%s: Create preducer surface failed.", LOG_TAG);
+        return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+    }
+    consumerBufferListener_ = new ConsumerBufferListener(shared_from_this());
+    consumerSurface_->RegisterConsumerListener(consumerBufferListener_);
+    return DH_SUCCESS;
+}
+
+sptr<Surface> ImageSourceEncoder::GetConsumerSurface()
+{
+    DHLOGI("%s: GetConsumerSurface.", LOG_TAG);
+    return consumerSurface_;
+}
+
+sptr<Surface> &ImageSourceEncoder::GetInputSurface()
+{
+    DHLOGI("%s: GetInputSurface.", LOG_TAG);
+    if (producerSurface_ == nullptr) {
+        return encoderSurface_;
+    }
+    return producerSurface_;
+}
+
+std::vector<OHOS::Rect> ImageSourceEncoder::VecToDamage(std::vector<std::vector<int32_t>> eventContent)
+{
+    DHLOGI("%s: VecToDamage.", LOG_TAG);
+    std::vector<OHOS::Rect> damages;
+    for (auto item : eventContent) {
+        OHOS::damage = {0, 0, 0, 0};
+        damage.x = item.at(0);
+        damage.y = item.at(1);
+        damage.w = item.at(2);
+        damage.h = item.at(3);
+        damages.push_back(damage);
+    }
+    return damages;
+}
+
+sptr<SurfaceBuffer> ImageSourceEncoder::GetEncoderInputSurfaceBuffer()
+{
+    DHLOGI("%s: GetEncoderInputSurfaceBuffer.", LOG_TAG);
+    OHOS::BufferRequestConfig requestConfig;
+    requestConfig.width = configParam_.GetVideoWidth();
+    requestConfig.height = configParam_.GetVideoHeight();
+    requestConfig.usage = HBM_USE_CPU_READ | HBM_USE_CPU_WRITE | HBM_USE_MEM_DMA;
+    requestConfig.strideAlignment = STRIDE_ALIGNMENT;
+    requestConfig.format = PixelFormat::PIXEL_FMT_RGBA_8888;
+    requestConfig.timeout = 0;
+    sptr<OHOS::SurfaceBuffer> encoderSurfaceBuffer = nullptr;
+    int32_t releaseFence = -1;
+    SurfaceError surfaceErr = encoderSurface_->RequestBuffer(encoderSurfaceBuffer, releaseFence, requestConfig);
+    if (surfaceErr != GSERROR_OK || encoderSurfaceBuffer == nullptr) {
+        DHLOGE("%s: RequestBuffer failed.", LOG_TAG);
+        encoderSurface_->CancelBuffer(encoderSurfaceBuffer);
+    }
+    return encoderSurfaceBuffer;
+}
+
+int32_t ImageSourceEncoder::FeedEncoderData(sptr<SurfaceBuffer> &surfaceBuffer)
+{
+    DHLOGI("%s: FeedEncoderData.", LOG_TAG);
+    sptr<OHOS::SurfaceBuffer> encoderSurfaceBuffer = GetEncoderInputSurfaceBuffer();
+    if (encoderSurfaceBuffer == nullptr) {
+        DHLOGE("Get encoder input producer surface buffer failed.");
+        return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+    }
+    int32_t screenDataSize = configParam_.GetVideoWidth() * configParam_.GetVideoHeight() * RGBA_CHROMA;
+    auto encoderSurfaceAddr = static_cast<uint8_t*>(encoderSurfaceBuffer->GetVirAddr());
+    auto surfaceAddr = static_cast<uint8_t*>(surfaceBuffer->GetVirAddr());
+    int32_t ret = memcpy_s(encoderSurfaceAddr, screenDataSize, surfaceAddr, screenDataSize);
+    if (ret != EOK) {
+        DHLOGE("%s: surfaceBuffer memcpy_s run failed.", LOG_TAG);
+        consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
+        encoderSurface_->CancelBuffer(encoderSurfaceBuffer);
+        return ret;
+    }
+    BufferFlushConfig flushConfig = { {0, 0, encoderSurfaceBuffer->GetWidth(), encoderSurfaceBuffer->GetHeight()}, 0};
+    SurfaceError surfaceErr = encoderSurface_->FlushBuffer(encoderSurfaceBuffer, -1, flushConfig);
+    if (surfaceErr != SURFACE_ERROR_OK) {
+        DHLOGE("%s: encoderSurface_ flush buffer failed.", LOG_TAG);
+        consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
+        encoderSurface_->CancelBuffer(encoderSurfaceBuffer);
+        return surfaceErr;
+    }
+    consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
     return DH_SUCCESS;
 }
 
@@ -62,9 +254,13 @@ int32_t ImageSourceEncoder::ReleaseEncoder()
         DHLOGE("%s: Release encoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_RELEASE_FAILED;
     }
+    if (pHandler_ != nullptr) {
+        dscreenDbgItfPtr_->Release();
+        dlclose(pHandler_);
+    }
     encodeVideoCallback_ = nullptr;
     videoEncoder_ = nullptr;
-
+    consumerBufferListener_ = nullptr;
     return DH_SUCCESS;
 }
 
@@ -87,7 +283,7 @@ int32_t ImageSourceEncoder::StartEncoder()
         DHLOGE("%s: Start encoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_START_FAILED;
     }
-
+    InitDscreenDBG();
     return DH_SUCCESS;
 }
 
@@ -109,7 +305,12 @@ int32_t ImageSourceEncoder::StopEncoder()
         DHLOGE("%s: Stop encoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_STOP_FAILED;
     }
-
+    ret = consumerSurface_->UnregisterConsumerListener();
+    if (ret != SURFACE_ERROR_OK) {
+        DHLOGE("Unregister Consumer Listener failed.");
+    }
+    consumerSurface_ = nullptr;
+    producerSurface_ = nullptr;
     return DH_SUCCESS;
 }
 
@@ -241,8 +442,9 @@ void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecB
         DHLOGE("%s: Copy data failed.", LOG_TAG);
         return;
     }
+    dataBuf->SetDataType(VIDEO_FULL_SCREEN_DATA);
+    dataBuf->SetSize(dataSize);
     listener->OnImageProcessDone(dataBuf);
-
     ret = videoEncoder_->ReleaseOutputBuffer(index);
     if (ret != Media::MSERR_OK) {
         DHLOGE("%s: videoEncoder ReleaseOutputBuffer failed.", LOG_TAG);

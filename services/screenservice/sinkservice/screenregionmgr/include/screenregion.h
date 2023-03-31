@@ -55,12 +55,15 @@ public:
     int32_t Start();
     int32_t Stop();
     std::shared_ptr<WindowProperty> GetWindowProperty();
+    void SetScreenVersion(std::string version);
+    std::string GetScreenVersion();
 
 private:
     std::string remoteDevId_;
     uint64_t screenId_; // local screen id
     uint64_t displayId_; // local display id
     bool isRunning = false;
+    std::string version_ = "1.0";
 
     std::shared_ptr<VideoParam> videoParam_ = nullptr;
     std::shared_ptr<DScreenMapRelation> mapRelation_ = nullptr;

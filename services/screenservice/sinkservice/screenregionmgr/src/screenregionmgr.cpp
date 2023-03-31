@@ -121,6 +121,9 @@ bool ScreenRegionManager::CheckContentJson(json &eventContentJson)
     if (!IsString(eventContentJson, KEY_DH_ID)) {
         return false;
     }
+    if (eventContentJson.contains(KEY_VERSION) && !IsString(eventContentJson, KEY_VERSION)) {
+        return false;
+    }
     return true;
 }
 
@@ -138,7 +141,9 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
         NotifyRemoteSourceSetUpResult(remoteDevId, "", ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
         return;
     }
-
+    if (eventContentJson.contains(KEY_VERSION)) {
+        version_ = eventContentJson[KEY_VERSION].get<std::string>();
+    }
     uint64_t screenId = eventContentJson[KEY_SCREEN_ID].get<uint64_t>();
     std::string dhId = eventContentJson[KEY_DH_ID].get<std::string>();
 
@@ -167,7 +172,7 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
         }
         screenRegions_[remoteDevId] = screenRegion;
     }
-
+    screenRegion->SetScreenVersion(version_);
     ret = screenRegion->SetUp();
     if (ret != DH_SUCCESS) {
         DHLOGE("screen region setup failed");

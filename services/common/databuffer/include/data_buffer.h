@@ -18,9 +18,19 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <vector>
+
+#include "dscreen_constants.h"
 
 namespace OHOS {
 namespace DistributedHardware {
+struct DirtyRect {
+    int32_t xPos;
+    int32_t yPos;
+    int32_t width;
+    int32_t height;
+    int32_t dirtySize;
+};
 class DataBuffer {
 public:
     explicit DataBuffer(size_t capacity);
@@ -28,10 +38,25 @@ public:
 
     size_t Capacity() const;
     uint8_t *Data() const;
-
+    void SetSize(size_t size);
+    void SetDataType(uint8_t dataType);
+    uint8_t DataType();
+    DirtyRect GetDirtyRect();
+    void SetDirtyRect(DirtyRect &rect);
+    void SetDataNumber(size_t number);
+    size_t DataNumber();
+    void ReapplyCapcity(size_t capacity);
+    void AddData(size_t dataSize, unsigned char* &inputData);
+    void AddDirtyRect(DirtyRect rec);
+    std::vector<DirtyRect> DirtyRectVec();
+    int32_t GetData(int32_t offset, int32_t datasize, uint8_t* &output);
 private:
+    static const constexpr char *LOG_TAG = "DataBuffer";
+    std::vector<DirtyRect> dirtyRectVec_;
     size_t capacity_ = 0;
     uint8_t *data_ = nullptr;
+    uint8_t dataType_ = 0;
+    size_t dataNumber_ = 0;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

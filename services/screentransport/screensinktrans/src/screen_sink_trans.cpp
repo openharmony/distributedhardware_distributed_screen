@@ -23,7 +23,7 @@
 #include "dscreen_log.h"
 #include "image_sink_processor.h"
 #include "screen_data_channel_impl.h"
-
+#include "screen_refresh_channel_impl.h"
 namespace OHOS {
 namespace DistributedHardware {
 int32_t ScreenSinkTrans::SetUp(const VideoParam &localParam, const VideoParam &remoteParam,
@@ -209,8 +209,16 @@ int32_t ScreenSinkTrans::CheckTransParam(const VideoParam &localParam, const Vid
 int32_t ScreenSinkTrans::InitScreenTrans(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::string &peerDevId)
 {
-    screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
-
+    switch (atoi(version_.c_str())) {
+        case 1:
+            screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
+            break;
+        case 2:
+            screenChannel_ = std::make_shared<ScreenRefreshChannelImpl>(peerDevId);
+            break;
+        default:
+            break;  
+    }
     int32_t ret = RegisterChannelListener();
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Register channel listener failed.", LOG_TAG);
@@ -286,7 +294,7 @@ void ScreenSinkTrans::OnSessionOpened()
     if (dhFwkKit != nullptr) {
         int32_t ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, ENABLE_LOW_LATENCY.dump());
         if (ret != DH_FWK_SUCCESS) {
-            DHLOGE("%s: Sink start enable low latency failed ret: %d.", LOG_TAG, ret);
+            DHLOGE("%s: Sink start enable low latency failed ret: %.", PRId32, LOG_TAG, ret);
         }
     }
 }
@@ -298,7 +306,7 @@ void ScreenSinkTrans::OnSessionClosed()
     if (dhFwkKit != nullptr) {
         int32_t ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, DISABLE_LOW_LATENCY.dump());
         if (ret != DH_FWK_SUCCESS) {
-            DHLOGE("%s: Sink stop enable low latency failed ret: %d.", LOG_TAG, ret);
+            DHLOGE("%s: Sink stop enable low latency failed ret: %.", PRId32, LOG_TAG, ret);
         }
     }
 
@@ -321,6 +329,11 @@ void ScreenSinkTrans::OnDataReceived(const std::shared_ptr<DataBuffer> &data)
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: send data to image processor failed ret: %" PRId32, LOG_TAG, ret);
     }
+}
+
+void ScreenSinkTrans::SetScreenVersion(std::string &version)
+{
+    version_ = version;
 }
 
 void ScreenSinkTrans::OnProcessorStateNotify(int32_t state)

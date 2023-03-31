@@ -70,9 +70,8 @@ HWTEST_F(ScreenSourceTransTest, SetUp_002, TestSize.Level1)
     remoteParam.SetVideoWidth(100);
     remoteParam.SetScreenHeight(100);
     remoteParam.SetScreenWidth(100);
-    std::string peerDevId = "peerDevId";
 
-    int32_t actual = trans->SetUp(localParam, remoteParam, peerDevId);
+    int32_t actual = trans->SetUp(localParam, remoteParam, "peerDevId");
 
     EXPECT_EQ(-1, actual);
 }
@@ -406,10 +405,10 @@ HWTEST_F(ScreenSourceTransTest, GetImageSurface_001, TestSize.Level1)
     remoteParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
     remoteParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
     trans->imageProcessor_ = std::make_shared<ImageSourceProcessor>();
+    trans->screenDecisionCenter_ = std::make_shared<ScreenDecisionCenter>(localParam);
     trans->RegisterProcessorListener(localParam, remoteParam);
-    sptr<Surface> encoderSurface = trans->GetImageSurface();
 
-    EXPECT_NE(nullptr, encoderSurface);
+    EXPECT_NE(nullptr, trans->GetImageSurface());
 }
 
 /**

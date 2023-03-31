@@ -48,6 +48,7 @@ private:
     ~ScreenClientWindowAdapter() = default;
     std::map<int32_t, sptr<Rosen::Window>> windowIdMap_;
     std::mutex windowIdMapMutex_;
+    sptr<Surface> surface_ = nullptr;
 };
 
 class ScreenClientInputEventListener : public Rosen::IInputEventConsumer {

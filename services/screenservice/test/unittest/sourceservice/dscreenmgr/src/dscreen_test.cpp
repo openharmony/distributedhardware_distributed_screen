@@ -328,6 +328,7 @@ HWTEST_F(DScreenTest, SetUp_001, TestSize.Level1)
     dScreen_->videoParam_->SetVideoWidth(100);
     dScreen_->videoParam_->SetScreenHeight(100);
     dScreen_->videoParam_->SetScreenWidth(100);
+    dScreen_->version_ = "1.0";
     int32_t ret = dScreen_->SetUp();
     EXPECT_EQ(-1, ret);
 }
@@ -348,6 +349,7 @@ HWTEST_F(DScreenTest, SetUp_002, TestSize.Level1)
     dScreen_->videoParam_->SetVideoWidth(100);
     dScreen_->videoParam_->SetScreenHeight(100);
     dScreen_->videoParam_->SetScreenWidth(100);
+    dScreen_->version_ = "1.0";
     int32_t ret = dScreen_->SetUp();
     EXPECT_EQ(-1, ret);
 }

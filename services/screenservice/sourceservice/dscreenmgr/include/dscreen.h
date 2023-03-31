@@ -89,6 +89,8 @@ public:
     std::string GetDHId() const;
     std::string GetDevId() const;
     int32_t AddTask(const std::shared_ptr<Task> &task);
+    void SetScreenVersion(std::string &version);
+    std::string GetScreenVersion();
 
 private:
     void TaskThreadLoop();
@@ -117,6 +119,7 @@ private:
     std::mutex taskQueueMtx_;
     std::queue<std::shared_ptr<Task>> taskQueue_;
     bool taskThreadRunning_;
+    std::string version_;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

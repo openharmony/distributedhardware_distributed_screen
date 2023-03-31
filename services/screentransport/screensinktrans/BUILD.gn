@@ -20,6 +20,8 @@ ohos_shared_library("distributed_screen_sinktrans") {
   include_dirs = [
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//third_party/json/include",
+    "//third_party/libjpeg",
+    "//third_party/libyuv/files/include",
     "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
     "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
@@ -32,20 +34,26 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "./include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",
+    "${services_path}/common/imageJpeg/include",
     "${services_path}/common/screen_channel/include",
     "${services_path}/common/utils/include",
     "${services_path}/screentransport/screendatachannel/include",
     "${services_path}/screentransport/screensinktrans/include",
     "${services_path}/screentransport/screensinkprocessor/include",
     "${services_path}/screentransport/screensinkprocessor/decoder/include",
+    "${services_path}/screentransport/screensourceprocessor/include",
     "${services_path}/softbusadapter/include",
+
   ]
 
   sources = [
+    "${common_path}/src/dscreen_json_util.cpp",
+    "${services_path}/common/imageJpeg/src/screen_image_jpeg.cpp",
     "${services_path}/common/databuffer/src/data_buffer.cpp",
     "${services_path}/common/utils/src/dscreen_fwkkit.cpp",
     "${services_path}/common/utils/src/video_param.cpp",
     "${services_path}/screentransport/screendatachannel/src/screen_data_channel_impl.cpp",
+    "${services_path}/screentransport/screendatachannel/src/screen_refresh_channel_impl.cpp",
     "${services_path}/screentransport/screensinkprocessor/decoder/src/image_decoder_callback.cpp",
     "${services_path}/screentransport/screensinkprocessor/decoder/src/image_sink_decoder.cpp",
     "${services_path}/screentransport/screensinkprocessor/src/image_sink_processor.cpp",
@@ -57,6 +65,8 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "${common_path}:distributed_screen_utils",
     "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
     "//foundation/graphic/graphic_2d/frameworks/surface:surface",
+    "//third_party/libjpeg-turbo:turbojpeg_static",
+    "//third_party/libyuv:yuv",
   ]
 
   defines = [

@@ -19,10 +19,11 @@ import(
 ohos_shared_library("distributed_screen_client") {
   include_dirs = [
     "${windowmanager_path}/interfaces/innerkits/wm",
-    "${graphicstandard_path}/interfaces/innerkits/surface",
+    "${graphicstandard_path}/interfaces/inner_api/surface",
     "${graphicstandard_path}/rosen/modules/render_service_client/core/ui",
     "${fwk_common_path}/utils/include",
     "//foundation/multimodalinput/input/interfaces/native/innerkits/event/include/",
+    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
   ]
 
   include_dirs += [

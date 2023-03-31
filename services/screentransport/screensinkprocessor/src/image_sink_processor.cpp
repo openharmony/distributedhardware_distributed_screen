@@ -31,7 +31,7 @@ int32_t ImageSinkProcessor::ConfigureImageProcessor(
     remoteParam_ = remoteParam;
 
     imageDecoder_ = std::make_shared<ImageSinkDecoder>(imageListener);
-
+    imageJpeg_ = std::make_shared<ScreenImageJpeg>(remoteParam);
     int32_t ret = imageDecoder_->ConfigureDecoder(localParam);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: ConfigureDecoder failed ret:%" PRId32, LOG_TAG, ret);
@@ -120,6 +120,12 @@ int32_t ImageSinkProcessor::SetImageSurface(sptr<Surface> &surface)
         return ret;
     }
 
+    ret = imageJpeg_->SetOutputSurface(surface);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("%s: imageJpeg SetImageSurface failed ret: %" PRId32, LOG_TAG, ret);
+        ReportOptFail(DSCREEN_OPT_FAIL, ret, "imageJpeg SetOutputSurface failed.");
+        return ret;
+    }
     return DH_SUCCESS;
 }
 
@@ -132,13 +138,24 @@ int32_t ImageSinkProcessor::ProcessImage(const std::shared_ptr<DataBuffer> &data
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
-    int32_t ret = imageDecoder_->InputScreenData(data);
-    if (ret != DH_SUCCESS) {
-        DHLOGE("%s: InputScreenData failed ret:%" PRId32, LOG_TAG, ret);
-        ReportOptFail(DSCREEN_OPT_FAIL, ret, "InputScreenData failed.");
-        return ret;
+    if (data->DataType() == VIDEO_FULL_SCREEN_DATA) {
+        int32_t ret = imageDecoder_->InputScreenData(data);
+        if (ret != DH_SUCCESS) {
+            DHLOGE("%s: InputScreenData failed ret:%" PRId32, LOG_TAG, ret);
+            ReportOptFail(DSCREEN_OPT_FAIL, ret, "InputScreenData failed.");
+            return ret;
+        }
+    } else if (data->DataType() == VIDEO_PART_SCREEN_DATA){
+        int32_t ret = imageJpeg_->MergeDirtyImagetoSurface(data, imageDecoder_->GetLastFrame());
+        if (ret != DH_SUCCESS) {
+            DHLOGE("%s: MergeDirtyImagetoSurface failed ret:%" PRId32, LOG_TAG, ret);
+            ReportOptFail(DSCREEN_OPT_FAIL, ret, "MergeDirtyImagetoSurface failed.");
+            return ret;
+        }
+    } else {
+         DHLOGE("%s: data type is invalid.", LOG_TAG);
+         return ERR_DH_SCREEN_DATA_TYPE_INVALID;
     }
-
     return DH_SUCCESS;
 }
 } // namespace DistributedHardware

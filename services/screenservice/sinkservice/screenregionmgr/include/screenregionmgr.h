@@ -42,6 +42,7 @@ private:
     std::map<std::string, std::shared_ptr<ScreenRegion>> screenRegions_;
     std::mutex screenRegionsMtx_;
     std::string localDevId_;
+    std::string version_ = "1.0";
 
     sptr<IDScreenSource> GetDScreenSourceSA(const std::string &devId);
     int32_t NotifyRemoteScreenService(const std::string &remoteDevId, const std::string &dhId,
