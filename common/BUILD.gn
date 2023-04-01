@@ -20,11 +20,11 @@ ohos_shared_library("distributed_screen_utils") {
   include_dirs = [
     "${services_path}/common/utils/include",
     "//commonlibrary/c_utils/base/include",
-    "include",
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "//third_party/json/include",
     "${fwk_common_path}/utils/include",
+    "//foundation/distributedhardware/distributed_screen/common/include",
   ]
 
   deps = [
