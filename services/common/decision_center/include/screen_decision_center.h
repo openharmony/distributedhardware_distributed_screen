@@ -39,9 +39,10 @@ public:
 
 private:
     static const constexpr int32_t DIRTY_REGION_ARE_THRESHOLD = 260000;
-    static const constexpr int32_t THRESHOLD = 10;
+    static const constexpr int32_t FORCE_FULL_IMAGE_TIME_INTERAL = 10;  //10 seconds
+    static const constexpr int32_t MIN_SURPPORT_FRAME_COUNT = 10;  //10 frames
     static const constexpr char *LOG_TAG = "ScreenDecisionCenter";
-    std::shared_ptr<ScreenImageJpeg> imageJpeg_ = nullptr;
+    std::shared_ptr<JpegImageProcessor> imageJpeg_ = nullptr;
     std::shared_ptr<IImageSourceProcessor> imageProcessor_ = nullptr;
     VideoParam configParam_;
     int32_t frameCount_ = 0;

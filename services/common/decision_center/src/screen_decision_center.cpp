@@ -47,20 +47,21 @@ bool ScreenDecisionCenter::IsDirtyRectValid(const std::vector<OHOS::Rect> &damag
     }
     return true;
 }
+
 bool ScreenDecisionCenter::JudgeDirtyThreshold(const std::vector<OHOS::Rect> &damages)
 {
     DHLOGI("%s: JudgeDirtyThreshold.", LOG_TAG);
     int32_t allDirtyArea = 0;
     for (const auto &damage : damages) {
-        int32_t dirtyArea = damage.w * damage.h;
-        allDirtyArea += dirtyArea;
-        if (dirtyArea > DIRTY_REGION_ARE_THRESHOLD || allDirtyArea > DIRTY_REGION_ARE_THRESHOLD) {
-            DHLOGE("%s: dirtyArea is %." PRId32, LOG_TAG, dirtyArea);
+        allDirtyArea += damage.w * damage.h;
+        if (allDirtyArea > DIRTY_REGION_ARE_THRESHOLD) {
+            DHLOGE("%s: dirtyArea is %." PRId32, LOG_TAG, allDirtyArea);
             return false;
         }
     }
     return true;
 }
+
 bool ScreenDecisionCenter::LimitTime(uint32_t timethreshold)
 {
     return difftime(time(nullptr), sendFullTime_) >= timethreshold;
@@ -74,18 +75,19 @@ int32_t ScreenDecisionCenter::InputBufferImage(sptr<SurfaceBuffer> &surfaceBuffe
         DHLOGE("%s: surfaceBuffer is null.", LOG_TAG);
         return ERR_DH_SCREEN_SURFACE_BUFFER_INVALIED;
     }
-    if (damages.empty() || frameCount_ < THRESHOLD || LimitTime(THRESHOLD) ||
+    if (damages.empty() || frameCount_ < MIN_SURPPORT_FRAME_COUNT ||
+        LimitTime(FORCE_FULL_IMAGE_TIME_INTERAL) ||
         !IsDirtyRectValid(damages) || !JudgeDirtyThreshold(damages)) {
         DHLOGI("%s: send full image data.", LOG_TAG);
         sendFullTime_ = time(nullptr);
-        int32_t ret = imageProcessor_->ProcessFullIma ge(surfaceBuffer);
+        int32_t ret = imageProcessor_->ProcessFullImage(surfaceBuffer);
         if (ret != DH_SUCCESS) {
             DHLOGE("%s: send full data failed.", LOG_TAG);
             return ret;
         }
     } else {
         DHLOGI("%s: send dirty data.", LOG_TAG);
-        int32_t ret = imageJpeg_->ProcessPartailImage(surfaceBuffer, damages);
+        int32_t ret = imageJpeg_->ProcessDamageSurface(surfaceBuffer, damages);
         if (ret != DH_SUCCESS) {
             DHLOGE("%s: send dirty data failed.", LOG_TAG);
             return ret;
@@ -94,6 +96,7 @@ int32_t ScreenDecisionCenter::InputBufferImage(sptr<SurfaceBuffer> &surfaceBuffe
     frameCount_++;
     return DH_SUCCESS;
 }
+
 int32_t ScreenDecisionCenter::ConfigureDecisionCenter(std::shared_ptr<IImageSourceProcessorListener> &listener,
         std::shared_ptr<IImageSourceProcessor> &imageProcessor)
 {
@@ -102,20 +105,20 @@ int32_t ScreenDecisionCenter::ConfigureDecisionCenter(std::shared_ptr<IImageSour
         DHLOGE("%s: Image source process is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
-    imageJpeg_ = std::make_shared<ScreenImageJpeg>(configParam_);
+    imageJpeg_ = std::make_shared<JpegImageProcessor>(configParam_);
     imageJpeg_->SetImageProcessListener(listener);
     imageProcessor_ = imageProcessor;
     return DH_SUCCESS;
 }
+
 int32_t ScreenDecisionCenter::SetJpegSurface(sptr<Surface> &surface)
 {
     DHLOGI("%s: SetJpegSurface.", LOG_TAG);
-    int32_t ret = imageJpeg_->SetOutputSurface(surface);
-    if (ret != DH_SUCCESS) {
-        DHLOGE("%s: JPEG set surface failed.", LOG_TAG);
-        return ret;
+    if (surface ==nullptr) {
+        DHLOGE("%s: Jpeg source is null.", LOG_TAG);
+        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
-    return DH_SUCCESS;
+    return imageJpeg_->SetOutputSurface(surface);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

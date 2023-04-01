@@ -119,7 +119,7 @@ private:
     std::mutex taskQueueMtx_;
     std::queue<std::shared_ptr<Task>> taskQueue_;
     bool taskThreadRunning_;
-    std::string version_;
+    std::string version_ = "1.0";
 };
 } // namespace DistributedHardware
 } // namespace OHOS

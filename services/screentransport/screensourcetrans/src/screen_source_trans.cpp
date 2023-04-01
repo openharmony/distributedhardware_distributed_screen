@@ -27,7 +27,6 @@
 #include "dscreen_log.h"
 #include "image_source_processor.h"
 #include "screen_data_channel_impl.h"
-#include "screen_refresh_channel_impl.h"
 namespace OHOS {
 namespace DistributedHardware {
 constexpr const char* FDATA_THREAD = "FeedDataThread";
@@ -262,9 +261,8 @@ int32_t ScreenSourceTrans::CheckTransParam(const VideoParam &localParam, const V
         DHLOGE("%s: check remoteParam param failed.", LOG_TAG);
         return ret;
     }
-
+ 
     DHLOGI("%s: Local: codecType(%u), videoFormat(%u), videoSize(%ux%u), screenSize(%ux%u).", LOG_TAG,
-        localParam.GetCodecType(), localParam.GetVideoFormat(), localParam.GetVideoWidth(),
         localParam.GetVideoHeight(), localParam.GetScreenWidth(), localParam.GetScreenHeight());
     DHLOGI("%s: Remote: codecType(%u), videoFormat(%u), videoSize(%ux%u), screenSize(%ux%u).", LOG_TAG,
         remoteParam.GetCodecType(), remoteParam.GetVideoFormat(), remoteParam.GetVideoWidth(),
@@ -276,15 +274,9 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
     const std::string &peerDevId)
 {
     DHLOGI("%s:InitScreenTrans.", LOG_TAG);
-    switch (atoi(version_.c_str())) {
-        case 1:
-            screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
-            break;
-        case 2:
-            screenChannel_ = std::make_shared<ScreenRefreshChannelImpl>(peerDevId);
-            break;
-        default:
-            break;
+    screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
+    if (atoi(version_.c_str()) == TWO) {
+        screenChannel_->SetJpegSessionFlag(true);
     }
     int32_t ret = RegisterChannelListener();
     if (ret != DH_SUCCESS) {

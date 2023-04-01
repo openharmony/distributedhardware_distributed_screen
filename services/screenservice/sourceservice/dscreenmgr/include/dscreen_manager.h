@@ -76,7 +76,7 @@ private:
     sptr<DScreenGroupListener> dScreenGroupListener_ = nullptr;
     std::shared_ptr<IDScreenCallback> dScreenCallback_ = nullptr;
     std::string localDevId_;
-    std::string version_;
+    std::string version_ = "1.0";
 
     sptr<IDScreenSink> GetDScreenSinkSA(const std::string &devId);
     int32_t NotifyRemoteScreenService(const std::string &devId, int32_t eventCode, const std::string &eventContent);

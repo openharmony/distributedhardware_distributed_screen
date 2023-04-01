@@ -31,7 +31,7 @@ int32_t ImageSinkProcessor::ConfigureImageProcessor(
     remoteParam_ = remoteParam;
 
     imageDecoder_ = std::make_shared<ImageSinkDecoder>(imageListener);
-    imageJpeg_ = std::make_shared<ScreenImageJpeg>(remoteParam);
+    imageJpeg_ = std::make_shared<JpegImageProcessor>(remoteParam);
     int32_t ret = imageDecoder_->ConfigureDecoder(localParam);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: ConfigureDecoder failed ret:%" PRId32, LOG_TAG, ret);
@@ -146,10 +146,10 @@ int32_t ImageSinkProcessor::ProcessImage(const std::shared_ptr<DataBuffer> &data
             return ret;
         }
     } else if (data->DataType() == VIDEO_PART_SCREEN_DATA) {
-        int32_t ret = imageJpeg_->MergeDirtyImagetoSurface(data, imageDecoder_->GetLastFrame());
+        int32_t ret = imageJpeg_->FillDirtyImages2Surface(data, imageDecoder_->GetLastFrame());
         if (ret != DH_SUCCESS) {
-            DHLOGE("%s: MergeDirtyImagetoSurface failed ret:%" PRId32, LOG_TAG, ret);
-            ReportOptFail(DSCREEN_OPT_FAIL, ret, "MergeDirtyImagetoSurface failed.");
+            DHLOGE("%s: FillDirtyImages2Surface failed ret:%" PRId32, LOG_TAG, ret);
+            ReportOptFail(DSCREEN_OPT_FAIL, ret, "FillDirtyImages2Surface failed.");
             return ret;
         }
     } else {

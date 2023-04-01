@@ -42,7 +42,7 @@ private:
     VideoParam localParam_;
     VideoParam remoteParam_;
     std::shared_ptr<ImageSinkDecoder> imageDecoder_ = nullptr;
-    std::shared_ptr<ScreenImageJpeg> imageJpeg_ = nullptr;
+    std::shared_ptr<JpegImageProcessor> imageJpeg_ = nullptr;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

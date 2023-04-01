@@ -103,6 +103,10 @@ public:
         (void) data;
         return DH_SUCCESS;
     }
+    void SetJpegSessionFlag(bool flag) override
+    {
+        return;
+    }
 };
 
 } // namespace DistributedHardware

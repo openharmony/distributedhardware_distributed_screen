@@ -53,7 +53,6 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "${services_path}/common/utils/src/dscreen_fwkkit.cpp",
     "${services_path}/common/utils/src/video_param.cpp",
     "${services_path}/screentransport/screendatachannel/src/screen_data_channel_impl.cpp",
-    "${services_path}/screentransport/screendatachannel/src/screen_refresh_channel_impl.cpp",
     "${services_path}/screentransport/screensinkprocessor/decoder/src/image_decoder_callback.cpp",
     "${services_path}/screentransport/screensinkprocessor/decoder/src/image_sink_decoder.cpp",
     "${services_path}/screentransport/screensinkprocessor/src/image_sink_processor.cpp",
@@ -69,9 +68,9 @@ ohos_shared_library("distributed_screen_sinktrans") {
   ]
 
   if (!distributed_screen_common) {
-      cflags += [ "-DLIBYUV" ]
-      include_dirs += [ "//third_party/libyuv/files/include", ]
-      deps += [ ""//third_party/libyuv:yuv"," ]
+      cflags = [ "-DLIBYUV" ]
+      include_dirs += [ "//third_party/libyuv/files/include" ]
+      deps += [ "//third_party/libyuv:yuv" ]
   }
 
   defines = [

@@ -28,22 +28,22 @@
 #include "video_param.h"
 namespace OHOS {
 namespace DistributedHardware {
-class ScreenImageJpeg : public std::enable_shared_from_this<ScreenImageJpeg> {
+class JpegImageProcessor : public std::enable_shared_from_this<JpegImageProcessor> {
 public:
-    explicit ScreenImageJpeg(const VideoParam &configParam) : configParam_(configParam){};
-    ~ScreenImageJpeg() = default;
+    explicit JpegImageProcessor(const VideoParam &configParam) : configParam_(configParam){};
+    ~JpegImageProcessor() = default;
     int32_t SetOutputSurface(sptr<Surface> surface);
-    int32_t MergeDirtyImagetoSurface(const std::shared_ptr<DataBuffer> &data, uint8_t *lastFrame);
-    int32_t ProcessPartailImage(sptr<SurfaceBuffer> &surfaceBuffer, const std::vector<OHOS::Rect> &damages);
+    int32_t FillDirtyImages2Surface(const std::shared_ptr<DataBuffer> &data, uint8_t *lastFrame);
+    int32_t ProcessDamageSurface(sptr<SurfaceBuffer> &surfaceBuffer, const std::vector<OHOS::Rect> &damages);
     int32_t SetImageProcessListener(std::shared_ptr<IImageSourceProcessorListener> &imageProcessorListener);
-    void CodecImage(sptr<SurfaceBuffer> &surfaceBuffer, const OHOS::Rect &damage, std::shared_ptr<DataBuffer> &data);
-    int32_t MergeImage(const std::shared_ptr<DataBuffer> &data, uint8_t *lastFrame);
-    int32_t PastImage(uint8_t *lastFrame, uint8_t *dirtyImageData, const DirtyRect rect);
+    void EncodeDamageData(sptr<SurfaceBuffer> &surfaceBuffer, const OHOS::Rect &damage, std::shared_ptr<DataBuffer> &data);
+    int32_t DecodeDamageData(const std::shared_ptr<DataBuffer> &data, uint8_t *lastFrame);
+    int32_t ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t *dirtyImageData, const DirtyRect rect);
 private:
     uint32_t CompressRgbaToJpeg(const OHOS::Rect &damage, uint8_t *inputData, std::shared_ptr<DataBuffer> &data);
     void DecompressJpegToNV12(size_t jpegSize, uint8_t *inputData, uint8_t *outputData);
 
-    static const constexpr char *LOG_TAG = "ScreenImageJpeg";
+    static const constexpr char *LOG_TAG = "JpegImageProcessor";
     sptr<Surface> imageSurface_;
     VideoParam configParam_;
     std::weak_ptr<IImageSourceProcessorListener> imageProcessorListener_;

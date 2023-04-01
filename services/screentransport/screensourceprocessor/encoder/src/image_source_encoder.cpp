@@ -180,7 +180,7 @@ std::vector<OHOS::Rect> ImageSourceEncoder::VecToDamage(std::vector<std::vector<
     DHLOGI("%s: VecToDamage.", LOG_TAG);
     std::vector<OHOS::Rect> damages;
     for (auto item : eventContent) {
-        OHOS::damage = {0, 0, 0, 0};
+        OHOS::Rect damage = {0, 0, 0, 0};
         damage.x = item.at(ZERO);
         damage.y = item.at(ONE);
         damage.w = item.at(TWO);

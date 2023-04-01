@@ -128,11 +128,12 @@ int32_t ScreenRegion::SetUpWindow()
 
     return DH_SUCCESS;
 }
+
 void ScreenRegion::SetScreenVersion(std::string version)
 {
-    DHLOGD("ScreenRegion SetScreenVersion");
     version_ = version;
 }
+
 std::string ScreenRegion::GetScreenVersion()
 {
     return version_;

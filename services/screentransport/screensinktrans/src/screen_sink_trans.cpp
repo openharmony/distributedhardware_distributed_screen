@@ -23,7 +23,6 @@
 #include "dscreen_log.h"
 #include "image_sink_processor.h"
 #include "screen_data_channel_impl.h"
-#include "screen_refresh_channel_impl.h"
 namespace OHOS {
 namespace DistributedHardware {
 int32_t ScreenSinkTrans::SetUp(const VideoParam &localParam, const VideoParam &remoteParam,
@@ -209,15 +208,9 @@ int32_t ScreenSinkTrans::CheckTransParam(const VideoParam &localParam, const Vid
 int32_t ScreenSinkTrans::InitScreenTrans(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::string &peerDevId)
 {
-    switch (atoi(version_.c_str())) {
-        case ONE:
-            screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
-            break;
-        case TWO:
-            screenChannel_ = std::make_shared<ScreenRefreshChannelImpl>(peerDevId);
-            break;
-        default:
-            break;
+    screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
+    if (atoi(version_.c_str()) == TWO) {
+        screenChannel_->SetJpegSessionFlag(true);
     }
     int32_t ret = RegisterChannelListener();
     if (ret != DH_SUCCESS) {

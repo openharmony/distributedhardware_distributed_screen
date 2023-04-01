@@ -545,14 +545,14 @@ void DScreenManager::HandleNotifySetUpResult(const std::string &remoteDevId, con
 
     dScreens_[dScreenIdx]->AddTask(std::make_shared<Task>(TaskType::TASK_CONNECT, ""));
 }
+
 void DScreenManager::SetScreenVersion(std::string &version)
 {
-    DHLOGI("SetScreenVersion");
     version_ = version;
 }
+
 std::string DScreenManager::GetScreenVersion()
 {
-    DHLOGI("GetScreenVersion");
     return version_;
 }
 } // namespace DistributedHardware
