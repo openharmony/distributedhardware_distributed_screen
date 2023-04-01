@@ -28,20 +28,19 @@ config("module_private_config") {
 
   include_dirs += [
     "./include",
-    "${services_path}/screentransport/test/unittest/screentranstestutils/include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",
+    "${services_path}/common/imageJpeg/include",
     "${services_path}/common/screen_channel/include",
     "${services_path}/common/utils/include",
+    "${services_path}/softbusadapter/include",
     "${services_path}/screentransport/screendatachannel/include",
-    "${services_path}/screentransport/screensourcetrans/include",
+    "${services_path}/screentransport/screensinkprocessor/decoder/include",
     "${services_path}/screentransport/screensinkprocessor/include",
     "${services_path}/screentransport/screensinktrans/include",
-    "${services_path}/screentransport/screensinkprocessor/include",
-    "${services_path}/screentransport/screensinkprocessor/decoder/include",
-    "${services_path}/softbusadapter/include",
-    "${services_path}/common/imageJpeg/include",
+    "${services_path}/screentransport/screensourcetrans/include",
     "${services_path}/screentransport/screensourceprocessor/include",
+    "${services_path}/screentransport/test/unittest/screentranstestutils/include",
   ]
 }
 
