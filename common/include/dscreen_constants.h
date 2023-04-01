@@ -91,6 +91,9 @@ constexpr uint32_t THREE = 3;
 constexpr uint32_t ZERO = 0;
 constexpr uint32_t ALIGNEDBITS = 32;
 
+/* Version */
+constexpr uint32_t OLD = 1;
+constexpr uint32_t NEW = 2;
 
 /* Screen session name max len */
 constexpr uint32_t DSCREEN_MAX_SESSION_NAME_LEN = 50;
