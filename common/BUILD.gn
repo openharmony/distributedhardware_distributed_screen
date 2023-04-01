@@ -24,7 +24,7 @@ ohos_shared_library("distributed_screen_utils") {
     "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "//third_party/json/include",
     "${fwk_common_path}/utils/include",
-    "//foundation/distributedhardware/distributed_screen/common/include",
+    "${common_path}/include",
   ]
 
   deps = [
