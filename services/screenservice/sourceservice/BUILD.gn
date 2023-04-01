@@ -29,7 +29,6 @@ ohos_shared_library("distributed_screen_source") {
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "//third_party/libjpeg-turbo",
     "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include/platform/ohos",
-    "//foundation/graphic/graphic_2d/rosen/modules/composer/vsync/include",
   ]
 
   include_dirs += [
@@ -51,7 +50,6 @@ ohos_shared_library("distributed_screen_source") {
     "${services_path}/common/decision_center/include",
     "//drivers/peripheral/display/interfaces/include",
     "//drivers/peripheral/base",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include",
     "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
   ]
 
@@ -75,6 +73,7 @@ ohos_shared_library("distributed_screen_source") {
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
     "${mediastandard_path}/interfaces/inner_api/native:media_client",
     "${windowmanager_path}/dm:libdm",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base:librender_service_base",
   ]
 
   defines = [
@@ -91,6 +90,7 @@ ohos_shared_library("distributed_screen_source") {
     "multimedia_player_framework:media_client",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
+    "graphic_standard:libcomposer",
   ]
 
   subsystem_name = "distributedhardware"
