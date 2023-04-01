@@ -20,14 +20,12 @@ ohos_shared_library("distributed_screen_sourcetrans") {
   include_dirs = [
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//third_party/json/include",
-    "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
     "${fwk_common_path}/utils/include",
     "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "${fwk_interfaces_path}/inner_kits/include",
     "${ipc_interfaces_path}/innerkits/ipc_core/include",
     "${services_path}/common/utils/include",
     "//third_party/libjpeg-turbo",
-    "//foundation/ability/dmsfwk/utils/native/include",
   ]
 
   include_dirs += [

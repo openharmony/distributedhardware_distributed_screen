@@ -48,7 +48,9 @@ ohos_shared_library("distributed_screen_client") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [ "input:libmmi-client" ]
+  external_deps = [ "input:libmmi-client",
+    "graphic_standard:libgraphic_utils",
+  ]
 
   part_name = "distributed_screen"
   subsystem_name = "distributedhardware"
