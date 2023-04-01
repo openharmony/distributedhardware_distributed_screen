@@ -64,9 +64,9 @@ ohos_shared_library("distributed_screen_sourcetrans") {
   ]
 
   if (!distributed_screen_common) {
-      cflags = [ "-DLIBYUV" ]
-      include_dirs += [ "//third_party/libyuv/files/include" ]
-      deps += [ "//third_party/libyuv:yuv" ]
+    cflags = [ "-DLIBYUV" ]
+    include_dirs += [ "//third_party/libyuv/files/include" ]
+    deps += [ "//third_party/libyuv:yuv" ]
   }
 
   defines = [

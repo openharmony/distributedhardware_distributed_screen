@@ -23,7 +23,6 @@ ohos_shared_library("distributed_screen_source") {
     "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "//third_party/json/include",
     "//third_party/libjpeg-turbo",
-    "//utils/system/safwk/native/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "${windowmanager_path}/interfaces/innerkits/dm",
     "${fwk_common_path}/utils/include",
