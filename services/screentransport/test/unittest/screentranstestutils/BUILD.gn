@@ -47,12 +47,12 @@ config("module_private_config") {
     "${services_path}/softbusadapter/include",
     "//drivers/peripheral/display/interfaces/include",
     "//drivers/peripheral/base",
+    "//foundation/communication/dsoftbus/interfaces/kits/transport",
     "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
     "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
     "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
     "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
     "//foundation/multimedia/player_framework/interfaces/inner_api/native",
-    "//foundation/communication/dsoftbus/interfaces/kits/transport",
   ]
 }
 

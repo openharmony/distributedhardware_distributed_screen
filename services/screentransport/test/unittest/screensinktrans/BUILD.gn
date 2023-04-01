@@ -45,7 +45,6 @@ config("module_private_config") {
     "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
     "//foundation/multimedia/player_framework/interfaces/inner_api/native",
     "//drivers/peripheral/base",
-    
   ]
 }
 
