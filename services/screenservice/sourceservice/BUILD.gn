@@ -28,7 +28,6 @@ ohos_shared_library("distributed_screen_source") {
     "${mediastandard_path}/interfaces/inner_api/native",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "//third_party/libjpeg-turbo",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include/platform/ohos",
   ]
 
   include_dirs += [
@@ -73,7 +72,6 @@ ohos_shared_library("distributed_screen_source") {
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
     "${mediastandard_path}/interfaces/inner_api/native:media_client",
     "${windowmanager_path}/dm:libdm",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base:librender_service_base",
   ]
 
   defines = [
