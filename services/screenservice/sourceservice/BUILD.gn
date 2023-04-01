@@ -19,21 +19,24 @@ import(
 ohos_shared_library("distributed_screen_source") {
   include_dirs = [
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
-    "//third_party/json/include",
-    "${windowmanager_path}/interfaces/innerkits/dm",
     "//commonlibrary/c_utils/base/include",
-    "//utils/system/safwk/native/include",
     "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
+    "//third_party/json/include",
+    "//third_party/libjpeg-turbo",
+    "//utils/system/safwk/native/include",
+    "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
+    "${windowmanager_path}/interfaces/innerkits/dm",
     "${fwk_common_path}/utils/include",
     "${mediastandard_path}/interfaces/inner_api/native",
-    "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
-    "//third_party/libjpeg-turbo",
   ]
 
   include_dirs += [
     "./dscreenservice/include",
     "./dscreenservice/include/callback",
     "./dscreenmgr/include",
+    "//drivers/peripheral/display/interfaces/include",
+    "//drivers/peripheral/base",
+    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
@@ -47,9 +50,6 @@ ohos_shared_library("distributed_screen_source") {
     "${services_path}/screentransport/screensourcetrans/include",
     "${services_path}/common/imageJpeg/include",
     "${services_path}/common/decision_center/include",
-    "//drivers/peripheral/display/interfaces/include",
-    "//drivers/peripheral/base",
-    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
   ]
 
   sources = [
@@ -82,13 +82,13 @@ ohos_shared_library("distributed_screen_source") {
 
   external_deps = [
     "c_utils:utils",
+    "graphic_standard:libcomposer",
     "graphic_standard:surface",
     "ipc:ipc_core",
     "multimedia_image_framework:image_native",
     "multimedia_player_framework:media_client",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
-    "graphic_standard:libcomposer",
   ]
 
   subsystem_name = "distributedhardware"

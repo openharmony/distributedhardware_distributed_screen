@@ -19,13 +19,13 @@ import(
 ohos_shared_library("distributed_screen_sourcetrans") {
   include_dirs = [
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
-    "//third_party/json/include",
-    "${fwk_common_path}/utils/include",
     "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
+    "//third_party/json/include",
+    "//third_party/libjpeg-turbo",
+    "${fwk_common_path}/utils/include",
     "${fwk_interfaces_path}/inner_kits/include",
     "${ipc_interfaces_path}/innerkits/ipc_core/include",
     "${services_path}/common/utils/include",
-    "//third_party/libjpeg-turbo",
   ]
 
   include_dirs += [
@@ -43,6 +43,7 @@ ohos_shared_library("distributed_screen_sourcetrans") {
   ]
 
   sources = [
+    "./src/screen_source_trans.cpp",
     "${services_path}/common/databuffer/src/data_buffer.cpp",
     "${services_path}/common/utils/src/dscreen_fwkkit.cpp",
     "${services_path}/common/utils/src/video_param.cpp",
@@ -53,7 +54,6 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "${services_path}/softbusadapter/src/softbus_adapter.cpp",
     "${services_path}/common/imageJpeg/src/jpeg_image_processor.cpp",
     "${services_path}/common/decision_center/src/screen_decision_center.cpp",
-    "./src/screen_source_trans.cpp",
   ]
 
   deps = [

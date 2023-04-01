@@ -19,11 +19,11 @@ import(
 ohos_shared_library("distributed_screen_sinktrans") {
   include_dirs = [
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
+    "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "//third_party/json/include",
     "//third_party/libjpeg",
     "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
-    "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "${fwk_interfaces_path}/inner_kits/include",
     "${ipc_interfaces_path}/innerkits/ipc_core/include",
     "${services_path}/common/utils/include",
