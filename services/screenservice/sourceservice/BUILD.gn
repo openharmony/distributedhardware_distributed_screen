@@ -23,7 +23,6 @@ ohos_shared_library("distributed_screen_source") {
     "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "//third_party/json/include",
     "//third_party/libjpeg-turbo",
-    "//utils/system/safwk/native/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "${windowmanager_path}/interfaces/innerkits/dm",
     "${fwk_common_path}/utils/include",
@@ -34,9 +33,6 @@ ohos_shared_library("distributed_screen_source") {
     "./dscreenservice/include",
     "./dscreenservice/include/callback",
     "./dscreenmgr/include",
-    "//drivers/peripheral/display/interfaces/include",
-    "//drivers/peripheral/base",
-    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
@@ -82,6 +78,7 @@ ohos_shared_library("distributed_screen_source") {
 
   external_deps = [
     "c_utils:utils",
+    "drivers_peripheral_display:hdi_display_device",
     "graphic_standard:libcomposer",
     "graphic_standard:surface",
     "ipc:ipc_core",

@@ -45,13 +45,10 @@ config("module_private_config") {
     "${services_path}/screentransport/test/unittest/screentranstestutils/include",
     "${services_path}/softbusadapter/include",
     "//drivers/peripheral/base",
-    "//drivers/peripheral/display/interfaces/include",
-    "//foundation/communication/dsoftbus/interfaces/kits/transport",
     "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
     "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
     "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
     "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
-    "//foundation/multimedia/player_framework/interfaces/inner_api/native",
   ]
 }
 
@@ -69,7 +66,11 @@ ohos_unittest("SourceTransTest") {
     "//third_party/googletest:gtest_main",
   ]
 
-  external_deps = [ "c_utils:utils" ]
+  external_deps = [
+    "c_utils:utils",
+    "drivers_peripheral_display:hdi_display_device",
+    "multimedia_player_framework:media_client", 
+  ]
 }
 
 group("source_trans_test") {

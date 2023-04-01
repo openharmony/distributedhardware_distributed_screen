@@ -19,7 +19,6 @@ import(
 ohos_shared_library("distributed_screen_sinktrans") {
   include_dirs = [
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
-    "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "//third_party/json/include",
     "//third_party/libjpeg",
     "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
@@ -81,6 +80,7 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "c_utils:utils",
     "dsoftbus:softbus_client",
     "hisysevent_native:libhisysevent",
+    "hisysevent_native:libhitracechain",
     "hitrace_native:hitrace_meter",
     "hiviewdfx_hilog_native:libhilog",
     "multimedia_player_framework:media_client",
