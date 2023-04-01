@@ -89,7 +89,8 @@ int32_t JpegImageProcessor::FillDirtyImages2Surface(const std::shared_ptr<DataBu
     return DH_SUCCESS;
 }
 
-int32_t JpegImageProcessor::ProcessDamageSurface(sptr<SurfaceBuffer> &surfaceBuffer, const std::vector<OHOS::Rect> &damages)
+int32_t JpegImageProcessor::ProcessDamageSurface(sptr<SurfaceBuffer> &surfaceBuffer,
+    const std::vector<OHOS::Rect> &damages)
 {
     DHLOGI("%s: ProcessDamageSurface.", LOG_TAG);
     std::shared_ptr<DataBuffer> dataBuf = std::make_shared<DataBuffer>(configParam_.GetScreenWidth() *
@@ -109,10 +110,10 @@ int32_t JpegImageProcessor::ProcessDamageSurface(sptr<SurfaceBuffer> &surfaceBuf
     return DH_SUCCESS;
 }
 
-int32_t JpegImageProcessor::SetImageProcessListener(std::shared_ptr<IImageSourceProcessorListener> &imageProcessorListener)
+int32_t JpegImageProcessor::SetImageProcessListener(std::shared_ptr<IImageSourceProcessorListener> &listener)
 {
     DHLOGI("%s: SetImageProcessorListener.", LOG_TAG);
-    imageProcessorListener_ = imageProcessorListener;
+    imageProcessorListener_ = listener;
     return DH_SUCCESS;
 }
 
@@ -276,8 +277,7 @@ void JpegImageProcessor::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputDat
     int32_t uvIndex = cinfo.output_width * cinfo.output_height;
     int32_t i = 0;
 #ifdef LIBYUV
-    int32_t rgbSize = cinfo.output_width * cinfo.output_height * RGBA_CHROMA;
-    uint8_t *rgb = new uint8_t[rgbSize];
+    uint8_t *rgb = new uint8_t[cinfo.output_width * cinfo.output_height * RGBA_CHROMA];
     int32_t rgbIndex = 0;
 #else
     int32_t yIndex = 0;

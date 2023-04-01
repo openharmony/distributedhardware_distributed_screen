@@ -35,8 +35,9 @@ public:
     int32_t SetOutputSurface(sptr<Surface> surface);
     int32_t FillDirtyImages2Surface(const std::shared_ptr<DataBuffer> &data, uint8_t *lastFrame);
     int32_t ProcessDamageSurface(sptr<SurfaceBuffer> &surfaceBuffer, const std::vector<OHOS::Rect> &damages);
-    int32_t SetImageProcessListener(std::shared_ptr<IImageSourceProcessorListener> &imageProcessorListener);
-    void EncodeDamageData(sptr<SurfaceBuffer> &surfaceBuffer, const OHOS::Rect &damage, std::shared_ptr<DataBuffer> &data);
+    int32_t SetImageProcessListener(std::shared_ptr<IImageSourceProcessorListener> &listener);
+    void EncodeDamageData(sptr<SurfaceBuffer> &surfaceBuffer, const OHOS::Rect &damage,
+        std::shared_ptr<DataBuffer> &data);
     int32_t DecodeDamageData(const std::shared_ptr<DataBuffer> &data, uint8_t *lastFrame);
     int32_t ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t *dirtyImageData, const DirtyRect rect);
 private:

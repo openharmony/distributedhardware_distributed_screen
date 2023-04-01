@@ -31,7 +31,6 @@ class ScreenDataChannelImpl : public IScreenChannel,
 public:
     explicit ScreenDataChannelImpl(std::string peerDevId) : peerDevId_(peerDevId) {};
     ~ScreenDataChannelImpl() override = default;
-
     int32_t CreateSession(const std::shared_ptr<IScreenChannelListener> &listener) override;
     int32_t ReleaseSession() override;
     int32_t OpenSession() override;
@@ -42,8 +41,6 @@ public:
     int32_t SendDirtyData(const std::shared_ptr<DataBuffer> &screenData);
     void ProcessDirtyData(const StreamData *data, std::shared_ptr<DataBuffer> dataBuffer, const StreamData *ext);
     void ProcessDullData(const StreamData *data, std::shared_ptr<DataBuffer> dataBuffer);
-
-
     void OnSessionOpened(int32_t sessionId, int32_t result) override;
     void OnSessionClosed(int32_t sessionId) override;
     void OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen) override;
@@ -52,7 +49,7 @@ public:
 
 private:
     static const constexpr char *LOG_TAG = "ScreenDataChannel";
-    bool jpegSessionFlag = false;
+    bool jpegSessionFlag_ = false;
     const std::string peerDevId_;
     int32_t sessionId_ = 0;
     int32_t jpegSessionId_ = 0;

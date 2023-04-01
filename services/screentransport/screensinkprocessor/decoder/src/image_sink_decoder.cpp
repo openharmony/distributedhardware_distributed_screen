@@ -123,7 +123,6 @@ void ImageSinkDecoder::NormalProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<Sur
         DHLOGE("%s: surfaceBuffer memcpy run failed.", LOG_TAG);
         windowSurface_->CancelBuffer(windowSurfaceBuffer);
     }
-
 }
 
 void ImageSinkDecoder::OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<SurfaceBuffer> windowSurfaceBuffer)

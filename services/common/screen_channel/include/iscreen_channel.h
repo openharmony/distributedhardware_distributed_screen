@@ -26,14 +26,12 @@ namespace DistributedHardware {
 class IScreenChannel {
 public:
     virtual ~IScreenChannel() = default;
-
     virtual int32_t CreateSession(const std::shared_ptr<IScreenChannelListener> &listener) = 0;
     virtual int32_t ReleaseSession() = 0;
     virtual int32_t OpenSession() = 0;
     virtual int32_t CloseSession() = 0;
     virtual int32_t SendData(const std::shared_ptr<DataBuffer> &data) = 0;
     virtual void SetJpegSessionFlag(bool flag) = 0;
-
 };
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -46,7 +46,7 @@ int32_t ScreenDataChannelImpl::CreateSession(const std::shared_ptr<IScreenChanne
         DHLOGE("%s: Register data adapter listener failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
-    if (jpegSessionFlag == true) {
+    if (jpegSessionFlag_ == true) {
         ret =
             SoftbusAdapter::GetInstance().CreateSoftbusSessionServer(PKG_NAME, JPEG_SESSION_NAME, peerDevId_);
         if (ret != DH_SUCCESS) {
@@ -68,7 +68,7 @@ int32_t ScreenDataChannelImpl::CreateSession(const std::shared_ptr<IScreenChanne
 
 void ScreenDataChannelImpl::SetJpegSessionFlag(bool flag)
 {
-    jpegSessionFlag = flag;
+    jpegSessionFlag_ = flag;
 }
 
 int32_t ScreenDataChannelImpl::ReleaseSession()
@@ -85,7 +85,7 @@ int32_t ScreenDataChannelImpl::ReleaseSession()
         return ret;
     }
 
-    if (jpegSessionFlag == true) {
+    if (jpegSessionFlag_ == true) {
         int32_t ret = SoftbusAdapter::GetInstance().RemoveSoftbusSessionServer(PKG_NAME, JPEG_SESSION_NAME, peerDevId_);
         if (ret != DH_SUCCESS) {
             DHLOGE("%s: Release jpeg session failed ret: %" PRId32, LOG_TAG, ret);
@@ -96,7 +96,7 @@ int32_t ScreenDataChannelImpl::ReleaseSession()
             DHLOGE("%s: UnRegister jpeg adapter listener failed ret: %" PRId32, LOG_TAG, ret);
             return ret;
         }
-        jpegSessionFlag = false;
+        jpegSessionFlag_ = false;
     }
     DHLOGI("%s: Release session success", LOG_TAG);
     return DH_SUCCESS;
@@ -113,7 +113,7 @@ int32_t ScreenDataChannelImpl::OpenSession()
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
     sessionId_ = sessionId;
-    if (jpegSessionFlag == true) {
+    if (jpegSessionFlag_ == true) {
         int32_t sessionId =
             SoftbusAdapter::GetInstance().OpenSoftbusSession(DATA_SESSION_NAME, JPEG_SESSION_NAME, peerDevId_);
         if (sessionId < 0) {
@@ -140,7 +140,7 @@ int32_t ScreenDataChannelImpl::CloseSession()
         return ret;
     }
     sessionId_ = 0;
-    if (jpegSessionFlag == true && jpegSessionId_ != 0) {
+    if (jpegSessionFlag_ == true && jpegSessionId_ != 0) {
         int32_t ret = SoftbusAdapter::GetInstance().CloseSoftbusSession(sessionId_);
         if (ret != DH_SUCCESS) {
             DHLOGE("%s: Close jpeg session failed ret: %" PRId32, LOG_TAG, ret);
@@ -242,7 +242,7 @@ void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, int32_t result)
         DHLOGE("Session open failed", LOG_TAG);
         return;
     }
-    if (jpegSessionFlag == false) {
+    if (jpegSessionFlag_ == false) {
         dataSessionOpened = true;
         sessionId_ = sessionId;
     } else {
