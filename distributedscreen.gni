@@ -29,5 +29,5 @@ ipc_interfaces_path = "${ipc_path}/interfaces"
 build_flags = [ "-Werror" ]
 
 declare_args() {
-    distributed_screen_common = true
+  distributed_screen_common = true
 }
