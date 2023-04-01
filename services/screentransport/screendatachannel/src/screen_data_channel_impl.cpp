@@ -21,7 +21,7 @@
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
-#include "dscreen_util.h" 
+#include "dscreen_util.h"
 #include "nlohmann/json.hpp"
 #include "dscreen_json_util.h"
 
@@ -96,7 +96,7 @@ int32_t ScreenDataChannelImpl::ReleaseSession()
             DHLOGE("%s: UnRegister jpeg adapter listener failed ret: %" PRId32, LOG_TAG, ret);
             return ret;
         }
-        jpegSessionFlag = false; 
+        jpegSessionFlag = false;
     }
     DHLOGI("%s: Release session success", LOG_TAG);
     return DH_SUCCESS;
@@ -138,7 +138,7 @@ int32_t ScreenDataChannelImpl::CloseSession()
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Close screen session failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
-    } 
+    }
     sessionId_ = 0;
     if (jpegSessionFlag == true && jpegSessionId_ != 0) {
         int32_t ret = SoftbusAdapter::GetInstance().CloseSoftbusSession(sessionId_);
@@ -184,7 +184,7 @@ int32_t ScreenDataChannelImpl::SendFullData(const std::shared_ptr<DataBuffer> &s
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     StreamData data = {reinterpret_cast<char *>(screenData->Data()), screenData->Capacity()};
-    StreamData ext = {nullptr};
+    StreamData ext = {0};
     StreamFrameInfo frameInfo = {0};
     int32_t ret = SoftbusAdapter::GetInstance().SendSoftbusStream(sessionId_, &data, &ext, &frameInfo);
     if (ret != DH_SUCCESS) {
@@ -294,7 +294,7 @@ void ScreenDataChannelImpl::OnStreamReceived(int32_t sessionId, const StreamData
         return;
     }
     auto dataBuffer = std::make_shared<DataBuffer>(data->bufLen);
-    if (ext == nullptr) {
+    if (ext->bufLen == 0) {
         DHLOGI("sink received full data.");
         ProcessDullData(data, dataBuffer);
         return;
@@ -319,7 +319,7 @@ void ScreenDataChannelImpl::ProcessDullData(const StreamData *data, std::shared_
         return;
     }
     dataBuffer->SetDataType(VIDEO_FULL_SCREEN_DATA);
-    listener->OnDataReceived(dataBuffer);   
+    listener->OnDataReceived(dataBuffer);
 }
 
 void ScreenDataChannelImpl::ProcessDirtyData(const StreamData *data,

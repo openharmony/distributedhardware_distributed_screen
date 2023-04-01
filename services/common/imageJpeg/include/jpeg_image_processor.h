@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_SCREEN_IMAGE_JPEG_H
-#define OHOS_SCREEN_IMAGE_JPEG_H
+#ifndef OHOS_JPEG_IMAGE_PROCESS_H
+#define OHOS_JPEG_IMAGE_PROCESS_H
 
 #include <thread>
 #include <mutex>

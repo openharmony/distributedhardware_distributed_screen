@@ -98,7 +98,7 @@ int32_t ScreenDecisionCenter::InputBufferImage(sptr<SurfaceBuffer> &surfaceBuffe
 }
 
 int32_t ScreenDecisionCenter::ConfigureDecisionCenter(std::shared_ptr<IImageSourceProcessorListener> &listener,
-        std::shared_ptr<IImageSourceProcessor> &imageProcessor)
+    std::shared_ptr<IImageSourceProcessor> &imageProcessor)
 {
     DHLOGI("%s: ConfigureDecisionCenter.", LOG_TAG);
     if (listener == nullptr || imageProcessor == nullptr) {

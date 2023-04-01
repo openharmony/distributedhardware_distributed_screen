@@ -84,7 +84,7 @@ void ImageSourceEncoder::ConsumeSurface()
     sptr<SurfaceBuffer> surfaceBuffer = nullptr;
     int32_t fence = -1;
     int64_t timestamp = 0;
-    OHOS::Rect damage = {0, 0, 0, 0}; 
+    OHOS::Rect damage = {0, 0, 0, 0};
     SurfaceError surfaceErr = consumerSurface_->AcquireBuffer(surfaceBuffer, fence, timestamp, damage);
     if (surfaceErr != SURFACE_ERROR_OK) {
         DHLOGE("%s: consumerSurface_ acquire buffer failed, errcode: %" PRId32, LOG_TAG, surfaceErr);
@@ -181,10 +181,10 @@ std::vector<OHOS::Rect> ImageSourceEncoder::VecToDamage(std::vector<std::vector<
     std::vector<OHOS::Rect> damages;
     for (auto item : eventContent) {
         OHOS::Rect damage = {0, 0, 0, 0};
-        damage.x = item.at(ZERO);
-        damage.y = item.at(ONE);
-        damage.w = item.at(TWO);
-        damage.h = item.at(THREE);
+        damage.x = item[0];
+        damage.y = item[1];
+        damage.w = item[2];
+        damage.h = item[3];
         damages.push_back(damage);
     }
     return damages;

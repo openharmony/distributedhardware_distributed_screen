@@ -204,6 +204,7 @@ void ScreenSourceTrans::SetScreenVersion(std::string &version)
 {
     version_ = version;
 }
+
 std::string ScreenSourceTrans::GetScreenVersion()
 {
     return version_;
@@ -398,11 +399,11 @@ void ScreenSourceTrans::OnDamageProcessDone(sptr<SurfaceBuffer> &surfaceBuffer, 
     }
     int32_t ret = DH_SUCCESS;
     switch (atoi(version_.c_str())) {
-        case ONE:
+        case OLD:
             DHLOGI("%s: ProcessFullImage.", LOG_TAG);
             ret = imageProcessor_->ProcessFullImage(surfaceBuffer);
             break;
-        case TWO:
+        case NEW:
             DHLOGI("%s: InputBufferImage.", LOG_TAG);
             ret = screenDecisionCenter_->InputBufferImage(surfaceBuffer, damages);
             break;

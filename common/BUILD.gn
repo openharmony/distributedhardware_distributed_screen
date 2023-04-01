@@ -26,7 +26,6 @@ ohos_shared_library("distributed_screen_utils") {
     "//third_party/json/include",
     "${fwk_common_path}/utils/include",
     "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits/include",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
     "//foundation/multimedia/image_framework/mock/native/include",
   ]
 
@@ -46,6 +45,7 @@ ohos_shared_library("distributed_screen_utils") {
     "dsoftbus:softbus_client",
     "hisysevent_native:libhisysevent",
     "hiviewdfx_hilog_native:libhilog",
+    "ipc:ipc_core",
   ]
 
   defines = [

@@ -81,6 +81,7 @@ constexpr int32_t YA_PARAM = 16;
 constexpr int32_t UA_PARAM = 128;
 constexpr int32_t YUV_PARAM = 255;
 constexpr int32_t MOVEBITS = 8;
+
 /* RGBA */
 constexpr uint32_t RGBA_CHROMA = 4;
 constexpr uint32_t RGB_CHROMA = 3;
@@ -89,6 +90,8 @@ constexpr uint32_t TWO = 2;
 constexpr uint32_t THREE = 3;
 constexpr uint32_t ZERO = 0;
 constexpr uint32_t ALIGNEDBITS = 32;
+
+
 /* Screen session name max len */
 constexpr uint32_t DSCREEN_MAX_SESSION_NAME_LEN = 50;
 

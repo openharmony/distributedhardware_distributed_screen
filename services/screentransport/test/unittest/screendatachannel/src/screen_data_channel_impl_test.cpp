@@ -81,7 +81,7 @@ HWTEST_F(ScreenDataChannelImplTest, close_session_test_002, TestSize.Level1)
 {
     dataChannelImpl_->channelListener_ = std::make_shared<MockIScreenChannelListener>();
 
-    StreamData *ext = nullptr;
+    StreamData ext = {0};
     StreamFrameInfo *param = nullptr;
 
     int32_t sessionId = 0;
@@ -89,7 +89,7 @@ HWTEST_F(ScreenDataChannelImplTest, close_session_test_002, TestSize.Level1)
     data.buf = new char[DATA_LEN];
     data.bufLen = DATA_LEN;
 
-    dataChannelImpl_->OnStreamReceived(sessionId, &data, ext, param);
+    dataChannelImpl_->OnStreamReceived(sessionId, &data, &ext, param);
     delete[] data.buf;
     dataChannelImpl_->sessionId_ = 0;
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_SESSION_NOT_OPEN, dataChannelImpl_->CloseSession());

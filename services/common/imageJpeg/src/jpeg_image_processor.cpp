@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "screen_image_jpeg.h"
+#include "jpeg_image_processor.h"
 
 #include <cstring>
 #include <fstream>
@@ -154,7 +154,7 @@ int32_t JpegImageProcessor::DecodeDamageData(const std::shared_ptr<DataBuffer> &
             DHLOGE("%s: Dirty rect invalid.", LOG_TAG);
             return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
         }
-        uint8_t *jpegData = new uint8_t [item.dirtySize] {0};
+        uint8_t *jpegData = new uint8_t[item.dirtySize] {0};
         int32_t ret = data->GetData(offset, item.dirtySize, jpegData);
         if (ret != DH_SUCCESS) {
             delete [] jpegData;
@@ -212,7 +212,8 @@ int32_t JpegImageProcessor::ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t 
     return DH_SUCCESS;
 }
 
-uint32_t JpegImageProcessor::CompressRgbaToJpeg(const OHOS::Rect &damage, uint8_t *inputData, std::shared_ptr<DataBuffer> &data)
+uint32_t JpegImageProcessor::CompressRgbaToJpeg(const OHOS::Rect &damage,
+    uint8_t *inputData, std::shared_ptr<DataBuffer> &data)
 {
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;

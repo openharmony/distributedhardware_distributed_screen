@@ -110,6 +110,7 @@ sptr<SurfaceBuffer> ImageSinkDecoder::GetWinSurfaceBuffer()
     }
     return windowSurfaceBuffer;
 }
+
 void ImageSinkDecoder::NormalProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<SurfaceBuffer> windowSurfaceBuffer)
 {
     DHLOGI("%s: NormalProcess.", LOG_TAG);
@@ -124,6 +125,7 @@ void ImageSinkDecoder::NormalProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<Sur
     }
 
 }
+
 void ImageSinkDecoder::OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<SurfaceBuffer> windowSurfaceBuffer)
 {
     DHLOGI("%s: OffsetProcess.", LOG_TAG);
@@ -219,7 +221,9 @@ int32_t ImageSinkDecoder::ReleaseDecoder()
         DHLOGE("%s: Decoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
-
+    if (lastFrame_ != nullptr) {
+        delete [] lastFrame_;
+    }
     int32_t ret = videoDecoder_->Release();
     if (ret != Media::MSERR_OK) {
         DHLOGE("%s: ReleaseDecoder failed.", LOG_TAG);

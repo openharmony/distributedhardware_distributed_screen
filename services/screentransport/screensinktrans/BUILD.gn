@@ -48,7 +48,7 @@ ohos_shared_library("distributed_screen_sinktrans") {
 
   sources = [
     "${common_path}/src/dscreen_json_util.cpp",
-    "${services_path}/common/imageJpeg/src/screen_image_jpeg.cpp",
+    "${services_path}/common/imageJpeg/src/jpeg_image_processor.cpp",
     "${services_path}/common/databuffer/src/data_buffer.cpp",
     "${services_path}/common/utils/src/dscreen_fwkkit.cpp",
     "${services_path}/common/utils/src/video_param.cpp",

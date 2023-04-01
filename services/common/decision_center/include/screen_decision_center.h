@@ -19,7 +19,7 @@
 #include <time.h>
 
 #include "image_source_processor.h"
-#include "screen_image_jpeg.h"
+#include "jpeg_image_processor.h"
 #include "surface_type.h"
 #include "video_param.h"
 

@@ -20,7 +20,7 @@
 #include "image_sink_decoder.h"
 #include "video_param.h"
 #include "data_buffer.h"
-#include "screen_image_jpeg.h"
+#include "jpeg_image_processor.h"
 
 namespace OHOS {
 namespace DistributedHardware {
