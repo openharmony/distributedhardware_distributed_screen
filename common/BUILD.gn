@@ -23,8 +23,8 @@ ohos_shared_library("distributed_screen_utils") {
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "//third_party/json/include",
-    "${fwk_common_path}/utils/include",
     "${common_path}/include",
+    "${fwk_common_path}/utils/include",
   ]
 
   deps = [ "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk" ]
