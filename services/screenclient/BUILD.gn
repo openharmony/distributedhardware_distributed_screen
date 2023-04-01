@@ -48,8 +48,8 @@ ohos_shared_library("distributed_screen_client") {
   ]
 
   external_deps = [
-    "input:libmmi-client",
     "graphic_standard:libgraphic_utils",
+    "input:libmmi-client",
   ]
 
   part_name = "distributed_screen"
