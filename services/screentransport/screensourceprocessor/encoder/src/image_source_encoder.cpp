@@ -212,7 +212,6 @@ sptr<SurfaceBuffer> ImageSourceEncoder::GetEncoderInputSurfaceBuffer()
 
 int32_t ImageSourceEncoder::FeedEncoderData(sptr<SurfaceBuffer> &surfaceBuffer)
 {
-    DHLOGI("%s: FeedEncoderData.", LOG_TAG);
     sptr<OHOS::SurfaceBuffer> encoderSurfaceBuffer = GetEncoderInputSurfaceBuffer();
     if (encoderSurfaceBuffer == nullptr) {
         DHLOGE("Get encoder input producer surface buffer failed.");
