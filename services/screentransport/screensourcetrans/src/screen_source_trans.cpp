@@ -414,7 +414,7 @@ void ScreenSourceTrans::OnDamageProcessDone(sptr<SurfaceBuffer> &surfaceBuffer, 
 
 void ScreenSourceTrans::OnImageProcessDone(const std::shared_ptr<DataBuffer> &data)
 {
-    DHLOGD("%s: OnProcessorDataReceived received data from data processor.", LOG_TAG);
+    DHLOGD("%s: OnImageProcessDone.", LOG_TAG);
     std::lock_guard<std::mutex> lck(dataQueueMtx_);
     while (dataQueue_.size() >= DATA_QUEUE_MAX_SIZE) {
         DHLOGE("%s: Data queue overflow.", LOG_TAG);
@@ -468,7 +468,6 @@ void ScreenSourceTrans::FeedChannelData()
         if (ret != DH_SUCCESS) {
             DHLOGD("%s:Send data failed.", LOG_TAG);
         }
-        DHLOGD("%s: FeedChannelData success.", LOG_TAG);
     }
 }
 } // namespace DistributedHardware

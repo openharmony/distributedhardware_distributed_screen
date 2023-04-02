@@ -93,7 +93,7 @@ uint8_t *ImageSinkDecoder::GetLastFrame()
 
 sptr<SurfaceBuffer> ImageSinkDecoder::GetWinSurfaceBuffer()
 {
-    DHLOGI("%s: ConsumeSurface.", LOG_TAG);
+    DHLOGI("%s: GetWinSurfaceBuffer.", LOG_TAG);
     sptr<SurfaceBuffer> windowSurfaceBuffer = nullptr;
     int32_t releaseFence = -1;
     OHOS::BufferRequestConfig requestConfig = {
@@ -197,6 +197,7 @@ void ImageSinkDecoder::ConsumeSurface()
         windowSurface_->CancelBuffer(windowSurfaceBuffer);
         return;
     }
+    DHLOGI("%s: ConsumeSurface sucess, send NV12 to window.", LOG_TAG);
     surfaceErr = windowSurface_->FlushBuffer(windowSurfaceBuffer, -1, flushConfig);
     if (surfaceErr != SURFACE_ERROR_OK) {
         DHLOGE("%s: windowSurface_ flush buffer failed.", LOG_TAG);
@@ -209,7 +210,7 @@ void ImageSinkDecoder::ConsumeSurface()
 
 void ConsumBufferListener::OnBufferAvailable()
 {
-    DHLOGI("%s: OnBufferAvailable.", LOG_TAG);
+    DHLOGI("%s: OnBufferAvailable, receive NV12 data from decoder.", LOG_TAG);
     decoder_->ConsumeSurface();
 }
 
@@ -530,7 +531,7 @@ int32_t ImageSinkDecoder::ProcessData(const std::shared_ptr<DataBuffer> &screenD
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
 
-    DHLOGD("%s: Decode screen data.", LOG_TAG);
+    DHLOGD("%s: Decode screen data. send data to H264 decoder", LOG_TAG);
     Media::AVCodecBufferInfo bufferInfo;
     bufferInfo.presentationTimeUs = 0;
     bufferInfo.size = static_cast<int32_t>(screenData->Capacity());

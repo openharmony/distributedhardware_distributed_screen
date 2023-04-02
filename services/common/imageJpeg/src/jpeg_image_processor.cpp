@@ -138,7 +138,7 @@ void JpegImageProcessor::EncodeDamageData(sptr<SurfaceBuffer> &surfaceBuffer,
         surfaceAddrIdx += configParam_.GetScreenWidth() * RGBA_CHROMA;
     }
     uint32_t jpegSize = CompressRgbaToJpeg(damage, partialBuffer, data);
-    DHLOGI("EncodeDamageData jpegSize %." PRId32, jpegSize);
+    DHLOGI("CompressRgbaToJpeg end, jpegSize %." PRId32, jpegSize);
     delete [] partialBuffer;
 }
 
@@ -163,7 +163,7 @@ int32_t JpegImageProcessor::DecodeDamageData(const std::shared_ptr<DataBuffer> &
         }
         offset += item.dirtySize;
         uint8_t *dirtyImageData = new uint8_t[item.width * item.height * RGB_CHROMA] {0};
-        DHLOGI("%s: CompressRgbaToJpeg.", LOG_TAG);
+        DHLOGI("%s: DecompressJpegToNV12.", LOG_TAG);
         DecompressJpegToNV12(item.dirtySize, jpegData, dirtyImageData);
         DHLOGI("%s: DecompressJpegToNV12 success.", LOG_TAG);
         ret = ReplaceDamage2LastFrame(lastFrame, dirtyImageData, item);
@@ -216,21 +216,19 @@ int32_t JpegImageProcessor::ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t 
 uint32_t JpegImageProcessor::CompressRgbaToJpeg(const OHOS::Rect &damage,
     uint8_t *inputData, std::shared_ptr<DataBuffer> &data)
 {
+    DHLOGI("%s: CompressRgbaToJpeg.", LOG_TAG);
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     JSAMPROW row_pointer[1];
-
     cinfo.err = jpeg_std_error(&jerr);
     jpeg_create_compress(&cinfo);
     unsigned char *outBuffer = nullptr;
     unsigned long outSize = 0;
     jpeg_mem_dest(&cinfo, &outBuffer, &outSize);
-
     cinfo.image_width = damage.w;
     cinfo.image_height = damage.h;
     cinfo.input_components = RGB_CHROMA;
     cinfo.in_color_space = JCS_RGB;
-
     jpeg_set_defaults(&cinfo);
     jpeg_set_quality(&cinfo, JPEG_QUALITY, TRUE);
     jpeg_start_compress(&cinfo, TRUE);

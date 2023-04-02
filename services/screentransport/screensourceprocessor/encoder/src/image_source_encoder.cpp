@@ -41,7 +41,7 @@ namespace OHOS {
 namespace DistributedHardware {
 void ConsumerBufferListener::OnBufferAvailable()
 {
-    DHLOGI("%s: OnBufferAvailable.", LOG_TAG);
+    DHLOGI("%s: OnBufferAvailable, receiv data from RS.", LOG_TAG);
     encoder_->ConsumeSurface();
 }
 
@@ -229,6 +229,7 @@ int32_t ImageSourceEncoder::FeedEncoderData(sptr<SurfaceBuffer> &surfaceBuffer)
         return ret;
     }
     BufferFlushConfig flushConfig = { {0, 0, encoderSurfaceBuffer->GetWidth(), encoderSurfaceBuffer->GetHeight()}, 0};
+    DHLOGI("%s: FeedEncoderData to H264 encoder.", LOG_TAG);
     SurfaceError surfaceErr = encoderSurface_->FlushBuffer(encoderSurfaceBuffer, -1, flushConfig);
     if (surfaceErr != SURFACE_ERROR_OK) {
         DHLOGE("%s: encoderSurface_ flush buffer failed.", LOG_TAG);
@@ -412,7 +413,7 @@ void ImageSourceEncoder::OnError(Media::AVCodecErrorType errorType, int32_t erro
 void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecBufferInfo info,
     Media::AVCodecBufferFlag flag)
 {
-    DHLOGD("%s: OnOutputBufferAvailable.", LOG_TAG);
+    DHLOGD("%s: OnOutputBufferAvailable, receiv H264 data from encoder.", LOG_TAG);
     std::shared_ptr<IImageSourceProcessorListener> listener = imageProcessorListener_.lock();
     if (listener == nullptr) {
         DHLOGE("%s: Processor listener is null", LOG_TAG);

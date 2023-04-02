@@ -115,6 +115,7 @@ sptr<Surface> ImageSourceProcessor::GetConsumerSurface()
 
 int32_t ImageSourceProcessor::ProcessFullImage(sptr<SurfaceBuffer> &surfaceBuffer)
 {
+    DHLOGI("%s: ProcessFullImage.", LOG_TAG);
     if (surfaceBuffer == nullptr) {
         DHLOGE("%s: Process surfaceBuffer is null.", LOG_TAG);
         return ERR_DH_SCREEN_SURFACE_BUFFER_INVALIED;

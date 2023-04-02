@@ -288,7 +288,7 @@ void ScreenDataChannelImpl::OnBytesReceived(int32_t sessionId, const void *data,
 void ScreenDataChannelImpl::OnStreamReceived(int32_t sessionId, const StreamData *data,
     const StreamData *ext, const StreamFrameInfo *param)
 {
-    DHLOGI("%s: OnStreamReceived.", LOG_TAG);
+    DHLOGI("%s: OnStreamReceived, receiv data from softbus.", LOG_TAG);
     if (data == nullptr) {
         DHLOGE("%s: Stream data is null", LOG_TAG);
         return;
