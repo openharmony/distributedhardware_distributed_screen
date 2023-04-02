@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -101,10 +101,31 @@ int32_t ImageSourceProcessor::StopImageProcessor()
     return DH_SUCCESS;
 }
 
-sptr<Surface> &ImageSourceProcessor::GetImageSurface()
+sptr<Surface> ImageSourceProcessor::GetImageSurface()
 {
     DHLOGI("%s: GetImageSurface.", LOG_TAG);
     return imageEncoder_->GetInputSurface();
+}
+
+sptr<Surface> ImageSourceProcessor::GetConsumerSurface()
+{
+    DHLOGI("%s: GetConsumerSurface.", LOG_TAG);
+    return imageEncoder_->GetConsumerSurface();
+}
+
+int32_t ImageSourceProcessor::ProcessFullImage(sptr<SurfaceBuffer> &surfaceBuffer)
+{
+    DHLOGI("%s: ProcessFullImage.", LOG_TAG);
+    if (surfaceBuffer == nullptr) {
+        DHLOGE("%s: Process surfaceBuffer is null.", LOG_TAG);
+        return ERR_DH_SCREEN_SURFACE_BUFFER_INVALIED;
+    }
+    int32_t ret = imageEncoder_->FeedEncoderData(surfaceBuffer);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("%s: FeedEncoderData failed.", LOG_TAG);
+        return ERR_DH_SCREEN_TRANS_ERROR;
+    }
+    return DH_SUCCESS;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -158,13 +158,8 @@ int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, con
 {
     DHLOGI("%s: OpenSoftbusSession mysess:%s peersess:%s id:%s.", LOG_TAG, mySessionName.c_str(),
         peerSessionName.c_str(), GetAnonyString(peerDevId).c_str());
-    int dataType = TYPE_BYTES;
-    int streamType = -1;
-    if (mySessionName == DATA_SESSION_NAME) {
-        dataType = TYPE_STREAM;
-        streamType = RAW_STREAM;
-    }
-
+    int dataType = TYPE_STREAM;
+    int streamType = COMMON_VIDEO_STREAM;
     SessionAttribute attr = { 0 };
     attr.dataType = dataType;
     attr.linkTypeNum = LINK_TYPE_MAX;
@@ -182,11 +177,11 @@ int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, con
     attr.attr.streamAttr.streamType = streamType;
     int32_t sessionId = OpenSession(mySessionName.c_str(), peerSessionName.c_str(), peerDevId.c_str(), "0", &attr);
     if (sessionId < 0) {
-        DHLOGE("%s: OpenSession failed sessionId:%" PRId32, LOG_TAG, sessionId);
+        DHLOGE("%s: OpenSession failed sessionId: %." PRId32, LOG_TAG, sessionId);
         return ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL;
     }
 
-    DHLOGI("%s: OpenSoftbusSession success sessionId:%" PRId32, LOG_TAG, sessionId);
+    DHLOGI("%s: OpenSoftbusSession success sessionId: %." PRId32, LOG_TAG, sessionId);
     return sessionId;
 }
 

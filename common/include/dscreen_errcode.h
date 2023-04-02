@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -103,6 +103,12 @@ enum DScreenErrorCode {
     // screen string param empty or screen input param invalid
     ERR_DH_SCREEN_STRING_PARAM_EMPTY = -56000,
     ERR_DH_SCREEN_INPUT_PARAM_INVALID = -56001,
+    ERR_DH_SCREEN_DATA_TYPE_INVALID = -56002,
+    // screen surface error
+    ERR_DH_SCREEN_SURFACE_REQUEST_FAILED = -57000,
+    ERR_DH_SCREEN_SURFACE_BUFFER_INVALIED = -57001,
+    ERR_DH_SCREEN_SURFACE_FLUSH_FAILED = -57002,
+    ERR_DH_SCREEN_SURFACE_INVALIED = -57003,
 };
 } // namespace DistributedHardware
 } // namespace OHOS

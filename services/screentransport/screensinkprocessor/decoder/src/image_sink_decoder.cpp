@@ -41,8 +41,177 @@ int32_t ImageSinkDecoder::ConfigureDecoder(const VideoParam &configParam)
         DHLOGE("%s: SetDecoderFormat failed.", LOG_TAG);
         return ret;
     }
-
+    configParam_ = configParam;
+    ret = AddSurface();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("%s: Add surface failed ret: %." PRId32, LOG_TAG, ret);
+        consumerSurface_ = nullptr;
+        producerSurface_ = nullptr;
+        return ret;
+    }
+    alignedHeight_ = configParam_.GetVideoHeight();
+    if (alignedHeight_ % ALIGNEDBITS != 0) {
+        alignedHeight_ = ((alignedHeight_ / ALIGNEDBITS) + 1) * ALIGNEDBITS;
+    }
     return DH_SUCCESS;
+}
+
+int32_t ImageSinkDecoder::AddSurface()
+{
+    DHLOGI("%s: AddSurface.", LOG_TAG);
+    consumerSurface_ = IConsumerSurface::Create();
+    if (consumerSurface_ == nullptr) {
+        DHLOGE("%s: Create consumer surface failed.", LOG_TAG);
+        return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+    }
+
+    sptr<IBufferProducer> producer = consumerSurface_->GetProducer();
+    if (producer == nullptr) {
+        DHLOGE("%s: Get preducer surface failed.", LOG_TAG);
+        return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+    }
+
+    producerSurface_ = Surface::CreateSurfaceAsProducer(producer);
+    if (producerSurface_ == nullptr) {
+        DHLOGE("%s: Create preducer surface failed.", LOG_TAG);
+        return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+    }
+
+    if (consumerBufferListener_ == nullptr) {
+        consumerBufferListener_ = new ConsumBufferListener(shared_from_this());
+    }
+    consumerSurface_->RegisterConsumerListener(consumerBufferListener_);
+    lastFrameSize_ = configParam_.GetVideoWidth() * configParam_.GetVideoHeight() * RGB_CHROMA / TWO;
+    lastFrame_ = new uint8_t[lastFrameSize_];
+    return DH_SUCCESS;
+}
+
+uint8_t *ImageSinkDecoder::GetLastFrame()
+{
+    return lastFrame_;
+}
+
+sptr<SurfaceBuffer> ImageSinkDecoder::GetWinSurfaceBuffer()
+{
+    DHLOGI("%s: GetWinSurfaceBuffer.", LOG_TAG);
+    sptr<SurfaceBuffer> windowSurfaceBuffer = nullptr;
+    int32_t releaseFence = -1;
+    OHOS::BufferRequestConfig requestConfig = {
+        .width = configParam_.GetVideoWidth(),
+        .height = configParam_.GetVideoHeight(),
+        .strideAlignment = STRIDE_ALIGNMENT,
+        .format = PIXEL_FMT_YCBCR_420_SP,
+        .usage = HBM_USE_CPU_READ | HBM_USE_CPU_WRITE | HBM_USE_MEM_DMA,
+    };
+    SurfaceError surfaceErr = windowSurface_->RequestBuffer(windowSurfaceBuffer, releaseFence, requestConfig);
+    if (surfaceErr != SURFACE_ERROR_OK || windowSurfaceBuffer == nullptr) {
+        DHLOGE("%s: windowSurface_ request buffer failed, buffer is nullptr.", LOG_TAG);
+        windowSurface_->CancelBuffer(windowSurfaceBuffer);
+    }
+    return windowSurfaceBuffer;
+}
+
+void ImageSinkDecoder::NormalProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<SurfaceBuffer> windowSurfaceBuffer)
+{
+    DHLOGI("%s: NormalProcess.", LOG_TAG);
+    auto surfaceAddr = static_cast<uint8_t*>(surfaceBuffer->GetVirAddr());
+    auto windowSurfaceAddr = static_cast<uint8_t*>(windowSurfaceBuffer->GetVirAddr());
+    int32_t sizeData = lastFrameSize_;
+    int32_t size = windowSurfaceBuffer->GetSize();
+    int32_t ret = memcpy_s(windowSurfaceAddr, size, surfaceAddr, sizeData);
+    if (ret != EOK) {
+        DHLOGE("%s: surfaceBuffer memcpy run failed.", LOG_TAG);
+        windowSurface_->CancelBuffer(windowSurfaceBuffer);
+    }
+}
+
+void ImageSinkDecoder::OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<SurfaceBuffer> windowSurfaceBuffer)
+{
+    DHLOGI("%s: OffsetProcess.", LOG_TAG);
+    auto surfaceAddr = static_cast<uint8_t*>(surfaceBuffer->GetVirAddr());
+    auto windowSurfaceAddr = static_cast<uint8_t*>(windowSurfaceBuffer->GetVirAddr());
+    int32_t size = windowSurfaceBuffer->GetSize();
+    int32_t srcDataOffset = 0;
+    int32_t dstDataOffset = 0;
+    int32_t alignedWidth = surfaceBuffer->GetStride();
+    int32_t chromaOffset = configParam_.GetVideoWidth() * configParam_.GetVideoHeight();
+    for (int32_t yh = 0 ; yh < configParam_.GetVideoHeight() ; yh++) {
+        int32_t ret = memcpy_s(windowSurfaceAddr + dstDataOffset, chromaOffset - dstDataOffset,
+            surfaceAddr + srcDataOffset, configParam_.GetVideoWidth());
+        if (ret != EOK) {
+            DHLOGE("%s: surfaceBuffer memcpy_s run failed.", LOG_TAG);
+            windowSurface_->CancelBuffer(windowSurfaceBuffer);
+            return;
+        }
+        dstDataOffset += configParam_.GetVideoWidth();
+        srcDataOffset += alignedWidth;
+    }
+    dstDataOffset = chromaOffset;
+    srcDataOffset = alignedWidth * alignedHeight_;
+    for (int32_t uvh = 0 ; uvh < configParam_.GetVideoHeight() / TWO; uvh++) {
+        int32_t ret = memcpy_s(windowSurfaceAddr + dstDataOffset, size - dstDataOffset,
+            surfaceAddr + srcDataOffset, configParam_.GetVideoWidth());
+        if (ret != EOK) {
+            DHLOGE("%s: surfaceBuffer memcpy_s run failed.", LOG_TAG);
+            windowSurface_->CancelBuffer(windowSurfaceBuffer);
+            return;
+        }
+        dstDataOffset += configParam_.GetVideoWidth();
+        srcDataOffset += alignedWidth;
+    }
+}
+
+void ImageSinkDecoder::ConsumeSurface()
+{
+    DHLOGI("%s: ConsumeSurface.", LOG_TAG);
+    std::unique_lock<std::mutex> bufLock(decodeMutex_);
+    if (consumerSurface_ == nullptr) {
+        DHLOGE("%s: consumerSurface_ is nullptr.", LOG_TAG);
+        return;
+    }
+    sptr<SurfaceBuffer> surfaceBuffer = nullptr;
+    int32_t fence = -1;
+    int64_t timestamp = 0;
+    OHOS::Rect damage = {0, 0, 0, 0};
+    SurfaceError surfaceErr = consumerSurface_->AcquireBuffer(surfaceBuffer, fence, timestamp, damage);
+    if (surfaceErr != SURFACE_ERROR_OK) {
+        return;
+    }
+    sptr<OHOS::SurfaceBuffer> windowSurfaceBuffer = GetWinSurfaceBuffer();
+    if (windowSurfaceBuffer == nullptr) {
+        consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
+        return;
+    }
+    int32_t alignedWidth = surfaceBuffer->GetStride();
+    if (alignedWidth == configParam_.GetVideoWidth() && alignedHeight_ == configParam_.GetVideoHeight()) {
+        NormalProcess(surfaceBuffer, windowSurfaceBuffer);
+    } else {
+        OffsetProcess(surfaceBuffer, windowSurfaceBuffer);
+    }
+    auto windowSurfaceAddr = static_cast<uint8_t*>(windowSurfaceBuffer->GetVirAddr());
+    BufferFlushConfig flushConfig = { {0, 0, windowSurfaceBuffer->GetWidth(), windowSurfaceBuffer->GetHeight()}, 0};
+    int32_t ret = memcpy_s(lastFrame_, lastFrameSize_, windowSurfaceAddr, lastFrameSize_);
+    if (ret != EOK) {
+        DHLOGE("%s: surfaceBuffer memcpy_s run failed.", LOG_TAG);
+        consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
+        windowSurface_->CancelBuffer(windowSurfaceBuffer);
+        return;
+    }
+    DHLOGI("%s: ConsumeSurface sucess, send NV12 to window.", LOG_TAG);
+    surfaceErr = windowSurface_->FlushBuffer(windowSurfaceBuffer, -1, flushConfig);
+    if (surfaceErr != SURFACE_ERROR_OK) {
+        DHLOGE("%s: windowSurface_ flush buffer failed.", LOG_TAG);
+        consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
+        windowSurface_->CancelBuffer(windowSurfaceBuffer);
+        return;
+    }
+    consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
+}
+
+void ConsumBufferListener::OnBufferAvailable()
+{
+    DHLOGI("%s: OnBufferAvailable, receive NV12 data from decoder.", LOG_TAG);
+    decoder_->ConsumeSurface();
 }
 
 int32_t ImageSinkDecoder::ReleaseDecoder()
@@ -52,7 +221,9 @@ int32_t ImageSinkDecoder::ReleaseDecoder()
         DHLOGE("%s: Decoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
-
+    if (lastFrame_ != nullptr) {
+        delete [] lastFrame_;
+    }
     int32_t ret = videoDecoder_->Release();
     if (ret != Media::MSERR_OK) {
         DHLOGE("%s: ReleaseDecoder failed.", LOG_TAG);
@@ -206,13 +377,20 @@ int32_t ImageSinkDecoder::SetOutputSurface(sptr<Surface> &surface)
         DHLOGE("%s: Decoder or surface is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
-
-    int32_t ret = videoDecoder_->SetOutputSurface(surface);
-    if (ret != Media::MSERR_OK) {
-        DHLOGE("%s: SetOutputSurface failed.", LOG_TAG);
-        return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+    windowSurface_ = surface;
+    if (consumerSurface_ == nullptr || producerSurface_ == nullptr) {
+        int32_t ret = videoDecoder_->SetOutputSurface(surface);
+        if (ret != Media::MSERR_OK) {
+            DHLOGE("%s: SetOutputSurface failed.", LOG_TAG);
+            return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+        }
+    } else {
+        int32_t ret = videoDecoder_->SetOutputSurface(producerSurface_);
+        if (ret != Media::MSERR_OK) {
+            DHLOGE("%s: SetOutputSurface failed.", LOG_TAG);
+            return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+        }
     }
-
     return DH_SUCCESS;
 }
 
@@ -353,7 +531,7 @@ int32_t ImageSinkDecoder::ProcessData(const std::shared_ptr<DataBuffer> &screenD
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
 
-    DHLOGD("%s: Decode screen data.", LOG_TAG);
+    DHLOGD("%s: Decode screen data. send data to H264 decoder", LOG_TAG);
     Media::AVCodecBufferInfo bufferInfo;
     bufferInfo.presentationTimeUs = 0;
     bufferInfo.size = static_cast<int32_t>(screenData->Capacity());

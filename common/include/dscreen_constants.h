@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -57,11 +57,43 @@ enum VideoFormat : uint8_t {
     VIDEO_DATA_FORMAT_RGBA8888 = 3,
 };
 
+enum DataType : uint8_t {
+    VIDEO_FULL_SCREEN_DATA = 0,
+    VIDEO_PART_SCREEN_DATA = 1,
+};
+
 /* Screen package name */
 const std::string PKG_NAME = "ohos.dhardware.dscreen";
 
 /* Screen data session name */
 const std::string DATA_SESSION_NAME = "ohos.dhardware.dscreen.data";
+const std::string JPEG_SESSION_NAME = "ohos.dhardware.dscreen.jpeg";
+/*YUV*/
+constexpr int32_t YR_PARAM = 66;
+constexpr int32_t YG_PARAM = 129;
+constexpr int32_t YB_PARAM = 25;
+constexpr int32_t UR_PARAM = -38;
+constexpr int32_t UG_PARAM = 74;
+constexpr int32_t UB_PARAM = 112;
+constexpr int32_t VG_PARAM = 94;
+constexpr int32_t VB_PARAM = 18;
+constexpr int32_t YA_PARAM = 16;
+constexpr int32_t UA_PARAM = 128;
+constexpr int32_t YUV_PARAM = 255;
+constexpr int32_t MOVEBITS = 8;
+
+/* RGBA */
+constexpr uint32_t RGBA_CHROMA = 4;
+constexpr uint32_t RGB_CHROMA = 3;
+constexpr uint32_t ONE = 1;
+constexpr uint32_t TWO = 2;
+constexpr uint32_t THREE = 3;
+constexpr uint32_t ZERO = 0;
+constexpr uint32_t ALIGNEDBITS = 32;
+
+/* Version */
+constexpr uint32_t OLD = 1;
+constexpr uint32_t NEW = 2;
 
 /* Screen session name max len */
 constexpr uint32_t DSCREEN_MAX_SESSION_NAME_LEN = 50;
@@ -87,6 +119,7 @@ constexpr int64_t MAX_YUV420_BUFFER_SIZE = 2560 * 1600 * (3 / 2) * 2;
 constexpr int32_t DSCREEN_MAX_LEN = 4096;
 
 constexpr int32_t INVALID_WINDOW_ID = -1;
+constexpr int32_t STRIDE_ALIGNMENT = 0x8;
 
 const std::string DSCREEN_LOG_TITLE_TAG = "DSCREEN";
 const std::string DSCREEN_PREFIX = "DISTRIBUTED_SCREEN";
@@ -150,6 +183,7 @@ constexpr size_t DATA_QUEUE_MAX_SIZE = 1000;
 constexpr uint32_t DECODE_WAIT_MILLISECONDS = 5000;
 constexpr size_t DATA_BUFFER_MAX_SIZE = 10 * 1024 * 1024;
 constexpr uint8_t TASK_WAIT_SECONDS = 1;
+constexpr int32_t JPEG_QUALITY = 80;
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

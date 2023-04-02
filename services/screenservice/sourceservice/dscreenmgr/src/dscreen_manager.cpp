@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -268,7 +268,7 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
         DHLOGI("dScreen state Already is ENABLED or ENABLING.");
         return DH_SUCCESS;
     }
-
+    dScreen ->SetScreenVersion(version_);
     dScreens_[dScreenIdx] = dScreen;
     int32_t ret = dScreen->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
     if (ret != DH_SUCCESS) {
@@ -484,7 +484,7 @@ void DScreenManager::NotifyRemoteSinkSetUp(const std::shared_ptr<DScreen> &dScre
         return;
     }
     eventContentJson[KEY_VIDEO_PARAM] = *(dScreen->GetVideoParam());
-
+    eventContentJson[KEY_VERSION] = dScreen->GetScreenVersion();
     if (mapRelations_.count(dScreen->GetScreenId()) == 0) {
         DHLOGE("mapRelation not found, back to enabled state screedId: %ulld", dScreen->GetScreenId());
         dScreen->SetState(ENABLED);
@@ -544,6 +544,16 @@ void DScreenManager::HandleNotifySetUpResult(const std::string &remoteDevId, con
     }
 
     dScreens_[dScreenIdx]->AddTask(std::make_shared<Task>(TaskType::TASK_CONNECT, ""));
+}
+
+void DScreenManager::SetScreenVersion(std::string &version)
+{
+    version_ = version;
+}
+
+std::string DScreenManager::GetScreenVersion()
+{
+    return version_;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

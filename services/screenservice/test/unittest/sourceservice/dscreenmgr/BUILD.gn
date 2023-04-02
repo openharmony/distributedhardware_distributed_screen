@@ -35,6 +35,7 @@ config("module_private_config") {
 
   include_dirs += [
     "./include",
+    "${services_path}/common/decision_center/include",
     "${services_path}/screenservice/sourceservice/dscreenmgr/include",
     "${services_path}/common/utils/include",
     "${services_path}/common/databuffer/include",
@@ -46,6 +47,8 @@ config("module_private_config") {
     "${distributedscreen_path}/interfaces/innerkits/native_cpp/screen_sink/include/callback",
     "${distributedscreen_path}/interfaces/innerkits/native_cpp/screen_source/include",
     "${distributedscreen_path}/interfaces/innerkits/native_cpp/screen_source/include/callback",
+    "${services_path}/common/imageJpeg/include",
+    "${services_path}/screentransport/screensourceprocessor/encoder/include",
   ]
 }
 

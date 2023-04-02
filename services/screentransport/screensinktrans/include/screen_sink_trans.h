@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,6 +40,7 @@ public:
     int32_t Stop() override;
     int32_t RegisterStateCallback(const std::shared_ptr<IScreenSinkTransCallback> &callback) override;
     int32_t SetImageSurface(const sptr<Surface> &surface) override;
+    void SetScreenVersion(std::string &version) override;
 
     void OnSessionOpened() override;
     void OnSessionClosed() override;
@@ -57,6 +58,7 @@ private:
 private:
     static const constexpr char *LOG_TAG = "ScreenSinkTrans";
 
+    std::string version_ = "1.0";
     sptr<Surface> decoderSurface_;
     std::shared_ptr<IImageSinkProcessor> imageProcessor_;
     std::shared_ptr<IScreenChannel> screenChannel_;

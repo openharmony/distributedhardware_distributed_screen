@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -20,9 +20,9 @@ ohos_shared_library("distributed_screen_sinktrans") {
   include_dirs = [
     "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//third_party/json/include",
+    "//third_party/libjpeg",
     "//foundation/graphic/graphic_2d/interfaces/innerkits/surface",
     "${fwk_common_path}/utils/include",
-    "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "${fwk_interfaces_path}/inner_kits/include",
     "${ipc_interfaces_path}/innerkits/ipc_core/include",
     "${services_path}/common/utils/include",
@@ -32,17 +32,21 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "./include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",
+    "${services_path}/common/imageJpeg/include",
     "${services_path}/common/screen_channel/include",
     "${services_path}/common/utils/include",
     "${services_path}/screentransport/screendatachannel/include",
     "${services_path}/screentransport/screensinktrans/include",
     "${services_path}/screentransport/screensinkprocessor/include",
     "${services_path}/screentransport/screensinkprocessor/decoder/include",
+    "${services_path}/screentransport/screensourceprocessor/include",
     "${services_path}/softbusadapter/include",
   ]
 
   sources = [
+    "${common_path}/src/dscreen_json_util.cpp",
     "${services_path}/common/databuffer/src/data_buffer.cpp",
+    "${services_path}/common/imageJpeg/src/jpeg_image_processor.cpp",
     "${services_path}/common/utils/src/dscreen_fwkkit.cpp",
     "${services_path}/common/utils/src/video_param.cpp",
     "${services_path}/screentransport/screendatachannel/src/screen_data_channel_impl.cpp",
@@ -57,7 +61,14 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "${common_path}:distributed_screen_utils",
     "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
     "//foundation/graphic/graphic_2d/frameworks/surface:surface",
+    "//third_party/libjpeg-turbo:turbojpeg_static",
   ]
+
+  if (!distributed_screen_common) {
+    cflags = [ "-DLIBYUV" ]
+    include_dirs += [ "//third_party/libyuv/files/include" ]
+    deps += [ "//third_party/libyuv:yuv" ]
+  }
 
   defines = [
     "HI_LOG_ENABLE",

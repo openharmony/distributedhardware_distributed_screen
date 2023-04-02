@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,7 +23,6 @@
 #include "dscreen_log.h"
 #include "image_sink_processor.h"
 #include "screen_data_channel_impl.h"
-
 namespace OHOS {
 namespace DistributedHardware {
 int32_t ScreenSinkTrans::SetUp(const VideoParam &localParam, const VideoParam &remoteParam,
@@ -210,7 +209,9 @@ int32_t ScreenSinkTrans::InitScreenTrans(const VideoParam &localParam, const Vid
     const std::string &peerDevId)
 {
     screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
-
+    if (atoi(version_.c_str()) == TWO) {
+        screenChannel_->SetJpegSessionFlag(true);
+    }
     int32_t ret = RegisterChannelListener();
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Register channel listener failed.", LOG_TAG);
@@ -286,7 +287,7 @@ void ScreenSinkTrans::OnSessionOpened()
     if (dhFwkKit != nullptr) {
         int32_t ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, ENABLE_LOW_LATENCY.dump());
         if (ret != DH_FWK_SUCCESS) {
-            DHLOGE("%s: Sink start enable low latency failed ret: %d.", LOG_TAG, ret);
+            DHLOGE("%s: Sink start enable low latency failed ret: %." PRId32, LOG_TAG, ret);
         }
     }
 }
@@ -298,7 +299,7 @@ void ScreenSinkTrans::OnSessionClosed()
     if (dhFwkKit != nullptr) {
         int32_t ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, DISABLE_LOW_LATENCY.dump());
         if (ret != DH_FWK_SUCCESS) {
-            DHLOGE("%s: Sink stop enable low latency failed ret: %d.", LOG_TAG, ret);
+            DHLOGE("%s: Sink stop enable low latency failed ret: %." PRId32, LOG_TAG, ret);
         }
     }
 
@@ -321,6 +322,11 @@ void ScreenSinkTrans::OnDataReceived(const std::shared_ptr<DataBuffer> &data)
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: send data to image processor failed ret: %" PRId32, LOG_TAG, ret);
     }
+}
+
+void ScreenSinkTrans::SetScreenVersion(std::string &version)
+{
+    version_ = version;
 }
 
 void ScreenSinkTrans::OnProcessorStateNotify(int32_t state)

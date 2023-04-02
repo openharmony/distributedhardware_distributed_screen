@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -42,6 +42,7 @@ private:
     std::map<std::string, std::shared_ptr<ScreenRegion>> screenRegions_;
     std::mutex screenRegionsMtx_;
     std::string localDevId_;
+    std::string version_ = "1.0";
 
     sptr<IDScreenSource> GetDScreenSourceSA(const std::string &devId);
     int32_t NotifyRemoteScreenService(const std::string &remoteDevId, const std::string &dhId,

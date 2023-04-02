@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -33,7 +33,10 @@ public:
     virtual int32_t Start() = 0;
     virtual int32_t Stop() = 0;
     virtual int32_t RegisterStateCallback(const std::shared_ptr<IScreenSourceTransCallback> &callBack) = 0;
-    virtual sptr<Surface> &GetImageSurface() = 0;
+    virtual sptr<Surface> GetImageSurface() = 0;
+    virtual int32_t SetConsumerSurface() = 0;
+    virtual void SetScreenVersion(std::string &version) = 0;
+    virtual std::string GetScreenVersion() = 0;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,6 +28,7 @@
 #include "media_errors.h"
 #include "format.h"
 #include "surface.h"
+#include "iconsumer_surface.h"
 
 #include "data_buffer.h"
 #include "iimage_sink_processor_listener.h"
@@ -36,6 +37,15 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+class ConsumBufferListener : public IBufferConsumerListener {
+public:
+    ConsumBufferListener(const std::shared_ptr<ImageSinkDecoder> decoder) : decoder_(decoder) {};
+    ~ConsumBufferListener() = default;
+    void OnBufferAvailable() override;
+private:
+    static const constexpr char *LOG_TAG = "ConsumBufferListener";
+    std::shared_ptr<ImageSinkDecoder> decoder_;
+};
 class ImageSinkDecoder : public std::enable_shared_from_this<ImageSinkDecoder> {
 public:
     explicit ImageSinkDecoder(const std::shared_ptr<IImageSinkProcessorListener> &imageListener)
@@ -48,6 +58,12 @@ public:
     int32_t StopDecoder();
     int32_t SetOutputSurface(sptr<Surface> &surface);
     int32_t InputScreenData(const std::shared_ptr<DataBuffer> &data);
+    int32_t AddSurface();
+    void ConsumeSurface();
+    uint8_t *GetLastFrame();
+    sptr<SurfaceBuffer> GetWinSurfaceBuffer();
+    void NormalProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<SurfaceBuffer> windowSurfaceBuffer);
+    void OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<SurfaceBuffer> windowSurfaceBuffer);
 
     void OnError(Media::AVCodecErrorType errorType, int32_t errorCode);
     void OnInputBufferAvailable(uint32_t index);
@@ -64,16 +80,23 @@ private:
 
 private:
     static const constexpr char *LOG_TAG = "ImageSinkDecoder";
-
+    VideoParam configParam_;
     std::mutex dataMutex_;
     std::mutex decodeMutex_;
     std::thread decodeThread_;
     std::condition_variable decodeCond_;
 
+    uint8_t *lastFrame_ = nullptr;
+    int32_t lastFrameSize_ = 0;
     Media::Format imageFormat_;
     Media::AVCodecBufferInfo decoderBufferInfo_;
 
     bool isDecoderReady_ = false;
+    int32_t alignedHeight_ = 0;
+    sptr<IConsumerSurface> consumerSurface_;
+    sptr<Surface> producerSurface_;
+    sptr<Surface> windowSurface_;
+    sptr<IBufferConsumerListener> consumerBufferListener_;
     std::queue<std::shared_ptr<DataBuffer>> videoDataQueue_;
     std::queue<int32_t> bufferIndexQueue_;
     std::shared_ptr<Media::AVCodecVideoDecoder> videoDecoder_;

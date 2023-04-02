@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,6 +20,7 @@
 #include "image_sink_decoder.h"
 #include "video_param.h"
 #include "data_buffer.h"
+#include "jpeg_image_processor.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -40,7 +41,8 @@ private:
     static const constexpr char *LOG_TAG = "ImageSinkProcessor";
     VideoParam localParam_;
     VideoParam remoteParam_;
-    std::shared_ptr<ImageSinkDecoder> imageDecoder_;
+    std::shared_ptr<ImageSinkDecoder> imageDecoder_ = nullptr;
+    std::shared_ptr<JpegImageProcessor> imageJpeg_ = nullptr;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

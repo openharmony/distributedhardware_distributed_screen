@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -129,6 +129,15 @@ int32_t ScreenRegion::SetUpWindow()
     return DH_SUCCESS;
 }
 
+void ScreenRegion::SetScreenVersion(std::string version)
+{
+    version_ = version;
+}
+
+std::string ScreenRegion::GetScreenVersion()
+{
+    return version_;
+}
 
 int32_t ScreenRegion::SetUp()
 {
@@ -142,7 +151,7 @@ int32_t ScreenRegion::SetUp()
     if (sinkTrans_ == nullptr) {
         sinkTrans_ = std::make_shared<ScreenSinkTrans>();
     }
-
+    sinkTrans_->SetScreenVersion(version_);
     sinkTrans_->RegisterStateCallback(shared_from_this());
     sinkTrans_->SetImageSurface(surface_);
     ret = sinkTrans_->SetUp(*videoParam_, *videoParam_, remoteDevId_);

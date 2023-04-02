@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,7 +19,7 @@ import(
 ohos_shared_library("distributed_screen_client") {
   include_dirs = [
     "${windowmanager_path}/interfaces/innerkits/wm",
-    "${graphicstandard_path}/interfaces/innerkits/surface",
+    "${graphicstandard_path}/interfaces/inner_api/surface",
     "${graphicstandard_path}/rosen/modules/render_service_client/core/ui",
     "${fwk_common_path}/utils/include",
     "//foundation/multimodalinput/input/interfaces/native/innerkits/event/include/",
@@ -47,7 +47,10 @@ ohos_shared_library("distributed_screen_client") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [ "input:libmmi-client" ]
+  external_deps = [
+    "graphic_standard:libgraphic_utils",
+    "input:libmmi-client",
+  ]
 
   part_name = "distributed_screen"
   subsystem_name = "distributedhardware"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -112,6 +112,8 @@ int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &dev
     const EnableParam &param, const std::string &reqId)
 {
     std::string attrs = param.attrs;
+    std::string version = param.version;
+    DScreenManager::GetInstance().SetScreenVersion(version);
     int ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, attrs, reqId);
     if (ret != DH_SUCCESS) {
         DHLOGE("enable distributedScreen failed. devId: %s, dhId: %s, reqId: %s, attrs: %s",

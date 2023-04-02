@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -33,7 +33,9 @@ public:
     int32_t ReleaseImageProcessor() override;
     int32_t StartImageProcessor() override;
     int32_t StopImageProcessor() override;
-    sptr<Surface> &GetImageSurface() override;
+    sptr<Surface> GetImageSurface() override;
+    sptr<Surface> GetConsumerSurface() override;
+    int32_t ProcessFullImage(sptr<SurfaceBuffer> &surfaceBuffer) override;
 
 private:
     static const constexpr char *LOG_TAG = "ImageSourceProcessor";

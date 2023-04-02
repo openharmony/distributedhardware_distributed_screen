@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -63,6 +63,8 @@ public:
     int32_t RemoveFromGroup(const std::shared_ptr<DScreen> &changedScreen, uint64_t screenId);
     void GetScreenDumpInfo(std::string &result);
     void PublishMessage(const DHTopic topic, const std::shared_ptr<DScreen> &dScreen);
+    void SetScreenVersion(std::string &version);
+    std::string GetScreenVersion();
 private:
     ~DScreenManager();
     DScreenManager();
@@ -74,6 +76,7 @@ private:
     sptr<DScreenGroupListener> dScreenGroupListener_ = nullptr;
     std::shared_ptr<IDScreenCallback> dScreenCallback_ = nullptr;
     std::string localDevId_;
+    std::string version_ = "1.0";
 
     sptr<IDScreenSink> GetDScreenSinkSA(const std::string &devId);
     int32_t NotifyRemoteScreenService(const std::string &devId, int32_t eventCode, const std::string &eventContent);

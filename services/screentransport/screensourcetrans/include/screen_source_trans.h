@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,6 +23,7 @@
 #include <string>
 #include <thread>
 
+#include "screen_decision_center.h"
 #include "iimage_source_processor.h"
 #include "iscreen_source_trans.h"
 #include "iscreen_source_trans_callback.h"
@@ -43,13 +44,17 @@ public:
     int32_t Start() override;
     int32_t Stop() override;
     int32_t RegisterStateCallback(const std::shared_ptr<IScreenSourceTransCallback> &callback) override;
-    sptr<Surface> &GetImageSurface() override;
+    sptr<Surface> GetImageSurface() override;
 
     void OnSessionOpened() override;
     void OnSessionClosed() override;
     void OnDataReceived(const std::shared_ptr<DataBuffer> &data) override;
     void OnImageProcessDone(const std::shared_ptr<DataBuffer> &data) override;
     void OnProcessorStateNotify(int32_t state) override;
+    void OnDamageProcessDone(sptr<SurfaceBuffer> &surfaceBuffer, const std::vector<OHOS::Rect> &damages) override;
+    int32_t SetConsumerSurface() override;
+    void SetScreenVersion(std::string &version) override;
+    std::string GetScreenVersion() override;
 
 private:
     int32_t CheckVideoParam(const VideoParam &param);
@@ -70,12 +75,14 @@ private:
     std::thread sendDataThread_;
 
     bool isChannelReady_ = false;
-    sptr<Surface> encoderSurface_;
+    sptr<Surface> consumerSurface_;
     std::queue<std::shared_ptr<DataBuffer>> dataQueue_;
 
     std::shared_ptr<IImageSourceProcessor> imageProcessor_;
     std::shared_ptr<IScreenChannel> screenChannel_;
     std::weak_ptr<IScreenSourceTransCallback> transCallback_;
+    std::shared_ptr<ScreenDecisionCenter> screenDecisionCenter_;
+    std::string version_ = "1.0";
 };
 } // namespace DistributedHardware
 } // namespace OHOS
