@@ -68,7 +68,6 @@ ohos_unittest("SourceTransTest") {
 
   external_deps = [
     "c_utils:utils",
-    "drivers_peripheral_display:hdi_display_device",
     "multimedia_player_framework:media_client",
   ]
 }
