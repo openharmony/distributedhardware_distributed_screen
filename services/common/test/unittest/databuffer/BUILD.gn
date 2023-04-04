@@ -38,9 +38,7 @@ config("module_private_config") {
 ohos_unittest("DataBufferTest") {
   module_out_path = module_out_path
 
-  sources = [
-    "${services_path}/common/test/unittest/databuffer/data_buffer_test.cpp",
-  ]
+  sources = [ "${services_path}/common/test/unittest/databuffer/data_buffer_test.cpp" ]
 
   configs = [ ":module_private_config" ]
 

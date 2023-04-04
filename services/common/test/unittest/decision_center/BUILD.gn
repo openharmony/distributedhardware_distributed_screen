@@ -36,15 +36,11 @@ config("module_private_config") {
 ohos_unittest("ScreenDecisionCenterTest") {
   module_out_path = module_out_path
 
-  sources = [
-    "${services_path}/common/test/unittest/decision_center/screen_decision_center_test.cpp",
-  ]
+  sources = [ "${services_path}/common/test/unittest/decision_center/screen_decision_center_test.cpp" ]
 
   configs = [ ":module_private_config" ]
 
-  deps = [
-    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
-  ]
+  deps = [ "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans" ]
 
   external_deps = [
     "graphic_standard:surface",
