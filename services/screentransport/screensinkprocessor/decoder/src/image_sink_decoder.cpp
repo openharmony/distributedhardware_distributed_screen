@@ -135,7 +135,7 @@ void ImageSinkDecoder::OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<Sur
     int32_t dstDataOffset = 0;
     int32_t alignedWidth = surfaceBuffer->GetStride();
     int32_t chromaOffset = configParam_.GetVideoWidth() * configParam_.GetVideoHeight();
-    for (int32_t yh = 0 ; yh < configParam_.GetVideoHeight() ; yh++) {
+    for (unsigned int yh = 0 ; yh < configParam_.GetVideoHeight() ; yh++) {
         int32_t ret = memcpy_s(windowSurfaceAddr + dstDataOffset, chromaOffset - dstDataOffset,
             surfaceAddr + srcDataOffset, configParam_.GetVideoWidth());
         if (ret != EOK) {
@@ -148,7 +148,7 @@ void ImageSinkDecoder::OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<Sur
     }
     dstDataOffset = chromaOffset;
     srcDataOffset = alignedWidth * alignedHeight_;
-    for (int32_t uvh = 0 ; uvh < configParam_.GetVideoHeight() / TWO; uvh++) {
+    for (unsigned int uvh = 0 ; uvh < configParam_.GetVideoHeight() / TWO; uvh++) {
         int32_t ret = memcpy_s(windowSurfaceAddr + dstDataOffset, size - dstDataOffset,
             surfaceAddr + srcDataOffset, configParam_.GetVideoWidth());
         if (ret != EOK) {
@@ -183,7 +183,8 @@ void ImageSinkDecoder::ConsumeSurface()
         return;
     }
     int32_t alignedWidth = surfaceBuffer->GetStride();
-    if (alignedWidth == configParam_.GetVideoWidth() && alignedHeight_ == configParam_.GetVideoHeight()) {
+    if (static_cast<uint32_t>(alignedWidth) == configParam_.GetVideoWidth() &&
+        static_cast<uint32_t>(alignedHeight_) == configParam_.GetVideoHeight()) {
         NormalProcess(surfaceBuffer, windowSurfaceBuffer);
     } else {
         OffsetProcess(surfaceBuffer, windowSurfaceBuffer);

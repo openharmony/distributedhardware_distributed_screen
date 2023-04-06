@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,25 +13,22 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DATA_BUFFER_TEST_H
-#define OHOS_DATA_BUFFER_TEST_H
+#ifndef SCREEN_DECISION_CENTER_TEST_H
+#define SCREEN_DECISION_CENTER_TEST_H
 
 #include <gtest/gtest.h>
-#include <new>
-#include <stddef.h>
-
-#include "data_buffer.h"
-
+#include "screen_decision_center.h"
+#include "video_param.h"
 namespace OHOS {
 namespace DistributedHardware {
-class DataBufferTest : public testing::Test {
+class ScreenDecisionCenterTest : public testing::Test {
 public:
     static void SetUpTestCase(void);
     static void TearDownTestCase(void);
     void SetUp();
     void TearDown();
-    size_t capacity = 1;
-    std::shared_ptr<DataBuffer> dataBuffer_ = nullptr;
+    VideoParam param_;
+    std::shared_ptr<ScreenDecisionCenter> decision = nullptr;
 };
 } // namespace DistributedHardware
 } // namespace OHOS
