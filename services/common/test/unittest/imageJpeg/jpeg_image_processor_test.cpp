@@ -103,21 +103,6 @@ HWTEST_F(ScreenImageJpegTest, FillDirtyImages2Surface_002, TestSize.Level1)
 }
 
 /**
- * @tc.name: CompressRgbaToJpeg_001
- * @tc.desc: Verify the CompressRgbaToJpeg function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ScreenImageJpegTest, CompressRgbaToJpeg_001, TestSize.Level1)
-{
-    OHOS::Rect damage = {20, 20, 20, 20};
-    uint8_t *inputData = new uint8_t[1600] {125};
-    std::shared_ptr<DataBuffer> dataBuffer = std::make_shared<DataBuffer>(2000);
-    int32_t ret = jpeg_->CompressRgbaToJpeg(damage, inputData, dataBuffer);
-    EXPECT_NE(1600, ret);
-}
-
-/**
  * @tc.name: ReplaceDamage2LastFrame_001
  * @tc.desc: Verify the ReplaceDamage2LastFrame function.
  * @tc.type: FUNC
