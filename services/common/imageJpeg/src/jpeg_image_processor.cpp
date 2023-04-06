@@ -282,7 +282,7 @@ void JpegImageProcessor::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputDat
 #endif
     while (cinfo.output_scanline < cinfo.output_height) {
         (void)jpeg_read_scanlines(&cinfo, buffer, 1);
-        for (int j = 0 ; j < cinfo.output_width ; j++) {
+        for (unsigned int j = 0 ; j < cinfo.output_width ; j++) {
 #ifdef LIBYUV
             rgb[rgbIndex++] = buffer[0][j * RGB_CHROMA + TWO];
             rgb[rgbIndex++] = buffer[0][j * RGB_CHROMA + 1];

@@ -120,7 +120,7 @@ std::vector<DirtyRect> DataBuffer::GetDirtyRectVec()
 
 int32_t DataBuffer::GetData(int32_t offset, int32_t datasize, uint8_t* &output)
 {
-    if (offset + datasize > capacity_ || output == nullptr) {
+    if (static_cast<unsigned long>(offset + datasize) > capacity_ || output == nullptr) {
         DHLOGE("DataBuffer GetData parameter invalid.");
         return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
     }
