@@ -76,10 +76,12 @@ HWTEST_F(DScreenSinkHandlerTest, LocalHardware_001, TestSize.Level1)
 {
     const std::string dhId = "DScreenSinkHandlerTest";
     const std::string param = "DScreenSinkHandlerTest";
+    int32_t ret = DScreenSinkHandler::GetInstance().InitSink(param);
+    EXPECT_EQ(DH_SUCCESS, ret);
     sptr<DScreenSinkLoadCallback> loadCallback = new DScreenSinkLoadCallback(param);
     loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, nullptr);
     loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, nullptr);
-    int32_t ret = DScreenSinkHandler::GetInstance().SubscribeLocalHardware(dhId, param);
+    ret = DScreenSinkHandler::GetInstance().SubscribeLocalHardware(dhId, param);
     EXPECT_EQ(DH_SUCCESS, ret);
 
     ret = DScreenSinkHandler::GetInstance().UnsubscribeLocalHardware(dhId);
