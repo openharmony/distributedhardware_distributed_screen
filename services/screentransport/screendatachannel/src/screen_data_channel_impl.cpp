@@ -53,7 +53,6 @@ int32_t ScreenDataChannelImpl::CreateSession(const std::shared_ptr<IScreenChanne
             DHLOGE("%s: Create jpeg session failed ret: %" PRId32, LOG_TAG, ret);
             return ret;
         }
-        std::shared_ptr<ISoftbusListener> softbusListener = shared_from_this();
         ret =
             SoftbusAdapter::GetInstance().RegisterSoftbusListener(softbusListener, JPEG_SESSION_NAME, peerDevId_);
         if (ret != DH_SUCCESS) {
@@ -86,7 +85,7 @@ int32_t ScreenDataChannelImpl::ReleaseSession()
     }
 
     if (jpegSessionFlag_ == true) {
-        int32_t ret = SoftbusAdapter::GetInstance().RemoveSoftbusSessionServer(PKG_NAME, JPEG_SESSION_NAME, peerDevId_);
+        ret = SoftbusAdapter::GetInstance().RemoveSoftbusSessionServer(PKG_NAME, JPEG_SESSION_NAME, peerDevId_);
         if (ret != DH_SUCCESS) {
             DHLOGE("%s: Release jpeg session failed ret: %" PRId32, LOG_TAG, ret);
             return ret;
@@ -114,7 +113,7 @@ int32_t ScreenDataChannelImpl::OpenSession()
     }
     sessionId_ = sessionId;
     if (jpegSessionFlag_ == true) {
-        int32_t sessionId =
+        sessionId =
             SoftbusAdapter::GetInstance().OpenSoftbusSession(DATA_SESSION_NAME, JPEG_SESSION_NAME, peerDevId_);
         if (sessionId < 0) {
             DHLOGE("%s: Open jpeg session failed, ret: %" PRId32, LOG_TAG, sessionId);
@@ -141,7 +140,7 @@ int32_t ScreenDataChannelImpl::CloseSession()
     }
     sessionId_ = 0;
     if (jpegSessionFlag_ == true && jpegSessionId_ != 0) {
-        int32_t ret = SoftbusAdapter::GetInstance().CloseSoftbusSession(sessionId_);
+        ret = SoftbusAdapter::GetInstance().CloseSoftbusSession(sessionId_);
         if (ret != DH_SUCCESS) {
             DHLOGE("%s: Close jpeg session failed ret: %" PRId32, LOG_TAG, ret);
             return ret;

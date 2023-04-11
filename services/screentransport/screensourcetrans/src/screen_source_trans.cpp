@@ -402,10 +402,16 @@ void ScreenSourceTrans::OnDamageProcessDone(sptr<SurfaceBuffer> &surfaceBuffer, 
         case OLD:
             DHLOGI("%s: ProcessFullImage.", LOG_TAG);
             ret = imageProcessor_->ProcessFullImage(surfaceBuffer);
+            if (ret != DH_SUCCESS) {
+                DHLOGE("%s: ImageProcessor process full image failed.", LOG_TAG);
+            }
             break;
         case NEW:
             DHLOGI("%s: InputBufferImage.", LOG_TAG);
             ret = screenDecisionCenter_->InputBufferImage(surfaceBuffer, damages);
+            if (ret != DH_SUCCESS) {
+                DHLOGE("%s: DecisionCenter process full image failed.", LOG_TAG);
+            }
             break;
         default:
             break;

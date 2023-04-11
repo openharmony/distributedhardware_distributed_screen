@@ -46,7 +46,7 @@ private:
     std::shared_ptr<IImageSourceProcessor> imageProcessor_ = nullptr;
     VideoParam configParam_;
     int32_t frameCount_ = 0;
-    time_t sendFullTime_;
+    time_t sendFullTime_ = 0;
 };
 } // namespace DistributedHardware
 } // namespace OHOS
