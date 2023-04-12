@@ -92,7 +92,7 @@ private:
     Media::AVCodecBufferInfo decoderBufferInfo_;
 
     bool isDecoderReady_ = false;
-    int32_t alignedHeight_ = 0;
+    uint32_t alignedHeight_ = 0;
     sptr<IConsumerSurface> consumerSurface_;
     sptr<Surface> producerSurface_;
     sptr<Surface> windowSurface_;

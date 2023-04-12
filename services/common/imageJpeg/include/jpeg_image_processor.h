@@ -41,7 +41,8 @@ public:
     int32_t DecodeDamageData(const std::shared_ptr<DataBuffer> &data, uint8_t *lastFrame);
     int32_t ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t *dirtyImageData, const DirtyRect rect);
 private:
-    uint32_t CompressRgbaToJpeg(const OHOS::Rect &damage, uint8_t *inputData, std::shared_ptr<DataBuffer> &data);
+    uint32_t CompressRgbaToJpeg(const OHOS::Rect &damage, uint8_t *inputData,
+        uint32_t inputDataSize, std::shared_ptr<DataBuffer> &data);
     void DecompressJpegToNV12(size_t jpegSize, uint8_t *inputData, uint8_t *outputData);
 
     static const constexpr char *LOG_TAG = "JpegImageProcessor";

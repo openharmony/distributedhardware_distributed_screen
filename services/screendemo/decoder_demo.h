@@ -39,7 +39,7 @@ public:
 
 class VDecDemoCallback : public AVCodecCallback, public NoCopyable {
 public:
-    explicit VDecDemoCallback(std::shared_ptr<VDecSignal> signal);
+    explicit VDecDemoCallback(std::shared_ptr<VDecSignal> signal) : signal_(signal) {};
     virtual ~VDecDemoCallback() = default;
 
     void OnError(AVCodecErrorType errorType, int32_t errorCode) override;

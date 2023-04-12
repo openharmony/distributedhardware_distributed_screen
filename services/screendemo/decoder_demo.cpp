@@ -310,11 +310,6 @@ void VDecDemo::OutputFunc()
     }
 }
 
-VDecDemoCallback::VDecDemoCallback(shared_ptr<VDecSignal> signal)
-    : signal_(signal)
-{
-}
-
 void VDecDemoCallback::OnError(AVCodecErrorType errorType, int32_t errorCode)
 {
     cout << "Error received, errorType:" << errorType << " errorCode:" << errorCode << endl;

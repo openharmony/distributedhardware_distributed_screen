@@ -81,7 +81,8 @@ int32_t ImageSinkDecoder::AddSurface()
         consumerBufferListener_ = new ConsumBufferListener(shared_from_this());
     }
     consumerSurface_->RegisterConsumerListener(consumerBufferListener_);
-    lastFrameSize_ = configParam_.GetVideoWidth() * configParam_.GetVideoHeight() * RGB_CHROMA / TWO;
+    lastFrameSize_ = static_cast<int32_t>(configParam_.GetVideoWidth() *
+        configParam_.GetVideoHeight() * RGB_CHROMA / TWO);
     lastFrame_ = new uint8_t[lastFrameSize_];
     return DH_SUCCESS;
 }
@@ -117,7 +118,7 @@ void ImageSinkDecoder::NormalProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<Sur
     auto surfaceAddr = static_cast<uint8_t*>(surfaceBuffer->GetVirAddr());
     auto windowSurfaceAddr = static_cast<uint8_t*>(windowSurfaceBuffer->GetVirAddr());
     int32_t sizeData = lastFrameSize_;
-    int32_t size = windowSurfaceBuffer->GetSize();
+    uint32_t size = windowSurfaceBuffer->GetSize();
     int32_t ret = memcpy_s(windowSurfaceAddr, size, surfaceAddr, sizeData);
     if (ret != EOK) {
         DHLOGE("%s: surfaceBuffer memcpy run failed.", LOG_TAG);
@@ -130,11 +131,11 @@ void ImageSinkDecoder::OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<Sur
     DHLOGI("%s: OffsetProcess.", LOG_TAG);
     auto surfaceAddr = static_cast<uint8_t*>(surfaceBuffer->GetVirAddr());
     auto windowSurfaceAddr = static_cast<uint8_t*>(windowSurfaceBuffer->GetVirAddr());
-    int32_t size = windowSurfaceBuffer->GetSize();
-    int32_t srcDataOffset = 0;
-    int32_t dstDataOffset = 0;
-    int32_t alignedWidth = surfaceBuffer->GetStride();
-    int32_t chromaOffset = configParam_.GetVideoWidth() * configParam_.GetVideoHeight();
+    uint32_t size = windowSurfaceBuffer->GetSize();
+    uint32_t srcDataOffset = 0;
+    uint32_t dstDataOffset = 0;
+    uint32_t alignedWidth = surfaceBuffer->GetStride();
+    uint32_t chromaOffset = configParam_.GetVideoWidth() * configParam_.GetVideoHeight();
     for (unsigned int yh = 0 ; yh < configParam_.GetVideoHeight() ; yh++) {
         int32_t ret = memcpy_s(windowSurfaceAddr + dstDataOffset, chromaOffset - dstDataOffset,
             surfaceAddr + srcDataOffset, configParam_.GetVideoWidth());

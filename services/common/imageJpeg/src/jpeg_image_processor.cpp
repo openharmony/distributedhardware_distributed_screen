@@ -49,7 +49,7 @@ int32_t JpegImageProcessor::FillDirtyImages2Surface(const std::shared_ptr<DataBu
         DHLOGE("%s: imageSurface_ is nullptr.", LOG_TAG);
         return ERR_DH_SCREEN_SURFACE_INVALIED;
     }
-    int32_t lastFrameSize = configParam_.GetScreenWidth() * configParam_.GetScreenHeight() * RGB_CHROMA / TWO;
+    uint32_t lastFrameSize = configParam_.GetScreenWidth() * configParam_.GetScreenHeight() * RGB_CHROMA / TWO;
     int32_t ret = DecodeDamageData(data, lastFrame);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Merge dirty failed, ret: %." PRId32, LOG_TAG, ret);
@@ -70,7 +70,7 @@ int32_t JpegImageProcessor::FillDirtyImages2Surface(const std::shared_ptr<DataBu
         imageSurface_->CancelBuffer(windowSurfaceBuffer);
         return surfaceErr;
     }
-    int32_t surfaceBuffeSize = windowSurfaceBuffer->GetSize();
+    uint32_t surfaceBuffeSize = windowSurfaceBuffer->GetSize();
     auto windowSurfaceAddr = static_cast<uint8_t*>(windowSurfaceBuffer->GetVirAddr());
     ret = memcpy_s(windowSurfaceAddr, surfaceBuffeSize, lastFrame, lastFrameSize);
     if (ret != DH_SUCCESS) {
@@ -121,7 +121,7 @@ void JpegImageProcessor::EncodeDamageData(sptr<SurfaceBuffer> &surfaceBuffer,
     const OHOS::Rect &damage, std::shared_ptr<DataBuffer> &data)
 {
     DHLOGI("%s: EncodeDamageData.", LOG_TAG);
-    int32_t partialSize = damage.w * damage.h *RGBA_CHROMA;
+    uint32_t partialSize = damage.w * damage.h * RGBA_CHROMA;
     unsigned char *partialBuffer = new unsigned char[partialSize];
     unsigned char *partialBufferIdx = partialBuffer;
     auto surfaceAddrIdx = static_cast<uint8_t*>(surfaceBuffer->GetVirAddr());
@@ -137,7 +137,7 @@ void JpegImageProcessor::EncodeDamageData(sptr<SurfaceBuffer> &surfaceBuffer,
         partialBufferIdx += damage.w * RGBA_CHROMA;
         surfaceAddrIdx += configParam_.GetScreenWidth() * RGBA_CHROMA;
     }
-    uint32_t jpegSize = CompressRgbaToJpeg(damage, partialBuffer, data);
+    uint32_t jpegSize = CompressRgbaToJpeg(damage, partialBuffer, partialSize, data);
     DHLOGI("CompressRgbaToJpeg end, jpegSize %." PRId32, jpegSize);
     delete [] partialBuffer;
 }
@@ -147,8 +147,8 @@ int32_t JpegImageProcessor::DecodeDamageData(const std::shared_ptr<DataBuffer> &
     DHLOGI("%s: DecodeDamageData.", LOG_TAG);
     std::vector<DirtyRect> dirtyRectVec = data->GetDirtyRectVec();
     int32_t offset = 0;
-    int32_t screenWidth = configParam_.GetScreenWidth();
-    int32_t screenHeight = configParam_.GetScreenHeight();
+    int32_t screenWidth = static_cast<int32_t>(configParam_.GetScreenWidth());
+    int32_t screenHeight = static_cast<int32_t>(configParam_.GetScreenHeight());
     for (auto item : dirtyRectVec) {
         if (item.xPos > screenWidth || item.yPos > screenHeight ||
             item.width > screenWidth - item.xPos || item.height > screenHeight - item.yPos) {
@@ -184,29 +184,29 @@ int32_t JpegImageProcessor::ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t 
 {
     DHLOGI("%s: ReplaceDamage2LastFrame.", LOG_TAG);
     uint8_t *lastFrameIdx = lastFrame;
-    uint8_t *yData = lastFrameIdx + configParam_.GetScreenWidth() * rect.yPos + rect.xPos;
+    uint8_t *yData = lastFrameIdx + static_cast<uint32_t>(configParam_.GetScreenWidth() * rect.yPos + rect.xPos);
     uint8_t *uData = lastFrameIdx + configParam_.GetScreenWidth() * configParam_.GetScreenHeight() +
-                configParam_.GetScreenWidth() * (rect.yPos / TWO) + rect.xPos;
+                static_cast<uint32_t>(configParam_.GetScreenWidth() * (rect.yPos / TWO) + rect.xPos);
     uint8_t *yDirtyData = dirtyImageData;
     uint8_t *uDirtyData = dirtyImageData + rect.width * rect.height;
     uint8_t *yTempData = nullptr;
     uint8_t *uTempData = nullptr;
     for (int32_t i = 0 ; i < rect.height ; i++) {
-        yTempData = yData + i * configParam_.GetScreenWidth();
+        yTempData = yData + static_cast<uint32_t>(i * configParam_.GetScreenWidth());
         int32_t ret = memcpy_s(yTempData, rect.width, yDirtyData, rect.width);
         if (ret != EOK) {
             DHLOGE("%s: memcpy yData failed.", LOG_TAG);
             return ret;
         }
-        yDirtyData += rect.width;
+        yDirtyData += static_cast<uint32_t>(rect.width);
         if (i % TWO) {
-            uTempData = uData + configParam_.GetScreenWidth() * (i / TWO);
+            uTempData = uData + static_cast<uint32_t>(configParam_.GetScreenWidth() * (i / TWO));
             ret = memcpy_s(uTempData, rect.width, uDirtyData, rect.width);
             if (ret != EOK) {
                 DHLOGE("%s: memcpy uData failed.", LOG_TAG);
                 return ret;
             }
-            uDirtyData += rect.width;
+            uDirtyData += static_cast<uint32_t>(rect.width);
             }
     }
     DHLOGI("%s: ReplaceDamage2LastFrame success.", LOG_TAG);
@@ -214,9 +214,12 @@ int32_t JpegImageProcessor::ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t 
 }
 
 uint32_t JpegImageProcessor::CompressRgbaToJpeg(const OHOS::Rect &damage,
-    uint8_t *inputData, std::shared_ptr<DataBuffer> &data)
+    uint8_t *inputData, uint32_t inputDataSize, std::shared_ptr<DataBuffer> &data)
 {
     DHLOGI("%s: CompressRgbaToJpeg.", LOG_TAG);
+    if (inputDataSize != damage.w * damage.h * RGBA_CHROMA) {
+        return ERR_DH_SCREEN_CODEC_PARTAIL_DATA_ERROR;
+    }
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     JSAMPROW row_pointer[1];
@@ -270,9 +273,9 @@ void JpegImageProcessor::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputDat
     jpeg_mem_src(&cinfo, inputData, jpegSize);
     (void)jpeg_read_header(&cinfo, TRUE);
     (void)jpeg_start_decompress(&cinfo);
-    int32_t row_stride = cinfo.output_width * cinfo.output_components;
+    int32_t row_stride = static_cast<int32_t>(cinfo.output_width * cinfo.output_components);
     JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo, JPOOL_IMAGE, row_stride, 1);
-    int32_t uvIndex = cinfo.output_width * cinfo.output_height;
+    uint32_t uvIndex = cinfo.output_width * cinfo.output_height;
     int32_t i = 0;
 #ifdef LIBYUV
     uint8_t *rgb = new uint8_t[cinfo.output_width * cinfo.output_height * RGBA_CHROMA];
@@ -291,8 +294,8 @@ void JpegImageProcessor::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputDat
 #else
             int32_t y = ((YR_PARAM * buffer[0][j * RGB_CHROMA] + YG_PARAM * buffer[0][j * RGB_CHROMA + 1] +
                 YB_PARAM * buffer[0][j * RGB_CHROMA + TWO] + UA_PARAM) >> MOVEBITS) + YA_PARAM;
-            int32_t u = ((UR_PARAM * buffer[0][j * RGB_CHROMA] - UG_PARAM * buffer[0][j * RGB_CHROMA + 1] +
-                UB_PARAM * buffer[0][j * RGB_CHROMA + TWO] + UA_PARAM) >> MOVEBITS) + UA_PARAM;
+            int32_t u = ((UB_PARAM * buffer[0][j * RGB_CHROMA + TWO] - UR_PARAM * buffer[0][j * RGB_CHROMA] -
+            UG_PARAM * buffer[0][j * RGB_CHROMA + 1] + UA_PARAM) >> MOVEBITS) + UA_PARAM;
             int32_t v = ((UB_PARAM * buffer[0][j * RGB_CHROMA] - VG_PARAM * buffer[0][j * RGB_CHROMA + 1] -
                 VB_PARAM * buffer[0][j * RGB_CHROMA + TWO] + UA_PARAM) >> MOVEBITS) + UA_PARAM;
             outputData[yIndex++] = static_cast<uint8_t>((y < 0) ? 0 : (y > YUV_PARAM) ? YUV_PARAM : y);
