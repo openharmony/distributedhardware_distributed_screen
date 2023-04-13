@@ -131,13 +131,8 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
 {
     DHLOGI("HandleNotifySetUp, remoteDevId: %s", GetAnonyString(remoteDevId).c_str());
     json eventContentJson = json::parse(eventContent, nullptr, false);
-    if (eventContentJson.is_discarded()) {
-        NotifyRemoteSourceSetUpResult(remoteDevId, "", ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
-        return;
-    }
-
-    if (!CheckContentJson(eventContentJson) || !eventContentJson.contains(KEY_VIDEO_PARAM) ||
-        !eventContentJson.contains(KEY_MAPRELATION)) {
+    if (eventContentJson.is_discarded()||!CheckContentJson(eventContentJson) ||
+        !eventContentJson.contains(KEY_VIDEO_PARAM) || !eventContentJson.contains(KEY_MAPRELATION)) {
         NotifyRemoteSourceSetUpResult(remoteDevId, "", ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
         return;
     }
@@ -175,14 +170,12 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
     screenRegion->SetScreenVersion(version_);
     ret = screenRegion->SetUp();
     if (ret != DH_SUCCESS) {
-        DHLOGE("screen region setup failed");
         NotifyRemoteSourceSetUpResult(remoteDevId, dhId, ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
         return;
     }
 
     ret = screenRegion->Start();
     if (ret != DH_SUCCESS) {
-        DHLOGE("screen region start failed");
         NotifyRemoteSourceSetUpResult(remoteDevId, dhId, ERR_DH_SCREEN_SA_SCREENREGION_START_FAIL, "");
         return;
     }

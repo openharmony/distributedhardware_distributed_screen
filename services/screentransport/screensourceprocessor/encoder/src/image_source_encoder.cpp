@@ -31,9 +31,9 @@
 #include "dscreen_log.h"
 #include "jpeglib.h"
 #ifdef __LP64__
-const std::string LIB_LOAD_PATH = "/system/lib64/libdistributed_screen_dbg_itf.z.so";
+static const std::string LIB_LOAD_PATH = "/system/lib64/libdistributed_screen_dbg_itf.z.so";
 #else
-const std::string LIB_LOAD_PATH = "/system/lib/libdistributed_screen_dbg_itf.z.so";
+static const std::string LIB_LOAD_PATH = "/system/lib/libdistributed_screen_dbg_itf.z.so";
 #endif
 using GetDscreenDBGItfFunc = OHOS::DistributedHardware::IDScreenDBGItf* (*)();
 using GetImageDirtyFunc = OHOS::DistributedHardware::IImageSetDirty* (*)();
@@ -194,8 +194,8 @@ sptr<SurfaceBuffer> ImageSourceEncoder::GetEncoderInputSurfaceBuffer()
 {
     DHLOGI("%s: GetEncoderInputSurfaceBuffer.", LOG_TAG);
     OHOS::BufferRequestConfig requestConfig;
-    requestConfig.width = configParam_.GetVideoWidth();
-    requestConfig.height = configParam_.GetVideoHeight();
+    requestConfig.width = static_cast<uint32_t>(configParam_.GetVideoWidth());
+    requestConfig.height = static_cast<uint32_t>(configParam_.GetVideoHeight());
     requestConfig.usage = HBM_USE_CPU_READ | HBM_USE_CPU_WRITE | HBM_USE_MEM_DMA;
     requestConfig.strideAlignment = STRIDE_ALIGNMENT;
     requestConfig.format = PixelFormat::PIXEL_FMT_RGBA_8888;
@@ -217,7 +217,7 @@ int32_t ImageSourceEncoder::FeedEncoderData(sptr<SurfaceBuffer> &surfaceBuffer)
         DHLOGE("Get encoder input producer surface buffer failed.");
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
-    int32_t screenDataSize = configParam_.GetVideoWidth() * configParam_.GetVideoHeight() * RGBA_CHROMA;
+    uint32_t screenDataSize = configParam_.GetVideoWidth() * configParam_.GetVideoHeight() * RGBA_CHROMA;
     auto encoderSurfaceAddr = static_cast<uint8_t*>(encoderSurfaceBuffer->GetVirAddr());
     auto surfaceAddr = static_cast<uint8_t*>(surfaceBuffer->GetVirAddr());
     int32_t ret = memcpy_s(encoderSurfaceAddr, screenDataSize, surfaceAddr, screenDataSize);

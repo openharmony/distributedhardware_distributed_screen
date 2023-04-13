@@ -28,8 +28,8 @@ bool ScreenDecisionCenter::IsDirtyRectValid(const std::vector<OHOS::Rect> &damag
         DHLOGE("%s: damages size is empty.", LOG_TAG);
         return false;
     }
-    int32_t screenWidth = configParam_.GetScreenWidth();
-    int32_t screenHeight = configParam_.GetScreenHeight();
+    int32_t screenWidth = static_cast<int32_t>(configParam_.GetScreenWidth());
+    int32_t screenHeight = static_cast<int32_t>(configParam_.GetScreenHeight());
     for (const auto &damage : damages) {
         if (damage.x < 0 || damage.x > screenWidth || damage.y < 0 ||
             damage.y > screenHeight || damage.x % TWO == 1 || damage.w % TWO == 1) {
