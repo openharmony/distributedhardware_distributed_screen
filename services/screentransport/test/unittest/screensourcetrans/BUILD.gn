@@ -62,6 +62,7 @@ ohos_unittest("SourceTransTest") {
 
   deps = [
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
+    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]

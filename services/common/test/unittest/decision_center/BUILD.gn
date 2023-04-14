@@ -40,7 +40,10 @@ ohos_unittest("ScreenDecisionCenterTest") {
 
   configs = [ ":module_private_config" ]
 
-  deps = [ "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans" ]
+  deps = [
+    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
+    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
+  ]
 
   external_deps = [
     "graphic_standard:surface",

@@ -92,9 +92,12 @@ void ImageSourceEncoder::ConsumeSurface()
         return;
     }
     int32_t retcode = syncFence_->Wait(SURFACE_SYNC_FENCE_TIMEOUT);
-    DHLOGI("%s: Sync fence value is %." PRId32, LOG_TAG, retcode);
+    if (retcode == -ETIME) {
+        DHLOGE("%s: Sync fence wait timeout, retcode is %." PRId32, LOG_TAG, retcode);
+        return;
+    }
     if (pHandler_ != nullptr) {
-        eventContent_.clear();
+        eventContent_.clear(); 
         eventContent_ = imageSetDirtyPtr_->GetDamage();
     }
     std::vector<OHOS::Rect> damages = VecToDamage(eventContent_);
