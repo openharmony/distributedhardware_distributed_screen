@@ -59,6 +59,7 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "${common_path}:distributed_screen_utils",
     "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
     "//foundation/graphic/graphic_2d/frameworks/surface:surface",
+    "//foundation/graphic/graphic_2d/utils/sync_fence:sync_fence",
     "//third_party/libjpeg-turbo:turbojpeg_static",
   ]
 

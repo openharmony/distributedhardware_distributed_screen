@@ -22,10 +22,11 @@
 #include "avsharedmemory.h"
 #include "avcodec_video_encoder.h"
 #include "avcodec_common.h"
-#include "media_errors.h"
 #include "format.h"
-#include "surface.h"
 #include "iconsumer_surface.h"
+#include "media_errors.h"
+#include "surface.h"
+#include "sync_fence.h"
 
 #include "idscreen_dbg_itf.h"
 #include "iimage_source_processor_listener.h"
@@ -86,6 +87,7 @@ private:
     std::shared_ptr<Media::AVCodecCallback> encodeVideoCallback_;
     std::weak_ptr<IImageSourceProcessorListener> imageProcessorListener_;
     std::vector<std::vector<int32_t>> eventContent_;
+    OHOS::sptr<OHOS::SyncFence> syncFence_ = SyncFence::INVALID_FENCE;
 private:
     IDScreenDBGItf *dscreenDbgItfPtr_ = nullptr;
     IImageSetDirty *imageSetDirtyPtr_ = nullptr;
