@@ -97,7 +97,7 @@ void ImageSourceEncoder::ConsumeSurface()
         return;
     }
     if (pHandler_ != nullptr) {
-        eventContent_.clear(); 
+        eventContent_.clear();
         eventContent_ = imageSetDirtyPtr_->GetDamage();
     }
     std::vector<OHOS::Rect> damages = VecToDamage(eventContent_);
