@@ -62,13 +62,13 @@ ohos_unittest("SourceTransTest") {
 
   deps = [
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
-    "//foundation/graphic/graphic_2d/utils/sync_fence:sync_fence",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "graphic_chipsetsdk:sync_fence",
     "graphic_standard:surface",
     "multimedia_player_framework:media_client",
   ]
