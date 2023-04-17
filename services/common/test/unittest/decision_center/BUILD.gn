@@ -43,8 +43,8 @@ ohos_unittest("ScreenDecisionCenterTest") {
   deps = [ "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans" ]
 
   external_deps = [
-    "graphic_chipsetsdk:sync_fence",
     "graphic_standard:surface",
+    "graphic_standard:sync_fence",
     "multimedia_player_framework:media_client",
   ]
 }
