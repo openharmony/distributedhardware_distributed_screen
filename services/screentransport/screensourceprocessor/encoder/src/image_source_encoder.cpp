@@ -199,8 +199,8 @@ sptr<SurfaceBuffer> ImageSourceEncoder::GetEncoderInputSurfaceBuffer()
 {
     DHLOGI("%s: GetEncoderInputSurfaceBuffer.", LOG_TAG);
     OHOS::BufferRequestConfig requestConfig;
-    requestConfig.width = static_cast<uint32_t>(configParam_.GetVideoWidth());
-    requestConfig.height = static_cast<uint32_t>(configParam_.GetVideoHeight());
+    requestConfig.width = configParam_.GetVideoWidth();
+    requestConfig.height = configParam_.GetVideoHeight();
     requestConfig.usage = HBM_USE_CPU_READ | HBM_USE_CPU_WRITE | HBM_USE_MEM_DMA;
     requestConfig.strideAlignment = STRIDE_ALIGNMENT;
     requestConfig.format = PixelFormat::PIXEL_FMT_RGBA_8888;
