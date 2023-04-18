@@ -82,13 +82,18 @@ void ImageSourceEncoder::ConsumeSurface()
         return;
     }
     sptr<SurfaceBuffer> surfaceBuffer = nullptr;
-    int32_t fence = -1;
+    syncFence_ = SyncFence::INVALID_FENCE;
     int64_t timestamp = 0;
     OHOS::Rect damage = {0, 0, 0, 0};
-    SurfaceError surfaceErr = consumerSurface_->AcquireBuffer(surfaceBuffer, fence, timestamp, damage);
+    SurfaceError surfaceErr = consumerSurface_->AcquireBuffer(surfaceBuffer, syncFence_, timestamp, damage);
     if (surfaceErr != SURFACE_ERROR_OK) {
         DHLOGE("%s: consumerSurface_ acquire buffer failed, errcode: %" PRId32, LOG_TAG, surfaceErr);
         consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
+        return;
+    }
+    int32_t retcode = syncFence_->Wait(SURFACE_SYNC_FENCE_TIMEOUT);
+    if (retcode == -ETIME) {
+        DHLOGE("%s: Sync fence wait timeout, retcode is %." PRId32, LOG_TAG, retcode);
         return;
     }
     if (pHandler_ != nullptr) {

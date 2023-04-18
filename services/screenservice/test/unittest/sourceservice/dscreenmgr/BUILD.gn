@@ -76,6 +76,7 @@ ohos_unittest("DscreenMgrTest") {
 
   external_deps = [
     "c_utils:utils",
+    "graphic_standard:sync_fence",
     "hdf_core:libhdi",
   ]
 }
