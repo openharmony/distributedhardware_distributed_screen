@@ -134,7 +134,7 @@ void ImageSinkDecoder::OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<Sur
     uint32_t size = windowSurfaceBuffer->GetSize();
     uint32_t srcDataOffset = 0;
     uint32_t dstDataOffset = 0;
-    uint32_t alignedWidth = surfaceBuffer->GetStride();
+    uint32_t alignedWidth = static_cast<uint32_t>(surfaceBuffer->GetStride());
     uint32_t chromaOffset = configParam_.GetVideoWidth() * configParam_.GetVideoHeight();
     for (unsigned int yh = 0 ; yh < configParam_.GetVideoHeight() ; yh++) {
         int32_t ret = memcpy_s(windowSurfaceAddr + dstDataOffset, chromaOffset - dstDataOffset,
