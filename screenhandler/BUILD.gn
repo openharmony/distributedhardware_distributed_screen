@@ -38,7 +38,6 @@ ohos_shared_library("distributed_screen_handler") {
 
   external_deps = [
     "c_utils:utils",
-    "drivers_peripheral_display:hdi_display_device",
     "graphic_standard:surface",
     "ipc:ipc_core",
     "multimedia_player_framework:media_client",
