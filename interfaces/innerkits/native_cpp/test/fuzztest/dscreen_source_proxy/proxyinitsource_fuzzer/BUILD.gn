@@ -14,8 +14,7 @@
 #####################hydra-fuzz###################
 import("//build/config/features.gni")
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../../../../../distributedscreen.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("ProxyInitSourceFuzzTest") {
@@ -23,10 +22,7 @@ ohos_fuzztest("ProxyInitSourceFuzzTest") {
 
   fuzz_config_file = "${interfaces_path}/innerkits/native_cpp/test/fuzztest/dscreen_source_proxy/proxyinitsource_fuzzer"
 
-  include_dirs = [
-    "//utils/system/safwk/native/include",
-    "${fwk_common_path}/utils/include",
-  ]
+  include_dirs = [ "${fwk_common_path}/utils/include" ]
 
   include_dirs += [
     "include",

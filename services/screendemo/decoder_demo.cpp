@@ -20,7 +20,6 @@
 
 #include "avcodec_list.h"
 #include "securec.h"
-#include "ui/rs_surface_node.h"
 #include "wm_common.h"
 #include "window.h"
 #include "window_option.h"

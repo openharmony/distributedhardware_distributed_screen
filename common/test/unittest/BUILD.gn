@@ -12,8 +12,7 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../distributedscreen.gni")
 
 module_out_path = "distributed_screen/screen_common_test"
 
@@ -21,9 +20,7 @@ config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "./include",
-    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "${common_path}/include",
-    "//foundation/communication/dsoftbus/interfaces/kits/bus_center",
   ]
 }
 

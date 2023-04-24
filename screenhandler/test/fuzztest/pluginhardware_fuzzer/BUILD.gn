@@ -14,8 +14,7 @@
 #####################hydra-fuzz###################
 import("//build/config/features.gni")
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../../distributedscreen.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("PluginHardwareFuzzTest") {
@@ -25,8 +24,6 @@ ohos_fuzztest("PluginHardwareFuzzTest") {
 
   include_dirs = [
     "//third_party/json/include",
-    "${windowmanager_path}/interfaces/innerkits/dm",
-    "${mediastandard_path}/interfaces/innerkits/native/media/include",
     "${fwk_common_path}/utils/include",
   ]
 
@@ -35,16 +32,7 @@ ohos_fuzztest("PluginHardwareFuzzTest") {
     "${common_path}/include",
     "${distributedscreen_path}/screenhandler/include",
     "${fwk_services_path}/distributedhardwarefwkservice/include/localhardwaremanager",
-    "//drivers/peripheral/base",
-    "//drivers/peripheral/display/interfaces/include",
-    "//foundation/arkui/ace_engine/frameworks/base/utils",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
-    "//foundation/distributedhardware/distributed_hardware_fwk/common/utils/include",
-    "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
-    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include",
-    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
-    "//foundation/window/window_manager/utils/include",
+    "${fwk_common_path}/utils/include",
   ]
 
   cflags = [
@@ -67,7 +55,14 @@ ohos_fuzztest("PluginHardwareFuzzTest") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [ "c_utils:utils" ]
+  external_deps = [
+    "c_utils:utils",
+    "drivers_peripheral_display:hdi_display_gralloc",
+    "graphic_standard:libgraphic_utils",
+    "graphic_standard:surface",
+    "ipc:ipc_core",
+    "window_manager:libdm",
+  ]
 }
 
 ###############################################################################

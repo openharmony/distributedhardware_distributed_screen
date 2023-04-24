@@ -250,6 +250,7 @@ HWTEST_F(DScreenSourceHandlerTest, UnregisterDistributedHardware_004, TestSize.L
 {
     const std::string devId = "devId";
     const std::string dhId = "dhId";
+    DScreenSourceHandler::GetInstance().InitSource("DScreenSourceHandlerTest");
     std::shared_ptr<UnregisterCallbackTest> callback = std::make_shared<UnregisterCallbackTest>();
     DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = nullptr;
 

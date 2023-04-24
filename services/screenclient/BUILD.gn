@@ -13,16 +13,12 @@
 
 import("//build/ohos.gni")
 import("//build/ohos_var.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../distributedscreen.gni")
 
 ohos_shared_library("distributed_screen_client") {
   include_dirs = [
     "${windowmanager_path}/interfaces/innerkits/wm",
-    "${graphicstandard_path}/interfaces/inner_api/surface",
-    "${graphicstandard_path}/rosen/modules/render_service_client/core/ui",
     "${fwk_common_path}/utils/include",
-    "//foundation/multimodalinput/input/interfaces/native/innerkits/event/include/",
   ]
 
   include_dirs += [
@@ -37,8 +33,7 @@ ohos_shared_library("distributed_screen_client") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${windowmanager_path}/wm:libwm",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "${graphicstandard_path}/rosen/modules/render_service_client:librender_service_client",
   ]
 
   defines = [
@@ -49,7 +44,9 @@ ohos_shared_library("distributed_screen_client") {
 
   external_deps = [
     "graphic_standard:libgraphic_utils",
+    "graphic_standard:surface",
     "input:libmmi-client",
+    "window_manager:libwm",
   ]
 
   part_name = "distributed_screen"

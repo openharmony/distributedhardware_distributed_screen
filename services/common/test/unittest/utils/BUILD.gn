@@ -12,8 +12,7 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../../../distributedscreen.gni")
 
 module_out_path = "distributed_screen/services/utils_test"
 
@@ -25,7 +24,7 @@ config("module_private_config") {
     "${fwk_common_path}/utils/include",
     "${fwk_common_path}/log/include",
     "${fwk_utils_path}/include/log",
-    "//foundation/distributedhardware/distributed_hardware_fwk/interfaces/inner_kits/include",
+    "${fwk_interfaces_path}/inner_kits/include",
   ]
 
   include_dirs += [
@@ -49,11 +48,12 @@ ohos_unittest("UtilsTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
+    "${fwk_interfaces_path}/inner_kits:libdhfwk_sdk",
     "${services_path}/screenservice/sinkservice:distributed_screen_sink",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
+
 }
 
 group("utils_test") {

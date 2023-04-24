@@ -12,8 +12,7 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../../../distributedscreen.gni")
 
 module_out_path = "distributed_screen/source_trans_test"
 
@@ -44,11 +43,6 @@ config("module_private_config") {
     "${services_path}/screentransport/test/unittest/screensourcetrans/include",
     "${services_path}/screentransport/test/unittest/screentranstestutils/include",
     "${services_path}/softbusadapter/include",
-    "//drivers/peripheral/base",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
-    "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
-    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
-    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
   ]
 }
 
@@ -68,8 +62,10 @@ ohos_unittest("SourceTransTest") {
 
   external_deps = [
     "c_utils:utils",
+    "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",
     "graphic_standard:sync_fence",
+    "ipc:ipc_core",
     "multimedia_player_framework:media_client",
   ]
 }

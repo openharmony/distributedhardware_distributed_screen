@@ -13,19 +13,11 @@
 
 import("//build/ohos.gni")
 import("//build/ohos_var.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../distributedscreen.gni")
 
 ohos_shared_library("distributed_screen_sink") {
   include_dirs = [
-    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//third_party/json/include",
-    "//commonlibrary/c_utils/base/include",
-    "//utils/system/safwk/native/include",
-    "//foundation/graphic/graphic_2d/interfaces/inner_api/surface",
-    "//foundation/graphic/graphic_2d/interfaces/inner_api/common",
-    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
-    "${windowmanager_path}/interfaces/innerkits/dm",
     "${fwk_common_path}/utils/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
   ]
@@ -45,9 +37,6 @@ ohos_shared_library("distributed_screen_sink") {
     "${services_path}/screentransport/screensinkprocessor/include",
     "${services_path}/screentransport/screensinkprocessor/decoder/include",
     "${services_path}/screenclient/include/",
-    "//foundation/multimedia/image_framework/interfaces/innerkits/include",
-    "//drivers/peripheral/display/interfaces/include",
-    "//drivers/peripheral/base",
   ]
 
   sources = [
@@ -67,7 +56,6 @@ ohos_shared_library("distributed_screen_sink") {
     "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
     "${services_path}/screenclient:distributed_screen_client",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
-    "${windowmanager_path}/dm:libdm",
   ]
 
   defines = [
@@ -78,9 +66,15 @@ ohos_shared_library("distributed_screen_sink") {
 
   external_deps = [
     "c_utils:utils",
+    "drivers_peripheral_display:hdi_display_gralloc",
+    "graphic_standard:libgraphic_utils",
+    "graphic_standard:surface",
+    "hisysevent_native:libhisysevent",
     "ipc:ipc_core",
+    "multimedia_image_framework:image_native",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
+    "window_manager:libdm",
   ]
 
   subsystem_name = "distributedhardware"

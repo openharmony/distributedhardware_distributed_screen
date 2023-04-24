@@ -12,8 +12,7 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../../distributedscreen.gni")
 
 module_out_path = "distributed_screen/soft_bus_adapter_test"
 
@@ -37,9 +36,6 @@ config("module_private_config") {
     "${services_path}/screentransport/screensourceprocessor/include",
     "${services_path}/screentransport/screensourceprocessor/encoder/include",
     "${services_path}/softbusadapter/include",
-    "//foundation/communication/dsoftbus/interfaces/kits/bus_center",
-    "//foundation/communication/dsoftbus/interfaces/kits/common",
-    "//foundation/communication/dsoftbus/interfaces/kits/transport",
   ]
 }
 

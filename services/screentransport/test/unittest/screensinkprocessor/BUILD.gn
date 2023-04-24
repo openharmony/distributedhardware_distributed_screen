@@ -14,8 +14,7 @@
 import("//build/ohos.gni")
 import("//build/ohos_var.gni")
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../../../distributedscreen.gni")
 
 module_out_path = "distributed_screen/sink_processor_test"
 
@@ -57,13 +56,13 @@ ohos_unittest("SinkProcessorTest") {
 
   deps = [
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
-    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "graphic_standard:surface",
     "multimedia_player_framework:media_client",
   ]
 

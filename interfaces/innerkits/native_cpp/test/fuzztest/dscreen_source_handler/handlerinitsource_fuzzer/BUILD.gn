@@ -14,8 +14,7 @@
 #####################hydra-fuzz###################
 import("//build/config/features.gni")
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../../../../../distributedscreen.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("HandlerInitSourceFuzzTest") {
@@ -23,10 +22,7 @@ ohos_fuzztest("HandlerInitSourceFuzzTest") {
 
   fuzz_config_file = "${interfaces_path}/innerkits/native_cpp/test/fuzztest/dscreen_source_handler/handlerinitsource_fuzzer"
 
-  include_dirs = [
-    "//utils/system/safwk/native/include",
-    "${fwk_common_path}/utils/include",
-  ]
+  include_dirs = [ "${fwk_common_path}/utils/include" ]
 
   include_dirs += [
     "include",
@@ -36,7 +32,6 @@ ohos_fuzztest("HandlerInitSourceFuzzTest") {
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
     "${fwk_services_path}/distributedhardwarefwkservice/include",
     "${fwk_services_path}/distributedhardwarefwkservice/include/componentmanager",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
   ]
 
   cflags = [
@@ -59,7 +54,10 @@ ohos_fuzztest("HandlerInitSourceFuzzTest") {
     "LOG_DOMAIN=0xD004100",
   ]
 
-  external_deps = [ "c_utils:utils" ]
+  external_deps = [
+    "c_utils:utils",
+    "ipc:ipc_core",
+  ]
 }
 
 ###############################################################################

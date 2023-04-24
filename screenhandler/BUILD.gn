@@ -13,33 +13,22 @@
 
 import("//build/ohos.gni")
 import("//build/ohos_var.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../distributedscreen.gni")
 
 ohos_shared_library("distributed_screen_handler") {
   include_dirs = [
     "//third_party/json/include",
-    "${windowmanager_path}/interfaces/innerkits/dm",
-    "${mediastandard_path}/interfaces/inner_api/native",
     "${fwk_common_path}/utils/include",
   ]
 
   include_dirs += [
     "include",
     "${common_path}/include",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include",
-    "//drivers/peripheral/display/interfaces/include",
-    "//drivers/peripheral/base",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
-    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
   ]
 
   sources = [ "src/dscreen_handler.cpp" ]
 
-  deps = [
-    "${common_path}:distributed_screen_utils",
-    "${windowmanager_path}/dm:libdm",
-  ]
+  deps = [ "${common_path}:distributed_screen_utils" ]
 
   defines = [
     "HI_LOG_ENABLE",
@@ -49,8 +38,11 @@ ohos_shared_library("distributed_screen_handler") {
 
   external_deps = [
     "c_utils:utils",
+    "drivers_peripheral_display:hdi_display_device",
+    "ipc:ipc_core",
     "graphic_standard:surface",
     "multimedia_player_framework:media_client",
+    "window_manager:libdm",
   ]
 
   subsystem_name = "distributedhardware"

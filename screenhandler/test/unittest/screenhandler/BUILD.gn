@@ -12,8 +12,7 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../../distributedscreen.gni")
 
 module_out_path = "distributed_screen/dscreen_handler_test"
 
@@ -21,21 +20,13 @@ config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "//third_party/json/include",
-    "${windowmanager_path}/interfaces/innerkits/dm",
-    "${graphicstandard_path}/interfaces/innerkits/surface",
-    "${mediastandard_path}/interfaces/inner_api/native",
     "${fwk_common_path}/utils/include",
   ]
 
   include_dirs += [
     "./include",
     "${common_path}/include",
-    "//foundation/distributedhardware/distributed_screen/screenhandler/include",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include",
-    "//drivers/peripheral/display/interfaces/include",
-    "//drivers/peripheral/base",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
-    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
+    "${distributedscreen_path}/screenhandler/include",
   ]
 }
 
@@ -48,14 +39,20 @@ ohos_unittest("DscreenHandlerTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "${windowmanager_path}/dm:libdm",
-    "//foundation/distributedhardware/distributed_screen/screenhandler:distributed_screen_handler",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "${distributedscreen_path}/screenhandler:distributed_screen_handler",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
 
-  external_deps = [ "c_utils:utils" ]
+  external_deps = [
+    "c_utils:utils",
+    "drivers_peripheral_display:hdi_display_device",
+    "graphic_standard:libgraphic_utils",
+    "graphic_standard:surface",
+    "ipc:ipc_core",
+    "multimedia_player_framework:media_client",
+    "window_manager:libdm",
+  ]
 
   defines = [
     "HI_LOG_ENABLE",

@@ -12,24 +12,19 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../../../../distributedscreen.gni")
 
 module_out_path = "distributed_screen/DscreenMgrTest"
 
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
-    "${windowmanager_path}/interfaces/innerkits/dm",
     "//third_party/json/include",
     "${graphicstandard_path}/interfaces/inner_api/surface",
     "${graphicstandard_path}/interfaces/inner_api/common",
-    "//drivers/peripheral/display/interfaces/include",
     "${graphicstandard_path}/utils/buffer_handle/export",
-    "//foundation/window/window_manager/utils/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "${distributedhardwarefwk_path}/common/utils/include",
-    "//foundation/multimodalinput/input/interfaces/native/innerkits/event/include/",
     "${mediastandard_path}/interfaces/inner_api/native",
   ]
 
@@ -66,17 +61,18 @@ ohos_unittest("DscreenMgrTest") {
 
   deps = [
     "${distributedscreen_path}/common:distributed_screen_utils",
-    "${mediastandard_path}/interfaces/inner_api/native:media_client",
     "${services_path}/screenservice/sourceservice:distributed_screen_source",
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
-    "${windowmanager_path}/dm:libdm",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "drivers_peripheral_display:hdi_display_gralloc",
     "graphic_standard:sync_fence",
     "hdf_core:libhdi",
+    "multimedia_player_framework:media_client",
+    "window_manager:libdm",
   ]
 }
