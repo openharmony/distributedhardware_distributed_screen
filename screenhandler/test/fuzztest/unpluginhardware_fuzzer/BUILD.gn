@@ -57,7 +57,6 @@ ohos_fuzztest("UnPluginHardwareFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
-    "drivers_peripheral_display:hdi_display_gralloc",
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",
     "ipc:ipc_core",

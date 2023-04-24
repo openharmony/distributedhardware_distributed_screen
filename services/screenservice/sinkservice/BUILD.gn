@@ -66,7 +66,6 @@ ohos_shared_library("distributed_screen_sink") {
 
   external_deps = [
     "c_utils:utils",
-    "drivers_peripheral_display:hdi_display_gralloc",
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",
     "hisysevent_native:libhisysevent",

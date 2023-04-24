@@ -53,7 +53,6 @@ ohos_unittest("UtilsTest") {
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
-
 }
 
 group("utils_test") {

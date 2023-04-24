@@ -69,7 +69,6 @@ ohos_unittest("DscreenMgrTest") {
 
   external_deps = [
     "c_utils:utils",
-    "drivers_peripheral_display:hdi_display_gralloc",
     "graphic_standard:sync_fence",
     "hdf_core:libhdi",
     "multimedia_player_framework:media_client",

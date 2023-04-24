@@ -64,7 +64,6 @@ ohos_unittest("ScreenCallbackTest") {
 
   external_deps = [
     "c_utils:utils",
-    "drivers_peripheral_display:hdi_display_gralloc",
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",
     "graphic_standard:sync_fence",

@@ -62,7 +62,6 @@ ohos_unittest("DscreenRegionMgrTest") {
 
   external_deps = [
     "c_utils:utils",
-    "drivers_peripheral_display:hdi_display_gralloc",
     "hisysevent_native:libhisysevent",
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",

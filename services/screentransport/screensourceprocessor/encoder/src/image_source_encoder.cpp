@@ -24,7 +24,6 @@
 #include <string>
 #include <ctime>
 
-#include "display_type.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
