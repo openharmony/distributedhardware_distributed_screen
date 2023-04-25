@@ -38,11 +38,13 @@ ohos_unittest("ScreenCommonTest") {
   configs = [ ":module_private_config" ]
 
   deps = [ "${common_path}:distributed_screen_utils" ]
+
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"dscreencommontest\"",
     "LOG_DOMAIN=0xD004100",
   ]
+
   external_deps = [
     "c_utils:utils",
     "dsoftbus:softbus_client",
