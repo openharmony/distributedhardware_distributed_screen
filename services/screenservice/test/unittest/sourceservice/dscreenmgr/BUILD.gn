@@ -20,6 +20,7 @@ config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "//third_party/json/include",
+    "${driver_path}/interfaces/include",
     "${graphicstandard_path}/interfaces/inner_api/surface",
     "${graphicstandard_path}/interfaces/inner_api/common",
     "${graphicstandard_path}/utils/buffer_handle/export",
