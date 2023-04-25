@@ -52,6 +52,7 @@ ohos_unittest("ScreenClientTest") {
 
   external_deps = [
     "input:libmmi-client",
+    "graphic_standard:surface",
     "window_manager:libwm",
   ]
 }

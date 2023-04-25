@@ -37,7 +37,7 @@ ohos_executable("distributedScreenTest") {
     "${graphicstandard_path}/rosen/modules/render_service_client:librender_service_client",
     "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
     "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
-    "${services_path}/screenclient:distributed_screen_client", 
+    "${services_path}/screenclient:distributed_screen_client",
   ]
 
   defines = [
