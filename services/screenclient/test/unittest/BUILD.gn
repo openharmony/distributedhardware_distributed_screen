@@ -45,12 +45,12 @@ ohos_unittest("ScreenClientTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
+    "${common_path}:distributed_screen_utils",
+    "${windowmanager_path}/wm:libwm",
     "//foundation/distributedhardware/distributed_screen/services/screenclient:distributed_screen_client",
     "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
-    "${common_path}:distributed_screen_utils",
-    "${windowmanager_path}/wm:libwm",
   ]
 
   external_deps = [

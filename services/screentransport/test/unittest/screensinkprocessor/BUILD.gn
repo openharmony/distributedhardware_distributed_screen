@@ -55,9 +55,9 @@ ohos_unittest("SinkProcessorTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
+    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
-    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
   ]
 
   external_deps = [

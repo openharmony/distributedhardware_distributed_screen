@@ -54,10 +54,10 @@ ohos_unittest("DscreenRegionMgrTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest_main",
     "${services_path}/screenservice/sinkservice:distributed_screen_sink",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [

@@ -42,10 +42,10 @@ ohos_unittest("DScreenSourceStubTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest_main",
     "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
     "${services_path}/screenservice/sourceservice:distributed_screen_source",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [

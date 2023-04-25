@@ -48,10 +48,10 @@ ohos_unittest("UtilsTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest_main",
     "${fwk_interfaces_path}/inner_kits:libdhfwk_sdk",
     "${services_path}/screenservice/sinkservice:distributed_screen_sink",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest_main",
   ]
 }
 
