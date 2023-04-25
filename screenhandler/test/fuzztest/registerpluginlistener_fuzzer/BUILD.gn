@@ -36,10 +36,10 @@ ohos_fuzztest("RegisterPluginListenerFuzzTest") {
   ]
 
   cflags = [
+    "-fno-omit-frame-pointer",
     "-g",
     "-O0",
     "-Wno-unused-variable",
-    "-fno-omit-frame-pointer",
   ]
 
   sources = [ "registerpluginlistener_fuzzer.cpp" ]

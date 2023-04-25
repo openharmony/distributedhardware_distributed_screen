@@ -39,9 +39,9 @@ ohos_unittest("DscreenHandlerTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "${distributedscreen_path}/screenhandler:distributed_screen_handler",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
+    "${distributedscreen_path}/screenhandler:distributed_screen_handler",
   ]
 
   external_deps = [

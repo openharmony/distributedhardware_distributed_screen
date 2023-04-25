@@ -48,9 +48,9 @@ ohos_unittest("SoftBusAdapterTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
+    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
   ]
 
   external_deps = [

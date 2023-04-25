@@ -32,14 +32,15 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "${services_path}/common/screen_channel/include",
     "${services_path}/common/utils/include",
     "${services_path}/screentransport/screendatachannel/include",
-    "${services_path}/screentransport/screensinktrans/include",
-    "${services_path}/screentransport/screensinkprocessor/include",
     "${services_path}/screentransport/screensinkprocessor/decoder/include",
+    "${services_path}/screentransport/screensinkprocessor/include",
+    "${services_path}/screentransport/screensinktrans/include",
     "${services_path}/screentransport/screensourceprocessor/include",
     "${services_path}/softbusadapter/include",
   ]
 
   sources = [
+    "./src/screen_sink_trans.cpp",
     "${common_path}/src/dscreen_json_util.cpp",
     "${services_path}/common/databuffer/src/data_buffer.cpp",
     "${services_path}/common/imageJpeg/src/jpeg_image_processor.cpp",
@@ -50,13 +51,12 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "${services_path}/screentransport/screensinkprocessor/decoder/src/image_sink_decoder.cpp",
     "${services_path}/screentransport/screensinkprocessor/src/image_sink_processor.cpp",
     "${services_path}/softbusadapter/src/softbus_adapter.cpp",
-    "./src/screen_sink_trans.cpp",
   ]
 
   deps = [
+    "//third_party/libjpeg-turbo:turbojpeg_static",
     "${common_path}:distributed_screen_utils",
     "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
-    "//third_party/libjpeg-turbo:turbojpeg_static",
   ]
 
   if (!distributed_screen_common) {

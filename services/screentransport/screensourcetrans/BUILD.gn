@@ -52,9 +52,9 @@ ohos_shared_library("distributed_screen_sourcetrans") {
   ]
 
   deps = [
+    "//third_party/libjpeg-turbo:turbojpeg_static",
     "${common_path}:distributed_screen_utils",
     "${fwk_interfaces_path}/inner_kits:libdhfwk_sdk",
-    "//third_party/libjpeg-turbo:turbojpeg_static",
   ]
 
   if (!distributed_screen_common) {
