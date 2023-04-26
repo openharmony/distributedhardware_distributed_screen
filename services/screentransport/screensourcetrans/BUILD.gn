@@ -18,12 +18,10 @@ import(
 
 ohos_shared_library("distributed_screen_sourcetrans") {
   include_dirs = [
-    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
     "//third_party/json/include",
     "//third_party/libjpeg-turbo",
     "${fwk_common_path}/utils/include",
     "${fwk_interfaces_path}/inner_kits/include",
-    "${ipc_interfaces_path}/innerkits/ipc_core/include",
     "${services_path}/common/utils/include",
   ]
 
@@ -57,8 +55,7 @@ ohos_shared_library("distributed_screen_sourcetrans") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
-    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
+    "${fwk_interfaces_path}/inner_kits:libdhfwk_sdk",
     "//third_party/libjpeg-turbo:turbojpeg_static",
   ]
 
@@ -77,6 +74,7 @@ ohos_shared_library("distributed_screen_sourcetrans") {
   external_deps = [
     "c_utils:utils",
     "dsoftbus:softbus_client",
+    "graphic_standard:surface",
     "graphic_standard:sync_fence",
     "hisysevent_native:libhisysevent",
     "hitrace_native:hitrace_meter",

@@ -54,7 +54,10 @@ ohos_unittest("ScreenClientTest") {
     "//third_party/googletest:gtest_main",
   ]
 
-  external_deps = [ "input:libmmi-client" ]
+  external_deps = [
+    "input:libmmi-client",
+    "window_manager:libwm",
+  ]
 }
 
 group("screen_client_test") {

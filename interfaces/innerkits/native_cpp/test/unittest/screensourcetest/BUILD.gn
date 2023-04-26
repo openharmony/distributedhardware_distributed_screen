@@ -21,23 +21,21 @@ config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "//third_party/json/include",
-    "//utils/system/safwk/native/include",
     "${fwk_common_path}/utils/include",
     "${fwk_utils_path}/include",
   ]
 
   include_dirs += [
     "./include",
-    "${services_path}/screentransport/test/unittest/screentranstestutils/include",
     "${common_path}/include",
-    "${services_path}/common/databuffer/include",
-    "${services_path}/common/screen_channel/include",
-    "${services_path}/common/utils/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
     "${interfaces_path}/innerkits/native_cpp/test/unittest/screensourcetest/include",
     "${interfaces_path}/innerkits/native_cpp/test/unittest/screensourcetest/include/callback",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
+    "${services_path}/common/databuffer/include",
+    "${services_path}/common/screen_channel/include",
+    "${services_path}/common/utils/include",
+    "${services_path}/screentransport/test/unittest/screentranstestutils/include",
   ]
 }
 
@@ -54,7 +52,6 @@ ohos_unittest("ScreenSourceTest") {
 
   deps = [
     "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core:ipc_core",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]

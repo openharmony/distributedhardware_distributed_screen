@@ -20,35 +20,32 @@ module_out_path = "distributed_screen/DscreenMgrTest"
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
-    "${windowmanager_path}/interfaces/innerkits/dm",
     "//third_party/json/include",
+    "${driver_path}/interfaces/include",
     "${graphicstandard_path}/interfaces/inner_api/surface",
     "${graphicstandard_path}/interfaces/inner_api/common",
-    "//drivers/peripheral/display/interfaces/include",
     "${graphicstandard_path}/utils/buffer_handle/export",
-    "//foundation/window/window_manager/utils/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "${distributedhardwarefwk_path}/common/utils/include",
-    "//foundation/multimodalinput/input/interfaces/native/innerkits/event/include/",
     "${mediastandard_path}/interfaces/inner_api/native",
   ]
 
   include_dirs += [
     "./include",
-    "${services_path}/common/decision_center/include",
-    "${services_path}/screenservice/sourceservice/dscreenmgr/include",
-    "${services_path}/common/utils/include",
-    "${services_path}/common/databuffer/include",
-    "${services_path}/common/screen_channel/include",
     "${common_path}/include",
-    "${services_path}/screentransport/screensourcetrans/include",
-    "${services_path}/screentransport/screensourceprocessor/include",
     "${distributedscreen_path}/interfaces/innerkits/native_cpp/screen_sink/include",
     "${distributedscreen_path}/interfaces/innerkits/native_cpp/screen_sink/include/callback",
     "${distributedscreen_path}/interfaces/innerkits/native_cpp/screen_source/include",
     "${distributedscreen_path}/interfaces/innerkits/native_cpp/screen_source/include/callback",
+    "${services_path}/common/databuffer/include",
+    "${services_path}/common/decision_center/include",
     "${services_path}/common/imageJpeg/include",
+    "${services_path}/common/screen_channel/include",
+    "${services_path}/common/utils/include",
+    "${services_path}/screenservice/sourceservice/dscreenmgr/include",
     "${services_path}/screentransport/screensourceprocessor/encoder/include",
+    "${services_path}/screentransport/screensourceprocessor/include",
+    "${services_path}/screentransport/screensourcetrans/include",
   ]
 }
 
@@ -66,10 +63,8 @@ ohos_unittest("DscreenMgrTest") {
 
   deps = [
     "${distributedscreen_path}/common:distributed_screen_utils",
-    "${mediastandard_path}/interfaces/inner_api/native:media_client",
     "${services_path}/screenservice/sourceservice:distributed_screen_source",
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
-    "${windowmanager_path}/dm:libdm",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
@@ -78,5 +73,7 @@ ohos_unittest("DscreenMgrTest") {
     "c_utils:utils",
     "graphic_standard:sync_fence",
     "hdf_core:libhdi",
+    "multimedia_player_framework:media_client",
+    "window_manager:libdm",
   ]
 }

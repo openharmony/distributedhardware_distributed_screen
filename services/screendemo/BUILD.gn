@@ -24,16 +24,9 @@ ohos_executable("distributedScreenTest") {
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
     "${fwk_common_path}/utils/include",
-    "${windowmanager_path}/interfaces/innerkits/dm",
     "${services_path}/screenclient/include",
-    "${windowmanager_path}/interfaces/innerkits/wm",
     "${common_path}/include",
-    "//base/security/access_token/interfaces/innerkits/nativetoken/include/",
-    "//base/security/access_token/interfaces/innerkits/token_setproc/include/",
   ]
-
-  include_dirs +=
-      [ "foundation/multimedia/player_framework/interfaces/inner_api/native" ]
 
   sources = [
     "./decoder_demo.cpp",
@@ -42,17 +35,10 @@ ohos_executable("distributedScreenTest") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
+    "${graphicstandard_path}/rosen/modules/render_service_client:librender_service_client",
     "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
     "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
     "${services_path}/screenclient:distributed_screen_client",
-    "${windowmanager_path}/dm:libdm",
-    "${windowmanager_path}/wm:libwm",
-    "//base/security/access_token/interfaces/innerkits/nativetoken:libnativetoken",
-    "//base/security/access_token/interfaces/innerkits/token_setproc:libtoken_setproc",
-    "//foundation/communication/dsoftbus/adapter:softbus_adapter",
-    "//foundation/communication/dsoftbus/sdk:softbus_client",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
-    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
   ]
 
   defines = [
@@ -63,8 +49,15 @@ ohos_executable("distributedScreenTest") {
 
   external_deps = [
     "access_token:libaccesstoken_sdk",
+    "access_token:libnativetoken",
+    "access_token:libtoken_setproc",
+    "dsoftbus:softbus_client",
+    "graphic_standard:surface",
     "hiviewdfx_hilog_native:libhilog",
     "multimedia_player_framework:media_client",
+    "samgr:samgr_proxy",
+    "window_manager:libdm",
+    "window_manager:libwm",
   ]
 
   cflags = [ "-Wall" ]

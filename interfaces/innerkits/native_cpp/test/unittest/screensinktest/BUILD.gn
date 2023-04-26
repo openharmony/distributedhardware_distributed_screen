@@ -35,8 +35,6 @@ config("module_private_config") {
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
     "${interfaces_path}/innerkits/native_cpp/test/unittest/screensinktest/include",
-    "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
-    "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy/include",
   ]
 }
 
@@ -56,6 +54,7 @@ ohos_unittest("ScreenSinkTest") {
 
   external_deps = [
     "c_utils:utils",
+    "ipc:ipc_core",
     "samgr:samgr_proxy",
   ]
 }

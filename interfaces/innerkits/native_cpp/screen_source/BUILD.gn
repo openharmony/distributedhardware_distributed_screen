@@ -17,11 +17,7 @@ import(
     "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
 
 ohos_shared_library("distributed_screen_source_sdk") {
-  include_dirs = [
-    "//utils/system/safwk/native/include",
-    "${fwk_common_path}/utils/include",
-    "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
-  ]
+  include_dirs = [ "${fwk_common_path}/utils/include" ]
 
   include_dirs += [
     "include",

@@ -19,9 +19,6 @@ import(
 ohos_shared_library("distributed_screen_utils") {
   include_dirs = [
     "${services_path}/common/utils/include",
-    "//commonlibrary/c_utils/base/include",
-    "//base/hiviewdfx/hisysevent/interfaces/native/innerkits/hisysevent/include",
-    "//base/hiviewdfx/hitrace/interfaces/native/innerkits/include/hitrace_meter",
     "//third_party/json/include",
     "${common_path}/include",
     "${fwk_common_path}/utils/include",
@@ -38,8 +35,10 @@ ohos_shared_library("distributed_screen_utils") {
 
   external_deps = [
     "c_utils:utils",
+    "c_utils:utilsbase",
     "dsoftbus:softbus_client",
     "hisysevent_native:libhisysevent",
+    "hitrace_native:hitrace_meter",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
   ]

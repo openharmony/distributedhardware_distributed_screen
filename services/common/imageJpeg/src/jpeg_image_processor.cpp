@@ -192,7 +192,7 @@ int32_t JpegImageProcessor::ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t 
     uint8_t *yTempData = nullptr;
     uint8_t *uTempData = nullptr;
     for (int32_t i = 0 ; i < rect.height ; i++) {
-        yTempData = yData + static_cast<uint32_t>(i * configParam_.GetScreenWidth());
+        yTempData = yData + static_cast<uint32_t>(i) * configParam_.GetScreenWidth();
         int32_t ret = memcpy_s(yTempData, rect.width, yDirtyData, rect.width);
         if (ret != EOK) {
             DHLOGE("%s: memcpy yData failed.", LOG_TAG);
@@ -200,7 +200,7 @@ int32_t JpegImageProcessor::ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t 
         }
         yDirtyData += static_cast<uint32_t>(rect.width);
         if (i % TWO) {
-            uTempData = uData + static_cast<uint32_t>(configParam_.GetScreenWidth() * (i / TWO));
+            uTempData = uData + configParam_.GetScreenWidth() * (static_cast<uint32_t>(i) / TWO);
             ret = memcpy_s(uTempData, rect.width, uDirtyData, rect.width);
             if (ret != EOK) {
                 DHLOGE("%s: memcpy uData failed.", LOG_TAG);
@@ -273,7 +273,7 @@ void JpegImageProcessor::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputDat
     jpeg_mem_src(&cinfo, inputData, jpegSize);
     (void)jpeg_read_header(&cinfo, TRUE);
     (void)jpeg_start_decompress(&cinfo);
-    int32_t row_stride = static_cast<int32_t>(cinfo.output_width * cinfo.output_components);
+    int32_t row_stride = static_cast<int32_t>(cinfo.output_width) * cinfo.output_components;
     JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo, JPOOL_IMAGE, row_stride, 1);
     uint32_t uvIndex = cinfo.output_width * cinfo.output_height;
     int32_t i = 0;

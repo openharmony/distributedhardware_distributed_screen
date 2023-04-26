@@ -41,9 +41,6 @@ config("module_private_config") {
     "${services_path}/screentransport/screensourceprocessor/include",
     "${services_path}/screentransport/screensourcetrans/include",
     "${services_path}/screentransport/test/unittest/screentranstestutils/include",
-    "//foundation/communication/dsoftbus/interfaces/kits/transport",
-    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
-    "//drivers/peripheral/base",
   ]
 }
 
@@ -57,13 +54,14 @@ ohos_unittest("SinkTransTest") {
 
   deps = [
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
-    "//foundation/graphic/graphic_2d/frameworks/surface:surface",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "dsoftbus:softbus_client",
+    "graphic_standard:surface",
     "multimedia_player_framework:media_client",
   ]
 

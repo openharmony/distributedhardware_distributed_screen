@@ -34,7 +34,6 @@
 #include "token_setproc.h"
 
 #include "decoder_demo.h"
-#include "softbus_adapter_mem.h"
 #include "softbus_bus_center.h"
 #include "softbus_common.h"
 
