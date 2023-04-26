@@ -12,7 +12,8 @@
 # limitations under the License.
 
 import("//build/ohos.gni")
-import("../../distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
 
 ohos_executable("distributedScreenTest") {
   install_enable = false

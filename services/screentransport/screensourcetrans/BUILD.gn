@@ -13,7 +13,9 @@
 
 import("//build/ohos.gni")
 import("//build/ohos_var.gni")
-import("../../../distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+
 ohos_shared_library("distributed_screen_sourcetrans") {
   include_dirs = [
     "//third_party/json/include",

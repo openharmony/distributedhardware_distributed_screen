@@ -14,7 +14,8 @@
 import("//build/ohos.gni")
 import("//build/ohos_var.gni")
 import("//build/test.gni")
-import("../../../../../distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
 
 module_out_path = "distributed_screen/sink_processor_test"
 
