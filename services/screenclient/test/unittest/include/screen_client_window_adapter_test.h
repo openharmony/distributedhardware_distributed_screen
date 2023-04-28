@@ -18,7 +18,6 @@
 
 #include <gtest/gtest.h>
 
-#include "rs_surface_node.h"
 #include "transaction/rs_interfaces.h"
 #include "window_option.h"
 #include "wm_common.h"
