@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -48,8 +48,7 @@ ohos_unittest("ScreenClientTest") {
   deps = [
     "${common_path}:distributed_screen_utils",
     "${windowmanager_path}/wm:libwm",
-    "//foundation/distributedhardware/distributed_screen/services/screenclient:distributed_screen_client",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "${distributedscreen_path}/services/screenclient:distributed_screen_client",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
