@@ -47,8 +47,8 @@ ohos_unittest("ScreenClientTest") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${windowmanager_path}/wm:libwm",
     "${distributedscreen_path}/services/screenclient:distributed_screen_client",
+    "${windowmanager_path}/wm:libwm",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
