@@ -26,6 +26,7 @@ int32_t DScreenSourceCallback::OnNotifyRegResult(const std::string &devId, const
 {
     DHLOGI("DScreenSourceCallback OnNotifyRegResult devId: %s dhId: %s status: %" PRId32,
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), status);
+    std::lock_guard<std::mutex> lock(registerMutex_);
     const auto iter = registerCallbackMap_.find(reqId);
     if (iter != registerCallbackMap_.end()) {
         if (iter->second == nullptr) {
@@ -45,6 +46,7 @@ int32_t DScreenSourceCallback::OnNotifyUnregResult(const std::string &devId, con
 {
     DHLOGI("DScreenSourceCallback OnNotifyUnregResult devId: %s dhId: %s status: %" PRId32,
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), status);
+    std::lock_guard<std::mutex> lock(unregisterMutex_);
     const auto iter = unregisterCallbackMap_.find(reqId);
     if (iter != unregisterCallbackMap_.end()) {
         if (iter->second == nullptr) {
@@ -63,12 +65,14 @@ void DScreenSourceCallback::PushRegRegisterCallback(const std::string &reqId,
     const std::shared_ptr<RegisterCallback> &callback)
 {
     DHLOGD("PushRegRegisterCallback");
+    std::lock_guard<std::mutex> lock(registerMutex_);
     registerCallbackMap_.emplace(reqId, callback);
 }
 
 void DScreenSourceCallback::PopRegRegisterCallback(const std::string &reqId)
 {
     DHLOGD("PopRegRegisterCallback");
+    std::lock_guard<std::mutex> lock(registerMutex_);
     registerCallbackMap_.erase(reqId);
 }
 
@@ -76,12 +80,14 @@ void DScreenSourceCallback::PushUnregisterCallback(const std::string &reqId,
     const std::shared_ptr<UnregisterCallback> &callback)
 {
     DHLOGD("PushUnregisterCallback");
+    std::lock_guard<std::mutex> lock(unregisterMutex_);
     unregisterCallbackMap_.emplace(reqId, callback);
 }
 
 void DScreenSourceCallback::PopUnregisterCallback(const std::string &reqId)
 {
     DHLOGD("PopUnregisterCallback");
+    std::lock_guard<std::mutex> lock(unregisterMutex_);
     unregisterCallbackMap_.erase(reqId);
 }
 }
