@@ -84,6 +84,7 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_001, TestSize.Lev
     param.version = "1.0";
     param.attrs = "attrs";
     std::string callbackParam = "callbackParam";
+    DScreenSourceHandler::GetInstance().InitSource("DScreenSourceHandlerTest");
     sptr<DScreenSourceLoadCallback> loadCallback = new DScreenSourceLoadCallback(callbackParam);
     loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, nullptr);
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();

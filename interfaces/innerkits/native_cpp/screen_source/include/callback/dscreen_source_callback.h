@@ -18,6 +18,7 @@
 
 #include <cstdint>
 #include <map>
+#include <mutex>
 #include <string>
 
 #include "idistributed_hardware_source.h"
@@ -42,6 +43,8 @@ public:
     void PopUnregisterCallback(const std::string &reqId);
 
 private:
+    std::mutex registerMutex_;
+    std::mutex unregisterMutex_;
     std::map<std::string, std::shared_ptr<RegisterCallback>> registerCallbackMap_;
     std::map<std::string, std::shared_ptr<UnregisterCallback>> unregisterCallbackMap_;
 };
