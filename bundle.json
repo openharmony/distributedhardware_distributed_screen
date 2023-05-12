@@ -1,9 +1,9 @@
 {
     "name":"@ohos/distributed_screen",
     "description":"distributed hardware screen",
-    "version":"4.0",
+    "version":"3.1",
     "author":{},
-    "repository":"https://gitee.com/openharmony/distributed_screen",
+    "repository":"https://gitee.com/openharmony/distributedhardware_distributed_screen",
     "license":"Apache License 2.0",
     "publishAs":"code-segment",
     "segment":{
@@ -21,8 +21,8 @@
         "adapted_system_type":[
             "standard"
         ],
-        "rom":"2000KB",
-        "ram":"6MB",
+        "rom":"5120KB",
+        "ram":"33580KB",
         "hisysevent_config": [
             "//foundation/distributedhardware/distributed_screen/hisysevent.yaml"
         ],
