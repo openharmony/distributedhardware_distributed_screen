@@ -12,3 +12,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#ifndef OHOS_DSCREEN_IPC_INTERFACE_CODE_H
+#define OHOS_DSCREEN_IPC_INTERFACE_CODE_H
+
+#include <cstdint>
+
+namespace OHOS {
+namespace DistributedHardware {
+    /* SAID: 4807*/
+    enum class IDScreenSourceInterfaceCode : uint32_t {
+        INIT_SOURCE = 0,
+        RELEASE_SOURCE = 1,
+        REGISTER_DISTRIBUTED_HARDWARE = 2,
+        UNREGISTER_DISTRIBUTED_HARDWARE = 3,
+        CONFIG_DISTRIBUTED_HARDWARE = 4,
+        DSCREEN_NOTIFY = 5,
+    };
+
+    /* SAID: 4808*/
+    enum class IDScreenSinkInterfaceCode : uint32_t {
+        INIT_SINK = 0,
+        RELEASE_SINK = 1,
+        SUBSCRIBE_DISTRIBUTED_HARDWARE = 2,
+        UNSUBSCRIBE_DISTRIBUTED_HARDWARE = 3,
+        DSCREEN_NOTIFY = 4,
+    };
+
+    /* SAID: 4807*/
+    enum class IDScreenSourceCBInterfaceCode : uint32_t {
+        NOTIFY_REG_RESULT = 0,
+        NOTIFY_UNREG_RESULT = 1,
+    };
+} // namespace DistributedHardware
+} // namespace OHOS
+#endif
