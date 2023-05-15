@@ -64,7 +64,7 @@ ohos_unittest("SourceProcessorTest") {
     "graphic_standard:surface",
     "graphic_standard:sync_fence",
     "ipc:ipc_core",
-    "multimedia_player_framework:media_client",
+    "player_framework:media_client",
   ]
 }
 

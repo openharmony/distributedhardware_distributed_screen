@@ -62,7 +62,7 @@ ohos_unittest("SinkTransTest") {
     "c_utils:utils",
     "dsoftbus:softbus_client",
     "graphic_standard:surface",
-    "multimedia_player_framework:media_client",
+    "player_framework:media_client",
   ]
 
   defines = [
