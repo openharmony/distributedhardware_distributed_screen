@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,6 +40,8 @@ public:
     uint8_t GetCodecType() const;
     void SetVideoFormat(uint8_t videoFormat);
     uint8_t GetVideoFormat() const;
+    void SetPartialFreshFlag(bool flag);
+    bool GetPartialFreshFlag() const;
 private:
     friend void to_json(json &j, const VideoParam &videoParam);
     friend void from_json(const json &j, VideoParam &videoParam);
@@ -51,6 +53,7 @@ private:
     uint32_t fps_ = DEFAULT_FPS;
     uint8_t codecType_ = DEFAULT_CODECTYPE;
     uint8_t videoFormat_ = DEFAULT_VIDEO_FORMAT;
+    bool isPartialFresh_ = false;
 };
 void to_json(json &j, const VideoParam &videoParam);
 void from_json(const json &j, VideoParam &videoParam);
