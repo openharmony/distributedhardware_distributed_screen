@@ -17,17 +17,23 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_ipc_interface_code.h"
 #include "dscreen_log.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 DScreenSinkStub::DScreenSinkStub()
 {
-    memberFuncMap_[INIT_SINK] = &DScreenSinkStub::InitSinkInner;
-    memberFuncMap_[RELEASE_SINK] = &DScreenSinkStub::ReleaseSinkInner;
-    memberFuncMap_[SUBSCRIBE_DISTRIBUTED_HARDWARE] = &DScreenSinkStub::SubscribeDistributedHardwareInner;
-    memberFuncMap_[UNSUBSCRIBE_DISTRIBUTED_HARDWARE] = &DScreenSinkStub::UnsubscribeDistributedHardwareInner;
-    memberFuncMap_[DSCREEN_NOTIFY] = &DScreenSinkStub::DScreenNotifyInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSinkInterfaceCode::INIT_SINK)] =
+        &DScreenSinkStub::InitSinkInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSinkInterfaceCode::RELEASE_SINK)] =
+        &DScreenSinkStub::ReleaseSinkInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSinkInterfaceCode::SUBSCRIBE_DISTRIBUTED_HARDWARE)] =
+        &DScreenSinkStub::SubscribeDistributedHardwareInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSinkInterfaceCode::UNSUBSCRIBE_DISTRIBUTED_HARDWARE)] =
+        &DScreenSinkStub::UnsubscribeDistributedHardwareInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSinkInterfaceCode::DSCREEN_NOTIFY)] =
+        &DScreenSinkStub::DScreenNotifyInner;
 }
 
 int32_t DScreenSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,

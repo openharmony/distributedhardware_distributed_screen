@@ -23,6 +23,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_ipc_interface_code.h"
 #include "dscreen_log.h"
 
 namespace OHOS { class MessageOption; }
@@ -30,8 +31,10 @@ namespace OHOS {
 namespace DistributedHardware {
 DScreenSourceCallbackStub::DScreenSourceCallbackStub()
 {
-    memberFuncMap_[NOTIFY_REG_RESULT] = &DScreenSourceCallbackStub::OnNotifyRegResultInner;
-    memberFuncMap_[NOTIFY_UNREG_RESULT] = &DScreenSourceCallbackStub::OnNotifyUnregResultInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceCBInterfaceCode::NOTIFY_REG_RESULT)] =
+        &DScreenSourceCallbackStub::OnNotifyRegResultInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceCBInterfaceCode::NOTIFY_UNREG_RESULT)] =
+        &DScreenSourceCallbackStub::OnNotifyUnregResultInner;
 }
 
 int32_t DScreenSourceCallbackStub::OnRemoteRequest(uint32_t code, MessageParcel &data,

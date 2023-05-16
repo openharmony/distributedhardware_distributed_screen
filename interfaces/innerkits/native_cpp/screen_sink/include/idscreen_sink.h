@@ -23,13 +23,6 @@ namespace DistributedHardware {
 class IDScreenSink : public OHOS::IRemoteBroker {
 public:
     DECLARE_INTERFACE_DESCRIPTOR(u"ohos.distributedhardware.distributedscreensink");
-    enum {
-        INIT_SINK = 0,
-        RELEASE_SINK = 1,
-        SUBSCRIBE_DISTRIBUTED_HARDWARE = 2,
-        UNSUBSCRIBE_DISTRIBUTED_HARDWARE = 3,
-        DSCREEN_NOTIFY = 4,
-    };
 
     IDScreenSink() = default;
     ~IDScreenSink() override = default;

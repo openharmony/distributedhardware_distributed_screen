@@ -25,14 +25,6 @@ namespace DistributedHardware {
 class IDScreenSource : public OHOS::IRemoteBroker {
 public:
     DECLARE_INTERFACE_DESCRIPTOR(u"ohos.distributedhardware.distributedscreensource");
-    enum {
-        INIT_SOURCE = 0,
-        RELEASE_SOURCE,
-        REGISTER_DISTRIBUTED_HARDWARE,
-        UNREGISTER_DISTRIBUTED_HARDWARE,
-        CONFIG_DISTRIBUTED_HARDWARE,
-        DSCREEN_NOTIFY,
-    };
 
     ~IDScreenSource() override {}
     virtual int32_t InitSource(const std::string &params, const sptr<IDScreenSourceCallback> &callback) = 0;

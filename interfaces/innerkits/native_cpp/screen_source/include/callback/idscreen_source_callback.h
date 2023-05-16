@@ -23,10 +23,6 @@ namespace DistributedHardware {
 class IDScreenSourceCallback : public OHOS::IRemoteBroker {
 public:
     DECLARE_INTERFACE_DESCRIPTOR(u"ohos.distributedhardware.dscreensourcecallback");
-    enum {
-        NOTIFY_REG_RESULT = 0,
-        NOTIFY_UNREG_RESULT,
-    };
 
     ~IDScreenSourceCallback() override {}
     virtual int32_t OnNotifyRegResult(const std::string &devId, const std::string &dhId,
