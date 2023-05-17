@@ -383,7 +383,7 @@ void ScreenDataChannelImpl::JsonToDirtyJson(nlohmann::json &rectJson, std::share
         int32_t H = rectJson[item][KEY_POINT_DIRTY_H].get<int32_t>();
         int32_t Size = rectJson[item][KEY_POINT_DIRTY_SIZE].get<int32_t>();
         DirtyRect rect = {X, Y, W, H, Size};
-        dataBuffer->AddDirtyRect(rect);
+        screenData->AddDirtyRect(rect);
         num++;
     }
     screenData->AddDirtyRect(rect);
