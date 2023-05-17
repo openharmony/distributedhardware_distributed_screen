@@ -386,7 +386,7 @@ void ScreenDataChannelImpl::JsonToDirtyJson(nlohmann::json &rectJson, std::share
         screenData->AddDirtyRect(rect);
         num++;
     }
-    screenData->AddDirtyRect(rect);
+    screenData->SetDataType(dataType);
 }
 } // namespace DistributedHardware
 } // namespace OHOS
