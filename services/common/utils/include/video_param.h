@@ -40,8 +40,8 @@ public:
     uint8_t GetCodecType() const;
     void SetVideoFormat(uint8_t videoFormat);
     uint8_t GetVideoFormat() const;
-    void SetPartialFreshFlag(bool flag);
-    bool GetPartialFreshFlag() const;
+    void SetPartialRefreshFlag(bool flag);
+    bool GetPartialRefreshFlag() const;
 private:
     friend void to_json(json &j, const VideoParam &videoParam);
     friend void from_json(const json &j, VideoParam &videoParam);
@@ -53,7 +53,7 @@ private:
     uint32_t fps_ = DEFAULT_FPS;
     uint8_t codecType_ = DEFAULT_CODECTYPE;
     uint8_t videoFormat_ = DEFAULT_VIDEO_FORMAT;
-    bool isPartialFresh_ = false;
+    bool isPartialRefresh_ = false;
 };
 void to_json(json &j, const VideoParam &videoParam);
 void from_json(const json &j, VideoParam &videoParam);

@@ -51,14 +51,14 @@ uint32_t VideoParam::GetVideoWidth() const
     return videoWidth_;
 }
 
-void VideoParam::SetPartialFreshFlag(bool flag)
+void VideoParam::SetPartialRefreshFlag(bool flag)
 {
-    isPartialFresh_ = flag;
+    isPartialRefresh_ = flag;
 }
 
-bool VideoParam::GetPartialFreshFlag() const
+bool VideoParam::GetPartialRefreshFlag() const
 {
-    return isPartialFresh_;
+    return isPartialRefresh_;
 }
 
 void VideoParam::SetVideoHeight(uint32_t videoHeight)
@@ -111,7 +111,7 @@ void to_json(json &j, const DistributedHardware::VideoParam &videoParam)
         {KEY_FPS, videoParam.fps_},
         {KEY_CODECTYPE, videoParam.codecType_},
         {KEY_COLOR_FORMAT, videoParam.videoFormat_},
-        {KEY_PARTIALFREAH, videoParam.isPartialFresh_}
+        {KEY_PARTIALREFREAH, videoParam.isPartialRefresh_}
     };
 }
 
@@ -119,7 +119,7 @@ void from_json(const json &j, DistributedHardware::VideoParam &videoParam)
 {
     if (!IsUInt32(j, KEY_SCREEN_WIDTH) || !IsUInt32(j, KEY_SCREEN_HEIGHT) ||
         !IsUInt32(j, KEY_VIDEO_WIDTH) || !IsUInt32(j, KEY_VIDEO_HEIGHT) ||
-        !IsBool(j, KEY_PARTIALFREAH) || !IsUInt32(j, KEY_FPS) ||
+        !IsBool(j, KEY_PARTIALREFREAH) || !IsUInt32(j, KEY_FPS) ||
         !IsUInt8(j, KEY_CODECTYPE) || !IsUInt8(j, KEY_COLOR_FORMAT)) {
         return;
     }
@@ -131,7 +131,7 @@ void from_json(const json &j, DistributedHardware::VideoParam &videoParam)
     videoParam.fps_ = j[KEY_FPS].get<uint32_t>();
     videoParam.codecType_ = j[KEY_CODECTYPE].get<uint8_t>();
     videoParam.videoFormat_ = j[KEY_COLOR_FORMAT].get<uint8_t>();
-    videoParam.isPartialFresh_ = j[KEY_PARTIALFREAH].get<bool>();
+    videoParam.isPartialRefresh_ = j[KEY_PARTIALREFREAH].get<bool>();
 }
 } // namespace DistributedHardware
 } // namespace OHOS

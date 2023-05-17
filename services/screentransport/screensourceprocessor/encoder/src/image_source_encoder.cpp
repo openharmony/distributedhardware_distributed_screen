@@ -173,7 +173,7 @@ sptr<Surface> ImageSourceEncoder::GetConsumerSurface()
 sptr<Surface> &ImageSourceEncoder::GetInputSurface()
 {
     DHLOGI("%s: GetInputSurface.", LOG_TAG);
-    if (producerSurface_ == nullptr || !configParam_.GetPartialFreshFlag()) {
+    if (producerSurface_ == nullptr || !configParam_.GetPartialRefreshFlag()) {
         return encoderSurface_;
     }
     return producerSurface_;
