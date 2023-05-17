@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,7 +19,6 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
-#include "dscreen_ipc_interface_code.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 
@@ -52,7 +51,7 @@ int32_t DScreenSourceCallbackProxy::OnNotifyRegResult(const std::string &devId, 
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
 
-    remote->SendRequest(static_cast<uint32_t>(IDScreenSourceCBInterfaceCode::NOTIFY_REG_RESULT), data, reply, option);
+    remote->SendRequest(NOTIFY_REG_RESULT, data, reply, option);
     return reply.ReadInt32();
 }
 
@@ -83,8 +82,7 @@ int32_t DScreenSourceCallbackProxy::OnNotifyUnregResult(const std::string &devId
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
 
-    remote->SendRequest(static_cast<uint32_t>(IDScreenSourceCBInterfaceCode::NOTIFY_UNREG_RESULT),
-        data, reply, option);
+    remote->SendRequest(NOTIFY_UNREG_RESULT, data, reply, option);
     return reply.ReadInt32();
 }
 
