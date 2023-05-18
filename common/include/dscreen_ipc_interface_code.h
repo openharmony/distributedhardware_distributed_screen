@@ -38,12 +38,6 @@ enum class IDScreenSinkInterfaceCode : uint32_t {
     UNSUBSCRIBE_DISTRIBUTED_HARDWARE = 3,
     DSCREEN_NOTIFY = 4,
 };
-
-/* SAID: 4807*/
-enum class IDScreenSourceCBInterfaceCode : uint32_t {
-    NOTIFY_REG_RESULT = 0,
-    NOTIFY_UNREG_RESULT = 1,
-};
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

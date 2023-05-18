@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,6 +15,7 @@
 
 #include "dscreen_source_proxy.h"
 
+#include "dscreen_ipc_interface_code.h"
 #include "idscreen_source_callback.h"
 #include "iremote_object.h"
 #include "message_option.h"
@@ -52,7 +53,7 @@ int32_t DScreenSourceProxy::InitSource(const std::string &params, const sptr<IDS
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
 
-    remote->SendRequest(INIT_SOURCE, data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IDScreenSourceInterfaceCode::INIT_SOURCE), data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
@@ -73,7 +74,7 @@ int32_t DScreenSourceProxy::ReleaseSource()
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 
-    remote->SendRequest(RELEASE_SOURCE, data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IDScreenSourceInterfaceCode::RELEASE_SOURCE), data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
@@ -104,7 +105,8 @@ int32_t DScreenSourceProxy::RegisterDistributedHardware(const std::string &devId
         DHLOGE("Write param failed.");
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
-    remote->SendRequest(REGISTER_DISTRIBUTED_HARDWARE, data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IDScreenSourceInterfaceCode::REGISTER_DISTRIBUTED_HARDWARE),
+        data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
@@ -134,7 +136,8 @@ int32_t DScreenSourceProxy::UnregisterDistributedHardware(const std::string &dev
         DHLOGE("Write param failed.");
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
-    remote->SendRequest(UNREGISTER_DISTRIBUTED_HARDWARE, data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IDScreenSourceInterfaceCode::UNREGISTER_DISTRIBUTED_HARDWARE),
+        data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
@@ -164,7 +167,8 @@ int32_t DScreenSourceProxy::ConfigDistributedHardware(const std::string &devId,
         DHLOGE("Write param failed.");
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
-    remote->SendRequest(CONFIG_DISTRIBUTED_HARDWARE, data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IDScreenSourceInterfaceCode::CONFIG_DISTRIBUTED_HARDWARE),
+        data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
@@ -195,7 +199,8 @@ void DScreenSourceProxy::DScreenNotify(const std::string &devId, int32_t eventCo
         return;
     }
 
-    remote->SendRequest(DSCREEN_NOTIFY, data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IDScreenSourceInterfaceCode::DSCREEN_NOTIFY),
+        data, reply, option);
 }
 
 bool DScreenSourceProxy::CheckRegParams(const std::string &devId, const std::string &dhId,

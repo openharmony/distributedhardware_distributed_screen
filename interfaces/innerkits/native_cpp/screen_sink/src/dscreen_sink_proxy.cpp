@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,6 +21,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_ipc_interface_code.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 
@@ -50,7 +51,7 @@ int32_t DScreenSinkProxy::InitSink(const std::string &params)
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
 
-    remote->SendRequest(INIT_SINK, data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IDScreenSinkInterfaceCode::INIT_SINK), data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
@@ -70,7 +71,7 @@ int32_t DScreenSinkProxy::ReleaseSink()
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 
-    remote->SendRequest(RELEASE_SINK, data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IDScreenSinkInterfaceCode::RELEASE_SINK), data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
@@ -99,7 +100,8 @@ int32_t DScreenSinkProxy::SubscribeLocalHardware(const std::string &dhId, const 
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
 
-    remote->SendRequest(SUBSCRIBE_DISTRIBUTED_HARDWARE, data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IDScreenSinkInterfaceCode::SUBSCRIBE_DISTRIBUTED_HARDWARE),
+        data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
@@ -128,7 +130,8 @@ int32_t DScreenSinkProxy::UnsubscribeLocalHardware(const std::string &dhId)
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
 
-    remote->SendRequest(UNSUBSCRIBE_DISTRIBUTED_HARDWARE, data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IDScreenSinkInterfaceCode::UNSUBSCRIBE_DISTRIBUTED_HARDWARE),
+        data, reply, option);
     int32_t ret = reply.ReadInt32();
     return ret;
 }
@@ -158,7 +161,7 @@ void DScreenSinkProxy::DScreenNotify(const std::string &devId, int32_t eventCode
         return;
     }
 
-    remote->SendRequest(DSCREEN_NOTIFY, data, reply, option);
+    remote->SendRequest(static_cast<uint32_t>(IDScreenSinkInterfaceCode::DSCREEN_NOTIFY), data, reply, option);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

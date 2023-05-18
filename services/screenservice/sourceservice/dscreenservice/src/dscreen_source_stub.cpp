@@ -19,6 +19,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_ipc_interface_code.h"
 #include "dscreen_log.h"
 #include "dscreen_source_callback_proxy.h"
 
@@ -26,12 +27,18 @@ namespace OHOS {
 namespace DistributedHardware {
 DScreenSourceStub::DScreenSourceStub()
 {
-    memberFuncMap_[INIT_SOURCE] = &DScreenSourceStub::InitSourceInner;
-    memberFuncMap_[RELEASE_SOURCE] = &DScreenSourceStub::ReleaseSourceInner;
-    memberFuncMap_[REGISTER_DISTRIBUTED_HARDWARE] = &DScreenSourceStub::RegisterDistributedHardwareInner;
-    memberFuncMap_[UNREGISTER_DISTRIBUTED_HARDWARE] = &DScreenSourceStub::UnregisterDistributedHardwareInner;
-    memberFuncMap_[CONFIG_DISTRIBUTED_HARDWARE] = &DScreenSourceStub::ConfigDistributedHardwareInner;
-    memberFuncMap_[DSCREEN_NOTIFY] = &DScreenSourceStub::DScreenNotifyInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::INIT_SOURCE)] =
+        &DScreenSourceStub::InitSourceInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::RELEASE_SOURCE)] =
+        &DScreenSourceStub::ReleaseSourceInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::REGISTER_DISTRIBUTED_HARDWARE)] =
+        &DScreenSourceStub::RegisterDistributedHardwareInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::UNREGISTER_DISTRIBUTED_HARDWARE)] =
+        &DScreenSourceStub::UnregisterDistributedHardwareInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::CONFIG_DISTRIBUTED_HARDWARE)] =
+        &DScreenSourceStub::ConfigDistributedHardwareInner;
+    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::DSCREEN_NOTIFY)] =
+        &DScreenSourceStub::DScreenNotifyInner;
 }
 
 int32_t DScreenSourceStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
