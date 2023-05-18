@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -51,6 +51,16 @@ uint32_t VideoParam::GetVideoWidth() const
     return videoWidth_;
 }
 
+void VideoParam::SetPartialRefreshFlag(bool flag)
+{
+    isPartialRefresh_ = flag;
+}
+
+bool VideoParam::GetPartialRefreshFlag() const
+{
+    return isPartialRefresh_;
+}
+
 void VideoParam::SetVideoHeight(uint32_t videoHeight)
 {
     videoHeight_ = videoHeight;
@@ -100,7 +110,8 @@ void to_json(json &j, const DistributedHardware::VideoParam &videoParam)
         {KEY_VIDEO_HEIGHT, videoParam.videoHeight_},
         {KEY_FPS, videoParam.fps_},
         {KEY_CODECTYPE, videoParam.codecType_},
-        {KEY_COLOR_FORMAT, videoParam.videoFormat_}
+        {KEY_COLOR_FORMAT, videoParam.videoFormat_},
+        {KEY_PARTIALREFREAH, videoParam.isPartialRefresh_}
     };
 }
 
@@ -108,7 +119,8 @@ void from_json(const json &j, DistributedHardware::VideoParam &videoParam)
 {
     if (!IsUInt32(j, KEY_SCREEN_WIDTH) || !IsUInt32(j, KEY_SCREEN_HEIGHT) ||
         !IsUInt32(j, KEY_VIDEO_WIDTH) || !IsUInt32(j, KEY_VIDEO_HEIGHT) ||
-        !IsUInt32(j, KEY_FPS) || !IsUInt8(j, KEY_CODECTYPE) || !IsUInt8(j, KEY_COLOR_FORMAT)) {
+        !IsBool(j, KEY_PARTIALREFREAH) || !IsUInt32(j, KEY_FPS) ||
+        !IsUInt8(j, KEY_CODECTYPE) || !IsUInt8(j, KEY_COLOR_FORMAT)) {
         return;
     }
 
@@ -119,6 +131,7 @@ void from_json(const json &j, DistributedHardware::VideoParam &videoParam)
     videoParam.fps_ = j[KEY_FPS].get<uint32_t>();
     videoParam.codecType_ = j[KEY_CODECTYPE].get<uint8_t>();
     videoParam.videoFormat_ = j[KEY_COLOR_FORMAT].get<uint8_t>();
+    videoParam.isPartialRefresh_ = j[KEY_PARTIALREFREAH].get<bool>();
 }
 } // namespace DistributedHardware
 } // namespace OHOS

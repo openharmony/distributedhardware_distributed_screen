@@ -309,10 +309,12 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
         CODEC_NAME_H265) != codecTypeCandidates.end()) {
         videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H265);
         videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
+        videoParam_->SetPartialRefreshFlag(true);
     } else if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
         CODEC_NAME_H264) != codecTypeCandidates.end()) {
         videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
         videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
+        videoParam_->SetPartialRefreshFlag(true);
     } else if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
         CODEC_NAME_MPEG4) != codecTypeCandidates.end()) {
         videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_MPEG4);

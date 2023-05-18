@@ -150,6 +150,7 @@ const std::string KEY_ERR_CODE = "errCode";
 const std::string KEY_ERR_CONTENT = "errContent";
 const std::string KEY_VIDEO_PARAM = "videoParam";
 const std::string KEY_MAPRELATION = "mapRelation";
+const std::string KEY_PARTIALREFREAH = "PartialRefresh";
 const std::string CODEC_NAME_H264 = "OMX_hisi_video_encoder_avc";
 const std::string CODEC_NAME_H265 = "OMX_hisi_video_encoder_hevc";
 const std::string CODEC_NAME_MPEG4 = "avenc_mpeg4";

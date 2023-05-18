@@ -380,7 +380,7 @@ int32_t ImageSinkDecoder::SetOutputSurface(sptr<Surface> &surface)
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     windowSurface_ = surface;
-    if (consumerSurface_ == nullptr || producerSurface_ == nullptr) {
+    if (consumerSurface_ == nullptr || producerSurface_ == nullptr || !configParam_.GetPartialRefreshFlag()) {
         int32_t ret = videoDecoder_->SetOutputSurface(surface);
         if (ret != Media::MSERR_OK) {
             DHLOGE("%s: SetOutputSurface failed.", LOG_TAG);
