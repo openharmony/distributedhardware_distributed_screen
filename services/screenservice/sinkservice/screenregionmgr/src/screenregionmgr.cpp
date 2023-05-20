@@ -136,7 +136,7 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
         NotifyRemoteSourceSetUpResult(remoteDevId, "", ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
         return;
     }
-    if (eventContentJson.contains(KEY_VERSION)) {
+    if (IsString(eventContentJson, KEY_VERSION)) {
         version_ = eventContentJson[KEY_VERSION].get<std::string>();
     }
     uint64_t screenId = eventContentJson[KEY_SCREEN_ID].get<uint64_t>();

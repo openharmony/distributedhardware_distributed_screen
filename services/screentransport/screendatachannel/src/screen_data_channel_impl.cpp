@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,7 +22,6 @@
 #include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
-#include "nlohmann/json.hpp"
 #include "dscreen_json_util.h"
 
 namespace OHOS {
@@ -202,15 +201,7 @@ int32_t ScreenDataChannelImpl::SendDirtyData(const std::shared_ptr<DataBuffer> &
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     nlohmann::json rectJson;
-    std::vector<DirtyRect> dirtyRectVec = screenData->GetDirtyRectVec();
-    rectJson["dataType"] = screenData->DataType();
-    rectJson["dirtySize"] = static_cast<uint8_t>(dirtyRectVec.size());
-    int32_t rectIndex = 0;
-    for (auto item : dirtyRectVec) {
-        std::string tempRectIndex = std::to_string(rectIndex);
-        rectJson[tempRectIndex] = {item.xPos, item.yPos, item.width, item.height, item.dirtySize};
-        rectIndex++;
-    }
+    DirtyVecToJson(rectJson, screenData);
     StreamData data = {reinterpret_cast<char *>(screenData->Data()), screenData->Capacity()};
     std::string rectInfo = rectJson.dump();
     char *dirtyInfo = new char[rectInfo.length() + 1] {0};
@@ -341,28 +332,61 @@ void ScreenDataChannelImpl::ProcessDirtyData(const StreamData *data,
         DHLOGE("%s: OnStreamReceived rectJson invalid", LOG_TAG);
         return;
     }
+    JsonToDirtyJson(rectJson, dataBuffer);
+    listener->OnDataReceived(dataBuffer);
+}
+
+void ScreenDataChannelImpl::DirtyVecToJson(nlohmann::json &rectJson, const std::shared_ptr<DataBuffer> &screenData)
+{
+    std::vector<DirtyRect> dirtyRectVec = screenData->GetDirtyRectVec();
+    rectJson["dataType"] = screenData->DataType();
+    rectJson["dirtySize"] = dirtyRectVec.size();
+    int32_t rectIndex = 0;
+    for (auto item : dirtyRectVec) {
+        std::string tempRectIndex = std::to_string(rectIndex);
+        rectJson[tempRectIndex] = nlohmann::json {
+            {KEY_POINT_DIRTY_X, item.xPos},
+            {KEY_POINT_DIRTY_Y, item.yPos},
+            {KEY_POINT_DIRTY_W, item.width},
+            {KEY_POINT_DIRTY_H, item.height},
+            {KEY_POINT_DIRTY_SIZE, item.dirtySize}
+        };
+        rectIndex++;
+    }
+}
+
+void ScreenDataChannelImpl::JsonToDirtyJson(nlohmann::json &rectJson, std::shared_ptr<DataBuffer> &screenData)
+{
     if (!IsInt32(rectJson, "dirtySize") || !IsInt32(rectJson, "dataType")) {
         return;
     }
     int32_t dirtySize = rectJson["dirtySize"].get<int32_t>();
     int32_t dataType = rectJson["dataType"].get<int32_t>();
-    uint8_t num = 0;
+    int32_t num = 0;
+    if (dirtySize >= DIRTY_MAX_SIZE) {
+        return;
+    }
     while (num < dirtySize) {
         auto item = std::to_string(num);
         if (!rectJson.contains(item)) {
             return;
         }
-        int32_t X = rectJson[item][0].get<int32_t>();
-        int32_t Y = rectJson[item][1].get<int32_t>();
-        int32_t W = rectJson[item][2].get<int32_t>();
-        int32_t H = rectJson[item][3].get<int32_t>();
-        int32_t Size = rectJson[item][4].get<int32_t>();
+        if (!IsInt32(rectJson[item], KEY_POINT_DIRTY_X) || !IsInt32(rectJson[item], KEY_POINT_DIRTY_Y) ||
+            !IsInt32(rectJson[item], KEY_POINT_DIRTY_W) || !IsInt32(rectJson[item], KEY_POINT_DIRTY_H) ||
+            !IsInt32(rectJson[item], KEY_POINT_DIRTY_SIZE)) {
+            DHLOGE("%s: JsonToDirtyJson rectJson not contain int32.");
+            return;
+        }
+        int32_t X = rectJson[item][KEY_POINT_DIRTY_X].get<int32_t>();
+        int32_t Y = rectJson[item][KEY_POINT_DIRTY_Y].get<int32_t>();
+        int32_t W = rectJson[item][KEY_POINT_DIRTY_W].get<int32_t>();
+        int32_t H = rectJson[item][KEY_POINT_DIRTY_H].get<int32_t>();
+        int32_t Size = rectJson[item][KEY_POINT_DIRTY_SIZE].get<int32_t>();
         DirtyRect rect = {X, Y, W, H, Size};
-        dataBuffer->AddDirtyRect(rect);
+        screenData->AddDirtyRect(rect);
         num++;
     }
-    dataBuffer->SetDataType(dataType);
-    listener->OnDataReceived(dataBuffer);
+    screenData->SetDataType(dataType);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -84,7 +84,9 @@ void from_json(const json &j, DScreenMapRelation &dScreenMapRelation)
     }
     dScreenMapRelation.displayId_ = j[KEY_DISPLAY_ID].get<uint64_t>();
     dScreenMapRelation.screenId_ = j[KEY_SCREEN_ID].get<uint64_t>();
-
+    if (!j.contains(KEY_DISPLAY_RECT) || !j.contains(KEY_SCREEN_RECT)) {
+        return;
+    }
     from_json(j.at(KEY_DISPLAY_RECT), dScreenMapRelation.displayRect_);
     from_json(j.at(KEY_SCREEN_RECT), dScreenMapRelation.screenRect_);
 }
