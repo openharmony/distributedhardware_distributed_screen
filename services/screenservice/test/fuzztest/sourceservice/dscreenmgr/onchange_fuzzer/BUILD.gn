@@ -49,7 +49,9 @@ ohos_fuzztest("OnChangeFuzzTest") {
 
   sources = [ "onchange_fuzzer.cpp" ]
 
-  deps = [ "${services_path}/screenservice/sourceservice:distributed_screen_source" ]
+  deps = [ 
+    "${services_path}/screenservice/sourceservice:distributed_screen_source",
+  ]
 
   defines = [
     "HI_LOG_ENABLE",
