@@ -1,0 +1,12 @@
+{
+    "process": "dscreen",
+    "systemability": [
+        {
+            "name": 4807,
+            "libpath": "libdistributed_screen_source.z.so",
+            "run-on-create": false,
+            "distributed": true,
+            "dump_level": 1
+        }
+    ]
+}
