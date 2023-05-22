@@ -32,7 +32,7 @@ void OnChangeFuzzTest(const uint8_t* data, size_t size)
     screenIds.emplace_back(screenIdOne);
     Rosen::ScreenGroupChangeEvent event = Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP;
     DScreenGroupListener dScreenGroupListener;
-    dScreenGroupListener.OnChange(screenIds,event);
+    dScreenGroupListener.OnChange(screenIds, event);
 }
 }
 }

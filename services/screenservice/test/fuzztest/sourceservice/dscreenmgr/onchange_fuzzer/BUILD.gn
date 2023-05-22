@@ -14,8 +14,7 @@
 #####################hydra-fuzz###################
 import("//build/config/features.gni")
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../../../../../distributedscreen.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("OnChangeFuzzTest") {
