@@ -34,10 +34,10 @@ ohos_fuzztest("OnChangeFuzzTest") {
     "${common_path}/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
-    "${services_path}/screenservice/sourceservice/dscreenmgr/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
     "${services_path}/common/utils/include",
+    "${services_path}/screenservice/sourceservice/dscreenmgr/include",
     "${services_path}/screentransport/screensourcetrans/include",
   ]
 

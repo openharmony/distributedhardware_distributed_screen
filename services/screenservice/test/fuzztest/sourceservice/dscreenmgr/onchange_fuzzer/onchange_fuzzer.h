@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef INITSINK_FUZZER_H
-#define INITSINK_FUZZER_H
+#ifndef ONCHANGE_FUZZER_H
+#define ONCHANGE_FUZZER_H
 
 #define FUZZ_PROJECT_NAME "onchange_fuzzer"
 
