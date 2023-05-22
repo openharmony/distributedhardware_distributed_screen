@@ -26,14 +26,15 @@ ohos_fuzztest("OnChangeFuzzTest") {
   include_dirs = [
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "${fwk_common_path}/utils/include",
+    "${windowmanager_path}/interfaces/innerkits/wm",
   ]
 
   include_dirs += [
     "./dscreenservice/include/callback",
     "${common_path}/include",
-    "${services_path}/screenservice/sourceservice/dscreenmgr/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
+    "${services_path}/screenservice/sourceservice/dscreenmgr/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
     "${services_path}/common/utils/include",
@@ -62,10 +63,3 @@ ohos_fuzztest("OnChangeFuzzTest") {
     "window_manager:libdm",
   ]
 }
-
-###############################################################################
-group("fuzztest") {
-  testonly = true
-  deps = [ ":HandlerInitSinkFuzzTest" ]
-}
-###############################################################################
