@@ -49,7 +49,7 @@ ohos_fuzztest("OnChangeFuzzTest") {
 
   sources = [ "onchange_fuzzer.cpp" ]
 
-  deps = [ 
+  deps = [
     "${services_path}/screenservice/sourceservice:distributed_screen_source",
   ]
 
