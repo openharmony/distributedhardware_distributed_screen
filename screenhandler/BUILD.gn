@@ -41,7 +41,7 @@ ohos_shared_library("distributed_screen_handler") {
     "c_utils:utils",
     "graphic_standard:surface",
     "ipc:ipc_core",
-    "multimedia_player_framework:media_client",
+    "player_framework:media_client",
     "window_manager:libdm",
   ]
 

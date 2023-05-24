@@ -50,7 +50,7 @@ ohos_unittest("DscreenHandlerTest") {
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",
     "ipc:ipc_core",
-    "multimedia_player_framework:media_client",
+    "player_framework:media_client",
     "window_manager:libdm",
   ]
 
