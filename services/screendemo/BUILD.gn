@@ -51,13 +51,13 @@ ohos_executable("distributedScreenTest") {
     "access_token:libnativetoken",
     "access_token:libtoken_setproc",
     "dsoftbus:softbus_client",
+    "graphic_standard:librender_service_client",
     "graphic_standard:surface",
     "hiviewdfx_hilog_native:libhilog",
     "player_framework:media_client",
     "samgr:samgr_proxy",
     "window_manager:libdm",
     "window_manager:libwm",
-    "graphic_standard:librender_service_client",
   ]
 
   cflags = [ "-Wall" ]

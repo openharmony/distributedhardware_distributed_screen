@@ -72,6 +72,7 @@ ohos_shared_library("distributed_screen_sourcetrans") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "graphic_standard:surface",
     "graphic_standard:sync_fence",
@@ -79,7 +80,6 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "hitrace_native:hitrace_meter",
     "hiviewdfx_hilog_native:libhilog",
     "player_framework:media_client",
-    "distributed_hardware_fwk:libdhfwk_sdk",
   ]
 
   subsystem_name = "distributedhardware"

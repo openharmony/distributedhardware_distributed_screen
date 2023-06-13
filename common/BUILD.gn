@@ -34,12 +34,12 @@ ohos_shared_library("distributed_screen_utils") {
   external_deps = [
     "c_utils:utils",
     "c_utils:utilsbase",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "hisysevent_native:libhisysevent",
     "hitrace_native:hitrace_meter",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
-    "distributed_hardware_fwk:libdhfwk_sdk",
   ]
 
   defines = [

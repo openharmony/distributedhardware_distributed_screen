@@ -44,10 +44,10 @@ ohos_shared_library("distributed_screen_client") {
 
   external_deps = [
     "graphic_standard:libgraphic_utils",
+    "graphic_standard:librender_service_client",
     "graphic_standard:surface",
     "input:libmmi-client",
     "window_manager:libwm",
-    "graphic_standard:librender_service_client",
   ]
 
   part_name = "distributed_screen"

@@ -66,6 +66,7 @@ ohos_shared_library("distributed_screen_sink") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",
     "hisysevent_native:libhisysevent",
@@ -74,7 +75,6 @@ ohos_shared_library("distributed_screen_sink") {
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
     "window_manager:libdm",
-    "distributed_hardware_fwk:libdhfwk_sdk",
   ]
 
   subsystem_name = "distributedhardware"

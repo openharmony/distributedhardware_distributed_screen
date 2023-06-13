@@ -70,6 +70,7 @@ ohos_shared_library("distributed_screen_source") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_standard:libcomposer",
     "graphic_standard:surface",
     "hisysevent_native:libhisysevent",
@@ -79,7 +80,6 @@ ohos_shared_library("distributed_screen_source") {
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
     "window_manager:libdm",
-    "distributed_hardware_fwk:libdhfwk_sdk",
   ]
 
   subsystem_name = "distributedhardware"

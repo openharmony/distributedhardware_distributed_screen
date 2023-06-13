@@ -40,7 +40,8 @@
                 "c_utils",
                 "player_framework",
                 "window_manager",
-                "multimedia_image_framework"
+                "multimedia_image_framework",
+                "distributed_hardware_fwk"
             ],
             "third_party":[
                 "json",
