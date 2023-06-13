@@ -56,7 +56,6 @@ ohos_shared_library("distributed_screen_sinktrans") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
     "//third_party/libjpeg-turbo:turbojpeg_static",
   ]
 
@@ -80,6 +79,7 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "hitrace_native:hitrace_meter",
     "hiviewdfx_hilog_native:libhilog",
     "player_framework:media_client",
+    "distributed_hardware_fwk:libdhfwk_sdk",
   ]
 
   subsystem_name = "distributedhardware"

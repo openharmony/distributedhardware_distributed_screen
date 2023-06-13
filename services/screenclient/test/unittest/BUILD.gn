@@ -45,7 +45,6 @@ ohos_unittest("ScreenClientTest") {
   deps = [
     "${common_path}:distributed_screen_utils",
     "${distributedscreen_path}/services/screenclient:distributed_screen_client",
-    "${graphicstandard_path}/rosen/modules/render_service_client:librender_service_client",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
@@ -54,6 +53,7 @@ ohos_unittest("ScreenClientTest") {
     "graphic_standard:surface",
     "input:libmmi-client",
     "window_manager:libwm",
+    "graphic_standard:librender_service_client",
   ]
 }
 

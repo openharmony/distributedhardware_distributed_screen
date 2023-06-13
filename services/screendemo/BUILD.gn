@@ -35,7 +35,6 @@ ohos_executable("distributedScreenTest") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${graphicstandard_path}/rosen/modules/render_service_client:librender_service_client",
     "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
     "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
     "${services_path}/screenclient:distributed_screen_client",
@@ -58,6 +57,7 @@ ohos_executable("distributedScreenTest") {
     "samgr:samgr_proxy",
     "window_manager:libdm",
     "window_manager:libwm",
+    "graphic_standard:librender_service_client",
   ]
 
   cflags = [ "-Wall" ]

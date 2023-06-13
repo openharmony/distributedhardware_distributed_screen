@@ -24,8 +24,6 @@ ohos_shared_library("distributed_screen_utils") {
     "${fwk_common_path}/utils/include",
   ]
 
-  deps = [ "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk" ]
-
   sources = [
     "src/dscreen_hisysevent.cpp",
     "src/dscreen_json_util.cpp",
@@ -41,6 +39,7 @@ ohos_shared_library("distributed_screen_utils") {
     "hitrace_native:hitrace_meter",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
+    "distributed_hardware_fwk:libdhfwk_sdk",
   ]
 
   defines = [
