@@ -32,9 +32,7 @@ ohos_shared_library("distributed_screen_client") {
     "${services_path}/screenclient/src/screen_client_window_adapter.cpp",
   ]
 
-  deps = [
-    "${common_path}:distributed_screen_utils",
-  ]
+  deps = [ "${common_path}:distributed_screen_utils" ]
 
   defines = [
     "HI_LOG_ENABLE",
