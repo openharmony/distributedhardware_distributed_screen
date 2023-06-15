@@ -25,7 +25,6 @@ ohos_shared_library("distributed_screen_sink") {
 
   include_dirs += [
     "./dscreenservice/include",
-    "./screenregionmgr/include",
     "${services_path}/screenservice/sinkservice/screenregionmgr",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",

@@ -281,7 +281,7 @@ void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer
         .usage = HBM_USE_CPU_READ | HBM_USE_CPU_WRITE | HBM_USE_MEM_DMA,
     };
     SurfaceError surfaceErr = windowSurface_->RequestBuffer(wsBuffer, releaseFence, requestConfig);
-    if(surfaceErr != SURFACE_ERROR_OK || wsBuffer == nullptr) {
+    if (surfaceErr != SURFACE_ERROR_OK || wsBuffer == nullptr) {
         DHLOGE("surface request buffer failed, surfaceErr: %d.", surfaceErr);
         windowSurface_->CancelBuffer(wsBuffer);
         return;
