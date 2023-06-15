@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "screenregion.h"
+#include "1.0/include/screenregion.h"
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
@@ -26,6 +26,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 ScreenRegion::ScreenRegion(const std::string &remoteDevId, uint64_t screenId, uint64_t displayId)
 {
     DHLOGD("ScreenRegion construct");
@@ -214,5 +215,6 @@ int32_t ScreenRegion::Stop()
     isRunning = false;
     return DH_SUCCESS;
 }
+} // namespace V1_0
 } // namespace DistributedHardware
 } // namespace OHOS

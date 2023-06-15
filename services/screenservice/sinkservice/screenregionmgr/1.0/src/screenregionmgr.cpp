@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "screenregionmgr.h"
+#include "1.0/include/screenregionmgr.h"
 
 #include "display_manager.h"
 #include "if_system_ability_manager.h"
@@ -35,6 +35,7 @@ using json = nlohmann::json;
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 IMPLEMENT_SINGLE_INSTANCE(ScreenRegionManager);
 ScreenRegionManager::ScreenRegionManager()
 {
@@ -268,5 +269,6 @@ void ScreenRegionManager::PublishMessage(const DHTopic topic, const uint64_t &sc
 
     DScreenFwkKit::GetInstance().GetDHFwkKit()->PublishMessage(topic, message);
 }
+} // namespace V1_0
 } // namespace DistributedHardware
 } // namespace OHOS

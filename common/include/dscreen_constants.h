@@ -62,6 +62,17 @@ enum DataType : uint8_t {
     VIDEO_PART_SCREEN_DATA = 1,
 };
 
+enum DScreenMsgType : uint32_t {
+    SETUP_SIGNAL = 0,
+};
+
+enum DScreenEventType : uint32_t {
+    REMOTE_MSG_RECEIVED = 0,
+    SENDER_ENGINE_ERROR,
+    RECEIVER_ENGINE_ERROR,
+    TRANS_CHANNEL_CLOSED,
+};
+
 /* Screen package name */
 const std::string PKG_NAME = "ohos.dhardware.dscreen";
 
@@ -150,6 +161,7 @@ const std::string KEY_COLOR_FORMAT = "colorFormat";
 const std::string KEY_FPS = "fps";
 const std::string KEY_CODECTYPE = "codecType";
 const std::string SCREEN_CLIENT_WINDOW = "screenClientWindow";
+const std::string KEY_DEV_ID = "devId";
 const std::string KEY_DH_ID = "dhId";
 const std::string KEY_ERR_CODE = "errCode";
 const std::string KEY_ERR_CONTENT = "errContent";
@@ -174,7 +186,7 @@ const std::string SINK_WIN_SHOW_Y = "sinkWinShowY";
 constexpr uint32_t MAX_MESSAGES_LEN = 40 * 1024 * 1024;
 constexpr float DEFAULT_DENSITY = 2.0;
 constexpr int32_t DEFAULT_SCREEN_FLAGS = 0;
-constexpr uint32_t DEFAULT_FPS = 30;
+constexpr uint32_t DEFAULT_FPS = 60;
 constexpr int32_t DIRTY_MAX_SIZE = 10;
 constexpr uint8_t DEFAULT_CODECTYPE = VIDEO_CODEC_TYPE_VIDEO_H264;
 constexpr uint8_t DEFAULT_VIDEO_FORMAT = VIDEO_DATA_FORMAT_NV12;
