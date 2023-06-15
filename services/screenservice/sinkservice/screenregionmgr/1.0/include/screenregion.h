@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DSCREEN_SCREEN_REGION_H
-#define OHOS_DSCREEN_SCREEN_REGION_H
+#ifndef OHOS_DSCREEN_SCREEN_REGION_V1_0_H
+#define OHOS_DSCREEN_SCREEN_REGION_V1_0_H
 
 #include <mutex>
 
