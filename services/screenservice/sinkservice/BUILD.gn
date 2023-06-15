@@ -54,7 +54,6 @@ ohos_shared_library("distributed_screen_sink") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
     "${services_path}/screenclient:distributed_screen_client",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
   ]
@@ -67,6 +66,7 @@ ohos_shared_library("distributed_screen_sink") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",
     "hisysevent_native:libhisysevent",

@@ -7,7 +7,7 @@
     "license":"Apache License 2.0",
     "publishAs":"code-segment",
     "segment":{
-        "destPath":"foundation/distributedhardware/distributed_screen/"
+        "destPath":"foundation/distributedhardware/distributed_screen"
     },
     "dirs":{},
     "scripts":{},
@@ -39,10 +39,13 @@
                 "hitrace_native",
                 "c_utils",
                 "player_framework",
-                "window_manager"
+                "window_manager",
+                "multimedia_image_framework",
+                "distributed_hardware_fwk"
             ],
             "third_party":[
-                "json"
+                "json",
+                "libjpeg_turbo"
             ]
         },
         "build":{

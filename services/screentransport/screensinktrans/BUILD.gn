@@ -56,7 +56,6 @@ ohos_shared_library("distributed_screen_sinktrans") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk",
     "//third_party/libjpeg-turbo:turbojpeg_static",
   ]
 
@@ -74,6 +73,7 @@ ohos_shared_library("distributed_screen_sinktrans") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "graphic_standard:surface",
     "hisysevent_native:libhisysevent",

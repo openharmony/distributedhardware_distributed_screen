@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -49,11 +49,12 @@ ohos_unittest("UtilsTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "${fwk_interfaces_path}/inner_kits:libdhfwk_sdk",
     "${services_path}/screenservice/sinkservice:distributed_screen_sink",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
   ]
+
+  external_deps = [ "distributed_hardware_fwk:libdhfwk_sdk" ]
 }
 
 group("utils_test") {

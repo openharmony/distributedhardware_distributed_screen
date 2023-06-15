@@ -35,7 +35,6 @@ ohos_executable("distributedScreenTest") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${graphicstandard_path}/rosen/modules/render_service_client:librender_service_client",
     "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
     "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
     "${services_path}/screenclient:distributed_screen_client",
@@ -52,6 +51,7 @@ ohos_executable("distributedScreenTest") {
     "access_token:libnativetoken",
     "access_token:libtoken_setproc",
     "dsoftbus:softbus_client",
+    "graphic_standard:librender_service_client",
     "graphic_standard:surface",
     "hiviewdfx_hilog_native:libhilog",
     "player_framework:media_client",

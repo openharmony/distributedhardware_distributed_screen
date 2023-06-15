@@ -24,8 +24,6 @@ ohos_shared_library("distributed_screen_utils") {
     "${fwk_common_path}/utils/include",
   ]
 
-  deps = [ "${distributedhardwarefwk_path}/interfaces/inner_kits:libdhfwk_sdk" ]
-
   sources = [
     "src/dscreen_hisysevent.cpp",
     "src/dscreen_json_util.cpp",
@@ -36,6 +34,7 @@ ohos_shared_library("distributed_screen_utils") {
   external_deps = [
     "c_utils:utils",
     "c_utils:utilsbase",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "hisysevent_native:libhisysevent",
     "hitrace_native:hitrace_meter",
