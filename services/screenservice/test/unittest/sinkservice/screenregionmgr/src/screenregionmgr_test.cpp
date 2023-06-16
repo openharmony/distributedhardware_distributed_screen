@@ -20,6 +20,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 void ScreenRegionManagerTest::SetUpTestCase(void) {}
 
 void ScreenRegionManagerTest::TearDownTestCase(void) {}
@@ -198,6 +199,7 @@ HWTEST_F(ScreenRegionManagerTest, GetDScreenSourceSA_001, TestSize.Level1)
     sptr<IDScreenSource> ret = ScreenRegionManager::GetInstance().GetDScreenSourceSA(remoteDevId);
 
     EXPECT_EQ(nullptr, ret);
+}
 }
 }
 }
