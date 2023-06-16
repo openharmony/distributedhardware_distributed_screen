@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DSCREEN_SCREEN_REGION_H
-#define OHOS_DSCREEN_SCREEN_REGION_H
+#ifndef OHOS_DSCREEN_SCREEN_REGION_V1_0_H
+#define OHOS_DSCREEN_SCREEN_REGION_V1_0_H
 
 #include <mutex>
 
@@ -28,6 +28,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 class ScreenSinkTransCallback : public IScreenSinkTransCallback {
 public:
     ~ScreenSinkTransCallback() override {};
@@ -63,7 +64,7 @@ private:
     uint64_t screenId_; // local screen id
     uint64_t displayId_; // local display id
     bool isRunning = false;
-    std::string version_ = "1.0";
+    std::string version_ = "2.0";
 
     std::shared_ptr<VideoParam> videoParam_ = nullptr;
     std::shared_ptr<DScreenMapRelation> mapRelation_ = nullptr;
@@ -72,6 +73,7 @@ private:
     std::shared_ptr<IScreenSinkTrans> sinkTrans_ = nullptr;
     std::shared_ptr<WindowProperty> windowProperty_ = nullptr;
 };
+} // namespace V1_0
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

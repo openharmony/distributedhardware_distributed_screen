@@ -14,6 +14,7 @@
  */
 
 #include "dscreen_sink_service.h"
+#include "1.0/include/screenregionmgr.h"
 
 #include "if_system_ability_manager.h"
 #include "ipc_skeleton.h"
@@ -77,7 +78,7 @@ int32_t DScreenSinkService::InitSink(const std::string &params)
 int32_t DScreenSinkService::ReleaseSink()
 {
     DHLOGI("ReleaseSink");
-    ScreenRegionManager::GetInstance().ReleaseAllRegions();
+    V1_0::ScreenRegionManager::GetInstance().ReleaseAllRegions();
     DHLOGI("exit sink sa process");
     auto systemAbilityMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (systemAbilityMgr == nullptr) {
@@ -112,7 +113,7 @@ void DScreenSinkService::DScreenNotify(const std::string &devId, int32_t eventCo
 {
     DHLOGI("DScreenNotify, devId:%s, eventCode: %" PRId32 ", eventContent:%s", GetAnonyString(devId).c_str(),
         eventCode, eventContent.c_str());
-    ScreenRegionManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
+    V1_0::ScreenRegionManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
 }
 
 int32_t DScreenSinkService::Dump(int32_t fd, const std::vector<std::u16string>& args)
@@ -120,7 +121,7 @@ int32_t DScreenSinkService::Dump(int32_t fd, const std::vector<std::u16string>& 
     DHLOGI("DScreenSinkService  Dump.");
     (void)args;
     std::string result;
-    ScreenRegionManager::GetInstance().GetScreenDumpInfo(result);
+    V1_0::ScreenRegionManager::GetInstance().GetScreenDumpInfo(result);
     int ret = dprintf(fd, "%s\n", result.c_str());
     if (ret < 0) {
         DHLOGE("dprintf error");

@@ -25,7 +25,7 @@ ohos_shared_library("distributed_screen_sink") {
 
   include_dirs += [
     "./dscreenservice/include",
-    "./screenregionmgr/include",
+    "${services_path}/screenservice/sinkservice/screenregionmgr",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
@@ -48,8 +48,8 @@ ohos_shared_library("distributed_screen_sink") {
     "${services_path}/common/utils/src/video_param.cpp",
     "./dscreenservice/src/dscreen_sink_service.cpp",
     "./dscreenservice/src/dscreen_sink_stub.cpp",
-    "./screenregionmgr/src/screenregion.cpp",
-    "./screenregionmgr/src/screenregionmgr.cpp",
+    "./screenregionmgr/1.0/src/screenregion.cpp",
+    "./screenregionmgr/1.0/src/screenregionmgr.cpp",
   ]
 
   deps = [

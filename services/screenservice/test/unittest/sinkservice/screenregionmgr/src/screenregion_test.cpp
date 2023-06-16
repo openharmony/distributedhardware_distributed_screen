@@ -21,6 +21,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 void ScreenRegionTest::SetUpTestCase(void) {}
 
 void ScreenRegionTest::TearDownTestCase(void) {}
@@ -264,6 +265,7 @@ HWTEST_F(ScreenRegionTest, Stop_003, TestSize.Level1)
     int32_t ret = screenRegion_->Stop();
 
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
+}
 }
 }
 }

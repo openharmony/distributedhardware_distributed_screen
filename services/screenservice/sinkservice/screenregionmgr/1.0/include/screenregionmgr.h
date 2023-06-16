@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DSCREEN_SCREEN_REGION_MGR_H
-#define OHOS_DSCREEN_SCREEN_REGION_MGR_H
+#ifndef OHOS_DSCREEN_SCREEN_REGION_MGR_V1_0_H
+#define OHOS_DSCREEN_SCREEN_REGION_MGR_V1_0_H
 
 #include <map>
 #include <mutex>
@@ -27,6 +27,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 class ScreenRegionManager {
 DECLARE_SINGLE_INSTANCE_BASE(ScreenRegionManager);
 public:
@@ -42,7 +43,7 @@ private:
     std::map<std::string, std::shared_ptr<ScreenRegion>> screenRegions_;
     std::mutex screenRegionsMtx_;
     std::string localDevId_;
-    std::string version_ = "1.0";
+    std::string version_ = "2.0";
 
     sptr<IDScreenSource> GetDScreenSourceSA(const std::string &devId);
     int32_t NotifyRemoteScreenService(const std::string &remoteDevId, const std::string &dhId,
@@ -52,6 +53,7 @@ private:
     void NotifyRemoteSourceSetUpResult(const std::string &remoteDevId, const std::string &dhId,
         int32_t errCode, const std::string &errContent);
 };
+} // namespace V1_0
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif
