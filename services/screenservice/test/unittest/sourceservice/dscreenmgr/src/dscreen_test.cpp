@@ -18,8 +18,8 @@
 #define private public
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
-#include "dscreen_manager.h"
-#include "screen_manager_adapter.h"
+#include "1.0./include/dscreen_manager.h"
+#include "common/include/screen_manager_adapter.h"
 #include "dscreen_util.h"
 #include "video_param.h"
 #include "screen_source_trans.h"
