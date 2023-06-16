@@ -21,7 +21,7 @@
 
 #define private public
 #include "dscreen_errcode.h"
-#include "dscreen_manager.h"
+#include "1.0/include/dscreen_manager.h"
 #undef private
 
 namespace OHOS {

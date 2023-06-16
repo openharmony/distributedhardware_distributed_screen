@@ -20,7 +20,7 @@
 #include <gmock/gmock.h>
 
 #define private public
-#include "dscreen.h"
+#include "1.0/include/dscreen.h"
 #undef private
 namespace OHOS {
 namespace DistributedHardware {

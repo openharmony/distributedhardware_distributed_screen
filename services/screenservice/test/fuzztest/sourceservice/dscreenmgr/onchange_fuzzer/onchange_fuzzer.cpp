@@ -43,7 +43,7 @@ void OnChangeFuzzTest(const uint8_t* data, size_t size)
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     /* Run your code on data */
-    OHOS::DistributedHardware::OnChangeFuzzTest(data, size);
+    OHOS::DistributedHardware::V1_0::OnChangeFuzzTest(data, size);
     return 0;
 }
 
