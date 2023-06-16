@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "dscreen.h"
+#include "1.0/include/dscreen.h"
 
 #include "avcodec_info.h"
 #include "avcodec_list.h"
@@ -25,11 +25,12 @@
 #include "dscreen_json_util.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
-#include "screen_manager_adapter.h"
+#include "common/include/screen_manager_adapter.h"
 #include "screen_source_trans.h"
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 constexpr const char* TASK_THREAD = "TaskThread";
 DScreen::DScreen(const std::string &devId, const std::string &dhId,
     std::shared_ptr<IDScreenCallback> dscreenCallback)
@@ -460,5 +461,6 @@ int32_t DScreen::Stop()
     sourceTrans_ = nullptr;
     return DH_SUCCESS;
 }
+} // namespace V1_0
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DSCREEN_TEST_H
-#define OHOS_DSCREEN_TEST_H
+#ifndef OHOS_DSCREEN_TEST_V1_0_H
+#define OHOS_DSCREEN_TEST_V1_0_H
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -24,6 +24,7 @@
 #undef private
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 class DScreenTest : public testing::Test {
 public:
     static void SetUpTestCase(void);
@@ -32,6 +33,7 @@ public:
     void TearDown();
     std::shared_ptr<DScreen> dScreen_ = nullptr;
 };
+} // namespace V1_0
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

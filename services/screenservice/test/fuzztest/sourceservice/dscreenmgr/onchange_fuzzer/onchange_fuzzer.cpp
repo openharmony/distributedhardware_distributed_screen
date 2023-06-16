@@ -18,10 +18,11 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "dscreen_manager.h"
+#include "1.0/include/dscreen_manager.h"
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 void OnChangeFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(uint64_t))) {
@@ -33,6 +34,7 @@ void OnChangeFuzzTest(const uint8_t* data, size_t size)
     Rosen::ScreenGroupChangeEvent event = Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP;
     DScreenGroupListener dScreenGroupListener;
     dScreenGroupListener.OnChange(screenIds, event);
+}
 }
 }
 }

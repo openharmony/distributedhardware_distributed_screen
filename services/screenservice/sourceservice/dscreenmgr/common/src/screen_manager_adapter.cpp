@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "screen_manager_adapter.h"
+#include "common/include/screen_manager_adapter.h"
 
 #include <memory>
 
@@ -52,7 +52,7 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
         DHLOGI("remove an exist virtual screen.");
         Rosen::DMError err = Rosen::ScreenManager::GetInstance().DestroyVirtualScreen(iter->second);
         if (err != Rosen::DMError::DM_OK) {
-            DHLOGE("remove virtual screen failed, screenId:%ulld", iter->second);
+            DHLOGE("remove virtual screen failed, screenId:%u", iter->second);
             return SCREEN_ID_INVALID;
         }
         screenIdMap_.erase(screenName);
@@ -116,7 +116,7 @@ int32_t ScreenMgrAdapter::UnregisterScreenGroupListener(sptr<Rosen::ScreenManage
 
 void ScreenMgrAdapter::RemoveScreenFromGroup(uint64_t screenId)
 {
-    DHLOGI("remove screen from group, screenId: %ulld", screenId);
+    DHLOGI("remove screen from group, screenId: %u", screenId);
     std::vector<uint64_t> screenIds;
     screenIds.push_back(screenId);
     Rosen::ScreenManager::GetInstance().RemoveVirtualScreenFromGroup(screenIds);
@@ -124,10 +124,10 @@ void ScreenMgrAdapter::RemoveScreenFromGroup(uint64_t screenId)
 
 int32_t ScreenMgrAdapter::RemoveVirtualScreen(uint64_t screenId)
 {
-    DHLOGI("remove virtual screen, screenId: %ulld", screenId);
+    DHLOGI("remove virtual screen, screenId: %u", screenId);
     Rosen::DMError err = Rosen::ScreenManager::GetInstance().DestroyVirtualScreen(screenId);
     if (err != Rosen::DMError::DM_OK) {
-        DHLOGE("remove virtual screen failed, screenId:%ulld", screenId);
+        DHLOGE("remove virtual screen failed, screenId:%u", screenId);
         return ERR_DH_SCREEN_SA_REMOVE_VIRTUALSCREEN_FAIL;
     }
     return DH_SUCCESS;
@@ -139,14 +139,14 @@ int32_t ScreenMgrAdapter::SetImageSurface(uint64_t screenId, sptr<OHOS::Surface>
         DHLOGE("ScreenMgrAdapter::SetImageSurface, surface is nullptr");
         return ERR_DH_SCREEN_SA_SET_IMAGESURFACE_FAIL;
     }
-    DHLOGI("SetImageSurface for virtualscreen, screenId: %ulld", screenId);
+    DHLOGI("SetImageSurface for virtualscreen, screenId: %u", screenId);
     Rosen::ScreenManager::GetInstance().SetVirtualScreenSurface(screenId, surface);
     return DH_SUCCESS;
 }
 
 std::shared_ptr<DScreenMapRelation> ScreenMgrAdapter::GetMapRelation(uint64_t screenId)
 {
-    DHLOGI("GetMapRelation screenId: %ulld", screenId);
+    DHLOGI("GetMapRelation screenId: %u", screenId);
     std::shared_ptr<DScreenMapRelation> mapRelation = std::make_shared<DScreenMapRelation>();
     sptr<Rosen::Screen> screen = Rosen::ScreenManager::GetInstance().GetScreenById(screenId);
     if (screen == nullptr) {

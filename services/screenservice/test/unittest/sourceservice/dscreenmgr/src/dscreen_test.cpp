@@ -30,6 +30,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 constexpr static int32_t videoDataNum = 100;
 void DScreenTest::SetUpTestCase(void) {}
 
@@ -404,6 +405,7 @@ HWTEST_F(DScreenTest, Stop_002, TestSize.Level1)
     dScreen_->sourceTrans_ = std::make_shared<ScreenSourceTrans>();
     int32_t ret = dScreen_->Stop();
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
+}
 }
 }
 }

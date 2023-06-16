@@ -39,7 +39,7 @@ config("module_private_config") {
     "${services_path}/screentransport/screensinkprocessor/include",
     "${services_path}/screentransport/screensinkprocessor/decoder/include",
     "${services_path}/screenclient/include/",
-    "${services_path}/screenservice/sinkservice/screenregionmgr/1.0/include",
+    "${services_path}/screenservice/sinkservice/screenregionmgr/",
   ]
 }
 

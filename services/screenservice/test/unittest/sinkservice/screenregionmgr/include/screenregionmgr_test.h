@@ -21,7 +21,7 @@
 
 #define private public
 #include "dscreen_errcode.h"
-#include "screenregionmgr.h"
+#include "1.0/include/screenregionmgr.h"
 #undef private
 
 namespace OHOS {
