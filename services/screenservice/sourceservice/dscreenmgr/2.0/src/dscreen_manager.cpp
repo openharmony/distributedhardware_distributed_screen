@@ -236,7 +236,8 @@ void DScreenManager::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
 int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const std::string &dhId,
     const std::string &attrs, const std::string &reqId)
 {
-    DHLOGI("EnableDistributedScreen3.0, devId: %s, dhId:%s", GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
+    DHLOGI("EnableDistributedScreen3.0, devId: %s, dhId:%s", GetAnonyString(devId).c_str(),
+        GetAnonyString(dhId).c_str());
     if (dScreenCallback_ == nullptr) {
         DHLOGE("dscreen manager not init.");
         return ERR_DH_SCREEN_SA_ENABLE_FAILED;
@@ -264,7 +265,7 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
 int32_t DScreenManager::DisableDistributedScreen(const std::string &devId, const std::string &dhId,
     const std::string &reqId)
 {
-    DHLOGI("DisableDistributedScreen, devId: %s, dhId:%s", GetAnonyString(devId).c_str(),GetAnonyString(dhId).c_str());
+    DHLOGI("DisableDistributedScreen, devId: %s, dhId:%s", GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     std::string dScreenIdx = devId + SEPERATOR + dhId;
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     if (dScreens_.count(dScreenIdx) == 0) {

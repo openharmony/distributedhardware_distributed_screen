@@ -108,6 +108,7 @@ private:
     int32_t ConfigSurface();
     int32_t RemoveSurface();
     int32_t SetUp();
+    void Judgment();
     bool CheckJsonData(json &attrJson);
     void SetState(DScreenState state);
 

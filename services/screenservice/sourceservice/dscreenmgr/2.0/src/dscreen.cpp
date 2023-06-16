@@ -365,7 +365,7 @@ int32_t DScreen::StopSenderEngine()
     return DH_SUCCESS;
 }
 
-int32_t DScreen::SetUp()
+void DScreen::Judgment()
 {
     DHLOGI("SetUp, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
     if (senderAdapter_ == nullptr) {
@@ -376,6 +376,11 @@ int32_t DScreen::SetUp()
         DHLOGE("videoParam is nullptr.");
         return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
     }
+}
+
+int32_t DScreen::SetUp()
+{
+    Judgment()
     auto mapRelation = ScreenMgrAdapter::GetInstance().GetMapRelation(screenId_);
     if (mapRelation == nullptr) {
         DHLOGE("get map relation failed.");
@@ -422,7 +427,7 @@ int32_t DScreen::SetUp()
     senderAdapter_->SetParameter(AVTransTag::VIDEO_WIDTH, std::to_string(videoParam_->GetVideoWidth()));
     senderAdapter_->SetParameter(AVTransTag::VIDEO_HEIGHT, std::to_string(videoParam_->GetVideoHeight()));
     senderAdapter_->SetParameter(AVTransTag::VIDEO_FRAME_RATE, std::to_string(videoParam_->GetFps()));
-    senderAdapter_->SetParameter(AVTransTag::VIDEO_BIT_RATE, std::to_string(12000000));
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_BIT_RATE, std::to_string(BIT_RATE));
     return senderAdapter_->SetParameter(AVTransTag::ENGINE_READY, OWNER_NAME_D_SCREEN);
 }
 
@@ -479,7 +484,8 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
 
 void DScreen::TaskThreadLoop()
 {
-    DHLOGI("DScreen taskThread start. devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    DHLOGI("DScreen taskThread start. devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
+        GetAnonyString(dhId_).c_str());
     while (taskThreadRunning_) {
         std::shared_ptr<Task> task;
         {
