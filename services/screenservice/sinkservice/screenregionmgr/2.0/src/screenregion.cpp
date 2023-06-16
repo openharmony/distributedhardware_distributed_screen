@@ -259,14 +259,8 @@ void ScreenRegion::OnEngineMessage(const std::shared_ptr<AVTransMessage> &messag
     }
 }
 
-void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer)
+std::sptr<OHOS::SurfaceBuffer> ScreenRegion::GetWSBuffer()
 {
-    ++frameNumber_;
-    DHLOGI("OnEngineDataDone enter");
-    if (buffer == nullptr) {
-        DHLOGE("received video buffer data is nullptr.");
-        return;
-    }
     if (windowSurface_ == nullptr) {
         DHLOGE("window surface is nullptr.");
         return;
@@ -286,6 +280,18 @@ void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer
         windowSurface_->CancelBuffer(wsBuffer);
         return;
     }
+    return wsBuffer;
+}
+
+void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer)
+{
+    ++frameNumber_;
+    DHLOGI("OnEngineDataDone enter");
+    if (buffer == nullptr) {
+        DHLOGE("received video buffer data is nullptr.");
+        return;
+    }
+    sptr<OHOS::SurfaceBuffer> wsBuffer = GetWSBuffer();
     auto bufferData = buffer->GetBufferData(0);
     auto bufferAddr = bufferData->GetAddress();
     auto wsBufAddr = static_cast<uint8_t*>(wsBuffer->GetVirAddr());
