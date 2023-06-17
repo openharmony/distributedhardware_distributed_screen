@@ -62,7 +62,7 @@ int32_t JpegImageProcessor::FillDirtyImages2Surface(const std::shared_ptr<DataBu
         .height = configParam_.GetScreenHeight(),
         .strideAlignment = STRIDE_ALIGNMENT,
         .format = GRAPHIC_PIXEL_FMT_YCBCR_420_SP,
-        .usage = BUFFER_USAGE_CPU_READ | BUFFER_USAGE__CPU_WRITE | BUFFER_USAGE__MEM_DMA,
+        .usage = BUFFER_USAGE_CPU_READ | BUFFER_USAGE_CPU_WRITE | BUFFER_USAGE_MEM_DMA,
     };
     SurfaceError surfaceErr = imageSurface_->RequestBuffer(windowSurfaceBuffer, releaseFence, requestConfig);
     if (surfaceErr != SURFACE_ERROR_OK || windowSurfaceBuffer == nullptr) {
