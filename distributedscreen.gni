@@ -26,6 +26,7 @@ fwk_utils_path = "${distributedhardwarefwk_path}/utils"
 fwk_common_path = "${distributedhardwarefwk_path}/common"
 fwk_services_path = "${distributedhardwarefwk_path}/services"
 fwk_interfaces_path = "${distributedhardwarefwk_path}/interfaces"
+av_transport_path = "${distributedhardwarefwk_path}/av_transport"
 ipc_interfaces_path = "${ipc_path}/interfaces"
 build_flags = [ "-Werror" ]
 
