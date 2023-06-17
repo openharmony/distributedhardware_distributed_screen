@@ -101,8 +101,8 @@ sptr<SurfaceBuffer> ImageSinkDecoder::GetWinSurfaceBuffer()
         .width = configParam_.GetVideoWidth(),
         .height = configParam_.GetVideoHeight(),
         .strideAlignment = STRIDE_ALIGNMENT,
-        .format = PIXEL_FMT_YCBCR_420_SP,
-        .usage = HBM_USE_CPU_READ | HBM_USE_CPU_WRITE | HBM_USE_MEM_DMA,
+        .format = GRAPHIC_PIXEL_FMT_YCBCR_420_SP,
+        .usage = BUFFER_USAGE_CPU_READ | BUFFER_USAGE__CPU_WRITE | BUFFER_USAGE__MEM_DMA,
     };
     SurfaceError surfaceErr = windowSurface_->RequestBuffer(windowSurfaceBuffer, releaseFence, requestConfig);
     if (surfaceErr != SURFACE_ERROR_OK || windowSurfaceBuffer == nullptr) {
