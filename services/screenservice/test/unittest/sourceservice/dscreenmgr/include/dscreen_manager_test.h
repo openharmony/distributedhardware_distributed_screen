@@ -13,19 +13,20 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DSCREEN_MANAGER_TEST_H
-#define OHOS_DSCREEN_MANAGER_TEST_H
+#ifndef OHOS_DSCREEN_MANAGER_TEST_V1_0_H
+#define OHOS_DSCREEN_MANAGER_TEST_V1_0_H
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
 #define private public
 #include "dscreen_errcode.h"
-#include "dscreen_manager.h"
+#include "1.0/include/dscreen_manager.h"
 #undef private
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 class DScreenManagerTest : public testing::Test {
 public:
     static void SetUpTestCase(void);
@@ -33,6 +34,7 @@ public:
     void SetUp();
     void TearDown();
 };
+} // namespace V1_0
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

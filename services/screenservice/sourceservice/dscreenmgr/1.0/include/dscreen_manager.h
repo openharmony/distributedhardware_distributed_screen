@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DSCREEN_MGR_H
-#define OHOS_DSCREEN_MGR_H
+#ifndef OHOS_DSCREEN_MGR_V1_0_H
+#define OHOS_DSCREEN_MGR_V1_0_H
 
 #include "distributed_hardware_fwk_kit.h"
 #include "dm_common.h"
@@ -29,6 +29,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 class DScreenCallback : public IDScreenCallback {
 public:
     void OnRegResult(const std::shared_ptr<DScreen> &dScreen, const std::string &reqId,
@@ -84,6 +85,7 @@ private:
     bool CheckContent(json &eventContent);
     void HandleNotifySetUpResult(const std::string &remoteDevId, const std::string &eventContent);
 };
+} // namespace V1_0
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

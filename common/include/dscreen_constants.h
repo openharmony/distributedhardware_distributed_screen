@@ -204,6 +204,7 @@ constexpr uint32_t DECODE_WAIT_MILLISECONDS = 5000;
 constexpr size_t DATA_BUFFER_MAX_SIZE = 10 * 1024 * 1024;
 constexpr uint8_t TASK_WAIT_SECONDS = 1;
 constexpr int32_t JPEG_QUALITY = 80;
+constexpr uint32_t BIT_RATE = 12000000;
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

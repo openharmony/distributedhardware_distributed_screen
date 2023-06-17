@@ -22,7 +22,7 @@
 #define private public
 #include "dscreen_errcode.h"
 #include "screen_sink_trans.h"
-#include "screenregion.h"
+#include "1.0/include/screenregion.h"
 #undef private
 
 namespace OHOS {

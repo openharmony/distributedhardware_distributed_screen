@@ -16,7 +16,7 @@
 #include "screen_manager_adapter_test.h"
 
 #define private public
-#include "screen_manager_adapter.h"
+#include "common/include/screen_manager_adapter.h"
 #undef private
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"

@@ -18,10 +18,11 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "dscreen_manager.h"
+#include "1.0/include/dscreen_manager.h"
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 void OnChangeFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(uint64_t))) {
@@ -36,12 +37,13 @@ void OnChangeFuzzTest(const uint8_t* data, size_t size)
 }
 }
 }
+}
 
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     /* Run your code on data */
-    OHOS::DistributedHardware::OnChangeFuzzTest(data, size);
+    OHOS::DistributedHardware::V1_0::OnChangeFuzzTest(data, size);
     return 0;
 }
 

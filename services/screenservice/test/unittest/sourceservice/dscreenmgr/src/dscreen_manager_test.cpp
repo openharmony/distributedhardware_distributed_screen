@@ -20,6 +20,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace V1_0 {
 void DScreenManagerTest::SetUpTestCase(void) {}
 
 void DScreenManagerTest::TearDownTestCase(void) {}
@@ -330,6 +331,7 @@ HWTEST_F(DScreenManagerTest, DisableDistributedScreen_001, TestSize.Level1)
 
     ret = DScreenManager::GetInstance().UnInit();
     EXPECT_EQ(DH_SUCCESS, ret);
+}
 }
 }
 }

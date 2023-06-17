@@ -1,0 +1,567 @@
+/*
+ * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "2.0/include/dscreen.h"
+
+#include "avcodec_info.h"
+#include "avcodec_list.h"
+#include "2.0/include/av_sender_engine_adpater.h"
+#include "dscreen_constants.h"
+#include "dscreen_errcode.h"
+#include "dscreen_hisysevent.h"
+#include "dscreen_json_util.h"
+#include "dscreen_log.h"
+#include "dscreen_util.h"
+#include "common/include/screen_manager_adapter.h"
+
+namespace OHOS {
+namespace DistributedHardware {
+namespace V2_0 {
+DScreen::DScreen(const std::string &devId, const std::string &dhId,
+    std::shared_ptr<IDScreenCallback> dscreenCallback)
+{
+    DHLOGD("DScreen construct, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
+        GetAnonyString(dhId).c_str());
+    devId_ = devId;
+    dhId_ = dhId;
+    dscreenCallback_ = dscreenCallback;
+    SetState(DISABLED);
+    taskThreadRunning_ = true;
+    taskQueueThread_ = std::thread(&DScreen::TaskThreadLoop, this);
+}
+
+DScreen::~DScreen()
+{
+    DHLOGD("DScreen deconstruct, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
+        GetAnonyString(dhId_).c_str());
+    taskThreadRunning_ = false;
+    taskQueueCond_.notify_all();
+    if (taskQueueThread_.joinable()) {
+        taskQueueThread_.join();
+    }
+    StopSenderEngine();
+    ScreenMgrAdapter::GetInstance().RemoveVirtualScreen(screenId_);
+    videoParam_ = nullptr;
+    senderAdapter_ = nullptr;
+    DHLOGD("DScreen deconstruct end.");
+}
+
+int32_t DScreen::AddTask(const std::shared_ptr<Task> &task)
+{
+    DHLOGI("DScreen::AddTask, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    if (task == nullptr) {
+        DHLOGE("AddTask, task is invalid.");
+        return ERR_DH_SCREEN_SA_DSCREEN_TASK_NOT_VALID;
+    }
+    DHLOGI("AddTask, task type: %" PRId32, task->GetTaskType());
+    {
+        std::lock_guard<std::mutex> lock(taskQueueMtx_);
+        taskQueue_.push(task);
+    }
+    taskQueueCond_.notify_all();
+    return DH_SUCCESS;
+}
+
+void DScreen::HandleTask(const std::shared_ptr<Task> &task)
+{
+    int32_t taskType = task->GetTaskType();
+    DHLOGI("HandleTask, devId: %s, dhId: %s, task type: %" PRId32, GetAnonyString(devId_).c_str(),
+        GetAnonyString(dhId_).c_str(), taskType);
+    switch (taskType) {
+        case TaskType::TASK_ENABLE:
+            HandleEnable(task->GetTaskParam(), task->GetTaskId());
+            break;
+        case TaskType::TASK_DISABLE:
+            HandleDisable(task->GetTaskId());
+            break;
+        case TaskType::TASK_CONNECT:
+            HandleConnect();
+            break;
+        case TaskType::TASK_DISCONNECT:
+            HandleDisconnect();
+            break;
+        default:
+            DHLOGD("task type unkown.");
+    }
+}
+
+void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
+{
+    DHLOGI("HandleEnable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    if (dscreenCallback_ == nullptr) {
+        DHLOGE("DScreen::HandleEnable, dscreenCallback_ is nullptr");
+        return;
+    }
+    if ((curState_ == ENABLED) || (curState_ == ENABLING) || (curState_ == CONNECTING) || (curState_ == CONNECTED)) {
+        dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
+        return;
+    }
+    SetState(ENABLING);
+
+    json attrJson = json::parse(param, nullptr, false);
+    if (!CheckJsonData(attrJson)) {
+        DHLOGE("HandleEnable, check json data failed.");
+        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
+            "enable param json is invalid.");
+        ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
+            GetAnonyString(dhId_).c_str(), "check json data failed.");
+        return;
+    }
+    if (videoParam_ == nullptr) {
+        videoParam_ = std::make_shared<VideoParam>();
+    }
+    int32_t ret = NegotiateCodecType(attrJson[KEY_CODECTYPE]);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("HandleEnable, negotiate codec type failed.");
+        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
+            "negotiate codec type failed.");
+        ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
+            GetAnonyString(dhId_).c_str(), "negotiate codec type failed.");
+        return;
+    }
+    videoParam_->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH].get<uint32_t>());
+    videoParam_->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT].get<uint32_t>());
+    uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId_, dhId_, videoParam_);
+    if (screenId == SCREEN_ID_INVALID) {
+        DHLOGE("HandleEnable, create virtual screen failed.");
+        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
+            "create virtual screen failed.");
+        ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
+            GetAnonyString(dhId_).c_str(), "create virtual screen failed.");
+        return;
+    }
+
+    screenId_ = screenId;
+    SetState(ENABLED);
+    dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
+    ReportRegisterScreenEvent(DSCREEN_REGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
+        "dscreen enable success.");
+}
+
+void DScreen::HandleDisable(const std::string &taskId)
+{
+    DHLOGI("HandleDisable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    if (dscreenCallback_ == nullptr) {
+        DHLOGE("DScreen::HandleDisable, dscreenCallback_ is nullptr");
+        return;
+    }
+    SetState(DISABLING);
+    int32_t ret = ScreenMgrAdapter::GetInstance().RemoveVirtualScreen(screenId_);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("HandleDisable, remove virtual screen failed.");
+        dscreenCallback_->OnUnregResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_DISABLE_FAILED,
+            "remove virtual screen failed.");
+        ReportUnRegisterFail(DSCREEN_UNREGISTER_FAIL, ERR_DH_SCREEN_SA_DISABLE_FAILED, GetAnonyString(devId_).c_str(),
+            GetAnonyString(dhId_).c_str(), "remove virtual screen failed.");
+        return;
+    }
+    SetState(DISABLED);
+    dscreenCallback_->OnUnregResult(shared_from_this(), taskId, DH_SUCCESS, "");
+    ReportUnRegisterScreenEvent(DSCREEN_UNREGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
+        "dscreen disable success.");
+}
+
+void DScreen::HandleConnect()
+{
+    DHLOGI("HandleConnect, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    SetState(CONNECTING);
+    int32_t ret = StartSenderEngine();
+    if (ret != DH_SUCCESS) {
+        SetState(ENABLED);
+        ScreenMgrAdapter::GetInstance().RemoveScreenFromGroup(screenId_);
+        DHLOGE("HandleConnect, start av transport sender engine failed.");
+        return;
+    }
+    ret = ConfigSurface();
+    if (ret != DH_SUCCESS) {
+        SetState(ENABLED);
+        ScreenMgrAdapter::GetInstance().RemoveScreenFromGroup(screenId_);
+        DHLOGE("HandleConnect, config image surface failed.");
+        return;
+    }
+    SetState(CONNECTED);
+    ReportScreenMirrorEvent(DSCREEN_PROJECT_START, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
+        "dscreen connect success");
+}
+
+void DScreen::HandleDisconnect()
+{
+    DHLOGD("HandleDisconnect, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    if (curState_ != CONNECTED) {
+        DHLOGE("dscreen is not connected, cannot disconnect");
+        return;
+    }
+    SetState(DISCONNECTING);
+    int32_t ret = RemoveSurface();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("remove image surface failed.");
+    }
+    ret = StopSenderEngine();
+    if (ret != DH_SUCCESS) {
+        SetState(CONNECTED);
+        DHLOGE("dScreen Stop failed.");
+        return;
+    }
+    SetState(ENABLED);
+    ReportScreenMirrorEvent(DSCREEN_PROJECT_END, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
+        "dscreen disconnect success");
+}
+
+int32_t DScreen::ConfigSurface()
+{
+    DHLOGD("ConfigSurface, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    consumerSurface_ = Surface::CreateSurfaceAsConsumer();
+    if (consumerSurface_ == nullptr) {
+        DHLOGE("Create consumer surface failed.");
+        return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+    }
+    sptr<IBufferProducer> producer = consumerSurface_->GetProducer();
+    if (producer == nullptr) {
+        DHLOGE("Get preducer surface failed.");
+        return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+    }
+    sptr<OHOS::Surface> producerSurface = Surface::CreateSurfaceAsProducer(producer);
+    if (producerSurface == nullptr) {
+        DHLOGE("Create preducer surface failed.");
+        return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
+    }
+    if (consumerBufferListener_ == nullptr) {
+        consumerBufferListener_ = new ConsumBufferListener(shared_from_this());
+    }
+    consumerSurface_->RegisterConsumerListener(consumerBufferListener_);
+    ScreenMgrAdapter::GetInstance().SetImageSurface(screenId_, producerSurface);
+    DHLOGI("ConfigSurface success.");
+    return DH_SUCCESS;
+}
+
+int32_t DScreen::RemoveSurface()
+{
+    if (consumerSurface_ == nullptr) {
+        DHLOGE("consumerSurface_ is nullptr.");
+        return ERR_DH_AV_TRANS_NULL_VALUE;
+    }
+    consumerSurface_->UnregisterConsumerListener();
+
+    consumerSurface_ = nullptr;
+    DHLOGI("RemoveSurface success.");
+    return DH_SUCCESS;
+}
+
+void ConsumBufferListener::OnBufferAvailable()
+{
+    DHLOGI("OnBufferAvailable enter.");
+    if (dScreen_ == nullptr) {
+        DHLOGE("dScreen is nullptr, cannot consume surface buffer.");
+        return;
+    }
+    if (dScreen_->GetState() != CONNECTED) {
+        DHLOGD("screen is not connected, no need consume surface buffer.");
+        return;
+    }
+    dScreen_->ConsumeSurface();
+}
+
+void DScreen::ConsumeSurface()
+{
+    DHLOGI("ConsumeSurface enter.");
+    if (senderAdapter_ == nullptr) {
+        DHLOGE("av transport sender adapter is null.");
+        return;
+    }
+    if (consumerSurface_ == nullptr) {
+        DHLOGE("consumerSurface_ is nullptr, cannot consume surface buffer.");
+        return;
+    }
+    sptr<SurfaceBuffer> surfaceBuffer = nullptr;
+    int32_t fence = -1;
+    int64_t timestamp = 0;
+    OHOS::Rect damage = {0, 0, 0, 0};
+    SurfaceError surfaceErr = consumerSurface_->AcquireBuffer(surfaceBuffer, fence, timestamp, damage);
+    if (surfaceErr != SURFACE_ERROR_OK) {
+        DHLOGE("consumerSurface_ acquire buffer failed, errcode: %d", surfaceErr);
+        return;
+    }
+    uint32_t surBufSize = surfaceBuffer->GetSize();
+    auto surBufAddr = static_cast<uint8_t*>(surfaceBuffer->GetVirAddr());
+    uint32_t videoWidth = videoParam_->GetVideoWidth();
+    uint32_t videoHeight = videoParam_->GetVideoHeight();
+    VideoData data = { surBufAddr, surBufSize, videoWidth, videoHeight, timestamp, VIDEO_FORMAT_RGBA8888 };
+    int32_t ret = senderAdapter_->PushData(data);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("feed buffer to av transport sender failed.");
+    }
+    consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
+    DHLOGI("ConsumeSurface success. timestamp=%lld", (long long)timestamp);
+}
+
+int32_t DScreen::InitSenderEngine(IAVEngineProvider *providerPtr, const std::string &peerDevId)
+{
+    DHLOGI("InitSenderEngine enter.");
+    if (senderAdapter_ == nullptr) {
+        senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
+    }
+    int32_t ret = senderAdapter_->Initialize(providerPtr, peerDevId);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("initialize av sender adapter failed.");
+        return ERR_DH_AV_TRANS_INIT_FAILED;
+    }
+    return senderAdapter_->RegisterAdapterCallback(shared_from_this());
+}
+
+int32_t DScreen::StartSenderEngine()
+{
+    DHLOGI("StartSenderEngine, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    if (senderAdapter_ == nullptr) {
+        DHLOGE("av transport sender adapter is null.");
+        return ERR_DH_AV_TRANS_NULL_VALUE;
+    }
+    int32_t ret = senderAdapter_->CreateControlChannel(devId_);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("create av sender control channel failed.");
+        return ERR_DH_AV_TRANS_CREATE_CHANNEL_FAILED;
+    }
+    ret = SetUp();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("set up av sender engine failed.");
+        return ERR_DH_AV_TRANS_SETUP_FAILED;
+    }
+    ret = senderAdapter_->Start();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("start av sender engine failed.");
+        return ERR_DH_AV_TRANS_START_FAILED;
+    }
+    return DH_SUCCESS;
+}
+
+int32_t DScreen::StopSenderEngine()
+{
+    DHLOGI("StopSenderEngine, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    if (senderAdapter_ == nullptr) {
+        DHLOGE("av transport sender adapter is null.");
+        return ERR_DH_AV_TRANS_NULL_VALUE;
+    }
+    int32_t ret = senderAdapter_->Stop();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("stop av sender adapter failed.");
+        return ERR_DH_AV_TRANS_STOP_FAILED;
+    }
+    ret = senderAdapter_->Release();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("release av sender adapter failed.");
+        return ERR_DH_AV_TRANS_STOP_FAILED;
+    }
+    return DH_SUCCESS;
+}
+
+void DScreen::Judgment()
+{
+    DHLOGI("SetUp, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    if (senderAdapter_ == nullptr) {
+        DHLOGE("av transport sender adapter is null.");
+        return ERR_DH_AV_TRANS_NULL_VALUE;
+    }
+    if (videoParam_ == nullptr) {
+        DHLOGE("videoParam is nullptr.");
+        return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
+    }
+}
+
+int32_t DScreen::SetUp()
+{
+    Judgment()
+    auto mapRelation = ScreenMgrAdapter::GetInstance().GetMapRelation(screenId_);
+    if (mapRelation == nullptr) {
+        DHLOGE("get map relation failed.");
+        return ERR_DH_AV_TRANS_SETUP_FAILED;
+    }
+    DisplayRect displayRect = mapRelation->GetDisplayRect();
+    videoParam_->SetVideoWidth(displayRect.width);
+    videoParam_->SetVideoHeight(displayRect.height);
+
+    json paramJson;
+    paramJson[KEY_DEV_ID] = devId_;
+    paramJson[KEY_DH_ID] = dhId_;
+    paramJson[KEY_SCREEN_ID] = screenId_;
+    paramJson[KEY_VIDEO_PARAM] = *videoParam_;
+    paramJson[KEY_MAPRELATION] = *mapRelation;
+
+    auto avMessage = std::make_shared<AVTransMessage>(DScreenMsgType::SETUP_SIGNAL, paramJson.dump(), devId_);
+    int32_t ret = senderAdapter_->SendMessageToRemote(avMessage);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("set message to remote engine failed.");
+        return ret;
+    }
+
+    std::string codecType;
+    if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H265) {
+        codecType = MINE_VIDEO_H265;
+    } else if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H264) {
+        codecType = MINE_VIDEO_H264;
+    } else {
+        codecType = MINE_VIDEO_RAW;
+    }
+    std::string pixelFormat;
+    if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_YUVI420) {
+        pixelFormat = VIDEO_FORMAT_YUVI420;
+    } else if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_NV12) {
+        pixelFormat = VIDEO_FORMAT_NV12;
+    } else if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_NV21) {
+        pixelFormat = VIDEO_FORMAT_NV21;
+    } else {
+        pixelFormat = VIDEO_FORMAT_RGBA8888;
+    }
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_CODEC_TYPE, codecType);
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_PIXEL_FORMAT, pixelFormat);
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_WIDTH, std::to_string(videoParam_->GetVideoWidth()));
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_HEIGHT, std::to_string(videoParam_->GetVideoHeight()));
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_FRAME_RATE, std::to_string(videoParam_->GetFps()));
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_BIT_RATE, std::to_string(BIT_RATE));
+    return senderAdapter_->SetParameter(AVTransTag::ENGINE_READY, OWNER_NAME_D_SCREEN);
+}
+
+int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
+{
+    json remoteCodecArray = json::parse(remoteCodecInfoStr, nullptr, false);
+    if (remoteCodecArray.is_discarded() || !remoteCodecArray.is_array()) {
+        DHLOGE("remoteCodecInfoStrjson is invalid.");
+        return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
+    }
+
+    std::vector<std::string> localCodecArray;
+    std::shared_ptr<Media::AVCodecList> codecList = Media::AVCodecListFactory::CreateAVCodecList();
+    if (codecList == nullptr) {
+        DHLOGE("codecList is nullptr.");
+        return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
+    }
+    std::vector<std::shared_ptr<Media::VideoCaps>> caps = codecList->GetVideoEncoderCaps();
+    for (const auto &cap : caps) {
+        if (cap == nullptr) {
+            continue;
+        }
+        std::shared_ptr<Media::AVCodecInfo> codecInfo = cap->GetCodecInfo();
+        if (codecInfo == nullptr) {
+            continue;
+        }
+        localCodecArray.push_back(codecInfo->GetName());
+    }
+    std::vector<std::string> codecTypeCandidates;
+    for (const auto &remoteCodecType : remoteCodecArray) {
+        if (std::find(localCodecArray.begin(), localCodecArray.end(),
+            remoteCodecType) != localCodecArray.end()) {
+            codecTypeCandidates.push_back(remoteCodecType);
+        }
+    }
+    if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
+        CODEC_NAME_H265) != codecTypeCandidates.end()) {
+        videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H265);
+        videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
+    } else if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
+        CODEC_NAME_H264) != codecTypeCandidates.end()) {
+        videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
+        videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
+    } else if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
+        CODEC_NAME_MPEG4) != codecTypeCandidates.end()) {
+        videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_MPEG4);
+        videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_RGBA8888);
+    } else {
+        DHLOGI("codec type not support.");
+        return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
+    }
+    return DH_SUCCESS;
+}
+
+void DScreen::TaskThreadLoop()
+{
+    DHLOGI("DScreen taskThread start. devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
+        GetAnonyString(dhId_).c_str());
+    while (taskThreadRunning_) {
+        std::shared_ptr<Task> task;
+        {
+            std::unique_lock<std::mutex> lock(taskQueueMtx_);
+            taskQueueCond_.wait_for(lock, std::chrono::seconds(TASK_WAIT_SECONDS),
+                [this]() { return !taskQueue_.empty(); });
+            if (taskQueue_.empty()) {
+                continue;
+            }
+            task = taskQueue_.front();
+            taskQueue_.pop();
+        }
+        if (task == nullptr) {
+            DHLOGD("task is null.");
+            continue;
+        }
+        DHLOGD("run task, task queue size: %zu", taskQueue_.size());
+        HandleTask(task);
+    }
+}
+
+bool DScreen::CheckJsonData(json &attrJson)
+{
+    if (attrJson.is_discarded()) {
+        DHLOGE("enable param json is invalid.");
+        return false;
+    }
+    if (!IsUInt32(attrJson, KEY_SCREEN_WIDTH) || !IsUInt32(attrJson, KEY_SCREEN_HEIGHT) ||
+        !attrJson.contains(KEY_CODECTYPE)) {
+        DHLOGE("enable param is invalid.");
+        return false;
+    }
+    return true;
+}
+
+void DScreen::OnEngineEvent(DScreenEventType event, const std::string &content)
+{
+    (void)event;
+    (void)content;
+}
+
+void DScreen::OnEngineMessage(const std::shared_ptr<AVTransMessage> &message)
+{
+    (void)message;
+}
+
+std::shared_ptr<VideoParam> DScreen::GetVideoParam()
+{
+    return videoParam_;
+}
+
+void DScreen::SetState(DScreenState state)
+{
+    std::lock_guard<std::mutex> lock(stateMtx_);
+    curState_ = state;
+}
+
+DScreenState DScreen::GetState() const
+{
+    return curState_;
+}
+
+uint64_t DScreen::GetScreenId() const
+{
+    return screenId_;
+}
+
+std::string DScreen::GetDHId() const
+{
+    return dhId_;
+}
+
+std::string DScreen::GetDevId() const
+{
+    return devId_;
+}
+} // namespace V2_0
+} // namespace DistributedHardware
+} // namespace OHOS

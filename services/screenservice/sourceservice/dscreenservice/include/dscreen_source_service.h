@@ -19,7 +19,8 @@
 #include "system_ability.h"
 #include "ipc_object_stub.h"
 
-#include "dscreen_manager.h"
+#include "1.0/include/dscreen_manager.h"
+
 #include "dscreen_source_stub.h"
 #include "idscreen_source_callback.h"
 
@@ -48,6 +49,7 @@ protected:
     DISALLOW_COPY_AND_MOVE(DScreenSourceService);
 
 private:
+    std::string version_ = "2.0";
     bool Init();
 
     bool registerToService_ = false;
