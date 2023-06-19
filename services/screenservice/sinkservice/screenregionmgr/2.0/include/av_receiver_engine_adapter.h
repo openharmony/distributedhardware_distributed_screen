@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_AV_TRANSPORT_SENDER_ADAPTER_H
-#define OHOS_AV_TRANSPORT_SENDER_ADAPTER_H
+#ifndef OHOS_AV_TRANSPORT_RECEIVER_ADAPTER_H
+#define OHOS_AV_TRANSPORT_RECEIVER_ADAPTER_H
 
 #include <condition_variable>
 #include <mutex>
