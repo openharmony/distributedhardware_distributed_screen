@@ -21,7 +21,7 @@
 #include "single_instance.h"
 #include "screen_manager.h"
 
-#include "av_sender_engine_adpater.h"
+#include "av_sender_engine_adapter.h"
 #include "dscreen.h"
 #include "dscreen_maprelation.h"
 #include "idscreen_sink.h"

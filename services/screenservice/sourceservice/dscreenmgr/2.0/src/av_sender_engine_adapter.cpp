@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "2.0/include/av_sender_engine_adpater.h"
+#include "2.0/include/av_sender_engine_adapter.h"
 
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
@@ -247,6 +247,7 @@ int32_t AVTransSenderAdapter::OnSenderEvent(const AVTransEvent& event)
             break;
         default:
             DHLOGE("Invalid event type.");
+            break;
     }
     return DH_AVT_SUCCESS;
 }

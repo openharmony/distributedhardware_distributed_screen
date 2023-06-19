@@ -17,7 +17,7 @@
 
 #include "avcodec_info.h"
 #include "avcodec_list.h"
-#include "2.0/include/av_sender_engine_adpater.h"
+#include "2.0/include/av_sender_engine_adapter.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"

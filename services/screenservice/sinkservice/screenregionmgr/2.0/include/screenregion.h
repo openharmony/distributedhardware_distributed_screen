@@ -20,7 +20,7 @@
 
 #include "surface.h"
 
-#include "2.0/include/av_receiver_engine_adpater.h"
+#include "2.0/include/av_receiver_engine_adapter.h"
 #include "distributed_hardware_fwk_kit.h"
 #include "dscreen_maprelation.h"
 #include "screen_client_common.h"
