@@ -365,22 +365,34 @@ int32_t DScreen::StopSenderEngine()
     return DH_SUCCESS;
 }
 
-void DScreen::Judgment()
+void DScreen::ChooseParameter(std::string &codecType, std::string &pixelFormat)
 {
-    DHLOGI("SetUp, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
-    if (senderAdapter_ == nullptr) {
-        DHLOGE("av transport sender adapter is null.");
-        return ERR_DH_AV_TRANS_NULL_VALUE;
+    if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H265) {
+        codecType = MINE_VIDEO_H265;
+    } else if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H264) {
+        codecType = MINE_VIDEO_H264;
+    } else {
+        codecType = MINE_VIDEO_RAW;
     }
-    if (videoParam_ == nullptr) {
-        DHLOGE("videoParam is nullptr.");
-        return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
+    if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_YUVI420) {
+        pixelFormat = VIDEO_FORMAT_YUVI420;
+    } else if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_NV12) {
+        pixelFormat = VIDEO_FORMAT_NV12;
+    } else if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_NV21) {
+        pixelFormat = VIDEO_FORMAT_NV21;
+    } else {
+        pixelFormat = VIDEO_FORMAT_RGBA8888;
     }
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_CODEC_TYPE, codecType);
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_PIXEL_FORMAT, pixelFormat);
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_WIDTH, std::to_string(videoParam_->GetVideoWidth()));
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_HEIGHT, std::to_string(videoParam_->GetVideoHeight()));
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_FRAME_RATE, std::to_string(videoParam_->GetFps()));
+    senderAdapter_->SetParameter(AVTransTag::VIDEO_BIT_RATE, std::to_string(BIT_RATE));
 }
 
 int32_t DScreen::SetUp()
 {
-    Judgment()
     auto mapRelation = ScreenMgrAdapter::GetInstance().GetMapRelation(screenId_);
     if (mapRelation == nullptr) {
         DHLOGE("get map relation failed.");
@@ -403,31 +415,9 @@ int32_t DScreen::SetUp()
         DHLOGE("set message to remote engine failed.");
         return ret;
     }
-
     std::string codecType;
-    if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H265) {
-        codecType = MINE_VIDEO_H265;
-    } else if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H264) {
-        codecType = MINE_VIDEO_H264;
-    } else {
-        codecType = MINE_VIDEO_RAW;
-    }
     std::string pixelFormat;
-    if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_YUVI420) {
-        pixelFormat = VIDEO_FORMAT_YUVI420;
-    } else if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_NV12) {
-        pixelFormat = VIDEO_FORMAT_NV12;
-    } else if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_NV21) {
-        pixelFormat = VIDEO_FORMAT_NV21;
-    } else {
-        pixelFormat = VIDEO_FORMAT_RGBA8888;
-    }
-    senderAdapter_->SetParameter(AVTransTag::VIDEO_CODEC_TYPE, codecType);
-    senderAdapter_->SetParameter(AVTransTag::VIDEO_PIXEL_FORMAT, pixelFormat);
-    senderAdapter_->SetParameter(AVTransTag::VIDEO_WIDTH, std::to_string(videoParam_->GetVideoWidth()));
-    senderAdapter_->SetParameter(AVTransTag::VIDEO_HEIGHT, std::to_string(videoParam_->GetVideoHeight()));
-    senderAdapter_->SetParameter(AVTransTag::VIDEO_FRAME_RATE, std::to_string(videoParam_->GetFps()));
-    senderAdapter_->SetParameter(AVTransTag::VIDEO_BIT_RATE, std::to_string(BIT_RATE));
+    ChooseParameter(codecType, pixelFormat);
     return senderAdapter_->SetParameter(AVTransTag::ENGINE_READY, OWNER_NAME_D_SCREEN);
 }
 

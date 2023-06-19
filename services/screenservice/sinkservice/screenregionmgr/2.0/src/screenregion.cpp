@@ -259,39 +259,8 @@ void ScreenRegion::OnEngineMessage(const std::shared_ptr<AVTransMessage> &messag
     }
 }
 
-std::sptr<OHOS::SurfaceBuffer> ScreenRegion::GetWSBuffer()
+void ScreenRegion::GetWSBuffer(sptr<OHOS>::SurfaceBuffer &wsBuffer, const std::shared_ptr<AVTransBuffer> &buffer)
 {
-    if (windowSurface_ == nullptr) {
-        DHLOGE("window surface is nullptr.");
-        return;
-    }
-    sptr<OHOS::SurfaceBuffer> wsBuffer = nullptr;
-    int32_t releaseFence = -1;
-    OHOS::BufferRequestConfig requestConfig = {
-        .width = videoParam_->GetVideoWidth(),
-        .height = videoParam_->GetVideoHeight(),
-        .strideAlignment = STRIDE_ALIGNMENT,
-        .format = PIXEL_FMT_YCRCB_420_SP,
-        .usage = HBM_USE_CPU_READ | HBM_USE_CPU_WRITE | HBM_USE_MEM_DMA,
-    };
-    SurfaceError surfaceErr = windowSurface_->RequestBuffer(wsBuffer, releaseFence, requestConfig);
-    if (surfaceErr != SURFACE_ERROR_OK || wsBuffer == nullptr) {
-        DHLOGE("surface request buffer failed, surfaceErr: %d.", surfaceErr);
-        windowSurface_->CancelBuffer(wsBuffer);
-        return;
-    }
-    return wsBuffer;
-}
-
-void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer)
-{
-    ++frameNumber_;
-    DHLOGI("OnEngineDataDone enter");
-    if (buffer == nullptr) {
-        DHLOGE("received video buffer data is nullptr.");
-        return;
-    }
-    sptr<OHOS::SurfaceBuffer> wsBuffer = GetWSBuffer();
     auto bufferData = buffer->GetBufferData(0);
     auto bufferAddr = bufferData->GetAddress();
     auto wsBufAddr = static_cast<uint8_t*>(wsBuffer->GetVirAddr());
@@ -327,7 +296,37 @@ void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer
         dstOffset += videoParam_->GetVideoWidth();
         srcOffset += alignedWidth;
     }
+}
 
+void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer)
+{
+    ++frameNumber_;
+    DHLOGI("OnEngineDataDone enter");
+    if (buffer == nullptr) {
+        DHLOGE("received video buffer data is nullptr.");
+        return;
+    }
+    if (windowSurface_ == nullptr) {
+        DHLOGE("window surface is nullptr.");
+        return;
+    }
+    sptr<OHOS::SurfaceBuffer> wsBuffer = nullptr;
+    int32_t releaseFence = -1;
+    OHOS::BufferRequestConfig requestConfig = {
+        .width = videoParam_->GetVideoWidth(),
+        .height = videoParam_->GetVideoHeight(),
+        .strideAlignment = STRIDE_ALIGNMENT,
+        .format = PIXEL_FMT_YCRCB_420_SP,
+        .usage = HBM_USE_CPU_READ | HBM_USE_CPU_WRITE | HBM_USE_MEM_DMA,
+    };
+    SurfaceError surfaceErr = windowSurface_->RequestBuffer(wsBuffer, releaseFence, requestConfig);
+    if (surfaceErr != SURFACE_ERROR_OK || wsBuffer == nullptr) {
+        DHLOGE("surface request buffer failed, surfaceErr: %d.", surfaceErr);
+        windowSurface_->CancelBuffer(wsBuffer);
+        return;
+    }
+    SetWSBuffer(wsBuffer,buffer);
+    
     BufferFlushConfig flushConfig = { {0, 0, wsBuffer->GetWidth(), wsBuffer->GetHeight()}, 0};
     surfaceErr = windowSurface_->FlushBuffer(wsBuffer, -1, flushConfig);
     if (surfaceErr != SURFACE_ERROR_OK) {

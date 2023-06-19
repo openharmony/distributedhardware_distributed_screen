@@ -38,7 +38,7 @@ public:
     void OnEngineEvent(DScreenEventType event, const std::string &content) override;
     void OnEngineMessage(const std::shared_ptr<AVTransMessage> &message) override;
     void OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer) override;
-    std::sptr<OHOS::SurfaceBuffer> GetWSBuffer();
+    void GetWSBuffer(sptr<OHOS>::SurfaceBuffer &wsBuffer, const std::shared_ptr<AVTransBuffer> &buffer);
 
     int32_t Release();
     int32_t InitReceiverEngine(IAVEngineProvider *providerPtr);
