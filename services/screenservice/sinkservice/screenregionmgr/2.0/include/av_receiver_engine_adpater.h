@@ -54,7 +54,7 @@ public:
     // interfaces from IAVReceiverEngineCallback
     int32_t OnReceiverEvent(const AVTransEvent& event) override;
     int32_t OnMessageReceived(const std::shared_ptr<AVTransMessage> &message) override;
-    int32_t OnDataAvaliable(const std::shared_ptr<AVTransBuffer> &buffer) override;
+    int32_t OnDataAvailable(const std::shared_ptr<AVTransBuffer> &buffer) override;
 
 private:
     std::atomic<bool> initialized_ {false};

@@ -21,6 +21,7 @@ config("module_private_config") {
   visibility = [ ":*" ]
 
   include_dirs = [
+    "${av_transport_path}/common/include",
     "//third_party/json/include",
     "${fwk_common_path}/utils/include",
     "${fwk_common_path}/log/include",
