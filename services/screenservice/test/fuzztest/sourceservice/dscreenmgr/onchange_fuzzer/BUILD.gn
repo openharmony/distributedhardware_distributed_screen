@@ -23,6 +23,7 @@ ohos_fuzztest("OnChangeFuzzTest") {
   fuzz_config_file = "${services_path}/screenservice/test/fuzztest/sourceservice/dscreenmgr/onchange_fuzzer"
 
   include_dirs = [
+    "${av_transport_path}/common/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "${fwk_common_path}/utils/include",
     "${windowmanager_path}/interfaces/innerkits/wm",
