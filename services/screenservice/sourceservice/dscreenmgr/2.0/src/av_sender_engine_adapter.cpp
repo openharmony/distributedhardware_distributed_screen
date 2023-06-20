@@ -247,7 +247,6 @@ int32_t AVTransSenderAdapter::OnSenderEvent(const AVTransEvent& event)
             break;
         default:
             DHLOGE("Invalid event type.");
-            break;
     }
     return DH_AVT_SUCCESS;
 }
