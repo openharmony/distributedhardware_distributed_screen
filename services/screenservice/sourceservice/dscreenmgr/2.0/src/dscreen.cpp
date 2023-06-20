@@ -393,6 +393,15 @@ void DScreen::ChooseParameter(std::string &codecType, std::string &pixelFormat)
 
 int32_t DScreen::SetUp()
 {
+    DHLOGI("SetUp, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    if (senderAdapter_ == nullptr) {
+        DHLOGE("av transport sender adapter is null.");
+        return ERR_DH_AV_TRANS_NULL_VALUE;
+    }
+    if (videoParam_ == nullptr) {
+        DHLOGE("videoParam is nullptr.");
+        return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
+    }
     auto mapRelation = ScreenMgrAdapter::GetInstance().GetMapRelation(screenId_);
     if (mapRelation == nullptr) {
         DHLOGE("get map relation failed.");
