@@ -139,7 +139,7 @@ int32_t ScreenDataChannelImpl::CloseSession()
     }
     sessionId_ = 0;
     if (jpegSessionFlag_ == true && jpegSessionId_ != 0) {
-        ret = SoftbusAdapter::GetInstance().CloseSoftbusSession(sessionId_);
+        ret = SoftbusAdapter::GetInstance().CloseSoftbusSession(jpegSessionId_);
         if (ret != DH_SUCCESS) {
             DHLOGE("%s: Close jpeg session failed ret: %" PRId32, LOG_TAG, ret);
             return ret;
