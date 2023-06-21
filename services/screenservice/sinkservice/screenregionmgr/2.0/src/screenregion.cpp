@@ -259,7 +259,7 @@ void ScreenRegion::OnEngineMessage(const std::shared_ptr<AVTransMessage> &messag
     }
 }
 
-void ScreenRegion::GetWSBuffer(sptr<OHOS>::SurfaceBuffer &wsBuffer, const std::shared_ptr<AVTransBuffer> &buffer)
+void ScreenRegion::GetWSBuffer(sptr<OHOS::SurfaceBuffer> &wsBuffer, const std::shared_ptr<AVTransBuffer> &buffer)
 {
     auto bufferData = buffer->GetBufferData(0);
     auto bufferAddr = bufferData->GetAddress();
