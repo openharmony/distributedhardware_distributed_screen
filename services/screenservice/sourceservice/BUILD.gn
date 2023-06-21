@@ -21,8 +21,6 @@ ohos_shared_library("distributed_screen_source") {
     "//third_party/json/include",
     "//third_party/libjpeg-turbo",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
-    "${av_transport_path}/interface",
-    "${av_transport_path}/common/include",
     "${fwk_common_path}/utils/include",
   ]
 
@@ -54,9 +52,6 @@ ohos_shared_library("distributed_screen_source") {
     "${services_path}/common/utils/src/video_param.cpp",
     "./dscreenmgr/1.0/src/dscreen.cpp",
     "./dscreenmgr/1.0/src/dscreen_manager.cpp",
-    "./dscreenmgr/2.0/src/av_sender_engine_adapter.cpp",
-    "./dscreenmgr/2.0/src/dscreen.cpp",
-    "./dscreenmgr/2.0/src/dscreen_manager.cpp",
     "./dscreenmgr/common/src/screen_manager_adapter.cpp",
     "./dscreenservice/src/callback/dscreen_source_callback_proxy.cpp",
     "./dscreenservice/src/dscreen_source_service.cpp",
@@ -64,7 +59,6 @@ ohos_shared_library("distributed_screen_source") {
   ]
 
   deps = [
-    "${av_transport_path}/av_trans_engine/av_sender:distributed_av_sender",
     "${common_path}:distributed_screen_utils",
     "${graphicstandard_path}/frameworks/surface:surface",
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",

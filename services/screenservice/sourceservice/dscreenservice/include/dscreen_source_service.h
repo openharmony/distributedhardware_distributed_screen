@@ -20,7 +20,6 @@
 #include "ipc_object_stub.h"
 
 #include "1.0/include/dscreen_manager.h"
-#include "2.0/include/dscreen_manager.h"
 #include "dscreen_source_stub.h"
 #include "idscreen_source_callback.h"
 
