@@ -61,7 +61,6 @@ ohos_shared_library("distributed_screen_source") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${graphicstandard_path}/frameworks/surface:surface",
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
   ]
 
