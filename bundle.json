@@ -45,7 +45,7 @@
             ],
             "third_party":[
                 "json",
-                "libjpeg_turbo"
+                "turbojpeg_static"
             ]
         },
         "build":{
