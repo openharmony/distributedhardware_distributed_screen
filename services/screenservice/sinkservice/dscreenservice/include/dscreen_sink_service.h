@@ -21,6 +21,7 @@
 
 #include "dscreen_sink_stub.h"
 #include "1.0/include/screenregionmgr.h"
+#include "2.0/include/screenregionmgr.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -43,7 +44,7 @@ protected:
     DISALLOW_COPY_AND_MOVE(DScreenSinkService);
 
 private:
-    std::string version_ = "3.0";
+    std::string version_ = "2.0";
     bool registerToService_ = false;
 
     bool Init();

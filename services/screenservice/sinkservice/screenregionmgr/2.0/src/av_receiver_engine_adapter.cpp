@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "2.0/include/av_receiver_engine_adpater.h"
+#include "2.0/include/av_receiver_engine_adapter.h"
 
 #include <cinttypes>
 #include <dlfcn.h>
@@ -151,7 +151,7 @@ int32_t AVTransReceiverAdapter::OnMessageReceived(const std::shared_ptr<AVTransM
     return DH_AVT_SUCCESS;
 }
 
-int32_t AVTransReceiverAdapter::OnDataAvailable(const std::shared_ptr<AVTransBuffer> &buffer)
+int32_t AVTransReceiverAdapter::OnDataAvaliable(const std::shared_ptr<AVTransBuffer> &buffer)
 {
     if (adapterCallback_ != nullptr) {
         adapterCallback_->OnEngineDataDone(buffer);

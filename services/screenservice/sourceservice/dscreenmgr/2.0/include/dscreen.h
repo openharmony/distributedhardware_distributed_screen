@@ -25,7 +25,7 @@
 #include "iconsumer_surface.h"
 #include "dscreen_constants.h"
 #include "video_param.h"
-#include "av_sender_engine_adpater.h"
+#include "av_sender_engine_adapter.h"
 
 namespace OHOS {
 namespace DistributedHardware {
