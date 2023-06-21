@@ -20,7 +20,6 @@ ohos_shared_library("distributed_screen_source") {
   include_dirs = [
     "//third_party/json/include",
     "//third_party/libjpeg-turbo",
-    "//utils/system/safwk/native/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "${av_transport_path}/interface",
     "${av_transport_path}/common/include",
@@ -45,10 +44,6 @@ ohos_shared_library("distributed_screen_source") {
     "${services_path}/screentransport/screensourcetrans/include",
     "${services_path}/common/imageJpeg/include",
     "${services_path}/common/decision_center/include",
-    "//drivers/peripheral/display/interfaces/include",
-    "//drivers/peripheral/base",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_base/include",
-    "//foundation/graphic/graphic_2d/utils/buffer_handle/export",
   ]
 
   sources = [
