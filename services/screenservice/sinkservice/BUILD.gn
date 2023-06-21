@@ -52,9 +52,9 @@ ohos_shared_library("distributed_screen_sink") {
     "./dscreenservice/src/dscreen_sink_stub.cpp",
     "./screenregionmgr/1.0/src/screenregion.cpp",
     "./screenregionmgr/1.0/src/screenregionmgr.cpp",
+    "./screenregionmgr/2.0/src/av_receiver_engine_adapter.cpp",
     "./screenregionmgr/2.0/src/screenregion.cpp",
     "./screenregionmgr/2.0/src/screenregionmgr.cpp",
-    "./screenregionmgr/2.0/src/av_receiver_engine_adapter.cpp",
   ]
 
   deps = [
