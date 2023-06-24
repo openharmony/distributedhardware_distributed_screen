@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "2.0/include/av_receiver_engine_adpater.h"
+#include "2.0/include/av_receiver_engine_adapter.h"
 
 #include <cinttypes>
 #include <dlfcn.h>

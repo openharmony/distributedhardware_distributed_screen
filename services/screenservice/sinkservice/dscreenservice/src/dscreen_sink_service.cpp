@@ -14,8 +14,6 @@
  */
 
 #include "dscreen_sink_service.h"
-#include "1.0/include/screenregionmgr.h"
-
 #include "if_system_ability_manager.h"
 #include "ipc_skeleton.h"
 #include "ipc_types.h"

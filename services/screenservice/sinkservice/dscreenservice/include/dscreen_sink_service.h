@@ -43,7 +43,7 @@ protected:
     DISALLOW_COPY_AND_MOVE(DScreenSinkService);
 
 private:
-    std::string version_ = "3.0";
+    std::string version_ = "2.0";
     bool registerToService_ = false;
 
     bool Init();

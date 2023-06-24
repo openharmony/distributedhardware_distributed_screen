@@ -55,6 +55,7 @@ ohos_shared_library("distributed_screen_sink") {
 
   deps = [
     "${common_path}:distributed_screen_utils",
+    "${graphicstandard_path}/frameworks/surface:surface",
     "${services_path}/screenclient:distributed_screen_client",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
   ]

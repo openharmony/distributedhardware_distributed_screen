@@ -259,7 +259,7 @@ void ScreenRegion::OnEngineMessage(const std::shared_ptr<AVTransMessage> &messag
     }
 }
 
-void ScreenRegion::GetWSBuffer(sptr<OHOS>::SurfaceBuffer &wsBuffer, const std::shared_ptr<AVTransBuffer> &buffer)
+void ScreenRegion::GetWSBuffer(sptr<OHOS::SurfaceBuffer> &wsBuffer, const std::shared_ptr<AVTransBuffer> &buffer)
 {
     auto bufferData = buffer->GetBufferData(0);
     auto bufferAddr = bufferData->GetAddress();
@@ -325,7 +325,7 @@ void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer
         windowSurface_->CancelBuffer(wsBuffer);
         return;
     }
-    SetWSBuffer(wsBuffer, buffer);
+    GetWSBuffer(wsBuffer, buffer);
     
     BufferFlushConfig flushConfig = { {0, 0, wsBuffer->GetWidth(), wsBuffer->GetHeight()}, 0};
     surfaceErr = windowSurface_->FlushBuffer(wsBuffer, -1, flushConfig);
