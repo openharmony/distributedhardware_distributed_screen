@@ -131,10 +131,12 @@ std::vector<DHItem> DScreenHandler::Query()
         attrJson[KEY_SCREEN_WIDTH] = screenWidth;
         attrJson[KEY_SCREEN_HEIGHT] = screenHeight;
         attrJson[KEY_CODECTYPE] = QueryCodecInfo();
-        std::string videoEncoders = HiStreamerQueryTool::GetInstance().QueryHiStreamerPluginInfo(HISTREAM_PLUGIN_TYPE::VIDEO_ENCODER);
+        std::string videoEncoders =
+            HiStreamerQueryTool::GetInstance().QueryHiStreamerPluginInfo(HISTREAM_PLUGIN_TYPE::VIDEO_ENCODER);
         DHLOGI("DScreen QueryVideoEncoderAbility info: %s", videoEncoders.c_str());
         attrJson[KEY_HISTREAMER_VIDEO_ENCODER] = videoEncoders;
-        std::string videoDecoders = HiStreamerQueryTool::GetInstance().QueryHiStreamerPluginInfo(HISTREAM_PLUGIN_TYPE::VIDEO_DECODER);
+        std::string videoDecoders =
+            HiStreamerQueryTool::GetInstance().QueryHiStreamerPluginInfo(HISTREAM_PLUGIN_TYPE::VIDEO_DECODER);
         DHLOGI("DScreen QueryVideoDecoderAbility info: %s", videoDecoders.c_str());
         attrJson[KEY_HISTREAMER_VIDEO_DECODER] = videoDecoders;
 
