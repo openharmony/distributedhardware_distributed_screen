@@ -1,37 +1,37 @@
 {
-    "name":"@ohos/distributed_screen",
-    "description":"distributed hardware screen",
-    "version":"3.1",
-    "author":{},
-    "repository":"https://gitee.com/openharmony/distributedhardware_distributed_screen",
-    "license":"Apache License 2.0",
-    "publishAs":"code-segment",
-    "segment":{
-        "destPath":"foundation/distributedhardware/distributed_screen"
+    "name": "@ohos/distributed_screen",
+    "description": "distributed hardware screen",
+    "version": "3.1",
+    "author": {},
+    "repository": "https://gitee.com/openharmony/distributedhardware_distributed_screen",
+    "license": "Apache License 2.0",
+    "publishAs": "code-segment",
+    "segment": {
+        "destPath": "foundation/distributedhardware/distributed_screen"
     },
-    "dirs":{},
-    "scripts":{},
-    "component":{
-        "name":"distributed_screen",
-        "subsystem":"distributedhardware",
-        "syscap":[
+    "dirs": {},
+    "scripts": {},
+    "component": {
+        "name": "distributed_screen",
+        "subsystem": "distributedhardware",
+        "syscap": [
             "SystemCapability.DistributedHardware.DistributedScreen"
         ],
-        "features":[],
-        "adapted_system_type":[
+        "features": [],
+        "adapted_system_type": [
             "standard"
         ],
-        "rom":"5120KB",
-        "ram":"33580KB",
+        "rom": "5120KB",
+        "ram": "33580KB",
         "hisysevent_config": [
             "//foundation/distributedhardware/distributed_screen/hisysevent.yaml"
         ],
-        "deps":{
-            "components":[
+        "deps": {
+            "components": [
                 "dsoftbus",
                 "hisysevent_native",
                 "ipc",
-                "hiviewdfx_hilog_native",
+                "hilog",
                 "input",
                 "graphic_standard",
                 "samgr",
@@ -43,13 +43,13 @@
                 "multimedia_image_framework",
                 "distributed_hardware_fwk"
             ],
-            "third_party":[
+            "third_party": [
                 "json",
                 "libjpeg_turbo"
             ]
         },
-        "build":{
-            "sub_component":[
+        "build": {
+            "sub_component": [
                 "//foundation/distributedhardware/distributed_screen/common:distributed_screen_utils",
                 "//foundation/distributedhardware/distributed_screen/interfaces/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
                 "//foundation/distributedhardware/distributed_screen/interfaces/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
@@ -62,8 +62,7 @@
                 "//foundation/distributedhardware/distributed_screen/sa_profile:dscreen_sa_profile",
                 "//foundation/distributedhardware/distributed_screen/sa_profile:dscreen.cfg"
             ],
-            "inner_kits":[
-                {
+            "inner_kits": [{
                     "type": "so",
                     "name": "//foundation/distributedhardware/distributed_screen/interfaces/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
                     "header": {
@@ -84,7 +83,7 @@
                     }
                 }
             ],
-            "test":[
+            "test": [
                 "//foundation/distributedhardware/distributed_screen/services/screendemo:distributedScreenTest",
                 "//foundation/distributedhardware/distributed_screen/common/test/unittest:ScreenCommonTest",
                 "//foundation/distributedhardware/distributed_screen/screenhandler/test/unittest/screenhandler:DscreenHandlerTest",
