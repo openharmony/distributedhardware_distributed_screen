@@ -77,9 +77,9 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "graphic_standard:surface",
+    "hilog:libhilog",
     "hisysevent_native:libhisysevent",
     "hitrace_native:hitrace_meter",
-    "hiviewdfx_hilog_native:libhilog",
     "player_framework:media_client",
   ]
 

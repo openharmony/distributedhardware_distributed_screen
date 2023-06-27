@@ -53,7 +53,7 @@ ohos_executable("distributedScreenTest") {
     "dsoftbus:softbus_client",
     "graphic_standard:librender_service_client",
     "graphic_standard:surface",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "player_framework:media_client",
     "samgr:samgr_proxy",
     "window_manager:libdm",
