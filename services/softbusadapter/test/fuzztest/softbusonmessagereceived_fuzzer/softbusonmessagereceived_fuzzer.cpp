@@ -17,7 +17,16 @@
 
 #include <iostream>
 
+#include "accesstoken_kit.h"
+#include "dscreen_constants.h"
+#include "dscreen_errcode.h"
+#include "dscreen_util.h"
+#include "isoftbus_listener.h"
+#include "nativetoken_kit.h"
 #include "softbus_adapter.h"
+#include "softbus_bus_center.h"
+#include "softbus_common.h"
+#include "token_setproc.h"
 
 namespace OHOS {
 namespace DistributedHardware {

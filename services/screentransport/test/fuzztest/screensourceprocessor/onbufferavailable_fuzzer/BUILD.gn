@@ -21,14 +21,12 @@ import(
 ohos_fuzztest("OnBufferAvailableFuzzTest") {
   module_out_path = "distributed_screen/imagesourceencoder"
 
-  fuzz_config_file =
-    "${services_path}/screentransport/test/fuzztest/screensourceprocessor/onbufferavailable_fuzzer"
+  fuzz_config_file = "${services_path}/screentransport/test/fuzztest/screensourceprocessor/onbufferavailable_fuzzer"
 
   include_dirs = [ "${fwk_common_path}/utils/include" ]
 
-  include_dirs += [
-    "${services_path}/screentransport/screensinkprocessor/encoder/include",
-  ]
+  include_dirs +=
+      [ "${services_path}/screentransport/screensinkprocessor/encoder/include" ]
 
   cflags = [
     "-g",

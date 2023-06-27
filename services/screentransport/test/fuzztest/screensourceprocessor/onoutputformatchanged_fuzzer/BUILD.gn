@@ -19,9 +19,8 @@ import(
 
 ##############################fuzztest##########################################
 ohos_fuzztest("OnOutputFormatChangedFuzzTest") {
-  module_out_path = "distributed_audio/softbusonbytesreceived"
-  fuzz_config_file =
-    "${services_path}/screentransport/test/fuzztest/screensourceprocessor/onoutputformatchanged_fuzzer"
+  module_out_path = "distributed_audio/imageencodercallback"
+  fuzz_config_file = "${services_path}/screentransport/test/fuzztest/screensourceprocessor/onoutputformatchanged_fuzzer"
 
   cflags = [
     "-g",
@@ -32,16 +31,31 @@ ohos_fuzztest("OnOutputFormatChangedFuzzTest") {
   sources = [ "onoutputformatchanged_fuzzer.cpp" ]
 
   include_dirs = [
+    "${common_path}/include",
+    "${services_path}/common/databuffer/include",
+    "${services_path}/common/decision_center/include",
+    "${services_path}/common/imageJpeg/include",
+    "${services_path}/common/screen_channel/include",
+    "${services_path}/common/utils/include",
+    "${services_path}/screentransport/screendatachannel/include",
+    "${services_path}/screentransport/screensinkprocessor/decoder/include",
+    "${services_path}/screentransport/screensinkprocessor/include",
+    "${services_path}/screentransport/screensinktrans/include",
+    "${services_path}/screentransport/screensourcetrans/include",
+    "${services_path}/screentransport/screensourceprocessor/include",
     "${services_path}/screentransport/screensourceprocessor/encoder/include",
+    "${services_path}/softbusadapter/include",
   ]
 
   deps = [
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
+    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
   ]
 
   external_deps = [
     "c_utils:utils",
     "ipc:ipc_core",
+    "player_framework:media_client",
   ]
 
   defines = [

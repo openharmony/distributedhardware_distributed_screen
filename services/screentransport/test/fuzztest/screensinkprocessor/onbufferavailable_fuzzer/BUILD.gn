@@ -21,12 +21,10 @@ import(
 ohos_fuzztest("OnBufferAvailableFuzzTest") {
   module_out_path = "distributed_screen/imagesinkdecoder"
 
-  fuzz_config_file =
-    "${services_path}/screentransport/test/fuzztest/screensinkprocessor/onbufferavailable_fuzzer"
+  fuzz_config_file = "${services_path}/screentransport/test/fuzztest/screensinkprocessor/onbufferavailable_fuzzer"
 
-  include_dirs += [
-    "${services_path}/screentransport/screensinkprocessor/encoder/include",
-  ]
+  include_dirs =
+      [ "${services_path}/screentransport/screensinkprocessor/encoder/include" ]
 
   cflags = [
     "-g",
@@ -37,7 +35,7 @@ ohos_fuzztest("OnBufferAvailableFuzzTest") {
 
   sources = [ "onbufferavailable_fuzzer.cpp" ]
 
- deps = [
+  deps = [
     "${common_path}:distributed_screen_utils",
     "//third_party/libjpeg-turbo:turbojpeg_static",
   ]

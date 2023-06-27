@@ -16,11 +16,10 @@ group("fuzztest") {
 
   deps = [
     "screensinkprocessor/onbufferavailable_fuzzer:fuzztest",
+    "screensourceprocessor/onbufferavailable_fuzzer:fuzztest",
     "screensourceprocessor/onerror_fuzzer:fuzztest",
     "screensourceprocessor/oninputbufferavailable_fuzzer:fuzztest",
     "screensourceprocessor/onoutputbufferavailable_fuzzer:fuzztest",
-    "screensourceprocessor/softbusonsessionclosed_fuzzer:fuzztest",
-    "screensourceprocessor/onoutputbufferavailable_fuzzer:fuzztest",
-    "screensourceprocessor/onbufferavailable_fuzzer:fuzztest",
+    "screensourceprocessor/onoutputformatchanged_fuzzer:fuzztest",
   ]
 }
