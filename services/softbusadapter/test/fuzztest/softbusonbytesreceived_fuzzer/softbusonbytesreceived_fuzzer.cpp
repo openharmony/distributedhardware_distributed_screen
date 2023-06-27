@@ -17,16 +17,15 @@
 
 #include <iostream>
 
-#include "accesstoken_kit.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_util.h"
 #include "isoftbus_listener.h"
-#include "nativetoken_kit.h"
-#include "softbus_adapter.h"
 #include "softbus_bus_center.h"
 #include "softbus_common.h"
-#include "token_setproc.h"
+#define private public
+#include "softbus_adapter.h"
+#undef private
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -36,10 +35,10 @@ void SoftbusOnBytesReceivedFuzzTest(const uint8_t* data, size_t size)
         return;
     }
     int32_t sessionId = *(reinterpret_cast<const int32_t*>(data));
-    void *data = nullptr;
+    void *adapterData = nullptr;
     uint32_t dataLen = *(reinterpret_cast<const uint32_t*>(data));
     std::shared_ptr<SoftbusAdapter> adapter = std::make_shared<SoftbusAdapter>();
-    adapter->OnBytesReceived(sessionId, data, dataLen);
+    adapter->OnBytesReceived(sessionId, adapterData, dataLen);
 }
 }
 }

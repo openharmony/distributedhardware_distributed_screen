@@ -19,6 +19,7 @@
 #include <cstdint>
 
 #include "image_source_encoder.h"
+#include "screen_source_trans.h"
 
 namespace OHOS {
 namespace DistributedHardware {

@@ -19,7 +19,7 @@ import(
 
 ##############################fuzztest##########################################
 ohos_fuzztest("SoftbusOnQosEventFuzzTest") {
-  module_out_path = "distributed_audio/softbusadapter"
+  module_out_path = "distributed_screen/softbusadapter"
   fuzz_config_file =
       "${services_path}/softbusadapter/test/fuzztest/softbusonqosevent_fuzzer"
 
@@ -32,6 +32,7 @@ ohos_fuzztest("SoftbusOnQosEventFuzzTest") {
   sources = [ "softbusonqosevent_fuzzer.cpp" ]
 
   include_dirs = [
+    "${av_transport_path}/common/include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",
     "${services_path}/common/screen_channel/include",
@@ -42,6 +43,7 @@ ohos_fuzztest("SoftbusOnQosEventFuzzTest") {
     "${services_path}/screentransport/screensourceprocessor/encoder/include",
     "${services_path}/softbusadapter/include",
   ]
+
   deps = [ "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans" ]
 
   external_deps = [

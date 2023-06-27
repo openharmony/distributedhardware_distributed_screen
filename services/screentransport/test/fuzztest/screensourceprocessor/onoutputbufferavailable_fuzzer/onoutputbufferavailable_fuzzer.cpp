@@ -20,6 +20,7 @@
 #include "avcodec_common.h"
 #include "format.h"
 #include "image_encoder_callback.h"
+#include "screen_source_trans.h"
 
 namespace OHOS {
 namespace DistributedHardware {

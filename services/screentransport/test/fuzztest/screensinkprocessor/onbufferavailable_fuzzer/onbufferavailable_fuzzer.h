@@ -14,7 +14,7 @@
  */
 
 #ifndef ONBUFFERAVAILABLE_FUZZER_H
-#define ONBUFFERAVAILABLE_FUZZER_Hs
+#define ONBUFFERAVAILABLE_FUZZER_H
 
 #define FUZZ_PROJECT_NAME "OnBufferAvailable_fuzzer"
 

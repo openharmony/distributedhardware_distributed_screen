@@ -19,7 +19,7 @@ import(
 
 ##############################fuzztest##########################################
 ohos_fuzztest("OnErrorFuzzTest") {
-  module_out_path = "distributed_audio/imageencodercallback"
+  module_out_path = "distributed_screen/imageencodercallback"
   fuzz_config_file = "${services_path}/screentransport/test/fuzztest/screensourceprocessor/onerror_fuzzer"
 
   cflags = [
@@ -31,8 +31,8 @@ ohos_fuzztest("OnErrorFuzzTest") {
   sources = [ "onerror_fuzzer.cpp" ]
 
   include_dirs = [
-    "${services_path}/screentransport/test/unittest/screentranstestutils/include",
     "${common_path}/include",
+    "${fwk_common_path}/utils/include",
     "${services_path}/common/databuffer/include",
     "${services_path}/common/decision_center/include",
     "${services_path}/common/imageJpeg/include",
@@ -55,6 +55,9 @@ ohos_fuzztest("OnErrorFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
+    "graphic_standard:surface",
+    "graphic_standard:sync_fence",
     "ipc:ipc_core",
     "player_framework:media_client",
   ]

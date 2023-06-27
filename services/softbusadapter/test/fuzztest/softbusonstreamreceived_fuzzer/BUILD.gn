@@ -19,7 +19,7 @@ import(
 
 ##############################fuzztest##########################################
 ohos_fuzztest("SoftbusOnStreamReceivedFuzzTest") {
-  module_out_path = "distributed_audio/softbusadapter"
+  module_out_path = "distributed_screen/softbusadapter"
   fuzz_config_file = "${services_path}/softbusadapter/test/fuzztest/softbusonstreamreceived_fuzzer"
 
   cflags = [
@@ -31,6 +31,7 @@ ohos_fuzztest("SoftbusOnStreamReceivedFuzzTest") {
   sources = [ "softbusonstreamreceived_fuzzer.cpp" ]
 
   include_dirs = [
+    "${av_transport_path}/common/include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",
     "${services_path}/common/screen_channel/include",

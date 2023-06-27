@@ -18,7 +18,16 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "avcodec_common.h"
+#include "dscreen_constants.h"
+#include "dscreen_errcode.h"
+#include "format.h"
+#include "iimage_source_processor_listener.h"
+#include "screen_sink_trans.h"
 #include "image_sink_decoder.h"
+#include "image_source_encoder.h"
+#include "image_encoder_callback.h"
+#include "iscreen_channel_listener.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -29,7 +38,7 @@ void OnBufferAvailableFuzzTest(const uint8_t* data, size_t size)
     }
     std::shared_ptr<IImageSinkProcessorListener> listener = std::make_shared<ScreenSinkTrans>();
     std::shared_ptr<ImageSinkDecoder> decoder = std::make_shared<ImageSinkDecoder>(listener);
-    std::shared_ptr<ConsumerBufferListener> bufferListen = std::make_shared<ConsumerBufferListener>(decoder);
+    std::shared_ptr<ConsumBufferListener> bufferListen = std::make_shared<ConsumBufferListener>(decoder);
     bufferListen->OnBufferAvailable();
 }
 }

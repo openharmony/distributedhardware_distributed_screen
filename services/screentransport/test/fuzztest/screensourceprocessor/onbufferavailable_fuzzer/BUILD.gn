@@ -23,10 +23,23 @@ ohos_fuzztest("OnBufferAvailableFuzzTest") {
 
   fuzz_config_file = "${services_path}/screentransport/test/fuzztest/screensourceprocessor/onbufferavailable_fuzzer"
 
-  include_dirs = [ "${fwk_common_path}/utils/include" ]
-
-  include_dirs +=
-      [ "${services_path}/screentransport/screensinkprocessor/encoder/include" ]
+  include_dirs = [
+    "${common_path}/include",
+    "${fwk_common_path}/utils/include",
+    "${services_path}/common/databuffer/include",
+    "${services_path}/common/decision_center/include",
+    "${services_path}/common/imageJpeg/include",
+    "${services_path}/common/screen_channel/include",
+    "${services_path}/common/utils/include",
+    "${services_path}/screentransport/screendatachannel/include",
+    "${services_path}/screentransport/screensinkprocessor/decoder/include",
+    "${services_path}/screentransport/screensinkprocessor/include",
+    "${services_path}/screentransport/screensinktrans/include",
+    "${services_path}/screentransport/screensourcetrans/include",
+    "${services_path}/screentransport/screensourceprocessor/include",
+    "${services_path}/screentransport/screensourceprocessor/encoder/include",
+    "${services_path}/softbusadapter/include",
+  ]
 
   cflags = [
     "-g",
@@ -38,8 +51,8 @@ ohos_fuzztest("OnBufferAvailableFuzzTest") {
   sources = [ "onbufferavailable_fuzzer.cpp" ]
 
   deps = [
-    "${common_path}:distributed_screen_utils",
-    "//third_party/libjpeg-turbo:turbojpeg_static",
+    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
+    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
   ]
 
   defines = [
@@ -50,8 +63,11 @@ ohos_fuzztest("OnBufferAvailableFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
+    "graphic_standard:surface",
+    "graphic_standard:sync_fence",
     "ipc:ipc_core",
-    "samgr:samgr_proxy",
+    "player_framework:media_client",
   ]
 }
 
