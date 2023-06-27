@@ -32,14 +32,14 @@ namespace OHOS {
 namespace DistributedHardware {
 void OnOutputFormatChangedFuzzTest(const uint8_t* data, size_t size)
 {
-    if ((data == nullptr) || (size < (sizeof(uint32_t)))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
     std::shared_ptr<IImageSourceProcessorListener> listener = std::make_shared<ScreenSourceTrans>();
     std::shared_ptr<ImageSourceEncoder> encoder = std::make_shared<ImageSourceEncoder>(listener);
     std::shared_ptr<ImageEncoderCallback> encoderCallback = std::make_shared<ImageEncoderCallback>(encoder);
 
-    Media::Format format = *(reinterpret_cast<const Media::Format*>(data));
+    Media::Format format;
     encoderCallback->OnOutputFormatChanged(format);
 }
 }

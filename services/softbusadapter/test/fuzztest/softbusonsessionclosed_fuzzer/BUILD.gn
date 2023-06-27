@@ -14,8 +14,7 @@
 #####################hydra-fuzz###################
 import("//build/config/features.gni")
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../../../distributedscreen.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("SoftbusOnSessionClosedFuzzTest") {
@@ -42,6 +41,7 @@ ohos_fuzztest("SoftbusOnSessionClosedFuzzTest") {
     "${services_path}/screentransport/screensourceprocessor/encoder/include",
     "${services_path}/softbusadapter/include",
   ]
+
   deps = [ "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans" ]
 
   external_deps = [

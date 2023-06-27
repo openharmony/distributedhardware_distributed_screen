@@ -14,8 +14,7 @@
 #####################hydra-fuzz###################
 import("//build/config/features.gni")
 import("//build/test.gni")
-import(
-    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
+import("../../../../../distributedscreen.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("SoftbusOnBytesReceivedFuzzTest") {
@@ -49,6 +48,7 @@ ohos_fuzztest("SoftbusOnBytesReceivedFuzzTest") {
     "c_utils:utils",
     "dsoftbus:softbus_client",
   ]
+
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"SoftbusOnBytesReceivedFuzzTest\"",

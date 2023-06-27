@@ -33,7 +33,7 @@ namespace OHOS {
 namespace DistributedHardware {
 void OnBufferAvailableFuzzTest(const uint8_t* data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
     std::shared_ptr<IImageSinkProcessorListener> listener = std::make_shared<ScreenSinkTrans>();
