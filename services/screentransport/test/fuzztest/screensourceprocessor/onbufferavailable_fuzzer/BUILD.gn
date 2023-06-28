@@ -1,0 +1,78 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#####################hydra-fuzz###################
+import("//build/config/features.gni")
+import("//build/test.gni")
+import("../../../../../../distributedscreen.gni")
+
+##############################fuzztest##########################################
+ohos_fuzztest("OnBufferAvailableFuzzTest") {
+  module_out_path = "distributed_screen/imagesourceencoder"
+
+  fuzz_config_file = "${services_path}/screentransport/test/fuzztest/screensourceprocessor/onbufferavailable_fuzzer"
+
+  include_dirs = [
+    "${common_path}/include",
+    "${fwk_common_path}/utils/include",
+    "${services_path}/common/databuffer/include",
+    "${services_path}/common/decision_center/include",
+    "${services_path}/common/imageJpeg/include",
+    "${services_path}/common/screen_channel/include",
+    "${services_path}/common/utils/include",
+    "${services_path}/screentransport/screendatachannel/include",
+    "${services_path}/screentransport/screensinkprocessor/decoder/include",
+    "${services_path}/screentransport/screensinkprocessor/include",
+    "${services_path}/screentransport/screensinktrans/include",
+    "${services_path}/screentransport/screensourcetrans/include",
+    "${services_path}/screentransport/screensourceprocessor/include",
+    "${services_path}/screentransport/screensourceprocessor/encoder/include",
+    "${services_path}/softbusadapter/include",
+  ]
+
+  cflags = [
+    "-g",
+    "-O0",
+    "-Wno-unused-variable",
+    "-fno-omit-frame-pointer",
+  ]
+
+  sources = [ "onbufferavailable_fuzzer.cpp" ]
+
+  deps = [
+    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
+    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
+  ]
+
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"HandlerOnRemoteSinkSvrDiedFuzzTest\"",
+    "LOG_DOMAIN=0xD004100",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
+    "graphic_standard:surface",
+    "graphic_standard:sync_fence",
+    "ipc:ipc_core",
+    "player_framework:media_client",
+  ]
+}
+
+###############################################################################
+group("fuzztest") {
+  testonly = true
+  deps = [ ":OnBufferAvailableFuzzTest" ]
+}
+###############################################################################
