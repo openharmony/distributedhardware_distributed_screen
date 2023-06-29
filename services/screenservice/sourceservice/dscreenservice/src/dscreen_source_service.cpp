@@ -129,10 +129,10 @@ int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &dev
     const EnableParam &param, const std::string &reqId)
 {
     std::string attrs = param.attrs;
-    std::string version = param.version;
+    version_ = param.version;
     int ret = -1;
     if (version_ == "2.0") {
-        V1_0::DScreenManager::GetInstance().SetScreenVersion(version);
+        V1_0::DScreenManager::GetInstance().SetScreenVersion(version_);
         ret = V1_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, attrs, reqId);
     } else if (version_ == "3.0") {
         ret = V2_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, attrs, reqId);
