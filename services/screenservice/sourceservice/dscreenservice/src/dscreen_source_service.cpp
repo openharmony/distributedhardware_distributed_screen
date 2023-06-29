@@ -76,20 +76,24 @@ int32_t DScreenSourceService::InitSource(const std::string &params, const sptr<I
         return ERR_DH_SCREEN_SA_INIT_SOURCE_FAIL;
     }
     DHLOGI("InitSource");
-    int32_t ret = V1_0::DScreenManager::GetInstance().Init();
-    if (ret != DH_SUCCESS) {
-        DHLOGE("Init V1_0::DScreenManager failed. err: %" PRId32, ret);
-        return ret;
-    }
+    version_ = params;
+    DHLOGI("InitSource params: %s, version_: %s", params.c_str(), version_.c_str());
 
-    V1_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
-
-    ret = V2_0::DScreenManager::GetInstance().Initialize();
-    if (ret != DH_SUCCESS) {
-        DHLOGE("Init V2_0::DScreenManager failed. err: %" PRId32, ret);
-        return ret;
+    if (version_ == "2.0") {
+        int32_t ret = V1_0::DScreenManager::GetInstance().Init();
+        if (ret != DH_SUCCESS) {
+            DHLOGE("Init V1_0::DScreenManager failed. err: %" PRId32, ret);
+            return ret;
+        }
+        V1_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
+    } else if (version_ == "3.0") {
+        int32_t ret = V2_0::ScreenRegionManager::GetInstance().Release();
+        if (ret != DH_SUCCESS) {
+            DHLOGE("Init V2_0::DScreenManager failed. err: %" PRId32, ret);
+            return ret;
+        }
+        V2_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
     }
-    V2_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
     return DH_SUCCESS;
 }
 
@@ -130,7 +134,8 @@ int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &dev
 {
     std::string attrs = param.attrs;
     version_ = param.version;
-    int ret = -1;
+    int32_t ret = -1;
+    DHLOGI("Source RegisterDistributedHardware params.version: %s", param.version.c_str());
     if (version_ == "2.0") {
         V1_0::DScreenManager::GetInstance().SetScreenVersion(version_);
         ret = V1_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, attrs, reqId);
@@ -193,7 +198,7 @@ int32_t DScreenSourceService::Dump(int32_t fd, const std::vector<std::u16string>
     if (version_ == "2.0") {
         V1_0::DScreenManager::GetInstance().GetScreenDumpInfo(result);
     } else if (version_ == "3.0") {
-        V1_0::DScreenManager::GetInstance().GetScreenDumpInfo(result);
+        V2_0::DScreenManager::GetInstance().GetScreenDumpInfo(result);
     }
     int ret = dprintf(fd, "%s\n", result.c_str());
     if (ret < 0) {
