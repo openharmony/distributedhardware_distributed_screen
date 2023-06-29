@@ -152,9 +152,9 @@ int32_t DScreenSourceService::UnregisterDistributedHardware(const std::string &d
 {
     int ret = -1;
     if (version_ == "2.0") {
-       ret = V1_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+        ret = V1_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
     } else if (version_ == "3.0") {
-       ret = V2_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+        ret = V2_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
     }
     if (ret != DH_SUCCESS) {
         DHLOGE("disable distributedScreen failed. devId: %s, dhId: %s, reqId: %s",

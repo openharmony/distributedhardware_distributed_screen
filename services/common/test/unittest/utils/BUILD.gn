@@ -49,9 +49,9 @@ ohos_unittest("UtilsTest") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "${services_path}/screenservice/sinkservice:distributed_screen_sink",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
+    "${services_path}/screenservice/sinkservice:distributed_screen_sink",
   ]
 
   external_deps = [ 

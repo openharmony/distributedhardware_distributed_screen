@@ -69,7 +69,6 @@ bool DScreenSinkService::Init()
 int32_t DScreenSinkService::InitSink(const std::string &params)
 {
     DHLOGI("InitSink");
-    DHLOGI("yangli. version_: %s", params.c_str());
     int32_t ret = V2_0::ScreenRegionManager::GetInstance().Initialize();
     if (ret != DH_SUCCESS) {
         DHLOGE("Init ScreenRegionManager failed. err: %d", ret);
