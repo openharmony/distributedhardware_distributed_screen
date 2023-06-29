@@ -57,7 +57,7 @@ public:
     int32_t SetParameter(const AVTransTag &tag, const std::string &param);
     int32_t PushData(const VideoData &video);
     int32_t SendMessageToRemote(const std::shared_ptr<AVTransMessage> &message);
-    int32_t CreateControlChannel(const std::string& peerDevId);
+    int32_t CreateControlChannel(const std::string &peerDevId);
     int32_t RegisterAdapterCallback(const std::shared_ptr<AVSenderAdapterCallback> &callback);
 
     // interfaces from IAVSenderEngineCallback

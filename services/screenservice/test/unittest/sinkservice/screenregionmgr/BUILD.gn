@@ -20,7 +20,6 @@ module_out_path = "distributed_screen/dscreen_sink_service_test"
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
-    "${av_transport_path}/common/include",
     "//third_party/json/include",
     "${fwk_common_path}/utils/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
@@ -64,6 +63,7 @@ ohos_unittest("DscreenRegionMgrTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributed_av_receiver",
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",
     "hisysevent_native:libhisysevent",

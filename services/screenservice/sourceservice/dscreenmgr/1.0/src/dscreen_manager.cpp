@@ -123,7 +123,7 @@ void DScreenManager::HandleScreenChange(const std::shared_ptr<DScreen> &changedS
     }
 
     uint64_t screenId = changedScreen->GetScreenId();
-    DHLOGI("DScreenManager::HandleScreenChange, screenId: %u, changeEvent: %", screenId, event);
+    DHLOGI("DScreenManager::HandleScreenChange, screenId: %u, changeEvent: %u", screenId, event);
     if (event == Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP) {
         if (AddToGroup(changedScreen, screenId) != DH_SUCCESS) {
             DHLOGE("AddToGroup failed.");

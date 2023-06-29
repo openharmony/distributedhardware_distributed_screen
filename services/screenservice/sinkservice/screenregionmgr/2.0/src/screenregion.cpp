@@ -151,11 +151,11 @@ int32_t ScreenRegion::SetUp(const std::string &content)
     }
     std::string codecType;
     if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H265) {
-        codecType = MINE_VIDEO_H265;
+        codecType = MIME_VIDEO_H265;
     } else if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H264) {
-        codecType = MINE_VIDEO_H264;
+        codecType = MIME_VIDEO_H264;
     } else {
-        codecType = MINE_VIDEO_RAW;
+        codecType = MIME_VIDEO_RAW;
     }
     std::string pixelFormat;
     if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_YUVI420) {

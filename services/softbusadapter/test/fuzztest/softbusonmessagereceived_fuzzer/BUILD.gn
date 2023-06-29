@@ -30,7 +30,6 @@ ohos_fuzztest("SoftbusOnMessageReceivedFuzzTest") {
   sources = [ "softbusonmessagereceived_fuzzer.cpp" ]
 
   include_dirs = [
-    "${av_transport_path}/common/include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",
     "${services_path}/common/screen_channel/include",
@@ -46,6 +45,8 @@ ohos_fuzztest("SoftbusOnMessageReceivedFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributed_av_receiver",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
   ]
 
