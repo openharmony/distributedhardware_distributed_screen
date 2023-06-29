@@ -69,7 +69,11 @@ bool DScreenSinkService::Init()
 int32_t DScreenSinkService::InitSink(const std::string &params)
 {
     DHLOGI("InitSink");
-    (void)params;
+    DHLOGI("yangli. version_: %s", params.c_str());
+    int32_t ret = V2_0::ScreenRegionManager::GetInstance().Initialize();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("Init ScreenRegionManager failed. err: %d", ret);
+    }
     return DH_SUCCESS;
 }
 
@@ -77,6 +81,7 @@ int32_t DScreenSinkService::ReleaseSink()
 {
     DHLOGI("ReleaseSink");
     V1_0::ScreenRegionManager::GetInstance().ReleaseAllRegions();
+    V2_0::ScreenRegionManager::GetInstance().Release();
     DHLOGI("exit sink sa process");
     auto systemAbilityMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (systemAbilityMgr == nullptr) {
@@ -120,6 +125,7 @@ int32_t DScreenSinkService::Dump(int32_t fd, const std::vector<std::u16string>& 
     (void)args;
     std::string result;
     V1_0::ScreenRegionManager::GetInstance().GetScreenDumpInfo(result);
+    V2_0::ScreenRegionManager::GetInstance().GetScreenDumpInfo(result);
     int ret = dprintf(fd, "%s\n", result.c_str());
     if (ret < 0) {
         DHLOGE("dprintf error");
