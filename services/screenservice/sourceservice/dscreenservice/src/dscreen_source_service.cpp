@@ -87,7 +87,7 @@ int32_t DScreenSourceService::InitSource(const std::string &params, const sptr<I
         }
         V1_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
     } else if (version_ == "3.0") {
-        int32_t ret = V2_0::DScreenManager::GetInstance().Release();
+        int32_t ret = V2_0::DScreenManager::GetInstance().Initialize();
         if (ret != DH_SUCCESS) {
             DHLOGE("Init V2_0::DScreenManager failed. err: %" PRId32, ret);
             return ret;
