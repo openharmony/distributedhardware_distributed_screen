@@ -71,9 +71,11 @@ int32_t DScreenSinkService::InitSink(const std::string &params)
     DHLOGI("InitSink");
     version_ = params;
     DHLOGI("InitSink params: %s, version_: %s", params.c_str(), version_.c_str());
-    int32_t ret = V2_0::ScreenRegionManager::GetInstance().Initialize();
-    if (ret != DH_SUCCESS) {
-        DHLOGE("Init ScreenRegionManager failed. err: %d", ret);
+    if(version_ == "3.0") {
+        int32_t ret = V2_0::ScreenRegionManager::GetInstance().Initialize();
+        if (ret != DH_SUCCESS) {
+        DHLOGE("Init ScreenRegionManager3.0 failed. err: %d", ret);
+    }
     }
     return DH_SUCCESS;
 }
@@ -120,7 +122,7 @@ void DScreenSinkService::DScreenNotify(const std::string &devId, int32_t eventCo
 {
     DHLOGI("DScreenNotify, devId:%s, eventCode: %" PRId32 ", eventContent:%s", GetAnonyString(devId).c_str(),
         eventCode, eventContent.c_str());
-    if (version == "2.0") {
+    if (version_ == "2.0") {
         V1_0::ScreenRegionManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
     }
 }
