@@ -20,6 +20,7 @@
 #include <mutex>
 #include <queue>
 #include <thread>
+#include "sync_fence.h"
 
 #include "surface.h"
 #include "iconsumer_surface.h"
@@ -128,6 +129,7 @@ private:
     std::queue<std::shared_ptr<Task>> taskQueue_;
     bool taskThreadRunning_;
     std::shared_ptr<AVTransSenderAdapter> senderAdapter_;
+    OHOS::sptr<OHOS::SyncFence> syncFence_ = SyncFence::INVALID_FENCE;
 };
 } // namespace V2_0
 } // namespace DistributedHardware

@@ -21,6 +21,7 @@
 
 #include "dscreen_sink_stub.h"
 #include "1.0/include/screenregionmgr.h"
+#include "2.0/include/screenregionmgr.h"
 
 namespace OHOS {
 namespace DistributedHardware {

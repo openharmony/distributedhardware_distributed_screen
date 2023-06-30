@@ -64,6 +64,7 @@ ScreenRegionManager::~ScreenRegionManager()
 
 int32_t ScreenRegionManager::Initialize()
 {
+    DHLOGI("Inter ScreenRegionManager::Initialize 2.0");
     int32_t ret = LoadAVReceiverEngineProvider();
     if ((ret != DH_SUCCESS) || (providerPtr_ == nullptr)) {
         DHLOGE("Load av transport receiver engine provider failed.");

@@ -285,12 +285,19 @@ void DScreen::ConsumeSurface()
         return;
     }
     sptr<SurfaceBuffer> surfaceBuffer = nullptr;
-    int32_t fence = -1;
+    syncFence_ = SyncFence::INVALID_FENCE;
     int64_t timestamp = 0;
     OHOS::Rect damage = {0, 0, 0, 0};
-    SurfaceError surfaceErr = consumerSurface_->AcquireBuffer(surfaceBuffer, fence, timestamp, damage);
+    SurfaceError surfaceErr = consumerSurface_->AcquireBuffer(surfaceBuffer, syncFence_, timestamp, damage);
     if (surfaceErr != SURFACE_ERROR_OK) {
         DHLOGE("consumerSurface_ acquire buffer failed, errcode: %d", surfaceErr);
+        consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
+        return;
+    }
+    int32_t retcode = syncFence_->Wait(SURFACE_SYNC_FENCE_TIMEOUT);
+    if (retcode == -ETIME) {
+        DHLOGE("%s: Sync fence wait timeout, retcode is %." PRId32, retcode);
+        consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
         return;
     }
     uint32_t surBufSize = surfaceBuffer->GetSize();
@@ -368,11 +375,11 @@ int32_t DScreen::StopSenderEngine()
 void DScreen::ChooseParameter(std::string &codecType, std::string &pixelFormat)
 {
     if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H265) {
-        codecType = MINE_VIDEO_H265;
+        codecType = MIME_VIDEO_H265;
     } else if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H264) {
-        codecType = MINE_VIDEO_H264;
+        codecType = MIME_VIDEO_H264;
     } else {
-        codecType = MINE_VIDEO_RAW;
+        codecType = MIME_VIDEO_RAW;
     }
     if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_YUVI420) {
         pixelFormat = VIDEO_FORMAT_YUVI420;

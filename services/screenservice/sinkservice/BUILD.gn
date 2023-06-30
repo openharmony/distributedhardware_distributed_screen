@@ -18,7 +18,6 @@ import(
 
 ohos_shared_library("distributed_screen_sink") {
   include_dirs = [
-    "${av_transport_path}/common/include",
     "//third_party/json/include",
     "${fwk_common_path}/utils/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
@@ -51,11 +50,13 @@ ohos_shared_library("distributed_screen_sink") {
     "./dscreenservice/src/dscreen_sink_stub.cpp",
     "./screenregionmgr/1.0/src/screenregion.cpp",
     "./screenregionmgr/1.0/src/screenregionmgr.cpp",
+    "./screenregionmgr/2.0/src/av_receiver_engine_adapter.cpp",
+    "./screenregionmgr/2.0/src/screenregion.cpp",
+    "./screenregionmgr/2.0/src/screenregionmgr.cpp",
   ]
 
   deps = [
     "${common_path}:distributed_screen_utils",
-    "${graphicstandard_path}/frameworks/surface:surface",
     "${services_path}/screenclient:distributed_screen_client",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
   ]
@@ -68,6 +69,7 @@ ohos_shared_library("distributed_screen_sink") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributed_av_receiver",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",

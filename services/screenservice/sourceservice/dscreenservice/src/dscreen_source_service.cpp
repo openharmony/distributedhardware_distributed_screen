@@ -46,7 +46,12 @@ void DScreenSourceService::OnStart()
 void DScreenSourceService::OnStop()
 {
     DHLOGI("dscreen source service stop.");
-    int32_t ret = V1_0::DScreenManager::GetInstance().UnInit();
+    int32_t ret = -1;
+    if (version_ == "2.0") {
+        ret = V1_0::DScreenManager::GetInstance().UnInit();
+    } else if (version_ == "3.0") {
+        ret = V2_0::DScreenManager::GetInstance().Release();
+    }
     if (ret != DH_SUCCESS) {
         DHLOGE("UnInit V1_0::DScreenManager failed. err: %" PRId32, ret);
     }
@@ -75,23 +80,43 @@ int32_t DScreenSourceService::InitSource(const std::string &params, const sptr<I
         return ERR_DH_SCREEN_SA_INIT_SOURCE_FAIL;
     }
     DHLOGI("InitSource");
-    int32_t ret = V1_0::DScreenManager::GetInstance().Init();
-    if (ret != DH_SUCCESS) {
-        DHLOGE("Init V1_0::DScreenManager failed. err: %" PRId32, ret);
-        return ret;
-    }
+    version_ = params;
+    DHLOGI("InitSource params: %s, version_: %s", params.c_str(), version_.c_str());
 
-    V1_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
+    if (version_ == "2.0") {
+        int32_t ret = V1_0::DScreenManager::GetInstance().Init();
+        if (ret != DH_SUCCESS) {
+            DHLOGE("Init V1_0::DScreenManager failed. err: %" PRId32, ret);
+            return ret;
+        }
+        V1_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
+    } else if (version_ == "3.0") {
+        int32_t ret = V2_0::DScreenManager::GetInstance().Initialize();
+        if (ret != DH_SUCCESS) {
+            DHLOGE("Init V2_0::DScreenManager failed. err: %" PRId32, ret);
+            return ret;
+        }
+        V2_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
+    }
     return DH_SUCCESS;
 }
 
 int32_t DScreenSourceService::ReleaseSource()
 {
     DHLOGI("ReleaseSource");
-    int32_t ret = V1_0::DScreenManager::GetInstance().UnInit();
-    if (ret != DH_SUCCESS) {
-        DHLOGE("UnInit V1_0::DScreenManager failed. err: %" PRId32, ret);
-        return ret;
+    int32_t ret = -1;
+    if (version_ == "2.0") {
+        ret = V1_0::DScreenManager::GetInstance().UnInit();
+        if (ret != DH_SUCCESS) {
+            DHLOGE("UnInit V1_0::DScreenManager failed. err: %" PRId32, ret);
+            return ret;
+        }
+    } else if (version_ == "3.0") {
+        ret = V2_0::DScreenManager::GetInstance().Release();
+        if (ret != DH_SUCCESS) {
+            DHLOGE("UnInit V2_0::DScreenManager failed. err: %" PRId32, ret);
+            return ret;
+        }
     }
     DHLOGI("exit source sa process");
     auto systemAbilityMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
@@ -112,9 +137,15 @@ int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &dev
     const EnableParam &param, const std::string &reqId)
 {
     std::string attrs = param.attrs;
-    std::string version = param.version;
-    V1_0::DScreenManager::GetInstance().SetScreenVersion(version);
-    int ret = V1_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, attrs, reqId);
+    version_ = param.version;
+    int32_t ret = -1;
+    DHLOGI("Source RegisterDistributedHardware params.version: %s", param.version.c_str());
+    if (version_ == "2.0") {
+        V1_0::DScreenManager::GetInstance().SetScreenVersion(version_);
+        ret = V1_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, attrs, reqId);
+    } else if (version_ == "3.0") {
+        ret = V2_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, attrs, reqId);
+    }
     if (ret != DH_SUCCESS) {
         DHLOGE("enable distributedScreen failed. devId: %s, dhId: %s, reqId: %s, attrs: %s",
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str(), attrs.c_str());
@@ -128,7 +159,12 @@ int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &dev
 int32_t DScreenSourceService::UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
     const std::string &reqId)
 {
-    int ret = V1_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+    int ret = -1;
+    if (version_ == "2.0") {
+        ret = V1_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+    } else if (version_ == "3.0") {
+        ret = V2_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+    }
     if (ret != DH_SUCCESS) {
         DHLOGE("disable distributedScreen failed. devId: %s, dhId: %s, reqId: %s",
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str());
@@ -153,7 +189,9 @@ void DScreenSourceService::DScreenNotify(const std::string &devId, const int32_t
     const std::string &eventContent)
 {
     DHLOGI("DScreenNotify, devId: %s, eventCode: %" PRId32, GetAnonyString(devId).c_str(), eventCode);
-    V1_0::DScreenManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
+    if (version_ == "2.0") {
+        V1_0::DScreenManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
+    }
 }
 
 int32_t DScreenSourceService::Dump(int32_t fd, const std::vector<std::u16string>& args)
@@ -161,7 +199,11 @@ int32_t DScreenSourceService::Dump(int32_t fd, const std::vector<std::u16string>
     DHLOGI("DScreenSourceService  Dump.");
     (void)args;
     std::string result;
-    V1_0::DScreenManager::GetInstance().GetScreenDumpInfo(result);
+    if (version_ == "2.0") {
+        V1_0::DScreenManager::GetInstance().GetScreenDumpInfo(result);
+    } else if (version_ == "3.0") {
+        V2_0::DScreenManager::GetInstance().GetScreenDumpInfo(result);
+    }
     int ret = dprintf(fd, "%s\n", result.c_str());
     if (ret < 0) {
         DHLOGE("dprintf error");

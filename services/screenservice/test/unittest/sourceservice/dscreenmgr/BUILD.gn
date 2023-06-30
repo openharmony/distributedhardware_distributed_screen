@@ -20,12 +20,8 @@ module_out_path = "distributed_screen/DscreenMgrTest"
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
-    "${av_transport_path}/common/include",
     "//third_party/json/include",
     "${driver_path}/interfaces/include",
-    "${graphicstandard_path}/interfaces/inner_api/surface",
-    "${graphicstandard_path}/interfaces/inner_api/common",
-    "${graphicstandard_path}/utils/buffer_handle/export",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "${distributedhardwarefwk_path}/common/utils/include",
     "${mediastandard_path}/interfaces/inner_api/native",
@@ -72,6 +68,9 @@ ohos_unittest("DscreenMgrTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributed_av_sender",
+    "graphic_standard:libcomposer",
+    "graphic_standard:surface",
     "graphic_standard:sync_fence",
     "hdf_core:libhdi",
     "player_framework:media_client",
