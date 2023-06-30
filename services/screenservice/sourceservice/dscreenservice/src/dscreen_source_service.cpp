@@ -46,8 +46,12 @@ void DScreenSourceService::OnStart()
 void DScreenSourceService::OnStop()
 {
     DHLOGI("dscreen source service stop.");
-    int32_t ret = V1_0::DScreenManager::GetInstance().UnInit();
-    ret = V2_0::DScreenManager::GetInstance().Release();
+    int32_t ret = -1;
+    if (version_ == "2.0") {
+        ret = V1_0::DScreenManager::GetInstance().UnInit();
+    } else if (version_ == "3.0") {
+        ret = V2_0::DScreenManager::GetInstance().Release();
+    }
     if (ret != DH_SUCCESS) {
         DHLOGE("UnInit V1_0::DScreenManager failed. err: %" PRId32, ret);
     }
