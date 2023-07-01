@@ -122,6 +122,7 @@ enum DScreenErrorCode {
     ERR_DH_AV_TRANS_STOP_FAILED = -58008,
     ERR_DH_AV_TRANS_FEED_DATA_FAILED = -58009,
     ERR_DH_AV_TRANS_SEND_MSG_FAILED = -58010,
+    ERR_DH_AV_TRANS_SINK_START_FAILED = -58011,
 };
 } // namespace DistributedHardware
 } // namespace OHOS

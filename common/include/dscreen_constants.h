@@ -63,14 +63,15 @@ enum DataType : uint8_t {
 };
 
 enum DScreenMsgType : uint32_t {
-    SETUP_SIGNAL = 0,
+    START_MIRROR = 0,
+    START_MIRROR_SUCCESS = 1;
+    START_MIRROR_FAIL = 2;
+    STOP_MIRROR = 3;
 };
 
 enum DScreenEventType : uint32_t {
-    REMOTE_MSG_RECEIVED = 0,
-    SENDER_ENGINE_ERROR,
-    RECEIVER_ENGINE_ERROR,
-    TRANS_CHANNEL_CLOSED,
+    ENGINE_ERROR = 0,
+    TRANS_CHANNEL_CLOSED = 1,
 };
 
 /* Screen package name */
@@ -207,6 +208,7 @@ constexpr size_t DATA_BUFFER_MAX_SIZE = 10 * 1024 * 1024;
 constexpr uint8_t TASK_WAIT_SECONDS = 1;
 constexpr int32_t JPEG_QUALITY = 80;
 constexpr uint32_t BIT_RATE = 12000000;
+constexpr int32_t WAIT_TIMEOUT_MS = 5000;
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

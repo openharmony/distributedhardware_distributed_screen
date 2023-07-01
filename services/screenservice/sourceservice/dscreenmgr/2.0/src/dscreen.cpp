@@ -204,17 +204,14 @@ void DScreen::HandleDisconnect()
         return;
     }
     SetState(DISCONNECTING);
-    int32_t ret = RemoveSurface();
-    if (ret != DH_SUCCESS) {
-        DHLOGE("remove image surface failed.");
-    }
-    ret = StopSenderEngine();
+    int32_t ret = StopSenderEngine();
     if (ret != DH_SUCCESS) {
         SetState(CONNECTED);
         DHLOGE("dScreen Stop failed.");
         return;
     }
     SetState(ENABLED);
+    RemoveSurface();
     ReportScreenMirrorEvent(DSCREEN_PROJECT_END, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
         "dscreen disconnect success");
 }
@@ -359,6 +356,14 @@ int32_t DScreen::StopSenderEngine()
         DHLOGE("av transport sender adapter is null.");
         return ERR_DH_AV_TRANS_NULL_VALUE;
     }
+
+    json paramJson;
+    paramJson[KEY_DEV_ID] = devId_;
+    paramJson[KEY_DH_ID] - dhId_;
+
+    auto avMessage = std:: make_shared<AVTransMessage>(DScreenMsgType::STOP_MIRROR, paramJson.dump(), devId_);
+    senderAdapter_->SenderMessageToRemote(avMessage);
+
     int32_t ret = senderAdapter_->Stop();
     if (ret != DH_SUCCESS) {
         DHLOGE("stop av sender adapter failed.");
@@ -419,22 +424,43 @@ int32_t DScreen::SetUp()
     videoParam_->SetVideoHeight(displayRect.height);
 
     json paramJson;
-    paramJson[KEY_DEV_ID] = devId_;
     paramJson[KEY_DH_ID] = dhId_;
     paramJson[KEY_SCREEN_ID] = screenId_;
     paramJson[KEY_VIDEO_PARAM] = *videoParam_;
     paramJson[KEY_MAPRELATION] = *mapRelation;
 
-    auto avMessage = std::make_shared<AVTransMessage>(DScreenMsgType::SETUP_SIGNAL, paramJson.dump(), devId_);
+    auto avMessage = std::make_shared<AVTransMessage>(DScreenMsgType::START_MIRROR, paramJson.dump(), devId_);
     int32_t ret = senderAdapter_->SendMessageToRemote(avMessage);
     if (ret != DH_SUCCESS) {
-        DHLOGE("set message to remote engine failed.");
+        DHLOGE("send message to remote engine failed.");
         return ret;
     }
+
+    ret = WaitForSinkStarted();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("send message to start remote device engine failed.");
+        return ret;
+    }
+
     std::string codecType;
     std::string pixelFormat;
     ChooseParameter(codecType, pixelFormat);
     return senderAdapter_->SetParameter(AVTransTag::ENGINE_READY, OWNER_NAME_D_SCREEN);
+}
+
+int32_t DScreen::WaitForSinkStarted()
+{
+    std::unique_lock<std::mutex> lock(waitSinkMtx_);
+    auto status = waitSinkCondVar_.wait_for(lock, std::chrono::milliseconds(WAIT_TIMEOUT_MS));
+    if (status = std::cv_status::timeout) {
+        DHLOGE("wait for sink device engine start timeout");
+        return ERR_DH_AV_TRANS_TIMEOUT;
+    }
+    if (!sinkStartSuccess_.load()) {
+        DHLOGE("start sink device engine failed");
+        return ERR_DH_AV_TRANS_SINK_START_FAILED;
+    }
+    return DH_SUCCESS;
 }
 
 int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
@@ -529,13 +555,26 @@ bool DScreen::CheckJsonData(json &attrJson)
 
 void DScreen::OnEngineEvent(DScreenEventType event, const std::string &content)
 {
-    (void)event;
     (void)content;
+    if (event == DScreenEventType::ENGINE_ERROR) {
+        StopSenderEngine();
+    } else if (event == DScreenEventType:: TRANS_CHANNEL_CLOSED) {
+        HandleDisconnect();
+    }
 }
 
 void DScreen::OnEngineMessage(const std::shared_ptr<AVTransMessage> &message)
 {
-    (void)message;
+    if (message == nullptr) {
+        DHLOGE("receiver engine message is null.");
+        return;
+    }
+    DHLOGI("On sink device engine message received, message type =%d.", message->type_);
+    if ((message->type_ == DScreenMsgType::START_MIRROR_SUCCESS) ||
+        (message->type_ == DScreenMsgType::START_MIRROR_FAIL)) {
+            sinkStartSuccess_ = (message->type_ == DScreenMsgType::START_MIRROR_SUCCESS);
+            waitSinkCondVar_.notify_one();
+        }
 }
 
 std::shared_ptr<VideoParam> DScreen::GetVideoParam()

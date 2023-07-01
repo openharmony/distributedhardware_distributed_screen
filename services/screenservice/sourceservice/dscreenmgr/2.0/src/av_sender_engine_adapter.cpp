@@ -21,8 +21,6 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-constexpr int32_t WAIT_TIMEOUT_MS = 5000;
-
 int32_t AVTransSenderAdapter::Initialize(IAVEngineProvider *providerPtr, const std::string &peerDevId)
 {
     DHLOGI("Initialize enter");
@@ -54,6 +52,8 @@ int32_t AVTransSenderAdapter::Release()
     }
     initialized_ = false;
     senderEngine_ = nullptr;
+    chnCreateSuccess_ = false;
+    transStartSuccess_ = false;
     return DH_SUCCESS;
 }
 
@@ -95,6 +95,7 @@ int32_t AVTransSenderAdapter::Stop()
         return ERR_DH_AV_TRANS_STOP_FAILED;
     }
     DHLOGI("Stop Success");
+    transStartSuccess_ = false;
     return DH_SUCCESS;
 }
 
@@ -242,7 +243,7 @@ int32_t AVTransSenderAdapter::OnSenderEvent(const AVTransEvent& event)
         case EventType::EVENT_ENGINE_ERROR:
         case EventType::EVENT_REMOTE_ERROR:
             if (adapterCallback_ != nullptr) {
-                adapterCallback_->OnEngineEvent(DScreenEventType::RECEIVER_ENGINE_ERROR, event.content);
+                adapterCallback_->OnEngineEvent(DScreenEventType::ENGINE_ERROR, event.content);
             }
             break;
         default:
