@@ -18,8 +18,14 @@
 #include "avcodec_info.h"
 #include "avcodec_list.h"
 #include "2.0/include/av_sender_engine_adapter.h"
+#include "distributed_hardware_fwk_kit.h"
+#include "distributed_hardware_fwk_kit_paras.h"
+#include "histreamer_ability_parser.h"
+#include "histreamer_query_tool.h"
+
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_fwkkit.h"
 #include "dscreen_hisysevent.h"
 #include "dscreen_json_util.h"
 #include "dscreen_log.h"
@@ -29,6 +35,14 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace V2_0 {
+/* <<ecoder, decoder>, codec> */
+static const std::map<std::pair<std::string, std::string>, std::string> CODECS_MAP = {
+    {{"HdiCodecAdapter.OMX.rk.video_encoder.hevc", "HdiCodecAdapter.OMX.rk.video_decoder.hevc"}, CODEC_NAME_H265},
+    {{"HdiCodecAdapter.OMX.hisi.video.encoder.hevc", "HdiCodecAdapter.OMX.hisi.video.decoder.hevc"}, CODEC_NAME_H265},
+    {{"HdiCodecAdapter.OMX.rk.video_encoder.avc", "HdiCodecAdapter.OMX.rk.video_decoder.avc"}, CODEC_NAME_H264},
+    {{"HdiCodecAdapter.OMX.hisi.video.encoder.avc", "HdiCodecAdapter.OMX.hisi.video.decoder.avc"}, CODEC_NAME_H264},
+};
+
 DScreen::DScreen(const std::string &devId, const std::string &dhId,
     std::shared_ptr<IDScreenCallback> dscreenCallback)
 {
@@ -122,7 +136,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     if (videoParam_ == nullptr) {
         videoParam_ = std::make_shared<VideoParam>();
     }
-    int32_t ret = NegotiateCodecType(attrJson[KEY_CODECTYPE]);
+    int32_t ret = NegotiateCodecType(attrJson[KEY_HISTREAMER_VIDEO_DECODER]);
     if (ret != DH_SUCCESS) {
         DHLOGE("HandleEnable, negotiate codec type failed.");
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
@@ -437,36 +451,49 @@ int32_t DScreen::SetUp()
     return senderAdapter_->SetParameter(AVTransTag::ENGINE_READY, OWNER_NAME_D_SCREEN);
 }
 
-int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
+int32_t DScreen::NegotiateCodecType(const std::string &rmtDecoderStr)
 {
-    json remoteCodecArray = json::parse(remoteCodecInfoStr, nullptr, false);
-    if (remoteCodecArray.is_discarded() || !remoteCodecArray.is_array()) {
-        DHLOGE("remoteCodecInfoStrjson is invalid.");
+    DHLOGI("Start NegotiateCodecType, remote decoder: %s", rmtDecoderStr.c_str());
+    json rmtDecoderJson = json::parse(rmtDecoderStr, nullptr, false);
+    if (rmtDecoderJson.is_discarded()) {
+        DHLOGE("remote Decoder Json is invalid.");
         return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
     }
 
-    std::vector<std::string> localCodecArray;
-    std::shared_ptr<Media::AVCodecList> codecList = Media::AVCodecListFactory::CreateAVCodecList();
-    if (codecList == nullptr) {
-        DHLOGE("codecList is nullptr.");
+    std::vector<VideoDecoder> rmtVideoDecoders;
+    FromJson<VideoDecoder>(VIDEO_DECODERS, rmtDecoderJson, rmtVideoDecoders);
+
+    std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DScreenFwkKit::GetInstance().GetDHFwkKit();
+    if (dhFwkKit == nullptr) {
+        DHLOGE("Get DhFwkKit return null");
         return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
     }
-    std::vector<std::shared_ptr<Media::VideoCaps>> caps = codecList->GetVideoEncoderCaps();
-    for (const auto &cap : caps) {
-        if (cap == nullptr) {
-            continue;
-        }
-        std::shared_ptr<Media::AVCodecInfo> codecInfo = cap->GetCodecInfo();
-        if (codecInfo == nullptr) {
-            continue;
-        }
-        localCodecArray.push_back(codecInfo->GetName());
+    std::string localVideoEncodersJsonStr = dhFwkKit->QueryLocalSysSpec(QueryLocalSysSpecType::HISTREAMER_VIDEO_ENCODER);
+    if (localVideoEncodersJsonStr.empty()) {
+        DHLOGE("Query local Codec info failed");
+        return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
     }
+    DHLOGI("DScreen Negotiate QueryVideoEncoderAbility info: %s", localVideoEncodersJsonStr.c_str());
+
+    json localVideoEncodersJson = json::parse(localVideoEncodersJsonStr, nullptr, false);
+    if (localVideoEncodersJson.is_discarded()) {
+        DHLOGE("localVideoEncodersJson is invalid.");
+        return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
+    }
+
+    std::vector<VideoEncoder> localVideoEncoders;
+    FromJson<VideoEncoder>(VIDEO_ENCODERS, localVideoEncodersJson, localVideoEncoders);
+
     std::vector<std::string> codecTypeCandidates;
-    for (const auto &remoteCodecType : remoteCodecArray) {
-        if (std::find(localCodecArray.begin(), localCodecArray.end(),
-            remoteCodecType) != localCodecArray.end()) {
-            codecTypeCandidates.push_back(remoteCodecType);
+    for (const auto &rmtDec : rmtVideoDecoders) {
+        for (const auto &locEnc : localVideoEncoders) {
+            std::pair<std::string, std::string> comb = {locEnc.name, rmtDec.name};
+            if (CODECS_MAP.find(comb) != CODECS_MAP.end()) {
+                std::string codec = CODECS_MAP.at(comb);
+                DHLOGI("Find match comb, local encoder: %s, remote decoder: %s, codec: %s",
+                    locEnc.name.c_str(), rmtDec.name.c_str(), codec.c_str());
+                codecTypeCandidates.push_back(codec);
+            }
         }
     }
     if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
@@ -477,10 +504,6 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
         CODEC_NAME_H264) != codecTypeCandidates.end()) {
         videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
         videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
-    } else if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
-        CODEC_NAME_MPEG4) != codecTypeCandidates.end()) {
-        videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_MPEG4);
-        videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_RGBA8888);
     } else {
         DHLOGI("codec type not support.");
         return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;

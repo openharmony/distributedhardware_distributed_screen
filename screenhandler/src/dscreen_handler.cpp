@@ -30,6 +30,10 @@ using json = nlohmann::json;
 
 namespace OHOS {
 namespace DistributedHardware {
+namespace {
+const std::string KEY_HISTREAMER_VIDEO_ENCODER = "histmVidEnc";
+const std::string KEY_HISTREAMER_VIDEO_DECODER = "histmVidDec";
+}
 IMPLEMENT_SINGLE_INSTANCE(DScreenHandler);
 
 DScreenHandler::DScreenHandler()
