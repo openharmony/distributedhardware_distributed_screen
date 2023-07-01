@@ -76,8 +76,8 @@ ohos_shared_library("distributed_screen_source") {
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributed_av_sender",
-    "distributed_hardware_fwk:libdhfwk_sdk",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_standard:libcomposer",
     "graphic_standard:surface",
     "hisysevent_native:libhisysevent",
