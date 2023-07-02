@@ -133,7 +133,7 @@ private:
     OHOS::sptr<OHOS::SyncFence> syncFence_ = SyncFence::INVALID_FENCE;
 
     std::mutex waitSinkMtx_;
-    std::condition_variable waitSinkConVac_;
+    std::condition_variable waitSinkCondVar_;
     std::atomic<bool> sinkStartSuccess_ {false};
 };
 } // namespace V2_0

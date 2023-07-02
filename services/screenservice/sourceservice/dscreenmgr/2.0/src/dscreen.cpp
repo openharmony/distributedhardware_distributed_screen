@@ -359,10 +359,10 @@ int32_t DScreen::StopSenderEngine()
 
     json paramJson;
     paramJson[KEY_DEV_ID] = devId_;
-    paramJson[KEY_DH_ID] - dhId_;
+    paramJson[KEY_DH_ID] = dhId_;
 
     auto avMessage = std::make_shared<AVTransMessage>(DScreenMsgType::STOP_MIRROR, paramJson.dump(), devId_);
-    senderAdapter_->SenderMessageToRemote(avMessage);
+    senderAdapter_->SendMessageToRemote(avMessage);
 
     int32_t ret = senderAdapter_->Stop();
     if (ret != DH_SUCCESS) {
@@ -452,7 +452,7 @@ int32_t DScreen::WaitForSinkStarted()
 {
     std::unique_lock<std::mutex> lock(waitSinkMtx_);
     auto status = waitSinkCondVar_.wait_for(lock, std::chrono::milliseconds(WAIT_TIMEOUT_MS));
-    if (status = std::cv_status::timeout) {
+    if (status == std::cv_status::timeout) {
         DHLOGE("wait for sink device engine start timeout");
         return ERR_DH_AV_TRANS_TIMEOUT;
     }
@@ -566,7 +566,7 @@ void DScreen::OnEngineEvent(DScreenEventType event, const std::string &content)
 void DScreen::OnEngineMessage(const std::shared_ptr<AVTransMessage> &message)
 {
     if (message == nullptr) {
-        DHLOGE("receiver engine message is null.");
+        DHLOGE("received engine message is null.");
         return;
     }
     DHLOGI("On sink device engine message received, message type =%d.", message->type_);

@@ -138,7 +138,6 @@ int32_t ScreenRegion::SetUp(const std::string &content)
         return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
     }
     screenId_ = contentJson[KEY_SCREEN_ID].get<uint64_t>();
-    remoteDevId_ = contentJson[KEY_DEV_ID].get<std::string>();
     displayId_ = Rosen::DisplayManager::GetInstance().GetDefaultDisplayId();
     videoParam_ = std::make_shared<VideoParam>(contentJson[KEY_VIDEO_PARAM].get<VideoParam>());
     mapRelation_ = std::make_shared<DScreenMapRelation>(contentJson[KEY_MAPRELATION].get<DScreenMapRelation>());
@@ -250,12 +249,11 @@ void ScreenRegion::OnEngineEvent(DScreenEventType event, const std::string &cont
 
 void ScreenRegion::OnEngineMessage(const std::shared_ptr<AVTransMessage> &message)
 {
-    DHLOGI("OnEngineMessage enter");
     if (message == nullptr) {
         DHLOGE("received engine message is null.");
         return;
     }
-    DHLOGI("On source device engine message type =%d.", message->type_);
+    DHLOGI("On source device engine message receiver, message type =%d.", message->type_);
     if (message->type_ == DScreenMsgType::START_MIRROR) {
         int32_t ret = StartReceiverEngine(message->content_);
         DScreenMsgType msgType = (ret == DH_SUCCESS) ? DScreenMsgType::START_MIRROR_SUCCESS :
@@ -376,9 +374,6 @@ std::shared_ptr<WindowProperty> ScreenRegion::GetWindowProperty()
 bool ScreenRegion::CheckContentJson(json &contentJson)
 {
     if (!IsUInt64(contentJson, KEY_SCREEN_ID)) {
-        return false;
-    }
-    if (!IsString(contentJson, KEY_DEV_ID)) {
         return false;
     }
     return true;

@@ -106,7 +106,7 @@ int32_t ScreenRegionManager::DestoryDScreenRegion(const std::string &peerDevId)
 {
     DHLOGI("DestoryDScreenRegion for peerDevId: %s", GetAnonyString(peerDevId).c_str());
     std::lock_guard<std::mutex> lock(screenRegionsMtx_);
-    for (const auto &regin : screenRegions_) {
+    for (const auto &region : screenRegions_) {
         if (region != nullptr) {
             region->Release();
         }
