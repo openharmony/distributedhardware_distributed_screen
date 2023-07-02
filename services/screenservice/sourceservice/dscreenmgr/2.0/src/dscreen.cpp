@@ -18,8 +18,12 @@
 #include "avcodec_info.h"
 #include "avcodec_list.h"
 #include "2.0/include/av_sender_engine_adapter.h"
+#include "distributed_hardware_fwk_kit.h"
+#include "histreamer_query_tool.h"
+
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_fwkkit.h"
 #include "dscreen_hisysevent.h"
 #include "dscreen_json_util.h"
 #include "dscreen_log.h"
@@ -29,6 +33,14 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace V2_0 {
+/* <<ecoder, decoder>, codec> */
+static const std::map<std::pair<std::string, std::string>, std::string> CODECS_MAP = {
+    {{"HdiCodecAdapter.OMX.rk.video_encoder.hevc", "HdiCodecAdapter.OMX.rk.video_decoder.hevc"}, CODEC_NAME_H265},
+    {{"HdiCodecAdapter.OMX.hisi.video.encoder.hevc", "HdiCodecAdapter.OMX.hisi.video.decoder.hevc"}, CODEC_NAME_H265},
+    {{"HdiCodecAdapter.OMX.rk.video_encoder.avc", "HdiCodecAdapter.OMX.rk.video_decoder.avc"}, CODEC_NAME_H264},
+    {{"HdiCodecAdapter.OMX.hisi.video.encoder.avc", "HdiCodecAdapter.OMX.hisi.video.decoder.avc"}, CODEC_NAME_H264},
+};
+
 DScreen::DScreen(const std::string &devId, const std::string &dhId,
     std::shared_ptr<IDScreenCallback> dscreenCallback)
 {

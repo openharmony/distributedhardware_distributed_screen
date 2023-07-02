@@ -24,7 +24,10 @@
 
 #include "surface.h"
 #include "iconsumer_surface.h"
+
 #include "dscreen_constants.h"
+#include "distributed_hardware_fwk_kit_paras.h"
+#include "histreamer_ability_parser.h"
 #include "video_param.h"
 #include "av_sender_engine_adapter.h"
 
