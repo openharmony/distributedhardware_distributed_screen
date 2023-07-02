@@ -64,9 +64,9 @@ enum DataType : uint8_t {
 
 enum DScreenMsgType : uint32_t {
     START_MIRROR = 0,
-    START_MIRROR_SUCCESS = 1;
-    START_MIRROR_FAIL = 2;
-    STOP_MIRROR = 3;
+    START_MIRROR_SUCCESS = 1,
+    START_MIRROR_FAIL = 2,
+    STOP_MIRROR = 3,
 };
 
 enum DScreenEventType : uint32_t {

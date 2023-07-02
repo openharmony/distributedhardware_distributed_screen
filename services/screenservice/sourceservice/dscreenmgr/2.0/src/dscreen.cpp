@@ -361,7 +361,7 @@ int32_t DScreen::StopSenderEngine()
     paramJson[KEY_DEV_ID] = devId_;
     paramJson[KEY_DH_ID] - dhId_;
 
-    auto avMessage = std:: make_shared<AVTransMessage>(DScreenMsgType::STOP_MIRROR, paramJson.dump(), devId_);
+    auto avMessage = std::make_shared<AVTransMessage>(DScreenMsgType::STOP_MIRROR, paramJson.dump(), devId_);
     senderAdapter_->SenderMessageToRemote(avMessage);
 
     int32_t ret = senderAdapter_->Stop();
@@ -558,7 +558,7 @@ void DScreen::OnEngineEvent(DScreenEventType event, const std::string &content)
     (void)content;
     if (event == DScreenEventType::ENGINE_ERROR) {
         StopSenderEngine();
-    } else if (event == DScreenEventType:: TRANS_CHANNEL_CLOSED) {
+    } else if (event == DScreenEventType :: TRANS_CHANNEL_CLOSED) {
         HandleDisconnect();
     }
 }
