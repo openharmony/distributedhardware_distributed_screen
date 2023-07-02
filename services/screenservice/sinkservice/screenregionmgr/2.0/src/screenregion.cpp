@@ -253,6 +253,7 @@ void ScreenRegion::OnEngineMessage(const std::shared_ptr<AVTransMessage> &messag
         DHLOGE("received engine message is null.");
         return;
     }
+
     DHLOGI("On source device engine message received, message type =%d.", message->type_);
     if (message->type_ == DScreenMsgType::START_MIRROR) {
         int32_t ret = StartReceiverEngine(message->content_);
