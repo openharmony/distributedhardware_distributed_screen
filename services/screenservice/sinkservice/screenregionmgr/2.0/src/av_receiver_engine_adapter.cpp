@@ -130,7 +130,7 @@ int32_t AVTransReceiverAdapter::OnReceiverEvent(const AVTransEvent& event)
 
     if (adapterCallback_ == nullptr) {
         DHLOGE("adapter callback is null.");
-        return ERR_DH_AV _TRANS_NULL_VALUE;
+        return ERR_DH_AV_TRANS_NULL_VALUE;
     }
 
     switch (event.type) {

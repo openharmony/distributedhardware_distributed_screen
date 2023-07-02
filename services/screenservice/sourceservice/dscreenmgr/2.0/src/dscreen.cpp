@@ -558,7 +558,7 @@ void DScreen::OnEngineEvent(DScreenEventType event, const std::string &content)
     (void)content;
     if (event == DScreenEventType::ENGINE_ERROR) {
         StopSenderEngine();
-    } else if (event == DScreenEventType :: TRANS_CHANNEL_CLOSED) {
+    } else if (event == DScreenEventType::TRANS_CHANNEL_CLOSED) {
         HandleDisconnect();
     }
 }
@@ -570,11 +570,11 @@ void DScreen::OnEngineMessage(const std::shared_ptr<AVTransMessage> &message)
         return;
     }
     DHLOGI("On sink device engine message received, message type =%d.", message->type_);
-    if ((message->type_ == DScreenMsgType::START_MIRROR_SUCCESS) ||
+    if ((message->type_ == DScreenMsgType::START_MIRROR_SUCCESS) || 
         (message->type_ == DScreenMsgType::START_MIRROR_FAIL)) {
-            sinkStartSuccess_ = (message->type_ == DScreenMsgType::START_MIRROR_SUCCESS);
-            waitSinkCondVar_.notify_one();
-        }
+        sinkStartSuccess_ = (message->type_ == DScreenMsgType::START_MIRROR_SUCCESS);
+        waitSinkCondVar_.notify_one();
+    }
 }
 
 std::shared_ptr<VideoParam> DScreen::GetVideoParam()
