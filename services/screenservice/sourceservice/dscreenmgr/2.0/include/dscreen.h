@@ -24,7 +24,10 @@
 
 #include "surface.h"
 #include "iconsumer_surface.h"
+
 #include "dscreen_constants.h"
+#include "distributed_hardware_fwk_kit_paras.h"
+#include "histreamer_ability_parser.h"
 #include "video_param.h"
 #include "av_sender_engine_adapter.h"
 
@@ -112,6 +115,8 @@ private:
      * rmtDecoderStr: remote Decoder description in JSON format
      */
     int32_t NegotiateCodecType(const std::string &rmtDecoderStr);
+    int32_t ChooseCodecType(const std::vector<VideoEncoder> &localVideoEncoders,
+        const std::vector<VideoDecoder> &rmtVideoDecoders);
     int32_t ConfigSurface();
     int32_t RemoveSurface();
     int32_t SetUp();

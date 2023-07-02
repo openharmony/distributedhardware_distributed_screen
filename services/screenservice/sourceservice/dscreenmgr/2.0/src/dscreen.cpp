@@ -19,8 +19,6 @@
 #include "avcodec_list.h"
 #include "2.0/include/av_sender_engine_adapter.h"
 #include "distributed_hardware_fwk_kit.h"
-#include "distributed_hardware_fwk_kit_paras.h"
-#include "histreamer_ability_parser.h"
 #include "histreamer_query_tool.h"
 
 #include "dscreen_constants.h"
@@ -468,7 +466,8 @@ int32_t DScreen::NegotiateCodecType(const std::string &rmtDecoderStr)
         DHLOGE("Get DhFwkKit return null");
         return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
     }
-    std::string localVideoEncodersJsonStr = dhFwkKit->QueryLocalSysSpec(QueryLocalSysSpecType::HISTREAMER_VIDEO_ENCODER);
+    std::string localVideoEncodersJsonStr =
+        dhFwkKit->QueryLocalSysSpec(QueryLocalSysSpecType::HISTREAMER_VIDEO_ENCODER);
     if (localVideoEncodersJsonStr.empty()) {
         DHLOGE("Query local Codec info failed");
         return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
@@ -484,6 +483,12 @@ int32_t DScreen::NegotiateCodecType(const std::string &rmtDecoderStr)
     std::vector<VideoEncoder> localVideoEncoders;
     FromJson<VideoEncoder>(VIDEO_ENCODERS, localVideoEncodersJson, localVideoEncoders);
 
+    return ChooseCodecType(localVideoEncoders, rmtVideoDecoders);
+}
+
+int32_t DScreen::ChooseCodecType(const std::vector<VideoEncoder> &localVideoEncoders,
+    const std::vector<VideoDecoder> &rmtVideoDecoders)
+{
     std::vector<std::string> codecTypeCandidates;
     for (const auto &rmtDec : rmtVideoDecoders) {
         for (const auto &locEnc : localVideoEncoders) {
