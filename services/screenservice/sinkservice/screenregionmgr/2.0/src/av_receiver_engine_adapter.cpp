@@ -137,6 +137,9 @@ int32_t AVTransReceiverAdapter::OnReceiverEvent(const AVTransEvent& event)
         case EventType::EVENT_START_SUCCESS:
             DHLOGI("av transport recevier engine start success.");
             break;
+        case EventType::EVENT_CHANNEL_CLOSED;
+            adapterCallback_->OnEngineEvent(DScreenEventType::TRANS_CHANNEL_CLOSED, event.peerDevId);
+            break;
         case EventType::EVENT_ENGINE_ERROR:
         case EventType::EVENT_REMOTE_ERROR:
             adapterCallback_->OnEngineEvent(DScreenEventType::ENGINE_ERROR, event.content);
