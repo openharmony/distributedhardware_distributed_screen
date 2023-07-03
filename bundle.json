@@ -29,14 +29,14 @@
         "deps": {
             "components": [
                 "dsoftbus",
-                "hisysevent_native",
+                "hisysevent",
                 "ipc",
                 "hilog",
                 "input",
                 "graphic_standard",
                 "samgr",
                 "safwk",
-                "hitrace_native",
+                "hitrace",
                 "c_utils",
                 "player_framework",
                 "window_manager",

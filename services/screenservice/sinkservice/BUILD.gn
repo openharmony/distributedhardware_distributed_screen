@@ -73,7 +73,7 @@ ohos_shared_library("distributed_screen_sink") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",
-    "hisysevent_native:libhisysevent",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "multimedia_image_framework:image_native",
     "safwk:system_ability_fwk",
