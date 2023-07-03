@@ -127,15 +127,22 @@ int32_t AVTransReceiverAdapter::RegisterAdapterCallback(const std::shared_ptr<AV
 int32_t AVTransReceiverAdapter::OnReceiverEvent(const AVTransEvent& event)
 {
     DHLOGI("OnReceiverEvent enter. event type:%" PRId32, event.type);
+
+    if (adapterCallback_ == nullptr) {
+        DHLOGE("adapter callback is null.");
+        return ERR_DH_AV_TRANS_NULL_VALUE;
+    }
+
     switch (event.type) {
         case EventType::EVENT_START_SUCCESS:
             DHLOGI("av transport recevier engine start success.");
             break;
+        case EventType::EVENT_CHANNEL_CLOSED:
+            adapterCallback_->OnEngineEvent(DScreenEventType::TRANS_CHANNEL_CLOSED, event.peerDevId);
+            break;
         case EventType::EVENT_ENGINE_ERROR:
         case EventType::EVENT_REMOTE_ERROR:
-            if (adapterCallback_ != nullptr) {
-                adapterCallback_->OnEngineEvent(DScreenEventType::RECEIVER_ENGINE_ERROR, event.content);
-            }
+            adapterCallback_->OnEngineEvent(DScreenEventType::ENGINE_ERROR, event.content);
             break;
         default:
             DHLOGE("Invalid event type.");

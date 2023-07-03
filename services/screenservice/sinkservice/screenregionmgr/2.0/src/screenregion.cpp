@@ -68,20 +68,23 @@ int32_t ScreenRegion::Release()
         DHLOGI("ScreenRegion not running, no need release");
         return DH_SUCCESS;
     }
+    ScreenClient::GetInstance().RemoveWindow(windowId_);
+
     if (receiverAdapter_ == nullptr) {
         DHLOGE("av transport receiver adapter is nullptr.");
         return ERR_DH_AV_TRANS_NULL_VALUE;
     }
+
     int32_t ret = receiverAdapter_->Stop();
     if (ret != DH_SUCCESS) {
         DHLOGE("sink trans stop failed.");
-        return ret;
     }
-    ret = ScreenClient::GetInstance().RemoveWindow(windowId_);
+
+    ret = receiverAdapter_->Release();
     if (ret != DH_SUCCESS) {
-        DHLOGE("remove window failed.");
-        return ret;
+        DHLOGE("release av receiver adapter failed.");
     }
+
     isRunning = false;
     return DH_SUCCESS;
 }
@@ -111,21 +114,17 @@ int32_t ScreenRegion::StartReceiverEngine(const std::string &content)
 int32_t ScreenRegion::StopReceiverEngine()
 {
     DHLOGI("StopReceiverEngine, remoteDevId: %s, screenId: %u", GetAnonyString(remoteDevId_).c_str(), screenId_);
+
+    int32_t ret = ScreenClient::GetInstance().RemoveWindow(windowId_);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("remove window failed.");
+    }
+
     if (receiverAdapter_ == nullptr) {
         DHLOGE("av transport receiver adapter is null.");
         return ERR_DH_AV_TRANS_NULL_VALUE;
     }
-    int32_t ret = receiverAdapter_->Stop();
-    if (ret != DH_SUCCESS) {
-        DHLOGE("stop av receiver adapter failed.");
-        return ERR_DH_AV_TRANS_STOP_FAILED;
-    }
-    ret = receiverAdapter_->Release();
-    if (ret != DH_SUCCESS) {
-        DHLOGE("release av receiver adapter failed.");
-        return ERR_DH_AV_TRANS_STOP_FAILED;
-    }
-    return DH_SUCCESS;
+    return receiverAdapter_->Stop();
 }
 
 int32_t ScreenRegion::SetUp(const std::string &content)
@@ -139,7 +138,6 @@ int32_t ScreenRegion::SetUp(const std::string &content)
         return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
     }
     screenId_ = contentJson[KEY_SCREEN_ID].get<uint64_t>();
-    remoteDevId_ = contentJson[KEY_DEV_ID].get<std::string>();
     displayId_ = Rosen::DisplayManager::GetInstance().GetDefaultDisplayId();
     videoParam_ = std::make_shared<VideoParam>(contentJson[KEY_VIDEO_PARAM].get<VideoParam>());
     mapRelation_ = std::make_shared<DScreenMapRelation>(contentJson[KEY_MAPRELATION].get<DScreenMapRelation>());
@@ -243,19 +241,31 @@ void ScreenRegion::PublishMessage(const DHTopic topic, const uint64_t &screenId,
 
 void ScreenRegion::OnEngineEvent(DScreenEventType event, const std::string &content)
 {
-    (void)event;
     (void)content;
+    if (event == DScreenEventType::ENGINE_ERROR) {
+        StopReceiverEngine();
+    }
 }
 
 void ScreenRegion::OnEngineMessage(const std::shared_ptr<AVTransMessage> &message)
 {
-    DHLOGI("OnEngineMessage enter");
     if (message == nullptr) {
         DHLOGE("received engine message is null.");
         return;
     }
-    if (message->type_ == DScreenMsgType::SETUP_SIGNAL) {
-        StartReceiverEngine(message->content_);
+
+    DHLOGI("On source device engine message received, message type =%d.", message->type_);
+    if (message->type_ == DScreenMsgType::START_MIRROR) {
+        int32_t ret = StartReceiverEngine(message->content_);
+        DScreenMsgType msgType = (ret == DH_SUCCESS) ? DScreenMsgType::START_MIRROR_SUCCESS :
+            DScreenMsgType::START_MIRROR_FAIL;
+
+        json paramJson;
+        paramJson[KEY_DEV_ID] = remoteDevId_;
+        auto avMessage = std::make_shared<AVTransMessage>(msgType, paramJson.dump(), remoteDevId_);
+        receiverAdapter_->SendMessageToRemote(avMessage);
+    } else if (message->type_ == DScreenMsgType::STOP_MIRROR) {
+        StopReceiverEngine();
     }
 }
 
@@ -365,9 +375,6 @@ std::shared_ptr<WindowProperty> ScreenRegion::GetWindowProperty()
 bool ScreenRegion::CheckContentJson(json &contentJson)
 {
     if (!IsUInt64(contentJson, KEY_SCREEN_ID)) {
-        return false;
-    }
-    if (!IsString(contentJson, KEY_DEV_ID)) {
         return false;
     }
     return true;

@@ -123,6 +123,7 @@ private:
     void ChooseParameter(std::string &codecType, std::string &pixelFormat);
     bool CheckJsonData(json &attrJson);
     void SetState(DScreenState state);
+    int32_t WaitForSinkStarted();
 
     std::string devId_;
     std::string dhId_;
@@ -141,6 +142,10 @@ private:
     bool taskThreadRunning_;
     std::shared_ptr<AVTransSenderAdapter> senderAdapter_;
     OHOS::sptr<OHOS::SyncFence> syncFence_ = SyncFence::INVALID_FENCE;
+
+    std::mutex waitSinkMtx_;
+    std::condition_variable waitSinkCondVar_;
+    std::atomic<bool> sinkStartSuccess_ {false};
 };
 } // namespace V2_0
 } // namespace DistributedHardware

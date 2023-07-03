@@ -105,14 +105,13 @@ int32_t ScreenRegionManager::CreateDScreenRegion(const std::string &peerDevId)
 int32_t ScreenRegionManager::DestoryDScreenRegion(const std::string &peerDevId)
 {
     DHLOGI("DestoryDScreenRegion for peerDevId: %s", GetAnonyString(peerDevId).c_str());
-    for (auto iter = screenRegions_.begin(); iter != screenRegions_.end();) {
-        if ((*iter)->GetRemoteDevId() == peerDevId) {
-            (*iter)->Release();
-            iter = screenRegions_.erase(iter);
-        } else {
-            iter++;
+    std::lock_guard<std::mutex> lock(screenRegionsMtx_);
+    for (const auto &region : screenRegions_) {
+        if (region != nullptr) {
+            region->Release();
         }
     }
+    screenRegions_.clear();
     return DH_SUCCESS;
 }
 
