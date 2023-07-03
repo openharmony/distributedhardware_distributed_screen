@@ -599,7 +599,7 @@ void DScreen::OnEngineMessage(const std::shared_ptr<AVTransMessage> &message)
         return;
     }
     DHLOGI("On sink device engine message received, message type =%d.", message->type_);
-    if ((message->type_ == DScreenMsgType::START_MIRROR_SUCCESS) || 
+    if ((message->type_ == DScreenMsgType::START_MIRROR_SUCCESS) ||
         (message->type_ == DScreenMsgType::START_MIRROR_FAIL)) {
         sinkStartSuccess_ = (message->type_ == DScreenMsgType::START_MIRROR_SUCCESS);
         waitSinkCondVar_.notify_one();
