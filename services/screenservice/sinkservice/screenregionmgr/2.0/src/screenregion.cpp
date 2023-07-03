@@ -316,8 +316,8 @@ void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer
         .width = videoParam_->GetVideoWidth(),
         .height = videoParam_->GetVideoHeight(),
         .strideAlignment = STRIDE_ALIGNMENT,
-        .format = PIXEL_FMT_YCRCB_420_SP,
-        .usage = HBM_USE_CPU_READ | HBM_USE_CPU_WRITE | HBM_USE_MEM_DMA,
+        .format = GRAPHIC_PIXEL_FMT_YCRCB_420_SP,
+        .usage = BUFFER_USAGE_CPU_READ | BUFFER_USAGE_CPU_WRITE | BUFFER_USAGE_MEM_DMA,
     };
     SurfaceError surfaceErr = windowSurface_->RequestBuffer(wsBuffer, releaseFence, requestConfig);
     if (surfaceErr != SURFACE_ERROR_OK || wsBuffer == nullptr) {
