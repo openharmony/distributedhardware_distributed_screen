@@ -66,7 +66,7 @@ ohos_unittest("DscreenRegionMgrTest") {
     "distributed_hardware_fwk:distributed_av_receiver",
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",
-    "hisysevent_native:libhisysevent",
+    "hisysevent:libhisysevent",
     "multimedia_image_framework:image_native",
     "window_manager:libdm",
   ]

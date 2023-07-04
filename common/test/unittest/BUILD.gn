@@ -50,7 +50,7 @@ ohos_unittest("ScreenCommonTest") {
     "c_utils:utils",
     "dsoftbus:softbus_client",
     "hilog:libhilog",
-    "hisysevent_native:libhisysevent",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
   ]
 }

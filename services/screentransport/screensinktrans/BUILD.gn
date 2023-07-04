@@ -78,8 +78,8 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "dsoftbus:softbus_client",
     "graphic_standard:surface",
     "hilog:libhilog",
-    "hisysevent_native:libhisysevent",
-    "hitrace_native:hitrace_meter",
+    "hisysevent:libhisysevent",
+    "hitrace:hitrace_meter",
     "player_framework:media_client",
   ]
 
