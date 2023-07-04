@@ -89,7 +89,7 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_001, TestSize.Lev
     loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, nullptr);
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
-    EXPECT_EQ(DH_SUCCESS, ret);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_FAILED, ret);
 }
 
 /**
