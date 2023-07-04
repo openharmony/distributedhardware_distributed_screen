@@ -34,7 +34,6 @@ void SoftbusOnSessionClosedFuzzTest(const uint8_t* data, size_t size)
     if ((data == nullptr) || (size < (sizeof(int32_t)))) {
         return;
     }
-    std::string peerDevId(reinterpret_cast<const char*>(data), size);
     int32_t sessionId = *(reinterpret_cast<const int32_t*>(data));
     std::shared_ptr<SoftbusAdapter> adapter = std::make_shared<SoftbusAdapter>();
     adapter->OnSoftbusSessionClosed(sessionId);
