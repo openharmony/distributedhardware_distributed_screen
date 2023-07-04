@@ -81,7 +81,7 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_001, TestSize.Lev
     const std::string devId = "devId";
     const std::string dhId = "dhId";
     EnableParam param;
-    param.version = "1.0";
+    param.version = "2.0";
     param.attrs = "attrs";
     std::string callbackParam = "callbackParam";
     DScreenSourceHandler::GetInstance().InitSource("DScreenSourceHandlerTest");
