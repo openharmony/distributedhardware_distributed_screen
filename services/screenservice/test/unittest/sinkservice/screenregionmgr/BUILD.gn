@@ -67,7 +67,7 @@ ohos_unittest("DscreenRegionMgrTest") {
     "graphic_standard:libgraphic_utils",
     "graphic_standard:surface",
     "hisysevent:libhisysevent",
-    "multimedia_image_framework:image_native",
+    "image_framework:image_native",
     "window_manager:libdm",
   ]
 }

@@ -40,7 +40,7 @@
                 "c_utils",
                 "player_framework",
                 "window_manager",
-                "multimedia_image_framework",
+                "image_framework",
                 "distributed_hardware_fwk"
             ],
             "third_party": [
