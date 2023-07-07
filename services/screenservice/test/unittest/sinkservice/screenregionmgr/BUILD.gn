@@ -64,8 +64,8 @@ ohos_unittest("DscreenRegionMgrTest") {
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributed_av_receiver",
-    "graphic_standard:libgraphic_utils",
-    "graphic_standard:surface",
+    "graphic_2d:libgraphic_utils",
+    "graphic_2d:surface",
     "hisysevent:libhisysevent",
     "multimedia_image_framework:image_native",
     "window_manager:libdm",
