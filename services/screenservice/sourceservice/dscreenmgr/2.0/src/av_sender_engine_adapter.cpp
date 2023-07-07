@@ -49,9 +49,9 @@ int32_t AVTransSenderAdapter::Release()
         if (ret != DH_AVT_SUCCESS) {
             DHLOGE("release av transport sender engine failed");
         }
+        senderEngine_ = nullptr;
     }
     initialized_ = false;
-    senderEngine_ = nullptr;
     chnCreateSuccess_ = false;
     transStartSuccess_ = false;
     return DH_SUCCESS;

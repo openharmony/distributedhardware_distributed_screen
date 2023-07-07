@@ -186,7 +186,7 @@ int32_t DScreenManager::StopDScreenMirror(const std::shared_ptr<DScreen> &dScree
 }
 
 void DScreenCallback::OnRegResult(const std::shared_ptr<DScreen> &dScreen,
-    const std::string &reqId, const int32_t status, const std::string &data)
+    const std::string &reqId, int32_t status, const std::string &data)
 {
     if (dScreen == nullptr) {
         DHLOGE("DScreenCallback::OnRegResult, dScreen id nullptr");
@@ -198,7 +198,7 @@ void DScreenCallback::OnRegResult(const std::shared_ptr<DScreen> &dScreen,
 }
 
 void DScreenCallback::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
-    const std::string &reqId, const int32_t status, const std::string &data)
+    const std::string &reqId, int32_t status, const std::string &data)
 {
     if (dScreen == nullptr) {
         DHLOGE("DScreenCallback::OnUnregResult, dScreen id nullptr");

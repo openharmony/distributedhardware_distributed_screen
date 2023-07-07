@@ -52,15 +52,15 @@ public:
         taskId_(""), taskParam_(taskParam) {};
     ~Task() {};
 
-    TaskType GetTaskType()
+    TaskType GetTaskType() const
     {
         return taskType_;
     };
-    std::string GetTaskId()
+    std::string GetTaskId() const
     {
         return taskId_;
     };
-    std::string GetTaskParam()
+    std::string GetTaskParam() const
     {
         return taskParam_;
     };
@@ -131,7 +131,7 @@ private:
     std::shared_ptr<VideoParam> videoParam_ = nullptr;
     std::shared_ptr<IDScreenCallback> dscreenCallback_ = nullptr;
     sptr<Surface> consumerSurface_ = nullptr;
-    sptr<IBufferConsumerListener> consumerBufferListener_;
+    sptr<IBufferConsumerListener> consumerBufferListener_ = nullptr;
 
     DScreenState curState_;
     std::mutex stateMtx_;

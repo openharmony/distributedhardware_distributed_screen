@@ -52,13 +52,13 @@ public:
     ~DScreenManager();
 
     void OnRegResult(const std::shared_ptr<DScreen> &dScreen, const std::string &reqId,
-        const int32_t status, const std::string &data);
+        int32_t status, const std::string &data);
     void OnUnregResult(const std::shared_ptr<DScreen> &dScreen, const std::string &reqId,
-        const int32_t status, const std::string &data);
+        int32_t status, const std::string &data);
 
     int32_t Initialize();
     int32_t Release();
-    int32_t EnableDistributedScreen(const std::string &devId, const std::string &dhId, const  std::string &attrs,
+    int32_t EnableDistributedScreen(const std::string &devId, const std::string &dhId, const std::string &attrs,
         const std::string &reqId);
     int32_t DisableDistributedScreen(const std::string &devId, const std::string &dhId, const std::string &reqId);
     void RegisterDScreenCallback(const sptr<IDScreenSourceCallback> &callback);

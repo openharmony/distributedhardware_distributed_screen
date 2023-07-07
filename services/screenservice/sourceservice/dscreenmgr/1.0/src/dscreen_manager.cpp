@@ -157,7 +157,7 @@ int32_t DScreenManager::AddToGroup(const std::shared_ptr<DScreen> &changedScreen
     }
     std::shared_ptr<DScreenMapRelation> mapRelation = ScreenMgrAdapter::GetInstance().GetMapRelation(screenId);
     if (mapRelation == nullptr) {
-        DHLOGE("mapRelation construct failed. screenId: %", PRIu64 screenId);
+        DHLOGE("mapRelation construct failed. screenId: %" PRIu64, screenId);
         return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
     }
 
