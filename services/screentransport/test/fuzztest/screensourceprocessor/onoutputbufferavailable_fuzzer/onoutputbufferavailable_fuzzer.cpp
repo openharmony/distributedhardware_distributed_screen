@@ -33,7 +33,7 @@ void OnOutputBufferAvailableFuzzTest(const uint8_t* data, size_t size)
     std::shared_ptr<ImageSourceEncoder> encoder = std::make_shared<ImageSourceEncoder>(listener);
     std::shared_ptr<ImageEncoderCallback> encoderCallback = std::make_shared<ImageEncoderCallback>(encoder);
     uint32_t index = *(reinterpret_cast<const uint32_t*>(data));
-    Media::AVCodecBufferInfo info = *(reinterpret_cast<const Media::AVCodecBufferInfo*>(data));
+    Media::AVCodecBufferInfo info;
     Media::AVCodecBufferFlag flag = Media::AVCODEC_BUFFER_FLAG_NONE;
     encoderCallback->OnOutputBufferAvailable(index, info, flag);
 }

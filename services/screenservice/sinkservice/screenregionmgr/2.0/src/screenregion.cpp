@@ -113,7 +113,7 @@ int32_t ScreenRegion::StartReceiverEngine(const std::string &content)
 
 int32_t ScreenRegion::StopReceiverEngine()
 {
-    DHLOGI("StopReceiverEngine, remoteDevId: %s, screenId: %u", GetAnonyString(remoteDevId_).c_str(), screenId_);
+    DHLOGI("StopReceiverEngine, remoteDevId: %s, screenId is: %" PRIu64, GetAnonyString(remoteDevId_).c_str(), screenId_);
 
     int32_t ret = ScreenClient::GetInstance().RemoveWindow(windowId_);
     if (ret != DH_SUCCESS) {
