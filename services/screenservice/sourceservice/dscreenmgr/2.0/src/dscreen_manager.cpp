@@ -128,7 +128,8 @@ void DScreenManager::HandleScreenChange(const std::shared_ptr<DScreen> &changedS
         DHLOGE("DScreenManager::HandleScreenChange, dScreen is null.");
         return;
     }
-    DHLOGI("DScreenManager::HandleScreenChange, screenId: %" PRIu64" changeEvent: %" PRIu64, changedScreen->GetScreenId(), event);
+    DHLOGI("DScreenManager::HandleScreenChange, screenId: %" PRIu64" changeEvent: %" PRIu64,
+        changedScreen->GetScreenId(), event);
     if (event == Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP) {
         if (StartDScreenMirror(changedScreen) != DH_SUCCESS) {
             DHLOGE("start dScreen mirror failed.");

@@ -31,7 +31,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace V2_0 {
-ScreenRegion::ScreenRegion(const std::string &remoteDevId) : remoteDevId_(remoteDevId)
+ScreenRegion::ScreenRegion(const std::string &remoteDevId) : screenId_(0), displayId_(0), remoteDevId_(remoteDevId)
 {
     DHLOGI("ScreenRegion ctor.");
     frameNumber_.store(0);
@@ -113,7 +113,8 @@ int32_t ScreenRegion::StartReceiverEngine(const std::string &content)
 
 int32_t ScreenRegion::StopReceiverEngine()
 {
-    DHLOGI("StopReceiverEngine, remoteDevId: %s, screenId is: %" PRIu64, GetAnonyString(remoteDevId_).c_str(), screenId_);
+    DHLOGI("StopReceiverEngine, remoteDevId: %s, screenId is: %" PRIu64,
+        GetAnonyString(remoteDevId_).c_str(), screenId_);
 
     int32_t ret = ScreenClient::GetInstance().RemoveWindow(windowId_);
     if (ret != DH_SUCCESS) {
