@@ -52,15 +52,15 @@ public:
         taskId_(""), taskParam_(taskParam) {};
     ~Task() {};
 
-    TaskType GetTaskType()
+    TaskType GetTaskType() const
     {
         return taskType_;
     };
-    std::string GetTaskId()
+    std::string GetTaskId() const
     {
         return taskId_;
     };
-    std::string GetTaskParam()
+    std::string GetTaskParam() const
     {
         return taskParam_;
     };
@@ -121,7 +121,7 @@ private:
     int32_t RemoveSurface();
     int32_t SetUp();
     void ChooseParameter(std::string &codecType, std::string &pixelFormat);
-    bool CheckJsonData(json &attrJson);
+    bool CheckJsonData(const json &attrJson);
     void SetState(DScreenState state);
     int32_t WaitForSinkStarted();
 
@@ -131,7 +131,7 @@ private:
     std::shared_ptr<VideoParam> videoParam_ = nullptr;
     std::shared_ptr<IDScreenCallback> dscreenCallback_ = nullptr;
     sptr<Surface> consumerSurface_ = nullptr;
-    sptr<IBufferConsumerListener> consumerBufferListener_;
+    sptr<IBufferConsumerListener> consumerBufferListener_ = nullptr;
 
     DScreenState curState_;
     std::mutex stateMtx_;

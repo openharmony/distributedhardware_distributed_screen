@@ -107,7 +107,7 @@ void DScreenGroupListener::OnChange(const std::vector<uint64_t> &screenIds, Rose
     for (uint64_t screenId : screenIds) {
         std::shared_ptr<DScreen> changedScreen = DScreenManager::GetInstance().FindDScreenByScreenId(screenId);
         if (changedScreen == nullptr) {
-            DHLOGD("screen change not about remote screen, screenId: %u", screenId);
+            DHLOGD("screen change not about remote screen, screenId: %" PRIu64, screenId);
             continue;
         }
         DScreenManager::GetInstance().HandleScreenChange(changedScreen, event);
@@ -123,7 +123,7 @@ void DScreenManager::HandleScreenChange(const std::shared_ptr<DScreen> &changedS
     }
 
     uint64_t screenId = changedScreen->GetScreenId();
-    DHLOGI("DScreenManager::HandleScreenChange, screenId: %u, changeEvent: %u", screenId, event);
+    DHLOGI("DScreenManager::HandleScreenChange, screenId: %" PRIu64", changeEvent: %" PRIu64, screenId, event);
     if (event == Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP) {
         if (AddToGroup(changedScreen, screenId) != DH_SUCCESS) {
             DHLOGE("AddToGroup failed.");
@@ -145,7 +145,7 @@ void DScreenManager::HandleScreenChange(const std::shared_ptr<DScreen> &changedS
 
 int32_t DScreenManager::AddToGroup(const std::shared_ptr<DScreen> &changedScreen, uint64_t screenId)
 {
-    DHLOGI("DScreenManager::ADDToGroup, screenId: %u", screenId);
+    DHLOGI("DScreenManager::ADDToGroup, screenId: %" PRIu64, screenId);
     if (changedScreen == nullptr) {
         DHLOGE("DScreenManager::ADDToGroup, dScreen is null.");
         return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
@@ -157,7 +157,7 @@ int32_t DScreenManager::AddToGroup(const std::shared_ptr<DScreen> &changedScreen
     }
     std::shared_ptr<DScreenMapRelation> mapRelation = ScreenMgrAdapter::GetInstance().GetMapRelation(screenId);
     if (mapRelation == nullptr) {
-        DHLOGE("mapRelation construct failed. screenId: %u", screenId);
+        DHLOGE("mapRelation construct failed. screenId: %" PRIu64, screenId);
         return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
     }
 
@@ -180,7 +180,7 @@ int32_t DScreenManager::AddToGroup(const std::shared_ptr<DScreen> &changedScreen
 
 int32_t DScreenManager::RemoveFromGroup(const std::shared_ptr<DScreen> &changedScreen, uint64_t screenId)
 {
-    DHLOGI("DScreenManager::RemoveFromGroup, screenId: %u", screenId);
+    DHLOGI("DScreenManager::RemoveFromGroup, screenId: %" PRIu64, screenId);
     if (changedScreen == nullptr) {
         DHLOGE("DScreenManager::RemoveFromGroup, dScreen is null.");
         return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
@@ -329,7 +329,7 @@ void DScreenManager::RegisterDScreenCallback(const sptr<IDScreenSourceCallback> 
 
 std::shared_ptr<DScreen> DScreenManager::FindDScreenByScreenId(uint64_t screenId)
 {
-    DHLOGD("FindDScreenByScreenId, screenId: %u", screenId);
+    DHLOGD("FindDScreenByScreenId, screenId: %" PRIu64, screenId);
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     for (const auto &iter : dScreens_) {
         std::shared_ptr<DScreen> dScreen = iter.second;
@@ -341,7 +341,7 @@ std::shared_ptr<DScreen> DScreenManager::FindDScreenByScreenId(uint64_t screenId
             return dScreen;
         }
     }
-    DHLOGD("DScreen not found, screenId: %u", screenId);
+    DHLOGD("DScreen not found, screenId: %" PRIu64, screenId);
     return nullptr;
 }
 

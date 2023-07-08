@@ -129,6 +129,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
             "enable param json is invalid.");
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
             GetAnonyString(dhId_).c_str(), "check json data failed.");
+        SetState(DISABLED);
         return;
     }
     if (videoParam_ == nullptr) {
@@ -188,6 +189,10 @@ void DScreen::HandleDisable(const std::string &taskId)
 void DScreen::HandleConnect()
 {
     DHLOGI("HandleConnect, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    if (GetState() != ENABLED) {
+        DHLOGE("GetState is not ENABLED, HandleConnect failed.");
+        return;
+    }
     SetState(CONNECTING);
     int32_t ret = StartSenderEngine();
     if (ret != DH_SUCCESS) {
@@ -568,7 +573,7 @@ void DScreen::TaskThreadLoop()
     }
 }
 
-bool DScreen::CheckJsonData(json &attrJson)
+bool DScreen::CheckJsonData(const json &attrJson)
 {
     if (attrJson.is_discarded()) {
         DHLOGE("enable param json is invalid.");

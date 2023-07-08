@@ -114,7 +114,7 @@ void DScreenGroupListener::OnChange(const std::vector<uint64_t> &screenIds, Rose
     for (uint64_t screenId : screenIds) {
         std::shared_ptr<DScreen> changedScreen = DScreenManager::GetInstance().FindDScreenById(screenId);
         if (changedScreen == nullptr) {
-            DHLOGD("screen change not about remote screen, screenId: %u", screenId);
+            DHLOGD("screen change not about remote screen, screenId: %" PRIu64, screenId);
             continue;
         }
         DScreenManager::GetInstance().HandleScreenChange(changedScreen, event);
@@ -128,7 +128,8 @@ void DScreenManager::HandleScreenChange(const std::shared_ptr<DScreen> &changedS
         DHLOGE("DScreenManager::HandleScreenChange, dScreen is null.");
         return;
     }
-    DHLOGI("DScreenManager::HandleScreenChange, screenId: %u, changeEvent: %", changedScreen->GetScreenId(), event);
+    DHLOGI("DScreenManager::HandleScreenChange, screenId: %" PRIu64" changeEvent: %" PRIu64,
+        changedScreen->GetScreenId(), event);
     if (event == Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP) {
         if (StartDScreenMirror(changedScreen) != DH_SUCCESS) {
             DHLOGE("start dScreen mirror failed.");
@@ -154,7 +155,7 @@ int32_t DScreenManager::StartDScreenMirror(const std::shared_ptr<DScreen> &dScre
         return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
     }
     uint64_t screenId = dScreen->GetScreenId();
-    DHLOGI("DScreenManager::StartDScreenMirror, screenId: %u", screenId);
+    DHLOGI("DScreenManager::StartDScreenMirror, screenId: %" PRIu64, screenId);
     if (dScreen->GetState() == CONNECTING) {
         DHLOGD("screen is connecting, no need handle change");
         return DH_SUCCESS;
@@ -165,7 +166,7 @@ int32_t DScreenManager::StartDScreenMirror(const std::shared_ptr<DScreen> &dScre
         return ret;
     }
     dScreen->AddTask(std::make_shared<Task>(TaskType::TASK_CONNECT, ""));
-    DHLOGI("StartDScreenMirror success, screenId:%u, peerDeviceId:%s", screenId,
+    DHLOGI("StartDScreenMirror success, screenId:%", PRIu64" peerDeviceId:%s", screenId,
         GetAnonyString(dScreen->GetDevId()).c_str());
     return DH_SUCCESS;
 }
@@ -176,7 +177,7 @@ int32_t DScreenManager::StopDScreenMirror(const std::shared_ptr<DScreen> &dScree
         DHLOGE("DScreenManager::StopDScreenMirror, dScreen is null.");
         return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
     }
-    DHLOGI("DScreenManager::StopDScreenMirror, screenId: %u", dScreen->GetScreenId());
+    DHLOGI("DScreenManager::StopDScreenMirror, screenId: %" PRIu64, dScreen->GetScreenId());
     if (dScreen->GetState() == DISCONNECTING) {
         DHLOGD("screen is disconnecting, no need handle change");
         return DH_SUCCESS;
@@ -210,7 +211,7 @@ void DScreenCallback::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
 }
 
 void DScreenManager::OnRegResult(const std::shared_ptr<DScreen> &dScreen,
-    const std::string &reqId, const int32_t status, const std::string &data)
+    const std::string &reqId, int32_t status, const std::string &data)
 {
     DHLOGI("DScreenManager::OnRegResult, devId: %s, dhId: %s, reqId: %s",
         GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(), reqId.c_str());
@@ -222,7 +223,7 @@ void DScreenManager::OnRegResult(const std::shared_ptr<DScreen> &dScreen,
 }
 
 void DScreenManager::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
-    const std::string &reqId, const int32_t status, const std::string &data)
+    const std::string &reqId, int32_t status, const std::string &data)
 {
     DHLOGI("DScreenManager::OnUnregResult, devId: %s, dhId: %s, reqId: %s",
         GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(), reqId.c_str());
@@ -308,7 +309,7 @@ void DScreenManager::RegisterDScreenCallback(const sptr<IDScreenSourceCallback> 
 
 std::shared_ptr<DScreen> DScreenManager::FindDScreenById(uint64_t screenId)
 {
-    DHLOGD("FindDScreenById, screenId: %u", screenId);
+    DHLOGD("FindDScreenById, screenId: %" PRIu64, screenId);
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     for (const auto &iter : dScreens_) {
         std::shared_ptr<DScreen> dScreen = iter.second;
@@ -319,7 +320,7 @@ std::shared_ptr<DScreen> DScreenManager::FindDScreenById(uint64_t screenId)
             return dScreen;
         }
     }
-    DHLOGD("DScreen not found, screenId: %u", screenId);
+    DHLOGD("DScreen not found, screenId: %" PRIu64, screenId);
     return nullptr;
 }
 
