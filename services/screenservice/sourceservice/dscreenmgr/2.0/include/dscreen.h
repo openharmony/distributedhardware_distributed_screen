@@ -121,7 +121,7 @@ private:
     int32_t RemoveSurface();
     int32_t SetUp();
     void ChooseParameter(std::string &codecType, std::string &pixelFormat);
-    bool CheckJsonData(json &attrJson);
+    bool CheckJsonData(const json &attrJson);
     void SetState(DScreenState state);
     int32_t WaitForSinkStarted();
 
