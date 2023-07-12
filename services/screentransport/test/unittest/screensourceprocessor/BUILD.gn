@@ -61,8 +61,8 @@ ohos_unittest("SourceProcessorTest") {
 
   external_deps = [
     "c_utils:utils",
-    "graphic_standard:surface",
-    "graphic_standard:sync_fence",
+    "graphic_2d:surface",
+    "graphic_2d:sync_fence",
     "ipc:ipc_core",
     "player_framework:media_client",
   ]

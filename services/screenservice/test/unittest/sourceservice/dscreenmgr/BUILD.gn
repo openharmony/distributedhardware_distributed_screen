@@ -69,9 +69,9 @@ ohos_unittest("DscreenMgrTest") {
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributed_av_sender",
-    "graphic_standard:libcomposer",
-    "graphic_standard:surface",
-    "graphic_standard:sync_fence",
+    "graphic_2d:libcomposer",
+    "graphic_2d:surface",
+    "graphic_2d:sync_fence",
     "hdf_core:libhdi",
     "player_framework:media_client",
     "window_manager:libdm",
