@@ -337,7 +337,6 @@ void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer
         return;
     }
     GetWSBuffer(wsBuffer, buffer);
-    
     BufferFlushConfig flushConfig = { {0, 0, wsBuffer->GetWidth(), wsBuffer->GetHeight()}, 0};
     surfaceErr = windowSurface_->FlushBuffer(wsBuffer, -1, flushConfig);
     if (surfaceErr != SURFACE_ERROR_OK) {

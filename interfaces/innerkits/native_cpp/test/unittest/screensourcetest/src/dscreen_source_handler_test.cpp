@@ -32,7 +32,7 @@ void DScreenSourceHandlerTest::TearDownTestCase(void) {}
 
 void DScreenSourceHandlerTest::SetUp(void)
 {
-    DScreenSourceHandler::GetInstance().InitSource("DScreenSourceHandlerTest");
+    DScreenSourceHandler::GetInstance().InitSource("2.0");
 }
 
 void DScreenSourceHandlerTest::TearDown(void)
@@ -84,12 +84,11 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_001, TestSize.Lev
     param.version = "2.0";
     param.attrs = "attrs";
     std::string callbackParam = "callbackParam";
-    DScreenSourceHandler::GetInstance().InitSource("DScreenSourceHandlerTest");
     sptr<DScreenSourceLoadCallback> loadCallback = new DScreenSourceLoadCallback(callbackParam);
     loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, nullptr);
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
-    EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_FAILED, ret);
+    EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 /**
