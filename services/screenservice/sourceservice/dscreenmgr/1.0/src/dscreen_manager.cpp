@@ -544,7 +544,7 @@ void DScreenManager::HandleNotifySetUpResult(const std::string &remoteDevId, con
         DHLOGE("remote sink set up failed, errCode: %" PRId32", reason: %s", errCode, errContent.c_str());
         if (dScreens_[dScreenIdx] == nullptr) {
             DHLOGE("dScreen is nullptr.");
-            return ERR_DH_SCREEN_SA_DISABLE_FAILED;
+            return;
         }
         dScreens_[dScreenIdx]->SetState(ENABLED);
         return;
