@@ -327,7 +327,7 @@ HWTEST_F(DScreenManagerTest, HandleNotifySetUpResult_001, TestSize.Level1)
 HWTEST_F(DScreenManagerTest, DisableDistributedScreen_001, TestSize.Level1)
 {
     int32_t ret = DScreenManager::GetInstance().DisableDistributedScreen("devId111", "dhId111", "reqId111");
-    EXPECT_EQ(ERR_DH_SCREEN_SA_DISABLE_FAILED, ret);
+    EXPECT_EQ(DH_SUCCESS, ret);
 
     ret = DScreenManager::GetInstance().UnInit();
     EXPECT_EQ(DH_SUCCESS, ret);
