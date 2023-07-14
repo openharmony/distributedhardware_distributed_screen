@@ -209,6 +209,7 @@ constexpr uint8_t TASK_WAIT_SECONDS = 1;
 constexpr int32_t JPEG_QUALITY = 80;
 constexpr uint32_t BIT_RATE = 12000000;
 constexpr int32_t WAIT_TIMEOUT_MS = 5000;
+constexpr uint32_t SYSTEM_PARAM_VALUE_SIZE = 50;
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif
