@@ -69,7 +69,7 @@ bool DScreenSinkService::Init()
 int32_t DScreenSinkService::InitSink(const std::string &params)
 {
     DHLOGI("Init sink dscreen region manager, params: %s", params.c_str());
-    if(IsSupportAVTransEngine(params)) {
+    if (IsSupportAVTransEngine(params)) {
         int32_t ret = V2_0::ScreenRegionManager::GetInstance().Initialize();
         if (ret != DH_SUCCESS) {
             DHLOGE("Initialize V2_0::ScreenRegionManage failed. err: %d", ret);

@@ -112,7 +112,7 @@ std::string GetInterruptString(const std::string &value)
     return res;
 }
 
-bool GetSystemParam(const char *inName, int32_t outValue);
+bool GetSystemParam(const char *inName, int32_t outValue)
 {
     if (inName == nullptr) {
         DHLOGE("get system parameter failed, input param name is nullptr.");

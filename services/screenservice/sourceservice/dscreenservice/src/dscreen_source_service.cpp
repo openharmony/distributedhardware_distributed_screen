@@ -80,13 +80,13 @@ int32_t DScreenSourceService::InitSource(const std::string &params, const sptr<I
         return ERR_DH_SCREEN_SA_INIT_SOURCE_FAIL;
     }
 
-    if(IsSupportAVTransEngine(params)) {
-       int32_t ret = V2_0::DScreenManager::GetInstance().Initialize();
+    if (IsSupportAVTransEngine(params)) {
+        int32_t ret = V2_0::DScreenManager::GetInstance().Initialize();
         if (ret != DH_SUCCESS) {
             DHLOGE("Initialize V2_0::DScreenManager failed. err: %" PRId32, ret);
             return ret;
         }
-        V2_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback); 
+        V2_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
     } else {
         int32_t ret = V1_0::DScreenManager::GetInstance().Init();
         if (ret != DH_SUCCESS) {
