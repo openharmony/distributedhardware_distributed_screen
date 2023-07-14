@@ -242,7 +242,7 @@ void DScreenManager::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
 }
 
 int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const std::string &dhId,
-    const std::string &attrs, const std::string &reqId)
+    const EnableParam &param, const std::string &reqId)
 {
     DHLOGI("EnableDistributedScreen2.0, devId: %s, dhId:%s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
@@ -263,9 +263,9 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
         DHLOGI("dScreen state Already is ENABLED or ENABLING.");
         return DH_SUCCESS;
     }
-    dScreen ->SetScreenVersion(version_);
+    dScreen ->SetScreenVersion(param.version);
     dScreens_[dScreenIdx] = dScreen;
-    int32_t ret = dScreen->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
+    int32_t ret = dScreen->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, param.attrs));
     if (ret != DH_SUCCESS) {
         DHLOGE("EnableDistributedScreen, add task failed. devId: %s, dhId:%s",
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
@@ -539,16 +539,6 @@ void DScreenManager::HandleNotifySetUpResult(const std::string &remoteDevId, con
     }
 
     dScreens_[dScreenIdx]->AddTask(std::make_shared<Task>(TaskType::TASK_CONNECT, ""));
-}
-
-void DScreenManager::SetScreenVersion(std::string &version)
-{
-    version_ = version;
-}
-
-std::string DScreenManager::GetScreenVersion()
-{
-    return version_;
 }
 } // namespace V1_0
 } // namespace DistributedHardware

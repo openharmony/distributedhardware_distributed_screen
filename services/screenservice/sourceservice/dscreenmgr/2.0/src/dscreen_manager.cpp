@@ -235,7 +235,7 @@ void DScreenManager::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
 }
 
 int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const std::string &dhId,
-    const std::string &attrs, const std::string &reqId)
+    const EnableParam &param, const std::string &reqId)
 {
     DHLOGI("EnableDistributedScreen3.0, devId: %s, dhId:%s", GetAnonyString(devId).c_str(),
         GetAnonyString(dhId).c_str());
@@ -255,7 +255,7 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
         return DH_SUCCESS;
     }
     dScreens_[dScreenIdx] = dScreen;
-    int32_t ret = dScreen->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
+    int32_t ret = dScreen->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, param.attrs));
     if (ret != DH_SUCCESS) {
         DHLOGE("EnableDistributedScreen, add task failed. devId: %s, dhId:%s",
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());

@@ -34,7 +34,7 @@ public:
     virtual int32_t Stop() = 0;
     virtual int32_t RegisterStateCallback(const std::shared_ptr<IScreenSinkTransCallback> &callBack) = 0;
     virtual int32_t SetImageSurface(const sptr<Surface> &surface) = 0;
-    virtual void SetScreenVersion(std::string &version) = 0;
+    virtual void SetScreenVersion(const std::string &version) = 0;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

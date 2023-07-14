@@ -200,14 +200,9 @@ sptr<Surface> ScreenSourceTrans::GetImageSurface()
     return imageProcessor_->GetImageSurface();
 }
 
-void ScreenSourceTrans::SetScreenVersion(std::string &version)
+void ScreenSourceTrans::SetScreenVersion(const std::string &version)
 {
     version_ = version;
-}
-
-std::string ScreenSourceTrans::GetScreenVersion()
-{
-    return version_;
 }
 
 int32_t ScreenSourceTrans::CheckVideoParam(const VideoParam &param)

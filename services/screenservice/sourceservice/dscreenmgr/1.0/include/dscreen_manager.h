@@ -53,7 +53,7 @@ public:
 
     int32_t Init();
     int32_t UnInit();
-    int32_t EnableDistributedScreen(const std::string &devId, const std::string &dhId, const  std::string &attrs,
+    int32_t EnableDistributedScreen(const std::string &devId, const std::string &dhId, const EnableParam &param,
         const std::string &reqId);
     int32_t DisableDistributedScreen(const std::string &devId, const std::string &dhId, const std::string &reqId);
     void HandleDScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent);
@@ -64,8 +64,7 @@ public:
     int32_t RemoveFromGroup(const std::shared_ptr<DScreen> &changedScreen, uint64_t screenId);
     void GetScreenDumpInfo(std::string &result);
     void PublishMessage(const DHTopic topic, const std::shared_ptr<DScreen> &dScreen);
-    void SetScreenVersion(std::string &version);
-    std::string GetScreenVersion();
+
 private:
     ~DScreenManager();
     DScreenManager();

@@ -40,7 +40,7 @@ public:
     int32_t Stop() override;
     int32_t RegisterStateCallback(const std::shared_ptr<IScreenSinkTransCallback> &callback) override;
     int32_t SetImageSurface(const sptr<Surface> &surface) override;
-    void SetScreenVersion(std::string &version) override;
+    void SetScreenVersion(const std::string &version) override;
 
     void OnSessionOpened() override;
     void OnSessionClosed() override;

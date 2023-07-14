@@ -112,8 +112,7 @@ std::string GetInterruptString(const std::string &value)
     return res;
 }
 
-template <typename T>
-bool GetSystemParam(const char *inName, T &outValue);
+bool GetSystemParam(const char *inName, int32_t outValue);
 {
     if (inName == nullptr) {
         DHLOGE("get system parameter failed, input param name is nullptr.");
@@ -127,17 +126,9 @@ bool GetSystemParam(const char *inName, T &outValue);
         return false;
     }
     DHLOGI("get system parameter %s success, param value=%s", inName, tempValue);
-
-    std::stringstream valueStr;
-    valueStr << tempValue;
-    valueStr >> outValue;
+    outValue = std::atoi(tempValue);
     return true;
 }
-
-template bool GetSystemParam(const char *inName, int32_t &outValue);
-template bool GetSystemParam(const char *inName, uint32_t &outValue);
-template bool GetSystemParam(const char *inName, int64_t &outValue);
-template bool GetSystemParam(const char *inName, std::string &outValue);
 
 bool IsPartialRefreshEnabled()
 {

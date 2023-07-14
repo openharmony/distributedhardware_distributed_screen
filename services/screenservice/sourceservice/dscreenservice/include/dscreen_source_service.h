@@ -49,7 +49,6 @@ protected:
     DISALLOW_COPY_AND_MOVE(DScreenSourceService);
 
 private:
-    std::string version_ = "2.0";
     bool Init();
 
     bool registerToService_ = false;

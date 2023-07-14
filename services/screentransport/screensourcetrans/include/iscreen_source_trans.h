@@ -35,8 +35,7 @@ public:
     virtual int32_t RegisterStateCallback(const std::shared_ptr<IScreenSourceTransCallback> &callBack) = 0;
     virtual sptr<Surface> GetImageSurface() = 0;
     virtual int32_t SetConsumerSurface() = 0;
-    virtual void SetScreenVersion(std::string &version) = 0;
-    virtual std::string GetScreenVersion() = 0;
+    virtual void SetScreenVersion(const std::string &version) = 0;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

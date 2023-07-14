@@ -324,7 +324,7 @@ void ScreenSinkTrans::OnDataReceived(const std::shared_ptr<DataBuffer> &data)
     }
 }
 
-void ScreenSinkTrans::SetScreenVersion(std::string &version)
+void ScreenSinkTrans::SetScreenVersion(const std::string &version)
 {
     version_ = version;
 }

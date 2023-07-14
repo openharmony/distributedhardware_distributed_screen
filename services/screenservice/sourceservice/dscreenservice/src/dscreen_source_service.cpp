@@ -95,8 +95,6 @@ int32_t DScreenSourceService::InitSource(const std::string &params, const sptr<I
         }
         V1_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
     }
-
-    version_ = params;
     return DH_SUCCESS;
 }
 
@@ -131,21 +129,18 @@ int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &dev
 {
     DHLOGI("Register source distributed screen, peer dscreen version: %s", param.version.c_str());
     int32_t ret = DH_SUCCESS;
-    std::string attrs = param.attrs;
     if (IsSupportAVTransEngine(param.version)) {
-        ret = V2_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, attrs, reqId);
+        ret = V2_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
     } else {
-        V1_0::DScreenManager::GetInstance().SetScreenVersion(param.version);
-        ret = V1_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, attrs, reqId);
+        ret = V1_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
     }
     if (ret != DH_SUCCESS) {
-        DHLOGE("enable distributedScreen failed. devId: %s, dhId: %s, reqId: %s, attrs: %s",
-            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str(), attrs.c_str());
+        DHLOGE("enable distributedScreen failed. devId: %s, dhId: %s, reqId: %s, param attrs: %s",
+            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str(), param.attrs.c_str());
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ret, GetAnonyString(devId).c_str(),
             GetAnonyString(dhId).c_str(), "enable distributedScreen failed.");
         return ERR_DH_SCREEN_SA_ENABLE_FAILED;
     }
-    version_ = param.version;
     return DH_SUCCESS;
 }
 
@@ -178,9 +173,7 @@ void DScreenSourceService::DScreenNotify(const std::string &devId, const int32_t
     const std::string &eventContent)
 {
     DHLOGI("DScreenNotify, devId: %s, eventCode: %" PRId32, GetAnonyString(devId).c_str(), eventCode);
-    if (version_ == "2.0") {
-        V1_0::DScreenManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
-    }
+    V1_0::DScreenManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
 }
 
 int32_t DScreenSourceService::Dump(int32_t fd, const std::vector<std::u16string>& args)
