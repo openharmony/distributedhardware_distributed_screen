@@ -65,7 +65,6 @@ int32_t DScreenManager::Init()
         int32_t ret = ScreenMgrAdapter::GetInstance().RegisterScreenGroupListener(dScreenGroupListener_);
         if (ret != DH_SUCCESS) {
             DHLOGE("DScreenManager Init failed, err: %" PRId32, ret);
-            delete dScreenGroupListener_;
             dScreenGroupListener_ = nullptr;
             return ret;
         }
@@ -293,7 +292,10 @@ int32_t DScreenManager::DisableDistributedScreen(const std::string &devId, const
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
         return ERR_DH_SCREEN_SA_DISABLE_FAILED;
     }
-
+    if (dScreens_[dScreenIdx] == nullptr) {
+        DHLOGE("dScreen is nullptr.");
+        return ERR_DH_SCREEN_SA_DISABLE_FAILED;
+    }
     int32_t dScreenState = dScreens_[dScreenIdx]->GetState();
     int32_t ret = DH_SUCCESS;
     switch (dScreenState) {
@@ -540,6 +542,10 @@ void DScreenManager::HandleNotifySetUpResult(const std::string &remoteDevId, con
 
     if (errCode != DH_SUCCESS) {
         DHLOGE("remote sink set up failed, errCode: %" PRId32", reason: %s", errCode, errContent.c_str());
+        if (dScreens_[dScreenIdx] == nullptr) {
+            DHLOGE("dScreen is nullptr.");
+            return;
+        }
         dScreens_[dScreenIdx]->SetState(ENABLED);
         return;
     }
