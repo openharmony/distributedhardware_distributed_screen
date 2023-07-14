@@ -147,10 +147,18 @@ int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &dev
 int32_t DScreenSourceService::UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
     const std::string &reqId)
 {
-    int ret_v1 = V1_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
-    int ret_v2 = V2_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
-    if ((ret_v1 != DH_SUCCESS) || (ret_v2 != DH_SUCCESS)) {
-        DHLOGE("disable distributedScreen failed. devId: %s, dhId: %s, reqId: %s",
+    int ret = V1_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("V1_0::DScreenManager disable distributedScreen failed. devId: %s, dhId: %s, reqId: %s",
+            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str());
+        ReportUnRegisterFail(DSCREEN_REGISTER_FAIL, ret, GetAnonyString(devId).c_str(),
+            GetAnonyString(dhId).c_str(), "disable distributedScreen failed.");
+        return ERR_DH_SCREEN_SA_DISABLE_FAILED;
+    }
+
+    ret = V2_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("V2_0::DScreenManager disable distributedScreen failed. devId: %s, dhId: %s, reqId: %s",
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str());
         ReportUnRegisterFail(DSCREEN_REGISTER_FAIL, ret, GetAnonyString(devId).c_str(),
             GetAnonyString(dhId).c_str(), "disable distributedScreen failed.");

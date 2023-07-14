@@ -23,6 +23,7 @@
 
 #include "dscreen.h"
 #include "dscreen_maprelation.h"
+#include "idistributed_hardware_source.h"
 #include "idscreen_sink.h"
 #include "idscreen_source_callback.h"
 #include "video_param.h"

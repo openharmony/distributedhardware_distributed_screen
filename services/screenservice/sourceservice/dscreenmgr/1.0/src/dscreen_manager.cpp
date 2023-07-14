@@ -70,11 +70,9 @@ int32_t DScreenManager::Init()
             return ret;
         }
     }
-
     if (dScreenCallback_ == nullptr) {
         dScreenCallback_ = std::make_shared<DScreenCallback>();
     }
-
     return DH_SUCCESS;
 }
 
@@ -92,7 +90,7 @@ int32_t DScreenManager::UnInit()
     }
     dScreenCallback_ = nullptr;
     DHLOGI("DScreenManager::UnInit success");
-    return ret;
+    return DH_SUCCESS;
 }
 
 void DScreenGroupListener::OnChange(const std::vector<uint64_t> &screenIds, Rosen::ScreenGroupChangeEvent event)
