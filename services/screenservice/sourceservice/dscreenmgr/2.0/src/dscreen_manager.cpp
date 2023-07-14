@@ -270,9 +270,9 @@ int32_t DScreenManager::DisableDistributedScreen(const std::string &devId, const
     std::string dScreenIdx = devId + SEPERATOR + dhId;
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     if (dScreens_.count(dScreenIdx) == 0) {
-        DHLOGE("dscreen not found, devId: %s, dhId: %s",
-            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
-        return ERR_DH_SCREEN_SA_DISABLE_FAILED;
+        DHLOGE("dscreen has already disabled, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
+            GetAnonyString(dhId).c_str());
+        return DH_SUCCESS;
     }
     int32_t dScreenState = dScreens_[dScreenIdx]->GetState();
     int32_t ret = DH_SUCCESS;
@@ -332,7 +332,7 @@ void DScreenManager::GetScreenDumpInfo(std::string &result)
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     if (dScreens_.size() == 0) {
         result.append("]");
-        DHLOGD("no virtualscreen");
+        DHLOGD("no virtual screen enabled in V2_0::DScreenManager.");
         return;
     }
     for (const auto &iter : dScreens_) {

@@ -27,6 +27,7 @@
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
+#include "parameter.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -109,6 +110,44 @@ std::string GetInterruptString(const std::string &value)
     }
 
     return res;
+}
+
+template <typename T>
+bool GetSystemParam(const char *inName, T &outValue);
+{
+    if (inName == nullptr) {
+        DHLOGE("get system parameter failed, input param name is nullptr.");
+        return false;
+    }
+
+    char tempValue[SYSTEM_PARAM_VALUE_SIZE] = {0};
+    auto ret = GetParameter(inName, "-1", tempValue, sizeof(tempValue));
+    if (ret <= 0) {
+        DHLOGE("get system parameter %s failed, ret=%" PRId32, inName, ret);
+        return false;
+    }
+    DHLOGI("get system parameter %s success, param value=%s", inName, tempValue);
+
+    std::stringstream valueStr;
+    valueStr << tempValue;
+    valueStr >> outValue;
+    return true;
+}
+
+template bool GetSystemParam(const char *inName, int32_t &outValue);
+template bool GetSystemParam(const char *inName, uint32_t &outValue);
+template bool GetSystemParam(const char *inName, int64_t &outValue);
+template bool GetSystemParam(const char *inName, std::string &outValue);
+
+bool IsPartialRefreshEnabled()
+{
+    int32_t paramValue = 0;
+    return GetSystemParam(PARTIAL_REFRESH_PARAM, paramValue) && (paramValue == 1);
+}
+
+bool IsSupportAVTransEngine(const std::string &version)
+{
+    return (version == AV_TRANS_SUPPORTED_VERSION) && !IsPartialRefreshEnabled();
 }
 } // namespace DistributedHardware
 } // namespace OHOS

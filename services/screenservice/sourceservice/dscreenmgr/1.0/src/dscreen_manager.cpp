@@ -81,22 +81,16 @@ int32_t DScreenManager::Init()
 int32_t DScreenManager::UnInit()
 {
     DHLOGI("DScreenManager::UnInit");
-    int32_t ret = ScreenMgrAdapter::GetInstance().UnregisterScreenGroupListener(dScreenGroupListener_);
-    if (ret != DH_SUCCESS) {
-        DHLOGE("DScreenManager UnInit failed, err: %" PRId32, ret);
-    }
-
-    dScreenCallback_ = nullptr;
-
+    ScreenMgrAdapter::GetInstance().UnregisterScreenGroupListener(dScreenGroupListener_);
     {
         std::lock_guard<std::mutex> lock(dScreenMapMtx_);
         dScreens_.clear();
     }
-
     {
         std::lock_guard<std::mutex> lock(dScreenMapRelationMtx_);
         mapRelations_.clear();
     }
+    dScreenCallback_ = nullptr;
     DHLOGI("DScreenManager::UnInit success");
     return ret;
 }
@@ -289,9 +283,9 @@ int32_t DScreenManager::DisableDistributedScreen(const std::string &devId, const
     std::string dScreenIdx = devId + SEPERATOR + dhId;
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     if (dScreens_.count(dScreenIdx) == 0) {
-        DHLOGE("dscreen not found, devId: %s, dhId: %s",
-            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
-        return ERR_DH_SCREEN_SA_DISABLE_FAILED;
+        DHLOGE("dscreen has already disabled, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
+            GetAnonyString(dhId).c_str());
+        return DH_SUCCESS;
     }
 
     int32_t dScreenState = dScreens_[dScreenIdx]->GetState();
@@ -353,7 +347,7 @@ void DScreenManager::GetScreenDumpInfo(std::string &result)
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     if (dScreens_.size() == 0) {
         result.append("]");
-        DHLOGD("no virtualscreen");
+        DHLOGD("no virtual screen enabled in V1_0::DScreenManager.");
         return;
     }
 
