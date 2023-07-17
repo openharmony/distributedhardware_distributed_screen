@@ -134,6 +134,7 @@ constexpr int32_t INVALID_WINDOW_ID = -1;
 constexpr int32_t STRIDE_ALIGNMENT = 0x8;
 constexpr int32_t SURFACE_SYNC_FENCE_TIMEOUT = 100;
 
+const std::string PARTIAL_REFRESH_VERSION = "2.0";
 const std::string AV_TRANS_SUPPORTED_VERSION = "3.0";
 const std::string DSCREEN_LOG_TITLE_TAG = "DSCREEN";
 const std::string DSCREEN_PREFIX = "DISTRIBUTED_SCREEN";

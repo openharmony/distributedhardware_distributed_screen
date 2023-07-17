@@ -52,7 +52,7 @@ public:
     std::shared_ptr<VideoParam> GetVideoParam();
     int32_t GetWindowId();
     int32_t SetUpWindow();
-    int32_t SetUp(const std::string &version);
+    int32_t SetUp(const std::string &version = PARTIAL_REFRESH_VERSION);
     int32_t Start();
     int32_t Stop();
     std::shared_ptr<WindowProperty> GetWindowProperty();
