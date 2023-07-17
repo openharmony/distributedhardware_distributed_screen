@@ -200,14 +200,9 @@ sptr<Surface> ScreenSourceTrans::GetImageSurface()
     return imageProcessor_->GetImageSurface();
 }
 
-void ScreenSourceTrans::SetScreenVersion(std::string &version)
+void ScreenSourceTrans::SetScreenVersion(const std::string &version)
 {
     version_ = version;
-}
-
-std::string ScreenSourceTrans::GetScreenVersion()
-{
-    return version_;
 }
 
 int32_t ScreenSourceTrans::CheckVideoParam(const VideoParam &param)
@@ -276,7 +271,7 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
 {
     DHLOGI("%s:InitScreenTrans.", LOG_TAG);
     screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
-    if (atoi(version_.c_str()) == TWO) {
+    if (std::atoi(version_.c_str()) > DSCREEN_MIN_VERSION) {
         screenChannel_->SetJpegSessionFlag(true);
     }
     int32_t ret = RegisterChannelListener();
@@ -397,24 +392,12 @@ void ScreenSourceTrans::OnDamageProcessDone(sptr<SurfaceBuffer> &surfaceBuffer, 
         DHLOGE("%s: Trans surfaceBuffer is null.", LOG_TAG);
         return;
     }
-    int32_t ret = DH_SUCCESS;
-    switch (atoi(version_.c_str())) {
-        case OLD:
-            DHLOGI("%s: ProcessFullImage.", LOG_TAG);
-            ret = imageProcessor_->ProcessFullImage(surfaceBuffer);
-            if (ret != DH_SUCCESS) {
-                DHLOGE("%s: ImageProcessor process full image failed.", LOG_TAG);
-            }
-            break;
-        case NEW:
-            DHLOGI("%s: InputBufferImage.", LOG_TAG);
-            ret = screenDecisionCenter_->InputBufferImage(surfaceBuffer, damages);
-            if (ret != DH_SUCCESS) {
-                DHLOGE("%s: DecisionCenter process full image failed.", LOG_TAG);
-            }
-            break;
-        default:
-            break;
+    if (std::atoi(version_.c_str()) == DSCREEN_MIN_VERSION) {
+        DHLOGI("%s: not support partial refresh, run full full image process.", LOG_TAG);
+        imageProcessor_->ProcessFullImage(surfaceBuffer);
+    } else {
+        DHLOGI("%s: run partial refresh image process.", LOG_TAG);
+        screenDecisionCenter_->InputBufferImage(surfaceBuffer, damages);
     }
 }
 

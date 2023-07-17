@@ -53,7 +53,7 @@ void DScreenSinkService::OnStop()
 
 bool DScreenSinkService::Init()
 {
-    DHLOGI("dscreen sink service start init.");
+    DHLOGI("Init dscreen sink service.");
     if (!registerToService_) {
         bool ret = Publish(this);
         if (!ret) {
@@ -62,32 +62,28 @@ bool DScreenSinkService::Init()
         }
         registerToService_ = true;
     }
-    DHLOGI("dscreenService init success.");
+    DHLOGI("dscreen sink service init success.");
     return true;
 }
 
 int32_t DScreenSinkService::InitSink(const std::string &params)
 {
-    DHLOGI("InitSink");
-    version_ = params;
-    DHLOGI("InitSink params: %s, version_: %s", params.c_str(), version_.c_str());
-    if (version_ == "3.0") {
+    DHLOGI("Init sink dscreen region manager, params: %s", params.c_str());
+    if (IsSupportAVTransEngine(params)) {
         int32_t ret = V2_0::ScreenRegionManager::GetInstance().Initialize();
         if (ret != DH_SUCCESS) {
-        DHLOGE("Init ScreenRegionManager3.0 failed. err: %d", ret);
-    }
+            DHLOGE("Initialize V2_0::ScreenRegionManage failed. err: %d", ret);
+        }
     }
     return DH_SUCCESS;
 }
 
 int32_t DScreenSinkService::ReleaseSink()
 {
-    DHLOGI("ReleaseSink");
-    if (version_ == "2.0") {
-        V1_0::ScreenRegionManager::GetInstance().ReleaseAllRegions();
-    } else if (version_ == "3.0") {
-        V2_0::ScreenRegionManager::GetInstance().Release();
-    }
+    DHLOGI("Release sink dscreen region manager.");
+    V2_0::ScreenRegionManager::GetInstance().Release();
+    V1_0::ScreenRegionManager::GetInstance().ReleaseAllRegions();
+
     DHLOGI("exit sink sa process");
     auto systemAbilityMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (systemAbilityMgr == nullptr) {
@@ -122,22 +118,18 @@ void DScreenSinkService::DScreenNotify(const std::string &devId, int32_t eventCo
 {
     DHLOGI("DScreenNotify, devId:%s, eventCode: %" PRId32 ", eventContent:%s", GetAnonyString(devId).c_str(),
         eventCode, eventContent.c_str());
-    if (version_ == "2.0") {
-        V1_0::ScreenRegionManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
-    }
+    V1_0::ScreenRegionManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
 }
 
 int32_t DScreenSinkService::Dump(int32_t fd, const std::vector<std::u16string>& args)
 {
     DHLOGI("DScreenSinkService  Dump.");
     (void)args;
-    std::string result;
-    if (version_ == "2.0") {
-        V1_0::ScreenRegionManager::GetInstance().GetScreenDumpInfo(result);
-    } else if (version_ == "3.0") {
-        V2_0::ScreenRegionManager::GetInstance().GetScreenDumpInfo(result);
-    }
-    int ret = dprintf(fd, "%s\n", result.c_str());
+    std::string result_v1;
+    V1_0::ScreenRegionManager::GetInstance().GetScreenDumpInfo(result_v1);
+    std::string result_v2;
+    V2_0::ScreenRegionManager::GetInstance().GetScreenDumpInfo(result_v2);
+    int ret = dprintf(fd, "%s\n", (result_v1 + result_v2).c_str());
     if (ret < 0) {
         DHLOGE("dprintf error");
         return ERR_DH_SCREEN_SA_HIDUMPER_ERROR;

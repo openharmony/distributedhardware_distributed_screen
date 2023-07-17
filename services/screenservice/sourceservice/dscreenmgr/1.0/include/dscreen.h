@@ -90,7 +90,7 @@ public:
     std::string GetDHId() const;
     std::string GetDevId() const;
     int32_t AddTask(const std::shared_ptr<Task> &task);
-    void SetScreenVersion(std::string &version);
+    void SetScreenVersion(const std::string &version);
     std::string GetScreenVersion();
 
 private:

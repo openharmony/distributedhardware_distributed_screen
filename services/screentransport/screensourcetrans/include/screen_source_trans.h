@@ -53,8 +53,7 @@ public:
     void OnProcessorStateNotify(int32_t state) override;
     void OnDamageProcessDone(sptr<SurfaceBuffer> &surfaceBuffer, const std::vector<OHOS::Rect> &damages) override;
     int32_t SetConsumerSurface() override;
-    void SetScreenVersion(std::string &version) override;
-    std::string GetScreenVersion() override;
+    void SetScreenVersion(const std::string &version) override;
 
 private:
     int32_t CheckVideoParam(const VideoParam &param);

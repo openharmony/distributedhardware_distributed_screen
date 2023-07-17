@@ -24,6 +24,7 @@
 #include "av_sender_engine_adapter.h"
 #include "dscreen.h"
 #include "dscreen_maprelation.h"
+#include "idistributed_hardware_source.h"
 #include "idscreen_sink.h"
 #include "idscreen_source_callback.h"
 #include "video_param.h"
@@ -58,7 +59,7 @@ public:
 
     int32_t Initialize();
     int32_t Release();
-    int32_t EnableDistributedScreen(const std::string &devId, const std::string &dhId, const std::string &attrs,
+    int32_t EnableDistributedScreen(const std::string &devId, const std::string &dhId, const EnableParam &param,
         const std::string &reqId);
     int32_t DisableDistributedScreen(const std::string &devId, const std::string &dhId, const std::string &reqId);
     void RegisterDScreenCallback(const sptr<IDScreenSourceCallback> &callback);

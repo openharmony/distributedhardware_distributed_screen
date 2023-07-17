@@ -209,7 +209,7 @@ int32_t ScreenSinkTrans::InitScreenTrans(const VideoParam &localParam, const Vid
     const std::string &peerDevId)
 {
     screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
-    if (atoi(version_.c_str()) == TWO) {
+    if (std::atoi(version_.c_str()) > DSCREEN_MIN_VERSION) {
         screenChannel_->SetJpegSessionFlag(true);
     }
     int32_t ret = RegisterChannelListener();
@@ -324,7 +324,7 @@ void ScreenSinkTrans::OnDataReceived(const std::shared_ptr<DataBuffer> &data)
     }
 }
 
-void ScreenSinkTrans::SetScreenVersion(std::string &version)
+void ScreenSinkTrans::SetScreenVersion(const std::string &version)
 {
     version_ = version;
 }

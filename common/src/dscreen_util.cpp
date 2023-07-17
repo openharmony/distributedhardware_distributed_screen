@@ -27,6 +27,7 @@
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
+#include "parameter.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -109,6 +110,23 @@ std::string GetInterruptString(const std::string &value)
     }
 
     return res;
+}
+
+bool IsPartialRefreshEnabled()
+{
+    char tempValue[SYSTEM_PARAM_VALUE_SIZE] = {0};
+    auto ret = GetParameter(PARTIAL_REFRESH_PARAM, "-1", tempValue, sizeof(tempValue));
+    if (ret <= 0) {
+        DHLOGE("get system parameter (dscreen.partial.refresh.enable) failed, ret=%" PRId32, ret);
+        return false;
+    }
+    DHLOGI("get system parameter (dscreen.partial.refresh.enable) success, param value = %s", tempValue);
+    return (std::atoi(tempValue) == PARTIAL_REFRESH_ENABLED_VALUE);
+}
+
+bool IsSupportAVTransEngine(const std::string &version)
+{
+    return (std::atoi(version.c_str()) >= AV_TRANS_SUPPORTED_VERSION) && !IsPartialRefreshEnabled();
 }
 } // namespace DistributedHardware
 } // namespace OHOS

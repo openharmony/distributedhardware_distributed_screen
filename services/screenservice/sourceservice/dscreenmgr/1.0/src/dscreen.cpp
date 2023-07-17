@@ -107,10 +107,11 @@ uint64_t DScreen::GetScreenId() const
     return screenId_;
 }
 
-void DScreen::SetScreenVersion(std::string &version)
+void DScreen::SetScreenVersion(const std::string &version)
 {
     version_ = version;
 }
+
 std::string DScreen::GetScreenVersion()
 {
     return version_;

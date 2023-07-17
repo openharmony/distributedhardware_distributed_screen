@@ -30,6 +30,7 @@
             "components": [
                 "dsoftbus",
                 "hisysevent",
+                "init",
                 "ipc",
                 "hilog",
                 "input",

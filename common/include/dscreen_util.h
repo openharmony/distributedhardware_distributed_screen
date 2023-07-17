@@ -25,6 +25,9 @@ int32_t GetLocalDeviceNetworkId(std::string &networkId);
 std::string GetRandomID();
 std::string GetAnonyString(const std::string &value);
 std::string GetInterruptString(const std::string &value);
+
+bool IsPartialRefreshEnabled();
+bool IsSupportAVTransEngine(const std::string &version);
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

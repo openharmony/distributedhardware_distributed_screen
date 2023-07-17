@@ -69,35 +69,27 @@ int32_t DScreenManager::Init()
             return ret;
         }
     }
-
     if (dScreenCallback_ == nullptr) {
         dScreenCallback_ = std::make_shared<DScreenCallback>();
     }
-
     return DH_SUCCESS;
 }
 
 int32_t DScreenManager::UnInit()
 {
     DHLOGI("DScreenManager::UnInit");
-    int32_t ret = ScreenMgrAdapter::GetInstance().UnregisterScreenGroupListener(dScreenGroupListener_);
-    if (ret != DH_SUCCESS) {
-        DHLOGE("DScreenManager UnInit failed, err: %" PRId32, ret);
-    }
-
-    dScreenCallback_ = nullptr;
-
+    ScreenMgrAdapter::GetInstance().UnregisterScreenGroupListener(dScreenGroupListener_);
     {
         std::lock_guard<std::mutex> lock(dScreenMapMtx_);
         dScreens_.clear();
     }
-
     {
         std::lock_guard<std::mutex> lock(dScreenMapRelationMtx_);
         mapRelations_.clear();
     }
+    dScreenCallback_ = nullptr;
     DHLOGI("DScreenManager::UnInit success");
-    return ret;
+    return DH_SUCCESS;
 }
 
 void DScreenGroupListener::OnChange(const std::vector<uint64_t> &screenIds, Rosen::ScreenGroupChangeEvent event)
@@ -247,7 +239,7 @@ void DScreenManager::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
 }
 
 int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const std::string &dhId,
-    const std::string &attrs, const std::string &reqId)
+    const EnableParam &param, const std::string &reqId)
 {
     DHLOGI("EnableDistributedScreen2.0, devId: %s, dhId:%s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
@@ -268,9 +260,9 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
         DHLOGI("dScreen state Already is ENABLED or ENABLING.");
         return DH_SUCCESS;
     }
-    dScreen ->SetScreenVersion(version_);
+    dScreen ->SetScreenVersion(param.version);
     dScreens_[dScreenIdx] = dScreen;
-    int32_t ret = dScreen->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
+    int32_t ret = dScreen->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, param.attrs));
     if (ret != DH_SUCCESS) {
         DHLOGE("EnableDistributedScreen, add task failed. devId: %s, dhId:%s",
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
@@ -288,9 +280,9 @@ int32_t DScreenManager::DisableDistributedScreen(const std::string &devId, const
     std::string dScreenIdx = devId + SEPERATOR + dhId;
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     if (dScreens_.count(dScreenIdx) == 0) {
-        DHLOGE("dscreen not found, devId: %s, dhId: %s",
-            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
-        return ERR_DH_SCREEN_SA_DISABLE_FAILED;
+        DHLOGE("dscreen has already disabled, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
+            GetAnonyString(dhId).c_str());
+        return DH_SUCCESS;
     }
     if (dScreens_[dScreenIdx] == nullptr) {
         DHLOGE("dScreen is nullptr.");
@@ -355,7 +347,7 @@ void DScreenManager::GetScreenDumpInfo(std::string &result)
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     if (dScreens_.size() == 0) {
         result.append("]");
-        DHLOGD("no virtualscreen");
+        DHLOGD("no virtual screen enabled in V1_0::DScreenManager.");
         return;
     }
 
@@ -551,16 +543,6 @@ void DScreenManager::HandleNotifySetUpResult(const std::string &remoteDevId, con
     }
 
     dScreens_[dScreenIdx]->AddTask(std::make_shared<Task>(TaskType::TASK_CONNECT, ""));
-}
-
-void DScreenManager::SetScreenVersion(std::string &version)
-{
-    version_ = version;
-}
-
-std::string DScreenManager::GetScreenVersion()
-{
-    return version_;
 }
 } // namespace V1_0
 } // namespace DistributedHardware
