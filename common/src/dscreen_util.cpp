@@ -112,28 +112,16 @@ std::string GetInterruptString(const std::string &value)
     return res;
 }
 
-bool GetSystemParam(const char *inName, int32_t outValue)
-{
-    if (inName == nullptr) {
-        DHLOGE("get system parameter failed, input param name is nullptr.");
-        return false;
-    }
-
-    char tempValue[SYSTEM_PARAM_VALUE_SIZE] = {0};
-    auto ret = GetParameter(inName, "-1", tempValue, sizeof(tempValue));
-    if (ret <= 0) {
-        DHLOGE("get system parameter %s failed, ret=%" PRId32, inName, ret);
-        return false;
-    }
-    DHLOGI("get system parameter %s success, param value=%s", inName, tempValue);
-    outValue = std::atoi(tempValue);
-    return true;
-}
-
 bool IsPartialRefreshEnabled()
 {
-    int32_t paramValue = 0;
-    return GetSystemParam(PARTIAL_REFRESH_PARAM, paramValue) && (paramValue == 1);
+    char tempValue[SYSTEM_PARAM_VALUE_SIZE] = {0};
+    auto ret = GetParameter(PARTIAL_REFRESH_PARAM, "-1", tempValue, sizeof(tempValue));
+    if (ret <= 0) {
+        DHLOGE("get system parameter (dscreen.partial.refresh.enable) failed, ret=%" PRId32, ret);
+        return false;
+    }
+    DHLOGI("get system parameter (dscreen.partial.refresh.enable) success, param value = %s", tempValue);
+    return (std::atoi(tempValue) == PARTIAL_REFRESH_ENABLED_VALUE);
 }
 
 bool IsSupportAVTransEngine(const std::string &version)

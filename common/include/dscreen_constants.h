@@ -187,6 +187,7 @@ const std::string SINK_WIN_SHOW_X = "sinkWinShowX";
 const std::string SINK_WIN_SHOW_Y = "sinkWinShowY";
 constexpr const char* PARTIAL_REFRESH_PARAM = "persist.distributedhardware.dscreen.partial.refresh.enable";
 
+constexpr int32_t PARTIAL_REFRESH_ENABLED_VALUE = 1;
 constexpr uint32_t MAX_MESSAGES_LEN = 40 * 1024 * 1024;
 constexpr float DEFAULT_DENSITY = 2.0;
 constexpr int32_t DEFAULT_SCREEN_FLAGS = 0;

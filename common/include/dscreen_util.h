@@ -26,7 +26,6 @@ std::string GetRandomID();
 std::string GetAnonyString(const std::string &value);
 std::string GetInterruptString(const std::string &value);
 
-bool GetSystemParam(const char *inName, int32_t outValue);
 bool IsPartialRefreshEnabled();
 bool IsSupportAVTransEngine(const std::string &version);
 } // namespace DistributedHardware
