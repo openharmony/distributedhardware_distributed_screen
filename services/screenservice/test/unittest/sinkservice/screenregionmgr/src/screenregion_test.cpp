@@ -178,7 +178,8 @@ HWTEST_F(ScreenRegionTest, SetUp_001, TestSize.Level1)
     videoParam->videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
     videoParam->fps_ = 30;
     screenRegion_->SetVideoParam(videoParam);
-    int32_t ret = screenRegion_->SetUp();
+    std::string version = "1.0";
+    int32_t ret = screenRegion_->SetUp(version);
 
     EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, ret);
 }
@@ -192,7 +193,8 @@ HWTEST_F(ScreenRegionTest, SetUp_001, TestSize.Level1)
 HWTEST_F(ScreenRegionTest, SetUp_002, TestSize.Level1)
 {
     screenRegion_->mapRelation_ = nullptr;
-    int32_t ret = screenRegion_->SetUp();
+    std::string version = "1.0";
+    int32_t ret = screenRegion_->SetUp(version);
 
     EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, ret);
 }

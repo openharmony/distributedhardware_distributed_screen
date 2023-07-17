@@ -126,7 +126,8 @@ bool IsPartialRefreshEnabled()
 
 bool IsSupportAVTransEngine(const std::string &version)
 {
-    return (version == AV_TRANS_SUPPORTED_VERSION) && !IsPartialRefreshEnabled();
+    
+    return (std::atoi(const_cast<char *>(version.c_str())) >= AV_TRANS_SUPPORTED_VERSION) && !IsPartialRefreshEnabled();
 }
 } // namespace DistributedHardware
 } // namespace OHOS

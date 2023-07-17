@@ -103,14 +103,11 @@ constexpr uint32_t THREE = 3;
 constexpr uint32_t ZERO = 0;
 constexpr uint32_t ALIGNEDBITS = 32;
 
-/* Version */
-constexpr uint32_t OLD = 1;
-constexpr uint32_t NEW = 2;
-
 /* Screen session name max len */
 constexpr uint32_t DSCREEN_MAX_SESSION_NAME_LEN = 50;
 
 constexpr uint32_t DSCREEN_MAX_DEVICE_ID_LEN = 100;
+
 /* Screen data received max length */
 constexpr uint32_t DSCREEN_MAX_RECV_DATA_LEN = 104857600;
 
@@ -134,8 +131,6 @@ constexpr int32_t INVALID_WINDOW_ID = -1;
 constexpr int32_t STRIDE_ALIGNMENT = 0x8;
 constexpr int32_t SURFACE_SYNC_FENCE_TIMEOUT = 100;
 
-const std::string PARTIAL_REFRESH_VERSION = "2.0";
-const std::string AV_TRANS_SUPPORTED_VERSION = "3.0";
 const std::string DSCREEN_LOG_TITLE_TAG = "DSCREEN";
 const std::string DSCREEN_PREFIX = "DISTRIBUTED_SCREEN";
 const std::string SCREEN_PREFIX = "SCREEN";
@@ -187,6 +182,8 @@ const std::string SINK_WIN_SHOW_X = "sinkWinShowX";
 const std::string SINK_WIN_SHOW_Y = "sinkWinShowY";
 constexpr const char* PARTIAL_REFRESH_PARAM = "persist.distributedhardware.dscreen.partial.refresh.enable";
 
+constexpr int32_t DSCREEN_MIN_VERSION = 1;
+constexpr int32_t AV_TRANS_SUPPORTED_VERSION = 3;
 constexpr int32_t PARTIAL_REFRESH_ENABLED_VALUE = 1;
 constexpr uint32_t MAX_MESSAGES_LEN = 40 * 1024 * 1024;
 constexpr float DEFAULT_DENSITY = 2.0;
