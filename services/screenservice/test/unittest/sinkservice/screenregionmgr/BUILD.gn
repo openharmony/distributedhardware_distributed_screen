@@ -41,11 +41,9 @@ config("module_private_config") {
     "${services_path}/screentransport/screensinkprocessor/decoder/include",
     "${services_path}/screenclient/include/",
     "${services_path}/screenservice/sinkservice/screenregionmgr/",
-    "${services_path}/screenservice/sourceservice/screenmgr",
+    "${services_path}/screenservice/sourceservice/dscreenmgr",
     "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr",
     "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/engineutils/include",
-
-
   ]
 }
 
@@ -63,7 +61,7 @@ ohos_unittest("DscreenRegionMgrTest") {
 
   deps = [
     "${services_path}/screenservice/sinkservice:distributed_screen_sink",
-    "${services_path}/screenservice/sinkservice:distributed_screen_source",
+    "${services_path}/screenservice/sourceservice:distributed_screen_source",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",

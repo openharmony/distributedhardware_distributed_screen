@@ -16,7 +16,7 @@
 #include "2.0/include/av_sender_engine_adapter_test.h"
 
 #include "dscreen_errcode.h"
-#include "histream_ability_parser.h"
+#include "histreamer_ability_parser.h"
 #include "2.0/include/dscreen.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
