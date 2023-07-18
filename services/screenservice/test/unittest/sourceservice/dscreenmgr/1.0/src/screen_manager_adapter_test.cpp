@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "screen_manager_adapter_test.h"
+#include "1.0/include/screen_manager_adapter_test.h"
 
 #define private public
 #include "common/include/screen_manager_adapter.h"

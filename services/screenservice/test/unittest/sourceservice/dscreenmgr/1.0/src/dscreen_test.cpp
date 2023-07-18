@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "dscreen_test.h"
+#include "1.0/include/dscreen_test.h"
 
 #define private public
 #include "dscreen_constants.h"

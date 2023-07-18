@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "screenregionmgr_test.h"
+#include "1.0/include/screenregionmgr_test.h"
 
 using namespace testing;
 using namespace testing::ext;
