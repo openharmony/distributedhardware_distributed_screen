@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "screenregionmgr_test.h"
+#include "1.0/include/screenregionmgr_test.h"
 
 using namespace testing;
 using namespace testing::ext;
@@ -135,11 +135,11 @@ HWTEST_F(ScreenRegionManagerTest, HandleNotifySetUp_001, TestSize.Level1)
 {
     ScreenRegionManager::GetInstance().screenRegions_.clear();
     const std::string remoteDevId = "sourceDevId";
-    const std::string eventContent = "{\"dhId\":\"SCREEN#0\",\"mapRelation\":{\"displayId\":0,\
-        \"displayRect\":{\"height\":1280,\"startX\":0,\"startY\":0,\"width\":720},\"screenId\":2,\
-        \"screenRect\":{\"height\":1280,\"startX\":0,\"startY\":0,\"width\":720}},\"screenId\":2,\
-        \"videoParam\":{\"codecType\":2,\"colorFormat\":3,\"fps\":30,\"screenHeight\":1280,\
-        \"screenWidth\":720,\"videoHeight\":1280,\"videoWidth\":720}}";
+    const std::string eventContent = "{\"dhId\":\"SCREEN#0\", \"mapRelation\":{\"displayId\":0, \
+        \"displayRect\":{\"height\":1280, \"startX\":0, \"startY\":0, \"width\":720}, \"screenId\":2, \
+        \"screenRect\":{\"height\":1280, \"startX\":0, \"startY\":0, \"width\":720}}, \"screenId\":2, \
+        \"videoParam\":{\"codecType\":2, \"colorFormat\":3, \"fps\":30, \"screenHeight\":1280, \
+        \"screenWidth\":720, \"videoHeight\":1280, \"videoWidth\":720}}";
     ScreenRegionManager::GetInstance().HandleNotifySetUp(remoteDevId, eventContent);
 
     EXPECT_NE(0, ScreenRegionManager::GetInstance().screenRegions_.size());
@@ -156,11 +156,11 @@ HWTEST_F(ScreenRegionManagerTest, HandleNotifySetUp_002, TestSize.Level1)
 {
     ScreenRegionManager::GetInstance().screenRegions_.clear();
     const std::string remoteDevId = "sourceDevId";
-    const std::string eventContent = "{\"dhIds\":\"SCREEN#0\",\"mapRelations\":{\"displayIds\":0,\
-        \"displayRects\":{\"heights\":1280,\"startXs\":0,\"startYs\":0,\"widths\":720},\"screenIds\":2,\
-        \"screenRects\":{\"heights\":1280,\"startXs\":0,\"startYs\":0,\"widths\":720}},\"screenIds\":2,\
-        \"videoParams\":{\"codecTypes\":2,\"colorFormats\":3,\"fpss\":30,\"screenHeights\":1280,\
-        \"screenWidths\":720,\"videoHeights\":1280,\"videoWidths\":720}}";
+    const std::string eventContent = "{\"dhIds\":\"SCREEN#0\", \"mapRelations\":{\"displayIds\":0, \
+        \"displayRects\":{\"heights\":1280, \"startXs\":0, \"startYs\":0, \"widths\":720}, \"screenIds\":2, \
+        \"screenRects\":{\"heights\":1280, \"startXs\":0, \"startYs\":0, \"widths\":720}}, \"screenIds\":2, \
+        \"videoParams\":{\"codecTypes\":2, \"colorFormats\":3, \"fpss\":30, \"screenHeights\":1280, \
+        \"screenWidths\":720, \"videoHeights\":1280, \"videoWidths\":720}}";
     ScreenRegionManager::GetInstance().HandleNotifySetUp(remoteDevId, eventContent);
 
     EXPECT_EQ(0, ScreenRegionManager::GetInstance().screenRegions_.size());
@@ -176,11 +176,11 @@ HWTEST_F(ScreenRegionManagerTest, HandleNotifySetUp_003, TestSize.Level1)
 {
     ScreenRegionManager::GetInstance().screenRegions_.clear();
     const std::string remoteDevId = "sourceDevId";
-    const std::string eventContent = "{\"dhIds\"\"SCREEN#0\",\"mapRelations\":{\"displayIds\":0,\
-        \"displayRects\":{\"heights\":1280,\"startXs\":0,\"startYs\":0,\"widths\":720},\"screenIds\":2,\
-        \"screenRects\":{\"heights\":1280,\"startXs\":0,\"startYs\":0,\"widths\":720}},\"screenIds\":2,\
-        \"videoParams\":{\"codecTypes\":2,\"colorFormats\":3,\"fpss\":30,\"screenHeights\":1280,\
-        \"screenWidths\":720,\"videoHeights\":1280,\"videoWidths\":720}}";
+    const std::string eventContent = "{\"dhIds\"\"SCREEN#0\", \"mapRelations\":{\"displayIds\":0, \
+        \"displayRects\":{\"heights\":1280, \"startXs\":0, \"startYs\":0, \"widths\":720}, \"screenIds\":2, \
+        \"screenRects\":{\"heights\":1280, \"startXs\":0, \"startYs\":0, \"widths\":720}}, \"screenIds\":2, \
+        \"videoParams\":{\"codecTypes\":2, \"colorFormats\":3, \"fpss\":30, \"screenHeights\":1280, \
+        \"screenWidths\":720, \"videoHeights\":1280, \"videoWidths\":720}}";
     ScreenRegionManager::GetInstance().HandleNotifySetUp(remoteDevId, eventContent);
 
     EXPECT_EQ(0, ScreenRegionManager::GetInstance().screenRegions_.size());

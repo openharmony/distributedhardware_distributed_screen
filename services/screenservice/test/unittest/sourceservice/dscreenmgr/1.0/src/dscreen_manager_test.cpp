@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "dscreen_manager_test.h"
+#include "1.0/include/dscreen_manager_test.h"
 
 using namespace testing;
 using namespace testing::ext;

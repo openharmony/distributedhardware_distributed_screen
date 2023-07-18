@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "screenregion_test.h"
+#include "1.0/include/screenregion_test.h"
 #include "dscreen_constants.h"
 
 using namespace testing;

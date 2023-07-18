@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "dscreen_test.h"
+#include "1.0/include/dscreen_test.h"
 
 #define private public
 #include "dscreen_constants.h"
@@ -139,7 +139,7 @@ HWTEST_F(DScreenTest, HandleEnable_002, TestSize.Level1)
     dScreen_->curState_ = ENABLED;
     dScreen_->videoParam_ = nullptr;
     std::string param = "{\"codecType\":\"OMX_rk_video_encoder_avc\", \
-        \"screenHeight\":1280,\"screenVersion\":\"1.0\",\"screenWidth\":720}";
+        \"screenHeight\":1280, \"screenVersion\":\"1.0\", \"screenWidth\":720}";
     std::string taskId = "taskId";
     dScreen_->HandleEnable(param, taskId);
     int32_t ret = dScreen_->AddTask(task);
@@ -159,7 +159,7 @@ HWTEST_F(DScreenTest, HandleEnable_003, TestSize.Level1)
     std::shared_ptr<Task> task = std::make_shared<Task>(TaskType::TASK_DISCONNECT, reqId, attrs);
     dScreen_->videoParam_ = std::make_shared<VideoParam>();
     std::string param = "{\"codecType\":\"OMX_rk_video_encoder_avc\", \
-        \"screenHeight\":1280,\"screenVersion\":\"1.0\",\"screenWidth\":720}";
+        \"screenHeight\":1280, \"screenVersion\":\"1.0\", \"screenWidth\":720}";
     std::string taskId = "taskId";
     dScreen_->HandleEnable(param, taskId);
     int32_t ret = dScreen_->AddTask(task);
@@ -178,8 +178,8 @@ HWTEST_F(DScreenTest, HandleEnable_004, TestSize.Level1)
     std::string attrs = "attrs";
     std::shared_ptr<Task> task = std::make_shared<Task>(TaskType::TASK_DISCONNECT, reqId, attrs);
     dScreen_->videoParam_ = std::make_shared<VideoParam>();
-    std::string param = "{\"codecType\":\"[\"OMX_rk_video_encoder_avc\",\"OMX_rk_video_encoder_hevc\", \
-        \"avenc_mpeg4\"]\",\"screenHeight\":1280,\"screenVersion\":\"1.0\",\"screenWidth\":720}";
+    std::string param = "{\"codecType\":\"[\"OMX_rk_video_encoder_avc\", \"OMX_rk_video_encoder_hevc\", \
+        \"avenc_mpeg4\"]\", \"screenHeight\":1280, \"screenVersion\":\"1.0\", \"screenWidth\":720}";
     std::string taskId = "taskId";
     dScreen_->HandleEnable(param, taskId);
     int32_t ret = dScreen_->AddTask(task);
@@ -198,8 +198,8 @@ HWTEST_F(DScreenTest, HandleEnable_005, TestSize.Level1)
     std::string attrs = "attrs";
     std::shared_ptr<Task> task = std::make_shared<Task>(TaskType::TASK_DISCONNECT, reqId, attrs);
     dScreen_->videoParam_ = std::make_shared<VideoParam>();
-    std::string param = "{\"codecType\":\"[\"OMX_rk_video_encoder_avc\",\"OMX_rk_video_encoder_hevc\", \
-        \"avenc_mpeg4\"]\",\"screenHeight\":1280,\"screenVersion\":\"1.0\",\"screenWidth\":720}";
+    std::string param = "{\"codecType\":\"[\"OMX_rk_video_encoder_avc\", \"OMX_rk_video_encoder_hevc\", \
+        \"avenc_mpeg4\"]\", \"screenHeight\":1280, \"screenVersion\":\"1.0\", \"screenWidth\":720}";
 
     std::string screenName = DSCREEN_PREFIX + SEPERATOR + GetInterruptString(dScreen_->devId_) +
                              SEPERATOR + GetInterruptString(dScreen_->dhId_);
@@ -307,7 +307,7 @@ HWTEST_F(DScreenTest, NegotiateCodecType_001, TestSize.Level1)
  */
 HWTEST_F(DScreenTest, NegotiateCodecType_002, TestSize.Level1)
 {
-    std::string remoteCodecInfoStr = "{\"codecType\":\"[\"OMX_rk_video_encoder_avc\",\"OMX_rk_video_encoder_hevc\", \
+    std::string remoteCodecInfoStr = "{\"codecType\":\"[\"OMX_rk_video_encoder_avc\", \"OMX_rk_video_encoder_hevc\", \
         \"avenc_mpeg4\"]\"}";
     int32_t ret = dScreen_->NegotiateCodecType(remoteCodecInfoStr);
     EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL, ret);
