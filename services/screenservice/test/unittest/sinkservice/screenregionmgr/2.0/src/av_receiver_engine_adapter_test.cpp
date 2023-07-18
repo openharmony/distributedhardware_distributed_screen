@@ -19,7 +19,7 @@
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 #include "engine_test_utils.h"
-#include "1.0/include/dscreen.h"
+#include "2.0/include/dscreen.h"
 
 using namespace testing::ext;
 
@@ -90,7 +90,7 @@ HWTEST_F(AVReceiverEngineAdapterTest, Start_001, TestSize.Level1)
 HWTEST_F(AVReceiverEngineAdapterTest, SetParameter_001, TestSize.Level1)
 {
     std::string param = "param";
-    EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, receiverAdapter_->SetParameter(AVTransTag::VIDEO_FRAME_RETE, param));
+    EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, receiverAdapter_->SetParameter(AVTransTag::VIDEO_FRAME_RATE, param));
 }
 
 /**
@@ -103,7 +103,7 @@ HWTEST_F(AVReceiverEngineAdapterTest, SetParameter_002, TestSize.Level1)
 {
     std::string param = "param";
     receiverAdapter_->receiverEngine_ = std::make_shared<MockIAVReceiverEngine>();
-    EXPECT_EQ(DH_SUCCESS, receiverAdapter_->SetParameter(AVTransTag::VIDEO_FRAME_RETE, param));
+    EXPECT_EQ(DH_SUCCESS, receiverAdapter_->SetParameter(AVTransTag::VIDEO_FRAME_RATE, param));
 }
 
 /**
@@ -132,7 +132,7 @@ HWTEST_F(AVReceiverEngineAdapterTest, SendMessageToRemote_001, TestSize.Level1)
 HWTEST_F(AVReceiverEngineAdapterTest, RegisterAdapterCallback_001, TestSize.Level1)
 {
     std::shared_ptr<AVReceiverAdapterCallback> callback = nullptr;
-    EXPECT_EQ(ERR_DH_AUDIO_TRANS_NULL_VALUE, receiverAdapter_->RegisterAdapterCallback(callback));
+    EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, receiverAdapter_->RegisterAdapterCallback(callback));
     callback = std::make_shared<MockAVReceiverAdapterCallback>();
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->RegisterAdapterCallback(callback));
 }

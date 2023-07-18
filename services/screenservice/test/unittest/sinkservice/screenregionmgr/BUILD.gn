@@ -23,6 +23,7 @@ config("module_private_config") {
     "//third_party/json/include",
     "${fwk_common_path}/utils/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
+    "${distributedhardwarefwk_path}/utils/include",
   ]
 
   include_dirs += [
@@ -40,6 +41,11 @@ config("module_private_config") {
     "${services_path}/screentransport/screensinkprocessor/decoder/include",
     "${services_path}/screenclient/include/",
     "${services_path}/screenservice/sinkservice/screenregionmgr/",
+    "${services_path}/screenservice/sourceservice/screenmgr",
+    "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr",
+    "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/engineutils/include",
+
+
   ]
 }
 
@@ -48,14 +54,16 @@ ohos_unittest("DscreenRegionMgrTest") {
   module_out_path = module_out_path
 
   sources = [
-    "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/src/screenregion_test.cpp",
-    "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/src/screenregionmgr_test.cpp",
+    "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/1.0/src/screenregion_test.cpp",
+    "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/1.0/src/screenregionmgr_test.cpp",
+    "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/2.0/src/av_receiver_engine_adapter_test.cpp",
   ]
 
   configs = [ ":module_private_config" ]
 
   deps = [
     "${services_path}/screenservice/sinkservice:distributed_screen_sink",
+    "${services_path}/screenservice/sinkservice:distributed_screen_source",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest_main",
@@ -64,8 +72,10 @@ ohos_unittest("DscreenRegionMgrTest") {
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributed_av_receiver",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "graphic_2d:libgraphic_utils",
     "graphic_2d:surface",
+    "graphic_2d:libcomposer",
     "hisysevent:libhisysevent",
     "multimedia_image_framework:image_native",
     "window_manager:libdm",

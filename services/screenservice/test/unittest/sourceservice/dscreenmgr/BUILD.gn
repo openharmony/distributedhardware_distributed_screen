@@ -24,6 +24,8 @@ config("module_private_config") {
     "${driver_path}/interfaces/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "${distributedhardwarefwk_path}/common/utils/include",
+    "${distributedhardwarefwk_path}/utils/include",
+    "${fwk_common_path}/utils/include",
     "${mediastandard_path}/interfaces/inner_api/native",
   ]
 
@@ -43,6 +45,9 @@ config("module_private_config") {
     "${services_path}/screentransport/screensourceprocessor/encoder/include",
     "${services_path}/screentransport/screensourceprocessor/include",
     "${services_path}/screentransport/screensourcetrans/include",
+    "${services_path}/screenservice/sinkservice/screenregionmgr",
+    "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr",
+    "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/engineutils/include",
   ]
 }
 
@@ -51,9 +56,10 @@ ohos_unittest("DscreenMgrTest") {
   module_out_path = module_out_path
 
   sources = [
-    "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/src/dscreen_manager_test.cpp",
-    "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/src/dscreen_test.cpp",
-    "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/src/screen_manager_adapter_test.cpp",
+    "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/src/1.0/dscreen_manager_test.cpp",
+    "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/src/1.0/dscreen_test.cpp",
+    "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/src/1.0/screen_manager_adapter_test.cpp",
+    "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/src/2.0/av_sender_engine_adapter_test.cpp",
   ]
 
   configs = [ ":module_private_config" ]
@@ -69,6 +75,8 @@ ohos_unittest("DscreenMgrTest") {
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributed_av_sender",
+    "distributed_hardware_fwk:distributedhardwareutils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_2d:libcomposer",
     "graphic_2d:surface",
     "graphic_2d:sync_fence",

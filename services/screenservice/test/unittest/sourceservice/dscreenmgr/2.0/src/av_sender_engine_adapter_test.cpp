@@ -16,6 +16,7 @@
 #include "2.0/include/av_sender_engine_adapter_test.h"
 
 #include "dscreen_errcode.h"
+#include "histream_ability_parser.h"
 #include "2.0/include/dscreen.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
@@ -63,10 +64,15 @@ HWTEST_F(AVSenderEngineAdapterTest, Initialize_001, TestSize.Level1)
 HWTEST_F(AVSenderEngineAdapterTest, Initialize_002, TestSize.Level1)
 {
     std::string peerDevId = "peerDevId";
+    EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, senderAdapter_->Start());
+    EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, senderAdapter_->Stop());
+    EXPECT_EQ(DH_SUCCESS, senderAdapter_->Release());
     senderAdapter_->senderEngine_ = std::make_shared<MockIAVSenderEngine>();
+    senderAdapter_->transStartSuccess_ = true;
     EXPECT_EQ(DH_SUCCESS, senderAdapter_->Start());
     EXPECT_EQ(DH_SUCCESS, senderAdapter_->Stop());
-    EXPECT_EQ(DH_SUCCESS, senderAdapter_->Release());
+    senderAdapter_->senderEngine_ = nullptr;
+    EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, senderAdapter_->Start());
 }
 
 /**
@@ -114,8 +120,7 @@ HWTEST_F(AVSenderEngineAdapterTest, SetParameter_002, TestSize.Level1)
  */
 HWTEST_F(AVSenderEngineAdapterTest, PushData_001, TestSize.Level1)
 {
-    size_t bufLen = 4096;
-    std::shared_ptr<VideoData> videoData = std::make_shared<VideoData>(bufLen);
+    struct VideoData videoData;
     EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, senderAdapter_->PushData(videoData));
     senderAdapter_->senderEngine_ = std::make_shared<MockIAVSenderEngine>();
     EXPECT_EQ(DH_SUCCESS, senderAdapter_->PushData(videoData));

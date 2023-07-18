@@ -27,17 +27,16 @@ class MockAVReceiverAdapterCallback : public AVReceiverAdapterCallback {
 public:
     explicit MockAVReceiverAdapterCallback() {}
     ~MockAVReceiverAdapterCallback() {}
-    void OnEngineEvent(const AVTransEvent &event) override {}
-    void OnEngineMessage(const std::shared_ptr<AVTransMessage> &message) override {}
-    void OnEngineDataAvailable(const std::shared_ptr<AVTransBuffer> &buffer) override {}
+    void OnEngineEvent(DScreenEventType event, const std::string &content) override {};
+    void OnEngineMessage(const std::shared_ptr<AVTransMessage> &message) override {};
+    void OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer) override {};
 };
-
 class MockAVSenderAdapterCallback : public AVSenderAdapterCallback {
 public:
     explicit MockAVSenderAdapterCallback() {}
     ~MockAVSenderAdapterCallback() {}
-    void OnEngineEvent(const AVTransEvent &event) override {}
-    void OnEngineMessage(const std::shared_ptr<AVTransMessage> &message) override {}
+    void OnEngineEvent(DScreenEventType event, const std::string &content) override {};
+    void OnEngineMessage(const std::shared_ptr<AVTransMessage> &message) override {};
 };
 
 class MockIAVReceiverEngine : public IAVReceiverEngine {
