@@ -55,6 +55,7 @@ ohos_unittest("DscreenRegionMgrTest") {
     "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/1.0/src/screenregion_test.cpp",
     "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/1.0/src/screenregionmgr_test.cpp",
     "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/2.0/src/av_receiver_engine_adapter_test.cpp",
+    "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/2.0/src/screenregionmgr_test.cpp",
   ]
 
   configs = [ ":module_private_config" ]
