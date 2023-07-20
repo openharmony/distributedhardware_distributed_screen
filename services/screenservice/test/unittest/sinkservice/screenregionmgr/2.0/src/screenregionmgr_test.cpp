@@ -52,7 +52,7 @@ HWTEST_F(ScreenRegionManagerTest2, Initialize_001, TestSize.Level1)
  */
 HWTEST_F(ScreenRegionManagerTest2, CreateDScreenRegion_001, TestSize.Level1)
 {
-    std::string peerDevId = "peerDevId"; 
+    std::string peerDevId = "peerDevId";
     int32_t ret =ScreenRegionManager::GetInstance().CreateDScreenRegion(peerDevId);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
@@ -65,7 +65,7 @@ HWTEST_F(ScreenRegionManagerTest2, CreateDScreenRegion_001, TestSize.Level1)
  */
 HWTEST_F(ScreenRegionManagerTest2, DestoryDScreenRegion_001, TestSize.Level1)
 {
-    std::string peerDevId = "peerDevId"; 
+    std::string peerDevId = "peerDevId";
     int32_t ret =ScreenRegionManager::GetInstance().DestoryDScreenRegion(peerDevId);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
