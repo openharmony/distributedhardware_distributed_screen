@@ -32,11 +32,11 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace V1_0 {
 constexpr static int32_t videoDataNum = 100;
-void DScreenTest1::SetUpTestCase(void) {}
+void DScreenTestV1::SetUpTestCase(void) {}
 
-void DScreenTest1::TearDownTestCase(void) {}
+void DScreenTestV1::TearDownTestCase(void) {}
 
-void DScreenTest1::SetUp(void)
+void DScreenTestV1::SetUp(void)
 {
     std::string devId = "devId";
     std::string dhId = "dhId";
@@ -53,7 +53,7 @@ void DScreenTest1::SetUp(void)
     dScreen_->devId_ = "peerDevId";
 }
 
-void DScreenTest1::TearDown(void) {}
+void DScreenTestV1::TearDown(void) {}
 
 /**
  * @tc.name: AddTask_001
@@ -61,7 +61,7 @@ void DScreenTest1::TearDown(void) {}
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, AddTask_001, TestSize.Level1)
+HWTEST_F(DScreenTestV1, AddTask_001, TestSize.Level1)
 {
     int32_t err = 0;
     std::string content = "content";
@@ -91,7 +91,7 @@ HWTEST_F(DScreenTest1, AddTask_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, AddTask_002, TestSize.Level1)
+HWTEST_F(DScreenTestV1, AddTask_002, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
@@ -112,7 +112,7 @@ HWTEST_F(DScreenTest1, AddTask_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, HandleEnable_001, TestSize.Level1)
+HWTEST_F(DScreenTestV1, HandleEnable_001, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
@@ -131,7 +131,7 @@ HWTEST_F(DScreenTest1, HandleEnable_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, HandleEnable_002, TestSize.Level1)
+HWTEST_F(DScreenTestV1, HandleEnable_002, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
@@ -152,7 +152,7 @@ HWTEST_F(DScreenTest1, HandleEnable_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, HandleEnable_003, TestSize.Level1)
+HWTEST_F(DScreenTestV1, HandleEnable_003, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
@@ -172,7 +172,7 @@ HWTEST_F(DScreenTest1, HandleEnable_003, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, HandleEnable_004, TestSize.Level1)
+HWTEST_F(DScreenTestV1, HandleEnable_004, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
@@ -192,7 +192,7 @@ HWTEST_F(DScreenTest1, HandleEnable_004, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, HandleEnable_005, TestSize.Level1)
+HWTEST_F(DScreenTestV1, HandleEnable_005, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
@@ -216,7 +216,7 @@ HWTEST_F(DScreenTest1, HandleEnable_005, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, CheckJsonData_001, TestSize.Level1)
+HWTEST_F(DScreenTestV1, CheckJsonData_001, TestSize.Level1)
 {
     json attrJson;
 
@@ -244,7 +244,7 @@ HWTEST_F(DScreenTest1, CheckJsonData_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, CheckJsonData_002, TestSize.Level1)
+HWTEST_F(DScreenTestV1, CheckJsonData_002, TestSize.Level1)
 {
     json attrJson;
     attrJson["dhid"] = "dhid";
@@ -264,7 +264,7 @@ HWTEST_F(DScreenTest1, CheckJsonData_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, CheckJsonData_003, TestSize.Level1)
+HWTEST_F(DScreenTestV1, CheckJsonData_003, TestSize.Level1)
 {
     json attrJson;
     uint32_t width = 100;
@@ -292,7 +292,7 @@ HWTEST_F(DScreenTest1, CheckJsonData_003, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, NegotiateCodecType_001, TestSize.Level1)
+HWTEST_F(DScreenTestV1, NegotiateCodecType_001, TestSize.Level1)
 {
     std::string remoteCodecInfoStr = "remoteCodecInfoStr";
     int32_t ret = dScreen_->NegotiateCodecType(remoteCodecInfoStr);
@@ -305,7 +305,7 @@ HWTEST_F(DScreenTest1, NegotiateCodecType_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, NegotiateCodecType_002, TestSize.Level1)
+HWTEST_F(DScreenTestV1, NegotiateCodecType_002, TestSize.Level1)
 {
     std::string remoteCodecInfoStr = "{\"codecType\":\"[\"OMX_rk_video_encoder_avc\", \"OMX_rk_video_encoder_hevc\", \
         \"avenc_mpeg4\"]\"}";
@@ -319,7 +319,7 @@ HWTEST_F(DScreenTest1, NegotiateCodecType_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, SetUp_001, TestSize.Level1)
+HWTEST_F(DScreenTestV1, SetUp_001, TestSize.Level1)
 {
     dScreen_->sourceTrans_ = nullptr;
     dScreen_->videoParam_ = std::make_shared<VideoParam>();
@@ -340,7 +340,7 @@ HWTEST_F(DScreenTest1, SetUp_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, SetUp_002, TestSize.Level1)
+HWTEST_F(DScreenTestV1, SetUp_002, TestSize.Level1)
 {
     dScreen_->sourceTrans_ = std::make_shared<ScreenSourceTrans>();
     dScreen_->videoParam_ = std::make_shared<VideoParam>();
@@ -361,7 +361,7 @@ HWTEST_F(DScreenTest1, SetUp_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, Start_001, TestSize.Level1)
+HWTEST_F(DScreenTestV1, Start_001, TestSize.Level1)
 {
     dScreen_->sourceTrans_ = nullptr;
     int32_t ret = dScreen_->Start();
@@ -374,7 +374,7 @@ HWTEST_F(DScreenTest1, Start_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, Start_002, TestSize.Level1)
+HWTEST_F(DScreenTestV1, Start_002, TestSize.Level1)
 {
     dScreen_->sourceTrans_ = std::make_shared<ScreenSourceTrans>();
     int32_t ret = dScreen_->Start();
@@ -387,7 +387,7 @@ HWTEST_F(DScreenTest1, Start_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, Stop_001, TestSize.Level1)
+HWTEST_F(DScreenTestV1, Stop_001, TestSize.Level1)
 {
     dScreen_->sourceTrans_ = nullptr;
     int32_t ret = dScreen_->Stop();
@@ -400,7 +400,7 @@ HWTEST_F(DScreenTest1, Stop_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTest1, Stop_002, TestSize.Level1)
+HWTEST_F(DScreenTestV1, Stop_002, TestSize.Level1)
 {
     dScreen_->sourceTrans_ = std::make_shared<ScreenSourceTrans>();
     int32_t ret = dScreen_->Stop();

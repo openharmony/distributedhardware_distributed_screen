@@ -21,13 +21,13 @@ using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
 namespace V2_0 {
-void DScreenManagerTest2::SetUpTestCase(void) {}
+void DScreenManagerTestV2::SetUpTestCase(void) {}
 
-void DScreenManagerTest2::TearDownTestCase(void) {}
+void DScreenManagerTestV2::TearDownTestCase(void) {}
 
-void DScreenManagerTest2::SetUp() {}
+void DScreenManagerTestV2::SetUp() {}
 
-void DScreenManagerTest2::TearDown() {}
+void DScreenManagerTestV2::TearDown() {}
 
 /**
  * @tc.name: Initialize_001
@@ -35,7 +35,7 @@ void DScreenManagerTest2::TearDown() {}
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, Initialize_001, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, Initialize_001, TestSize.Level1)
 {
     sptr<DScreenGroupListener> dScreenGroupListener_ = new (std::nothrow) DScreenGroupListener();
     int32_t ret = DScreenManager::GetInstance().Initialize();
@@ -48,7 +48,7 @@ HWTEST_F(DScreenManagerTest2, Initialize_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, Release_001, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, Release_001, TestSize.Level1)
 {
     int32_t ret = DScreenManager::GetInstance().Release();
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -60,7 +60,7 @@ HWTEST_F(DScreenManagerTest2, Release_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, HandleScreenChange_001, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, HandleScreenChange_001, TestSize.Level1)
 {
     std::shared_ptr<DScreen> changedScreen = nullptr;
     Rosen::ScreenGroupChangeEvent event = Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP;
@@ -89,7 +89,7 @@ HWTEST_F(DScreenManagerTest2, HandleScreenChange_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, StartDScreenMirror_001, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, StartDScreenMirror_001, TestSize.Level1)
 {
     std::shared_ptr<DScreen> changedScreen = nullptr;
     int32_t ret = DScreenManager::GetInstance().StartDScreenMirror(changedScreen);
@@ -110,7 +110,7 @@ HWTEST_F(DScreenManagerTest2, StartDScreenMirror_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, StopDScreenMirror_001, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, StopDScreenMirror_001, TestSize.Level1)
 {
     std::shared_ptr<DScreen> changedScreen = nullptr;
     int32_t ret = DScreenManager::GetInstance().StopDScreenMirror(changedScreen);
@@ -132,7 +132,7 @@ HWTEST_F(DScreenManagerTest2, StopDScreenMirror_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, OnRegResult_001, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, OnRegResult_001, TestSize.Level1)
 {
     std::shared_ptr<IDScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
     std::shared_ptr<DScreen> changedScreen = std::make_shared<DScreen>("devId000", "dhId000", dScreenCallback);
@@ -148,7 +148,7 @@ HWTEST_F(DScreenManagerTest2, OnRegResult_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, OnUnregResult_001, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, OnUnregResult_001, TestSize.Level1)
 {
     std::shared_ptr<IDScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
     std::shared_ptr<DScreen> changedScreen = std::make_shared<DScreen>("devId000", "dhId000", dScreenCallback);
@@ -164,7 +164,7 @@ HWTEST_F(DScreenManagerTest2, OnUnregResult_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, EnableDistributedScreen_001, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, EnableDistributedScreen_001, TestSize.Level1)
 {
     int32_t ret = DScreenManager::GetInstance().EnableDistributedScreen("", "", EnableParam{"", ""}, "");
     EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_FAILED, ret);
@@ -195,7 +195,7 @@ HWTEST_F(DScreenManagerTest2, EnableDistributedScreen_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, DisableDistributedScreen_001, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, DisableDistributedScreen_001, TestSize.Level1)
 {
     int32_t ret = DScreenManager::GetInstance().DisableDistributedScreen("devId111", "dhId111", "reqId111");
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -210,7 +210,7 @@ HWTEST_F(DScreenManagerTest2, DisableDistributedScreen_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, FindDScreenById_001, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, FindDScreenById_001, TestSize.Level1)
 {
     std::shared_ptr<DScreen> dScreen = DScreenManager::GetInstance().FindDScreenById(99);
     EXPECT_EQ(nullptr, dScreen);
@@ -222,7 +222,7 @@ HWTEST_F(DScreenManagerTest2, FindDScreenById_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, GetScreenDumpInfo_001, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, GetScreenDumpInfo_001, TestSize.Level1)
 {
     std::string result;
     DScreenManager::GetInstance().GetScreenDumpInfo(result);
@@ -235,7 +235,7 @@ HWTEST_F(DScreenManagerTest2, GetScreenDumpInfo_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, GetScreenDumpInfo_002, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, GetScreenDumpInfo_002, TestSize.Level1)
 {
     std::string result;
     DScreenManager::GetInstance().GetScreenDumpInfo(result);
@@ -248,7 +248,7 @@ HWTEST_F(DScreenManagerTest2, GetScreenDumpInfo_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenManagerTest2, PublishMessage_001, TestSize.Level1)
+HWTEST_F(DScreenManagerTestV2, PublishMessage_001, TestSize.Level1)
 {
     std::shared_ptr<IDScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
     std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>("devId000", "dhId000", dScreenCallback);

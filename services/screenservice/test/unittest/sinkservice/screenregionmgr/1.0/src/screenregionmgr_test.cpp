@@ -21,13 +21,13 @@ using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
 namespace V1_0 {
-void ScreenRegionManagerTest1::SetUpTestCase(void) {}
+void ScreenRegionManagerTestV1::SetUpTestCase(void) {}
 
-void ScreenRegionManagerTest1::TearDownTestCase(void) {}
+void ScreenRegionManagerTestV1::TearDownTestCase(void) {}
 
-void ScreenRegionManagerTest1::SetUp(void) {}
+void ScreenRegionManagerTestV1::SetUp(void) {}
 
-void ScreenRegionManagerTest1::TearDown(void)
+void ScreenRegionManagerTestV1::TearDown(void)
 {
     sleep(1);
 }
@@ -38,7 +38,7 @@ void ScreenRegionManagerTest1::TearDown(void)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest1, ReleaseAllRegions_001, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTestV1, ReleaseAllRegions_001, TestSize.Level1)
 {
     const std::string remoteDevId = "sourceDevId";
     uint64_t screenId = 0;
@@ -56,7 +56,7 @@ HWTEST_F(ScreenRegionManagerTest1, ReleaseAllRegions_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest1, ReleaseAllRegions_002, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTestV1, ReleaseAllRegions_002, TestSize.Level1)
 {
     const std::string remoteDevId = "sourceDevId";
     std::shared_ptr<ScreenRegion> screenRegion = nullptr;
@@ -72,7 +72,7 @@ HWTEST_F(ScreenRegionManagerTest1, ReleaseAllRegions_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest1, ReleaseAllRegions_003, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTestV1, ReleaseAllRegions_003, TestSize.Level1)
 {
     std::string remoteDevId = "sourceDevId";
     int32_t eventCode = 100;
@@ -113,7 +113,7 @@ HWTEST_F(ScreenRegionManagerTest1, ReleaseAllRegions_003, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest1, NotifyRemoteScreenService_001, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTestV1, NotifyRemoteScreenService_001, TestSize.Level1)
 {
     const std::string remoteDevId = "sourceDevId";
     const std::string dhId = "sinkDhId";
@@ -131,7 +131,7 @@ HWTEST_F(ScreenRegionManagerTest1, NotifyRemoteScreenService_001, TestSize.Level
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest1, HandleNotifySetUp_001, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTestV1, HandleNotifySetUp_001, TestSize.Level1)
 {
     ScreenRegionManager::GetInstance().screenRegions_.clear();
     const std::string remoteDevId = "sourceDevId";
@@ -152,7 +152,7 @@ HWTEST_F(ScreenRegionManagerTest1, HandleNotifySetUp_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest1, HandleNotifySetUp_002, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTestV1, HandleNotifySetUp_002, TestSize.Level1)
 {
     ScreenRegionManager::GetInstance().screenRegions_.clear();
     const std::string remoteDevId = "sourceDevId";
@@ -172,7 +172,7 @@ HWTEST_F(ScreenRegionManagerTest1, HandleNotifySetUp_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest1, HandleNotifySetUp_003, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTestV1, HandleNotifySetUp_003, TestSize.Level1)
 {
     ScreenRegionManager::GetInstance().screenRegions_.clear();
     const std::string remoteDevId = "sourceDevId";
@@ -193,7 +193,7 @@ HWTEST_F(ScreenRegionManagerTest1, HandleNotifySetUp_003, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest1, GetDScreenSourceSA_001, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTestV1, GetDScreenSourceSA_001, TestSize.Level1)
 {
     const std::string remoteDevId = "sourceDevId";
     sptr<IDScreenSource> ret = ScreenRegionManager::GetInstance().GetDScreenSourceSA(remoteDevId);
