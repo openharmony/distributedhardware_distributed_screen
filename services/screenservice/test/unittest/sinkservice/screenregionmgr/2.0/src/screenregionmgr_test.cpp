@@ -21,13 +21,13 @@ using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
 namespace V2_0 {
-void ScreenRegionManagerTest::SetUpTestCase(void) {}
+void ScreenRegionManagerTest2::SetUpTestCase(void) {}
 
-void ScreenRegionManagerTest::TearDownTestCase(void) {}
+void ScreenRegionManagerTest2::TearDownTestCase(void) {}
 
-void ScreenRegionManagerTest::SetUp(void) {}
+void ScreenRegionManagerTest2::SetUp(void) {}
 
-void ScreenRegionManagerTest::TearDown(void)
+void ScreenRegionManagerTest2::TearDown(void)
 {
     sleep(1);
 }
@@ -38,7 +38,7 @@ void ScreenRegionManagerTest::TearDown(void)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest, Initialize_001, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTest2, Initialize_001, TestSize.Level1)
 {
     EXPECT_NE(DH_SUCCESS, ScreenRegionManager::GetInstance().Initialize());
     EXPECT_EQ(DH_SUCCESS, ScreenRegionManager::GetInstance().Release());
@@ -50,7 +50,7 @@ HWTEST_F(ScreenRegionManagerTest, Initialize_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest, CreateDScreenRegion_001, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTest2, CreateDScreenRegion_001, TestSize.Level1)
 {
     std::string peerDevId = "peerDevId"; 
     int32_t ret =ScreenRegionManager::GetInstance().CreateDScreenRegion(peerDevId);
@@ -63,7 +63,7 @@ HWTEST_F(ScreenRegionManagerTest, CreateDScreenRegion_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest, DestoryDScreenRegion_001, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTest2, DestoryDScreenRegion_001, TestSize.Level1)
 {
     std::string peerDevId = "peerDevId"; 
     int32_t ret =ScreenRegionManager::GetInstance().DestoryDScreenRegion(peerDevId);
@@ -76,7 +76,7 @@ HWTEST_F(ScreenRegionManagerTest, DestoryDScreenRegion_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest, GetScreenDumpInfo_001, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTest2, GetScreenDumpInfo_001, TestSize.Level1)
 {
     std::string result;
     ScreenRegionManager::GetInstance().GetScreenDumpInfo(result);
@@ -89,7 +89,7 @@ HWTEST_F(ScreenRegionManagerTest, GetScreenDumpInfo_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest, GetScreenDumpInfo_002, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTest2, GetScreenDumpInfo_002, TestSize.Level1)
 {
     std::string result;
     ScreenRegionManager::GetInstance().GetScreenDumpInfo(result);
@@ -102,7 +102,7 @@ HWTEST_F(ScreenRegionManagerTest, GetScreenDumpInfo_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTest, OnProviderEvent_002, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTest2, OnProviderEvent_002, TestSize.Level1)
 {
     AVTransEvent event;
     EngineProviderListener engineProviderListener;

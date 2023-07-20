@@ -22,11 +22,11 @@ using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
 namespace V1_0 {
-void ScreenRegionTest::SetUpTestCase(void) {}
+void ScreenRegionTest1::SetUpTestCase(void) {}
 
-void ScreenRegionTest::TearDownTestCase(void) {}
+void ScreenRegionTest1::TearDownTestCase(void) {}
 
-void ScreenRegionTest::SetUp(void)
+void ScreenRegionTest1::SetUp(void)
 {
     const std::string remoteDevId = "sourceDevId";
     uint64_t screenId = 0;
@@ -34,7 +34,7 @@ void ScreenRegionTest::SetUp(void)
     screenRegion_ = std::make_shared<ScreenRegion>(remoteDevId, screenId, displayId);
 }
 
-void ScreenRegionTest::TearDown(void) {}
+void ScreenRegionTest1::TearDown(void) {}
 
 /**
  * @tc.name: OnTransError_001
@@ -42,10 +42,10 @@ void ScreenRegionTest::TearDown(void) {}
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, OnTransError_001, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, OnTransError_001, TestSize.Level1)
 {
     int32_t err = 0;
-    const std::string content = "ScreenRegionTest";
+    const std::string content = "ScreenRegionTest1";
     screenRegion_->OnTransError(err, content);
     EXPECT_EQ(false, screenRegion_->isRunning);
 }
@@ -56,7 +56,7 @@ HWTEST_F(ScreenRegionTest, OnTransError_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, SetMapRelation_001, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, SetMapRelation_001, TestSize.Level1)
 {
     std::shared_ptr<DScreenMapRelation> mapRelation = std::make_shared<DScreenMapRelation>();
     screenRegion_->SetMapRelation(mapRelation);
@@ -69,7 +69,7 @@ HWTEST_F(ScreenRegionTest, SetMapRelation_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, GetScreenId_001, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, GetScreenId_001, TestSize.Level1)
 {
     screenRegion_->screenId_ = 5;
     uint64_t ret = screenRegion_->GetScreenId();
@@ -82,7 +82,7 @@ HWTEST_F(ScreenRegionTest, GetScreenId_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, GetDisplayId_001, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, GetDisplayId_001, TestSize.Level1)
 {
     screenRegion_->displayId_ = 5;
     uint64_t ret = screenRegion_->GetDisplayId();
@@ -95,7 +95,7 @@ HWTEST_F(ScreenRegionTest, GetDisplayId_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, GetRemoteDevId_001, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, GetRemoteDevId_001, TestSize.Level1)
 {
     screenRegion_->remoteDevId_ = "remoteDevId";
     std::string ret = screenRegion_->GetRemoteDevId();
@@ -108,7 +108,7 @@ HWTEST_F(ScreenRegionTest, GetRemoteDevId_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, GetWindowId_001, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, GetWindowId_001, TestSize.Level1)
 {
     screenRegion_->windowId_ = 5;
     int32_t ret = screenRegion_->GetWindowId();
@@ -121,7 +121,7 @@ HWTEST_F(ScreenRegionTest, GetWindowId_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, GetVideoParam_001, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, GetVideoParam_001, TestSize.Level1)
 {
     screenRegion_->videoParam_ = std::make_shared<VideoParam>();
     std::shared_ptr<VideoParam> ret = screenRegion_->GetVideoParam();
@@ -134,7 +134,7 @@ HWTEST_F(ScreenRegionTest, GetVideoParam_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, GetWindowProperty_001, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, GetWindowProperty_001, TestSize.Level1)
 {
     screenRegion_->windowProperty_ = std::make_shared<WindowProperty>();
     std::shared_ptr<WindowProperty> ret = screenRegion_->GetWindowProperty();
@@ -147,7 +147,7 @@ HWTEST_F(ScreenRegionTest, GetWindowProperty_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, SetUpWindow_001, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, SetUpWindow_001, TestSize.Level1)
 {
     screenRegion_->mapRelation_ = nullptr;
     int32_t ret = screenRegion_->SetUpWindow();
@@ -160,7 +160,7 @@ HWTEST_F(ScreenRegionTest, SetUpWindow_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, SetUp_001, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, SetUp_001, TestSize.Level1)
 {
     screenRegion_->mapRelation_ = std::make_shared<DScreenMapRelation>();
     ScreenRect screenRect;
@@ -190,7 +190,7 @@ HWTEST_F(ScreenRegionTest, SetUp_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, SetUp_002, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, SetUp_002, TestSize.Level1)
 {
     screenRegion_->mapRelation_ = nullptr;
     std::string version = "1.0";
@@ -205,7 +205,7 @@ HWTEST_F(ScreenRegionTest, SetUp_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, Start_001, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, Start_001, TestSize.Level1)
 {
     int32_t ret = screenRegion_->Start();
 
@@ -218,7 +218,7 @@ HWTEST_F(ScreenRegionTest, Start_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, Start_002, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, Start_002, TestSize.Level1)
 {
     screenRegion_->sinkTrans_ = std::make_shared<ScreenSinkTrans>();
     int32_t ret = screenRegion_->Start();
@@ -232,7 +232,7 @@ HWTEST_F(ScreenRegionTest, Start_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, Stop_001, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, Stop_001, TestSize.Level1)
 {
     screenRegion_->isRunning = false;
     int32_t ret = screenRegion_->Stop();
@@ -246,7 +246,7 @@ HWTEST_F(ScreenRegionTest, Stop_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, Stop_002, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, Stop_002, TestSize.Level1)
 {
     screenRegion_->isRunning = true;
     int32_t ret = screenRegion_->Stop();
@@ -260,7 +260,7 @@ HWTEST_F(ScreenRegionTest, Stop_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionTest, Stop_003, TestSize.Level1)
+HWTEST_F(ScreenRegionTest1, Stop_003, TestSize.Level1)
 {
     screenRegion_->isRunning = true;
     screenRegion_->sinkTrans_ = std::make_shared<ScreenSinkTrans>();
