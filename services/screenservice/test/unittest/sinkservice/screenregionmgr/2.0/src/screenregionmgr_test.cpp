@@ -40,7 +40,7 @@ void ScreenRegionManagerTest2::TearDown(void)
  */
 HWTEST_F(ScreenRegionManagerTest2, Initialize_001, TestSize.Level1)
 {
-    EXPECT_NE(DH_SUCCESS, ScreenRegionManager::GetInstance().Initialize());
+    EXPECT_EQ(DH_SUCCESS, ScreenRegionManager::GetInstance().Initialize());
     EXPECT_EQ(DH_SUCCESS, ScreenRegionManager::GetInstance().Release());
 }
 
