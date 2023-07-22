@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,27 +13,28 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DSCREEN_TEST_V1_0_H
-#define OHOS_DSCREEN_TEST_V1_0_H
+#ifndef OHOS_SCREEN_REGION_MANAGER_TEST_V2_0_H
+#define OHOS_SCREEN_REGION_MANAGER_TEST_V2_0_H
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include "dscreen_errcode.h"
 
 #define private public
-#include "1.0/include/dscreen.h"
+#include "2.0/include/screenregionmgr.h"
 #undef private
+
 namespace OHOS {
 namespace DistributedHardware {
-namespace V1_0 {
-class DScreenTestV1 : public testing::Test {
+namespace V2_0 {
+class ScreenRegionManagerTestV2 : public testing::Test {
 public:
     static void SetUpTestCase(void);
     static void TearDownTestCase(void);
     void SetUp();
     void TearDown();
-    std::shared_ptr<DScreen> dScreen_ = nullptr;
 };
-} // namespace V1_0
+} // namespace V2_0
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

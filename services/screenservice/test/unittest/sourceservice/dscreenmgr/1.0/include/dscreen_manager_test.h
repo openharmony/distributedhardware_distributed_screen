@@ -27,7 +27,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 namespace V1_0 {
-class DScreenManagerTest : public testing::Test {
+class DScreenManagerTestV1 : public testing::Test {
 public:
     static void SetUpTestCase(void);
     static void TearDownTestCase(void);
