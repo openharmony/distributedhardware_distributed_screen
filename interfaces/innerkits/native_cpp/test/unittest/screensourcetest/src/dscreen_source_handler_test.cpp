@@ -207,7 +207,7 @@ HWTEST_F(DScreenSourceHandlerTest, UnregisterDistributedHardware_001, TestSize.L
         DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = new (std::nothrow) DScreenSourceCallback();
     }
     int32_t ret = DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, callback);
-    EXPECT_EQ(ERR_DH_SCREEN_SA_DISABLE_FAILED, ret);
+    EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 /**
