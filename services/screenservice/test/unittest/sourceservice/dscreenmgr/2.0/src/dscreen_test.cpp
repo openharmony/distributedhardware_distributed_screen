@@ -63,12 +63,9 @@ void DScreenTestV2::TearDown(void) {}
  */
 HWTEST_F(DScreenTestV2, AddTask_001, TestSize.Level1)
 {
-
     dScreen_->GetVideoParam();
-
     DScreenState state = ENABLING;
     dScreen_->SetState(state);
-
     dScreen_->GetState();
     dScreen_->GetScreenId();
     dScreen_->GetDHId();
@@ -89,7 +86,6 @@ HWTEST_F(DScreenTestV2, HandleTask_001, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
-
     std::shared_ptr<Task> task = std::make_shared<Task>(TaskType::TASK_DISCONNECT, reqId, attrs);
     int32_t ret = dScreen_->AddTask(task);
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -306,7 +302,6 @@ HWTEST_F(DScreenTestV2, NegotiateCodecType_002, TestSize.Level1)
         \"avenc_mpeg4\"]\"}";
     int32_t ret = dScreen_->NegotiateCodecType(remoteCodecInfoStr);
     EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL, ret);
-
 }
 
 /**
