@@ -79,7 +79,7 @@ HWTEST_F(DScreenTestV2, AddTask_001, TestSize.Level1)
     EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_TASK_NOT_VALID, ret);
     std::string reqId = "reqId";
     std::string attrs = "attrs";
-    int32_t ret = dScreen_->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
+    ret = dScreen_->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
@@ -93,11 +93,10 @@ HWTEST_F(DScreenTestV2, HandleTask_001, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
-    int32_t ret = dScreen_->HandleTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
+    dScreen_->HandleTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
     dScreen_->HandleTask(std::make_shared<Task>(TaskType::TASK_DISABLE, reqId, attrs));
     dScreen_->HandleTask(std::make_shared<Task>(TaskType::TASK_CONNECT, reqId, attrs));
     dScreen_->HandleTask(std::make_shared<Task>(TaskType::TASK_DISCONNECT, reqId, attrs));
-    dScreen_->HandleTask(std::make_shared<Task>(TaskType::TASK_ERROR, reqId, attrs));
     int32_t ret = dScreen_->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
     EXPECT_EQ(DH_SUCCESS, ret);
 }
@@ -116,12 +115,8 @@ HWTEST_F(DScreenTestV2, HandleEnable_001, TestSize.Level1)
     std::string param = "param";
     std::string taskId = "taskId";
     dScreen_->HandleEnable(param, taskId);
-    dScreenCallback_ = std::make_shared<DScreenCallback>();
+    dScreen_-> dscreenCallback_ = std::make_shared<DScreenCallback>();
     DScreenState state = ENABLING;
-    dScreen_->SetState(state);
-    dScreen_->HandleEnable(param, taskId);
-
-    DScreenState state = state;
     dScreen_->SetState(state);
     dScreen_->HandleEnable(param, taskId);
     int32_t ret = dScreen_->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
@@ -138,9 +133,9 @@ HWTEST_F(DScreenTestV2, HandleEnable_002, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
-    dScreenCallback_ = std::make_shared<DScreenCallback>();
+    dScreen_->dscreenCallback_ = std::make_shared<DScreenCallback>();
     std::shared_ptr<Task> task = std::make_shared<Task>(TaskType::TASK_DISCONNECT, reqId, attrs);
-    dScreen_->curState_ = curState;
+    dScreen_->curState_ = DISABLED;
     dScreen_->videoParam_ = nullptr;
     std::string param = "{\"codecType\":\"OMX_rk_video_encoder_avc\", \
         \"screenHeight\":1280, \"screenVersion\":\"1.0\", \"screenWidth\":720}";
@@ -162,7 +157,7 @@ HWTEST_F(DScreenTestV2, HandleDisable_001, TestSize.Level1)
     std::string attrs = "attrs";
     std::string taskId = "taskId";
     dScreen_->HandleDisable(taskId);
-    dScreenCallback_ = std::make_shared<DScreenCallback>();
+    dScreen_->dscreenCallback_ = std::make_shared<DScreenCallback>();
     dScreen_->HandleDisable(taskId);
     int32_t ret = dScreen_->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -178,34 +173,30 @@ HWTEST_F(DScreenTestV2, HandleConnect_001, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
-    DScreenState state = state;
-    dScreen_->SetState(state);
+    dScreen_->SetState(DISABLED);
     dScreen_->HandleConnect();
 
-    DScreenState state = ENABLED;
-    dScreen_->SetState(state);
+    dScreen_->SetState(ENABLED);
     dScreen_->HandleConnect();
     int32_t ret = dScreen_->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 /**
- * @tc.name: HandleDisConnect_001
- * @tc.desc: Verify the HandleDisConnect function failed.
+ * @tc.name: HandleDisconnect_001
+ * @tc.desc: Verify the HandleDisconnect function failed.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(DScreenTestV2, HandleDisConnect_001, TestSize.Level1)
+HWTEST_F(DScreenTestV2, HandleDisconnect_001, TestSize.Level1)
 {
     std::string reqId = "reqId";
     std::string attrs = "attrs";
-    DScreenState state = state;
-    dScreen_->SetState(state);
-    dScreen_->HandleDisConnect();
+    dScreen_->SetState(DISABLED);
+    dScreen_->HandleDisconnect();
 
-    DScreenState state = CONNECTED;
-    dScreen_->SetState(state);
-    dScreen_->HandleDisConnect();
+    dScreen_->SetState(CONNECTED);
+    dScreen_->HandleDisconnect();
     int32_t ret = dScreen_->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
     EXPECT_EQ(DH_SUCCESS, ret);
 }
@@ -232,17 +223,6 @@ HWTEST_F(DScreenTestV2, RemoveSurface_001, TestSize.Level1)
 {
     int32_t ret = dScreen_->RemoveSurface();
     EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, ret);
-
-    std::shared_ptr<DScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
-    ConsumBufferListener consumBufferListener;
-    ConsumBufferListener consumBufferListener.dScreen_ = std::make_shared<DScreen>(devId, dhId, dScreenCallback);
-    DScreenState state = CONNECTED;
-    consumBufferListener.dScreen_->SetState(state);
-    consumBufferListener.OnBufferAvailable();
-
-    ret = dScreen_->ConfigSurface();
-    dScreen_->RemoveSurface();
-    EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 /**
@@ -256,7 +236,7 @@ HWTEST_F(DScreenTestV2, ConsumeSurface_001, TestSize.Level1)
     std::string reqId = "reqId";
     std::string attrs = "attrs";
     dScreen_->ConsumeSurface();
-    dScreen_.senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
+    dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
     dScreen_->ConsumeSurface();
     int32_t ret = dScreen_->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, attrs));
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -270,7 +250,9 @@ HWTEST_F(DScreenTestV2, ConsumeSurface_001, TestSize.Level1)
  */
 HWTEST_F(DScreenTestV2, InitSenderEngine_001, TestSize.Level1)
 {
-    int32_t ret = dScreen_->InitSenderEngine();
+    IAVEngineProvider *providerPtr = nullptr;
+    std::string peerDevId = "peer";
+    int32_t ret = dScreen_->InitSenderEngine(providerPtr, peerDevId);
     EXPECT_EQ(ERR_DH_AV_TRANS_INIT_FAILED, ret);
 }
 
@@ -284,7 +266,7 @@ HWTEST_F(DScreenTestV2, StartSenderEngine_001, TestSize.Level1)
 {
     int32_t ret = dScreen_->StartSenderEngine();
     EXPECT_EQ(ERR_DH_AV_TRANS_INIT_FAILED, ret);
-    dScreen_.senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
+    dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
     ret = dScreen_->StartSenderEngine();
     EXPECT_EQ(ERR_DH_AV_TRANS_INIT_FAILED, ret);
 }
@@ -299,10 +281,10 @@ HWTEST_F(DScreenTestV2, StopSenderEngine_001, TestSize.Level1)
 {
     std::string codecType = "codecType";
     std::string pixelFormat = "pixelFormat";
-    dScreen_->ChooseParameter();
+    dScreen_->ChooseParameter(codecType, pixelFormat);
     int32_t ret = dScreen_->StopSenderEngine();
     EXPECT_EQ(ERR_DH_AV_TRANS_INIT_FAILED, ret);
-    dScreen_.senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
+    dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
     ret = dScreen_->StopSenderEngine();
     EXPECT_EQ(ERR_DH_AV_TRANS_INIT_FAILED, ret);
 }
@@ -317,7 +299,7 @@ HWTEST_F(DScreenTestV2, SetUp_001, TestSize.Level1)
 {
     int32_t ret = dScreen_->SetUp();
     EXPECT_EQ(ERR_DH_AV_TRANS_INIT_FAILED, ret);
-    dScreen_.senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
+    dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
     EXPECT_EQ(ERR_DH_AV_TRANS_INIT_FAILED, ret);
 }
 
@@ -371,6 +353,8 @@ HWTEST_F(DScreenTestV2, NegotiateCodecType_002, TestSize.Level1)
 HWTEST_F(DScreenTestV2, CheckJsonData_001, TestSize.Level1)
 {
     json attrJson;
+    uint32_t width = 100;
+    uint32_t heigth = 100;
     attrJson["screenWidth"] = width;
     attrJson["screenHeight"] = heigth;
     attrJson["codecType"] = 0;
