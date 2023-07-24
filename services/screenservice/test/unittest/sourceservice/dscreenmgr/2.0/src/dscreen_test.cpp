@@ -95,6 +95,7 @@ HWTEST_F(DScreenTestV2, HandleTask_001, TestSize.Level1)
     dScreen_->HandleTask(task);
     task = std::make_shared<Task>(TaskType::TASK_DISCONNECT, reqId, attrs);
     dScreen_->HandleTask(task);
+    EXPECT_EQ(SCREEN_ID_INVALID, dScreen_->screenId_);
 }
 
 /**
