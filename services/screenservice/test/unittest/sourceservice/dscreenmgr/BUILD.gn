@@ -61,6 +61,7 @@ ohos_unittest("DscreenMgrTest") {
     "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/1.0/src/screen_manager_adapter_test.cpp",
     "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/2.0/src/av_sender_engine_adapter_test.cpp",
     "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/2.0/src/dscreen_manager_test.cpp",
+    "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr/2.0/src/dscreen_test.cpp",
   ]
 
   configs = [ ":module_private_config" ]
