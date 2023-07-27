@@ -50,7 +50,7 @@ void CallbackOnRemoteRequestFuzzTest(const uint8_t* data, size_t size)
     pdata.WriteString(reqId);
     pdata.WriteString(dataStr);
 
-    sptr<DScreenSourceCallback> dScreenSourceCallback = new (std::nothrow) DScreenSourceCallback();
+    sptr<DScreenSourceCallback> dScreenSourceCallback(new (std::nothrow) DScreenSourceCallback());
     dScreenSourceCallback->OnRemoteRequest(code, pdata, reply, option);
 }
 }

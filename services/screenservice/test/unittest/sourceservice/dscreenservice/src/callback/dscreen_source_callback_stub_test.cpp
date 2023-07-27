@@ -68,7 +68,7 @@ int32_t DScreenSourceCallbackStubTest::TestDScreenSourceCallbackStub::OnNotifyUn
  */
 HWTEST_F(DScreenSourceCallbackStubTest, OnNotifyRegResult_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sourceCbkStubPtr = new TestDScreenSourceCallbackStub();
+    sptr<IRemoteObject> sourceCbkStubPtr(new TestDScreenSourceCallbackStub());
     DScreenSourceCallbackProxy sourceCbkProxy(sourceCbkStubPtr);
 
     int32_t ret = sourceCbkProxy.OnNotifyRegResult("", "dhId000", "reqId000", 0, "data000");
@@ -107,7 +107,7 @@ HWTEST_F(DScreenSourceCallbackStubTest, OnNotifyRegResult_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSourceCallbackStubTest, OnNotifyUnregResult_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sourceCbkStubPtr = new TestDScreenSourceCallbackStub();
+    sptr<IRemoteObject> sourceCbkStubPtr(new TestDScreenSourceCallbackStub());
     DScreenSourceCallbackProxy sourceCbkProxy(sourceCbkStubPtr);
 
     int32_t ret = sourceCbkProxy.OnNotifyUnregResult("", "dhId000", "reqId000", 0, "data000");

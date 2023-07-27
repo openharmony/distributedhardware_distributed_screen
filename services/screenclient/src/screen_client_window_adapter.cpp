@@ -34,7 +34,7 @@ sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProp
         DHLOGE("windowProperty is nullptr.");
         return nullptr;
     }
-    sptr<Rosen::WindowOption> option = new Rosen::WindowOption();
+    sptr<Rosen::WindowOption> option(new Rosen::WindowOption());
     if (option == nullptr) {
         DHLOGE("option is nullptr.");
         return nullptr;

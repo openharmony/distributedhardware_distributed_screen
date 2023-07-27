@@ -79,7 +79,7 @@ void DScreenSinkStubTest::TestDScreenSinkStub::DScreenNotify(const std::string &
  */
 HWTEST_F(DScreenSinkStubTest, InitSink_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sinkStubPtr = new TestDScreenSinkStub();
+    sptr<IRemoteObject> sinkStubPtr(new TestDScreenSinkStub());
     DScreenSinkProxy sinkProxy(sinkStubPtr);
 
     int32_t ret = sinkProxy.InitSink("params000");
@@ -97,7 +97,7 @@ HWTEST_F(DScreenSinkStubTest, InitSink_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSinkStubTest, ReleaseSink_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sinkStubPtr = new TestDScreenSinkStub();
+    sptr<IRemoteObject> sinkStubPtr(new TestDScreenSinkStub());
     DScreenSinkProxy sinkProxy(sinkStubPtr);
 
     int32_t ret = sinkProxy.ReleaseSink();
@@ -112,7 +112,7 @@ HWTEST_F(DScreenSinkStubTest, ReleaseSink_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSinkStubTest, SubscribeLocalHardware_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sinkStubPtr = new TestDScreenSinkStub();
+    sptr<IRemoteObject> sinkStubPtr(new TestDScreenSinkStub());
     DScreenSinkProxy sinkProxy(sinkStubPtr);
 
     int32_t ret = sinkProxy.SubscribeLocalHardware("dhId000", "param000");
@@ -139,7 +139,7 @@ HWTEST_F(DScreenSinkStubTest, SubscribeLocalHardware_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSinkStubTest, UnsubscribeLocalHardware_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sinkStubPtr = new TestDScreenSinkStub();
+    sptr<IRemoteObject> sinkStubPtr(new TestDScreenSinkStub());
     DScreenSinkProxy sinkProxy(sinkStubPtr);
 
     int32_t ret = sinkProxy.UnsubscribeLocalHardware("dhId000");
@@ -163,7 +163,7 @@ HWTEST_F(DScreenSinkStubTest, UnsubscribeLocalHardware_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSinkStubTest, DScreenNotify_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sinkStubPtr = new TestDScreenSinkStub();
+    sptr<IRemoteObject> sinkStubPtr(new TestDScreenSinkStub());
     DScreenSinkProxy sinkProxy(sinkStubPtr);
 
     sinkProxy.DScreenNotify("", 0, "eventContent000");

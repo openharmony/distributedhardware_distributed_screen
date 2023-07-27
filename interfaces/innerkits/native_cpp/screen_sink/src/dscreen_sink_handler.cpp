@@ -67,7 +67,7 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
                 "dscreen sink get samgr failed.");
             return ERR_DH_SCREEN_SA_GET_SAMGR_FAIL;
         }
-        sptr<DScreenSinkLoadCallback> loadCallback = new DScreenSinkLoadCallback(params);
+        sptr<DScreenSinkLoadCallback> loadCallback(new DScreenSinkLoadCallback(params));
         if (loadCallback == nullptr) {
             DHLOGE("loadCallback is nullptr.");
             ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_GET_SAMGR_FAIL, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,

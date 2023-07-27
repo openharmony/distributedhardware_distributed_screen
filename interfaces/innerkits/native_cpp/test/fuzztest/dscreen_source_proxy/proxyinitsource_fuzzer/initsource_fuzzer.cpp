@@ -34,7 +34,7 @@ void InitSourceFuzzTest(const uint8_t* data, size_t size)
 
     std::string params(reinterpret_cast<const char*>(data), size);
 
-    sptr<IDScreenSourceCallback> callback = new DScreenSourceCallback();
+    sptr<IDScreenSourceCallback> callback(new DScreenSourceCallback());
     if (callback == nullptr) {
         return;
     }
