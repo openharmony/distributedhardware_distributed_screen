@@ -39,7 +39,7 @@ void OnNotifyUnregResultFuzzTest(const uint8_t* data, size_t size)
     std::string dataStr(reinterpret_cast<const char*>(data), size);
     std::shared_ptr<UnregisterCallback> uncallback = std::make_shared<ComponentDisable>();
 
-    sptr<DScreenSourceCallback> dScreenSourceCallback = new (std::nothrow) DScreenSourceCallback();
+    sptr<DScreenSourceCallback> dScreenSourceCallback(new (std::nothrow) DScreenSourceCallback());
 
     dScreenSourceCallback->PushUnregisterCallback(reqId, uncallback);
     dScreenSourceCallback->OnNotifyUnregResult(devId, dhId, reqId, status, dataStr);

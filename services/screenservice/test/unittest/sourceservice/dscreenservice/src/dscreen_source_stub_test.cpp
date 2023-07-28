@@ -96,7 +96,7 @@ void DScreenSourceStubTest::TestDScreenSourceStub::DScreenNotify(const std::stri
  */
 HWTEST_F(DScreenSourceStubTest, InitSource_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sourceStubPtr = new TestDScreenSourceStub();
+    sptr<IRemoteObject> sourceStubPtr(new TestDScreenSourceStub());
     DScreenSourceProxy sourceProxy(sourceStubPtr);
 
     sptr<DScreenSourceCallback> callback;
@@ -119,7 +119,7 @@ HWTEST_F(DScreenSourceStubTest, InitSource_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSourceStubTest, ReleaseSource_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sourceStubPtr = new TestDScreenSourceStub();
+    sptr<IRemoteObject> sourceStubPtr(new TestDScreenSourceStub());
     DScreenSourceProxy sourceProxy(sourceStubPtr);
     int32_t ret = sourceProxy.ReleaseSource();
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -133,7 +133,7 @@ HWTEST_F(DScreenSourceStubTest, ReleaseSource_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSourceStubTest, RegisterDistributedHardware_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sourceStubPtr = new TestDScreenSourceStub();
+    sptr<IRemoteObject> sourceStubPtr(new TestDScreenSourceStub());
     DScreenSourceProxy sourceProxy(sourceStubPtr);
 
     EnableParam param;
@@ -180,7 +180,7 @@ HWTEST_F(DScreenSourceStubTest, RegisterDistributedHardware_001, TestSize.Level1
  */
 HWTEST_F(DScreenSourceStubTest, UnregisterDistributedHardware_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sourceStubPtr = new TestDScreenSourceStub();
+    sptr<IRemoteObject> sourceStubPtr(new TestDScreenSourceStub());
     DScreenSourceProxy sourceProxy(sourceStubPtr);
 
     int32_t ret = sourceProxy.UnregisterDistributedHardware("", "dhId000", "reqId000");
@@ -216,7 +216,7 @@ HWTEST_F(DScreenSourceStubTest, UnregisterDistributedHardware_001, TestSize.Leve
  */
 HWTEST_F(DScreenSourceStubTest, ConfigDistributedHardware_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sourceStubPtr = new TestDScreenSourceStub();
+    sptr<IRemoteObject> sourceStubPtr(new TestDScreenSourceStub());
     DScreenSourceProxy sourceProxy(sourceStubPtr);
 
     int32_t ret = sourceProxy.ConfigDistributedHardware("", "dhId000", "key000", "value000");
@@ -252,7 +252,7 @@ HWTEST_F(DScreenSourceStubTest, ConfigDistributedHardware_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSourceStubTest, DScreenNotify_001, TestSize.Level1)
 {
-    sptr<IRemoteObject> sourceStubPtr = new TestDScreenSourceStub();
+    sptr<IRemoteObject> sourceStubPtr(new TestDScreenSourceStub());
     DScreenSourceProxy sourceProxy(sourceStubPtr);
 
     sourceProxy.DScreenNotify("", 0, "eventContent000");

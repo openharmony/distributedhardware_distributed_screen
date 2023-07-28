@@ -37,7 +37,7 @@ void DScreenManagerTestV2::TearDown() {}
  */
 HWTEST_F(DScreenManagerTestV2, Initialize_001, TestSize.Level1)
 {
-    sptr<DScreenGroupListener> dScreenGroupListener_ = new (std::nothrow) DScreenGroupListener();
+    sptr<DScreenGroupListener> dScreenGroupListener_(new (std::nothrow) DScreenGroupListener());
     int32_t ret = DScreenManager::GetInstance().Initialize();
     EXPECT_EQ(DH_SUCCESS, ret);
 }

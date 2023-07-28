@@ -68,7 +68,7 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
                 "dscreen source get samgr failed.");
             return ERR_DH_SCREEN_SA_GET_SAMGR_FAIL;
         }
-        sptr<DScreenSourceLoadCallback> loadCallback = new DScreenSourceLoadCallback(params);
+        sptr<DScreenSourceLoadCallback> loadCallback(new DScreenSourceLoadCallback(params));
         StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_LOAD_SYSTEM_ABILITY_START);
         int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, loadCallback);
         if (ret != ERR_OK) {
