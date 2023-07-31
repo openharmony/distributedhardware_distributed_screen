@@ -60,18 +60,6 @@ DScreenManager::~DScreenManager()
 int32_t DScreenManager::Init()
 {
     DHLOGI("DScreenManager::Init2.0");
-    if (dScreenGroupListener_ == nullptr) {
-        dScreenGroupListener_ = new (std::nothrow) DScreenGroupListener();
-        int32_t ret = ScreenMgrAdapter::GetInstance().RegisterScreenGroupListener(dScreenGroupListener_);
-        if (ret != DH_SUCCESS) {
-            DHLOGE("DScreenManager Init failed, err: %" PRId32, ret);
-            dScreenGroupListener_ = nullptr;
-            return ret;
-        }
-    }
-    if (dScreenCallback_ == nullptr) {
-        dScreenCallback_ = std::make_shared<DScreenCallback>();
-    }
     return DH_SUCCESS;
 }
 
@@ -243,11 +231,18 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
 {
     DHLOGI("EnableDistributedScreen2.0, devId: %s, dhId:%s",
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
-    if (dScreenCallback_ == nullptr) {
-        DHLOGE("dscreen manager not init.");
-        return ERR_DH_SCREEN_SA_ENABLE_FAILED;
+    if (dScreenGroupListener_ == nullptr) {
+        dScreenGroupListener_ = new (std::nothrow) DScreenGroupListener();
+        int32_t ret = ScreenMgrAdapter::GetInstance().RegisterScreenGroupListener(dScreenGroupListener_);
+        if (ret != DH_SUCCESS) {
+            DHLOGE("DScreenManager Init failed, err: %" PRId32, ret);
+            dScreenGroupListener_ = nullptr;
+            return ret;
+        }
     }
-
+    if (dScreenCallback_ == nullptr) {
+        dScreenCallback_ = std::make_shared<DScreenCallback>();
+    }
     std::string dScreenIdx = devId + SEPERATOR + dhId;
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     std::shared_ptr<DScreen> dScreen = dScreens_[dScreenIdx];
