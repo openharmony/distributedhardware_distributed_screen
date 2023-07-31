@@ -175,7 +175,7 @@ HWTEST_F(DScreenManagerTestV2, EnableDistributedScreen_001, TestSize.Level1)
     std::shared_ptr<IDScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
     std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>(devId, dhId, dScreenCallback);
     dScreen->SetState(DScreenState::ENABLED);
-    ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
+    int32_t ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
     EXPECT_EQ(DH_SUCCESS, ret);
 
     dScreen->SetState(DScreenState::DISCONNECTING);
