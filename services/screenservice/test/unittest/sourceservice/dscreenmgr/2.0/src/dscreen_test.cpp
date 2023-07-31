@@ -232,6 +232,23 @@ HWTEST_F(DScreenTestV2, StartSenderEngine_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: StartSenderEngine_002
+ * @tc.desc: Verify the StartSenderEngine function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV2, StartSenderEngine_002, TestSize.Level1)
+{
+    int32_t ret = dScreen_->StartSenderEngine();
+    EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, ret);
+    dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
+    dScreen_->senderAdapter_->chnCreateSuccess_ = true;
+    dScreen_->screenId_ = 1;
+    ret = dScreen_->StartSenderEngine();
+    EXPECT_EQ(ERR_DH_AV_TRANS_SETUP_FAILED, ret);
+}
+
+/**
  * @tc.name: StopSenderEngine_001
  * @tc.desc: Verify the StopSenderEngine function failed.
  * @tc.type: FUNC
@@ -264,6 +281,34 @@ HWTEST_F(DScreenTestV2, SetUp_001, TestSize.Level1)
     dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
     ret = dScreen_->SetUp();
     EXPECT_EQ(ERR_DH_AV_TRANS_SETUP_FAILED, ret);
+}
+
+/**
+ * @tc.name: SetUp_002
+ * @tc.desc: Verify the SetUp function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV2, SetUp_002, TestSize.Level1)
+{
+    dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
+    dScreen_->screenId_ = -1;
+    int32_t ret = dScreen_->SetUp();
+    EXPECT_EQ(ERR_DH_AV_TRANS_SETUP_FAILED, ret);
+}
+
+/**
+ * @tc.name: SetUp_003
+ * @tc.desc: Verify the SetUp function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV2, SetUp_003, TestSize.Level1)
+{
+    dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
+    dScreen_->screenId_ = 1;
+    int32_t ret = dScreen_->SetUp();
+    EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, ret);
 }
 
 /**

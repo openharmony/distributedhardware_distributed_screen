@@ -32,6 +32,34 @@ void ScreenSourceTransTest::SetUp(void)
 void ScreenSourceTransTest::TearDown(void) {}
 
 /**
+ * @tc.name: RegisterChannelListener_001
+ * @tc.desc: Verify the RegisterChannelListener function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, RegisterChannelListener_001, TestSize.Level1)
+{
+    int32_t actual = trans->RegisterChannelListener();
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, actual);
+}
+
+/**
+ * @tc.name: RegisterProcessorListener_001
+ * @tc.desc: Verify the RegisterChannelListener function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, RegisterProcessorListener_001, TestSize.Level1)
+{
+    VideoParam localParam;
+    VideoParam remoteParam;
+    int32_t actual = trans->RegisterProcessorListener(localParam, remoteParam);
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, actual);
+}
+
+/**
  * @tc.name: SetUp_001
  * @tc.desc: Verify the SetUp function.
  * @tc.type: FUNC
