@@ -184,12 +184,12 @@ HWTEST_F(ScreenDataChannelImplTest, close_session_test_002, TestSize.Level1)
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_SESSION_NOT_OPEN, dataChannelImpl_->CloseSession());
 }
 
-// /**
-//  * @tc.name: send_data_test_001
-//  * @tc.desc: Verify the SendData function.
-//  * @tc.type: FUNC
-//  * @tc.require: Issue Number
-//  */
+/**
+ * @tc.name: send_data_test_001
+ * @tc.desc: Verify the SendData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
 HWTEST_F(ScreenDataChannelImplTest, send_data_test_001, TestSize.Level1)
 {
     std::shared_ptr<IScreenChannelListener> listener = nullptr;
@@ -219,12 +219,12 @@ HWTEST_F(ScreenDataChannelImplTest, send_data_test_002, TestSize.Level1)
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, dataChannelImpl_->SendData(data));
 }
 
-// /**
-//  * @tc.name: send_data_test_003
-//  * @tc.desc: Verify the SendData function.
-//  * @tc.type: FUNC
-//  * @tc.require: Issue Number
-//  */
+/**
+ * @tc.name: send_data_test_003
+ * @tc.desc: Verify the SendData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
 HWTEST_F(ScreenDataChannelImplTest, send_data_test_003, TestSize.Level1)
 {
     std::shared_ptr<IScreenChannelListener> listener = nullptr;
