@@ -42,6 +42,7 @@ ohos_unittest("JpegImageProcessorTest") {
   deps = [ "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans" ]
 
   external_deps = [
+    "c_utils:utils",
     "graphic_2d:surface",
     "player_framework:media_client",
   ]
