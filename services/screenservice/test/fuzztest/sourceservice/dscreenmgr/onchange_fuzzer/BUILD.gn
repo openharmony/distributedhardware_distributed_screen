@@ -60,6 +60,7 @@ ohos_fuzztest("OnChangeFuzzTest") {
   ]
 
   external_deps = [
+    "c_utils:utils",
     "distributed_hardware_fwk:distributed_av_sender",
     "graphic_2d:surface",
     "window_manager:libdm",
