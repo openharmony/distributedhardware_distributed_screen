@@ -39,7 +39,7 @@ sptr<Surface> ScreenClientWindowAdapter::CreateWindow(std::shared_ptr<WindowProp
         DHLOGE("option is nullptr.");
         return nullptr;
     }
-    option->SetWindowType(Rosen::WindowType::WINDOW_TYPE_APP_LAUNCHING);
+    option->SetWindowType(Rosen::WindowType::WINDOW_TYPE_FLOAT);
     option->SetWindowMode(Rosen::WindowMode::WINDOW_MODE_FLOATING);
     option->SetDisplayId(windowProperty->displayId);
     std::string windowName = SCREEN_CLIENT_WINDOW + std::to_string(windowId);
