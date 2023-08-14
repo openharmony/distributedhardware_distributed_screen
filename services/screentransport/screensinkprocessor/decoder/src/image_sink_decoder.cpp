@@ -98,8 +98,8 @@ sptr<SurfaceBuffer> ImageSinkDecoder::GetWinSurfaceBuffer()
     sptr<SurfaceBuffer> windowSurfaceBuffer = nullptr;
     int32_t releaseFence = -1;
     OHOS::BufferRequestConfig requestConfig = {
-        .width = configParam_.GetVideoWidth(),
-        .height = configParam_.GetVideoHeight(),
+        .width = static_cast<int32_t>(configParam_.GetVideoWidth()),
+        .height = static_cast<int32_t>(configParam_.GetVideoHeight()),
         .strideAlignment = STRIDE_ALIGNMENT,
         .format = GRAPHIC_PIXEL_FMT_YCBCR_420_SP,
         .usage = BUFFER_USAGE_CPU_READ | BUFFER_USAGE_CPU_WRITE | BUFFER_USAGE_MEM_DMA,
