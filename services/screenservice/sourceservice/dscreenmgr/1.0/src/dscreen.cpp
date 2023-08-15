@@ -299,7 +299,6 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
         }
         localCodecArray.push_back(codecInfo->GetName());
     }
-
     std::vector<std::string> codecTypeCandidates;
     for (const auto &remoteCodecType : remoteCodecArray) {
         if (std::find(localCodecArray.begin(), localCodecArray.end(),
@@ -309,11 +308,6 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
     }
 
     if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
-        CODEC_NAME_H265) != codecTypeCandidates.end()) {
-        videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H265);
-        videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
-        videoParam_->SetPartialRefreshFlag(true);
-    } else if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
         CODEC_NAME_H264) != codecTypeCandidates.end()) {
         videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
         videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
@@ -322,11 +316,15 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
         CODEC_NAME_MPEG4) != codecTypeCandidates.end()) {
         videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_MPEG4);
         videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_RGBA8888);
+    } else if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
+        CODEC_NAME_H265) != codecTypeCandidates.end()) {
+        videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H265);
+        videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
+        videoParam_->SetPartialRefreshFlag(true);
     } else {
         DHLOGI("codec type not support.");
         return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
     }
-
     return DH_SUCCESS;
 }
 

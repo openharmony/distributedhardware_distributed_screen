@@ -72,20 +72,7 @@ DScreenManager::~DScreenManager()
 
 int32_t DScreenManager::Initialize()
 {
-    DHLOGI("DScreenManager::Init3.0");
-    if (dScreenGroupListener_ == nullptr) {
-        dScreenGroupListener_ = new (std::nothrow) DScreenGroupListener();
-        int32_t ret = ScreenMgrAdapter::GetInstance().RegisterScreenGroupListener(dScreenGroupListener_);
-        if (ret != DH_SUCCESS) {
-            DHLOGE("DScreenManager Init failed, err: %" PRId32, ret);
-            delete dScreenGroupListener_;
-            dScreenGroupListener_ = nullptr;
-            return ret;
-        }
-    }
-    if (dScreenCallback_ == nullptr) {
-        dScreenCallback_ = std::make_shared<DScreenCallback>();
-    }
+    DHLOGI("DScreenManager::Init2.0");
     int32_t ret = LoadAVSenderEngineProvider();
     if (ret != DH_SUCCESS) {
         DHLOGE("Load av transport sender engine provider failed.");
@@ -237,11 +224,24 @@ void DScreenManager::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
 int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const std::string &dhId,
     const EnableParam &param, const std::string &reqId)
 {
-    DHLOGI("EnableDistributedScreen3.0, devId: %s, dhId:%s", GetAnonyString(devId).c_str(),
+    DHLOGI("EnableDistributedScreen2.0, devId: %s, dhId:%s", GetAnonyString(devId).c_str(),
         GetAnonyString(dhId).c_str());
-    if (dScreenCallback_ == nullptr) {
-        DHLOGE("dscreen manager not init.");
+    if (devId.empty() || dhId.empty() || param.version.empty() || param.attrs.empty() || reqId.empty()) {
+        DHLOGE("EnableDistributedScreen2.0 CheckRegParams is inlvalid.");
         return ERR_DH_SCREEN_SA_ENABLE_FAILED;
+    }
+    if (dScreenGroupListener_ == nullptr) {
+        dScreenGroupListener_ = new (std::nothrow) DScreenGroupListener();
+        int32_t ret = ScreenMgrAdapter::GetInstance().RegisterScreenGroupListener(dScreenGroupListener_);
+        if (ret != DH_SUCCESS) {
+            DHLOGE("DScreenManager2.0 EnableDistributedScreen failed, err: %" PRId32, ret);
+            delete dScreenGroupListener_;
+            dScreenGroupListener_ = nullptr;
+            return ERR_DH_SCREEN_SA_ENABLE_FAILED;
+        }
+    }
+    if (dScreenCallback_ == nullptr) {
+        dScreenCallback_ = std::make_shared<DScreenCallback>();
     }
     std::string dScreenIdx = devId + SEPERATOR + dhId;
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
