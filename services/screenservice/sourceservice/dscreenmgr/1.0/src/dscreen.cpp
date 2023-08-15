@@ -321,13 +321,10 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
         videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H265);
         videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
         videoParam_->SetPartialRefreshFlag(true);
-    }  else {
+    } else {
         DHLOGI("codec type not support.");
         return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
     }
-    // videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
-    // videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
-    // videoParam_->SetPartialRefreshFlag(true);
     return DH_SUCCESS;
 }
 
