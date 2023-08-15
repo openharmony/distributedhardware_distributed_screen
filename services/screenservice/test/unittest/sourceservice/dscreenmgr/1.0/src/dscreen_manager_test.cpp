@@ -172,6 +172,7 @@ HWTEST_F(DScreenManagerTestV1, EnableDistributedScreen_001, TestSize.Level1)
 
     ret = DScreenManager::GetInstance().EnableDistributedScreen("", "", EnableParam{"", ""}, "");
     EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_FAILED, ret);
+
     ret = DScreenManager::GetInstance().Init();
     EXPECT_EQ(DH_SUCCESS, ret);
 
