@@ -227,7 +227,7 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
     DHLOGI("EnableDistributedScreen2.0, devId: %s, dhId:%s", GetAnonyString(devId).c_str(),
         GetAnonyString(dhId).c_str());
     if (devId.empty() || dhId.empty() || param.version.empty() || param.attrs.empty() || reqId.empty()) {
-        DHLOGE("EnableDistributedScreen1.0 CheckRegParams is inlvalid.");
+        DHLOGE("EnableDistributedScreen2.0 CheckRegParams is inlvalid.");
         return ERR_DH_SCREEN_SA_ENABLE_FAILED;
     }
     if (dScreenGroupListener_ == nullptr) {
