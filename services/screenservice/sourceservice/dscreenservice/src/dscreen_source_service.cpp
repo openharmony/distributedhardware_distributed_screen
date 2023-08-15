@@ -88,7 +88,7 @@ int32_t DScreenSourceService::InitSource(const std::string &params, const sptr<I
     V2_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
     ret = V1_0::DScreenManager::GetInstance().Init();
     if (ret != DH_SUCCESS) {
-        DHLOGE("Initialize V1_0::DScreenManager failed. err: %" PRId32, ret);
+        DHLOGE("Init V1_0::DScreenManager failed. err: %" PRId32, ret);
         return ERR_DH_SCREEN_SA_INIT_SOURCE_FAIL;
     }
     V1_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
