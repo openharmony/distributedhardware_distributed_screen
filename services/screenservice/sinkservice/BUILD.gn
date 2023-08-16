@@ -74,7 +74,6 @@ ohos_shared_library("distributed_screen_sink") {
     "graphic_2d:libgraphic_utils",
     "graphic_2d:surface",
     "hisysevent:libhisysevent",
-    "image_framework:image_native",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
