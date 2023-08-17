@@ -27,6 +27,7 @@
 #include "screen.h"
 #include "screen_client.h"
 #include "screen_client_common.h"
+#include "2.0/include/screenregionmgr.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -115,12 +116,10 @@ int32_t ScreenRegion::StopReceiverEngine()
 {
     DHLOGI("StopReceiverEngine, remoteDevId: %s, screenId is: %" PRIu64,
         GetAnonyString(remoteDevId_).c_str(), screenId_);
-
     int32_t ret = ScreenClient::GetInstance().RemoveWindow(windowId_);
     if (ret != DH_SUCCESS) {
         DHLOGE("remove window failed.");
     }
-
     if (receiverAdapter_ == nullptr) {
         DHLOGE("av transport receiver adapter is null.");
         return ERR_DH_AV_TRANS_NULL_VALUE;
@@ -242,9 +241,10 @@ void ScreenRegion::PublishMessage(const DHTopic topic, const uint64_t &screenId,
 
 void ScreenRegion::OnEngineEvent(DScreenEventType event, const std::string &content)
 {
-    (void)content;
     if (event == DScreenEventType::ENGINE_ERROR) {
         StopReceiverEngine();
+    } else if (event == DScreenEventType::TRANS_CHANNEL_CLOSED) {
+        ScreenRegionManager::GetInstance().DestoryDScreenRegion(content);
     }
 }
 

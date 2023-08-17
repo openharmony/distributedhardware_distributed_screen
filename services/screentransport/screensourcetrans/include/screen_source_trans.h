@@ -71,7 +71,6 @@ private:
     std::condition_variable sessionCond_;
     std::condition_variable dataCond_;
     std::mutex dataQueueMtx_;
-    std::thread sendDataThread_;
 
     bool isChannelReady_ = false;
     sptr<Surface> consumerSurface_;
