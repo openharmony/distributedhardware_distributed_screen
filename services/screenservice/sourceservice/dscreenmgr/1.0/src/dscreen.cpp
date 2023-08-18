@@ -247,7 +247,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
             "create virtual screen failed.");
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
             GetAnonyString(dhId_).c_str(), "create virtual screen failed.");
-        return SCREEN_ID_INVALID;
+        return;
     }
     SetState(ENABLED);
     dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
