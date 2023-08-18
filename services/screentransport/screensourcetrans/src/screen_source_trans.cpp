@@ -162,16 +162,13 @@ int32_t ScreenSourceTrans::Stop()
         }
     }
 
+    isChannelReady_ = false;
     StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_CLOSE_SESSION_START);
     ret = screenChannel_->CloseSession();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
         DHLOGD("%s: Close Session failed ret: %" PRId32, LOG_TAG, ret);
         stopStatus = false;
-    }
-    isChannelReady_ = false;
-    if (sendDataThread_.joinable()) {
-        sendDataThread_.join();
     }
 
     if (!stopStatus) {
@@ -358,7 +355,7 @@ void ScreenSourceTrans::OnSessionOpened()
 
     isChannelReady_ = true;
     DHLOGI("%s: Start thread.", LOG_TAG);
-    sendDataThread_ = std::thread(&ScreenSourceTrans::FeedChannelData, this);
+    std::thread(&ScreenSourceTrans::FeedChannelData, this).detach();
     std::unique_lock<std::mutex> lck(sessionMtx_);
     sessionCond_.notify_all();
 }
@@ -367,9 +364,6 @@ void ScreenSourceTrans::OnSessionClosed()
 {
     DHLOGI("%s: OnChannelSessionClosed.", LOG_TAG);
     isChannelReady_ = false;
-    if (sendDataThread_.joinable()) {
-        sendDataThread_.join();
-    }
 
     std::shared_ptr<IScreenSourceTransCallback> callback = transCallback_.lock();
     if (callback == nullptr) {

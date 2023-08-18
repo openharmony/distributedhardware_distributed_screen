@@ -547,7 +547,6 @@ int32_t DScreen::ChooseCodecType(const std::vector<VideoEncoder> &localVideoEnco
     return DH_SUCCESS;
 }
 
-
 void DScreen::TaskThreadLoop()
 {
     DHLOGI("DScreen taskThread start. devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
