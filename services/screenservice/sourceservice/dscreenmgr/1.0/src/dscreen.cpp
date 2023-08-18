@@ -253,7 +253,6 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
     ReportRegisterScreenEvent(DSCREEN_REGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
         "dscreen enable success.");
-    return DH_SUCCESS;
 }
 
 int32_t DScreen::CheckJsonData(json &attrJson)
