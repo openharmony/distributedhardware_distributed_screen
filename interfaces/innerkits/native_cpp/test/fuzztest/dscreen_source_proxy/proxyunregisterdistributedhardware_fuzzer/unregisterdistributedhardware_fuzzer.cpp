@@ -41,8 +41,8 @@ void UnregisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
     if (samgr == nullptr) {
         return;
     }
-
-    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    int32_t saId = *(reinterpret_cast<const int32_t*>(data));
+    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(saId);
     if (remoteObject == nullptr) {
         return;
     }
