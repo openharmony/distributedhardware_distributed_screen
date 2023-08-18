@@ -256,9 +256,6 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     return DH_SUCCESS;
 }
 
-
-    
-
 int32_t DScreen::CheckJsonData(json &attrJson)
 {
     if (attrJson.is_discarded()) {
