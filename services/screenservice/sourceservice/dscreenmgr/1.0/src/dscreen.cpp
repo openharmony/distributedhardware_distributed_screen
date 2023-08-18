@@ -243,30 +243,14 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         return;
     }
 
-    ret = SuccessCreateVirtualScreen(taskId);
-    if (ret != DH_SUCCESS) {
+    uint64_t ret_ = SuccessCreateVirtualScreen(taskId);
+    if (ret_ != DH_SUCCESS) {
         return;
     }
-    // uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId_, dhId_, videoParam_);
-    // if (screenId == SCREEN_ID_INVALID) {
-    //     dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
-    //         "create virtual screen failed.");
-    //     ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
-    //         GetAnonyString(dhId_).c_str(), "create virtual screen failed.");
-    //     return;
-    // }
-    // screenId_ = screenId;
-    // SetState(ENABLED);
-    // dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
-    // ReportRegisterScreenEvent(DSCREEN_REGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
-    //     "dscreen enable success.");
 }
 
-int32_t DScreen::SuccessCreateVirtualScreen(const std::string &taskId)
+uint64_t DScreen::SuccessCreateVirtualScreen(const std::string &taskId)
 {
-    if (taskId == nullptr) {
-        return SCREEN_ID_INVALID;
-    }
     uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId_, dhId_, videoParam_);
     if (screenId == SCREEN_ID_INVALID) {
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
@@ -280,6 +264,7 @@ int32_t DScreen::SuccessCreateVirtualScreen(const std::string &taskId)
     dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
     ReportRegisterScreenEvent(DSCREEN_REGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
         "dscreen enable success.");
+    return DH_SUCCESS;
 }
 
 int32_t DScreen::CheckJsonData(json &attrJson)
