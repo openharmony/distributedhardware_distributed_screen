@@ -200,6 +200,11 @@ void DScreen::HandleTask(const std::shared_ptr<Task> &task)
 
 void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
 {
+    json attrJson = json::parse(param, nullptr, false);
+    if (attrJson.is_discarded()) {
+        DHLOGE("HandleEnable attrJson is invalid");
+        return;
+    }
     if (dscreenCallback_ == nullptr) {
         DHLOGE("DScreen::HandleEnable, dscreenCallback_ is nullptr");
         return;
@@ -209,18 +214,11 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
         return;
     }
-
     SetState(ENABLING);
     if (videoParam_ == nullptr) {
         videoParam_ = std::make_shared<VideoParam>();
     }
 
-    json attrJson = json::parse(param, nullptr, false);
-    if (attrJson.is_discarded()) {
-        DHLOGE("HandleEnable attrJson is invalid");
-        SetState(DISABLED);
-        return;
-    }
     int32_t ret = CheckJsonData(attrJson);
     if (ret != DH_SUCCESS) {
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
@@ -243,29 +241,23 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         return;
     }
 
-    uint64_t ret_ = SuccessCreateVirtualScreen(taskId);
-    if (ret_ != DH_SUCCESS) {
-        return;
-    }
-}
-
-uint64_t DScreen::SuccessCreateVirtualScreen(const std::string &taskId)
-{
-    uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId_, dhId_, videoParam_);
-    if (screenId == SCREEN_ID_INVALID) {
+    screenId_ = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId_, dhId_, videoParam_);
+    if (screenId_ == SCREEN_ID_INVALID) {
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
             "create virtual screen failed.");
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
             GetAnonyString(dhId_).c_str(), "create virtual screen failed.");
         return SCREEN_ID_INVALID;
     }
-    screenId_ = screenId;
     SetState(ENABLED);
     dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
     ReportRegisterScreenEvent(DSCREEN_REGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
         "dscreen enable success.");
     return DH_SUCCESS;
 }
+
+
+    
 
 int32_t DScreen::CheckJsonData(json &attrJson)
 {
