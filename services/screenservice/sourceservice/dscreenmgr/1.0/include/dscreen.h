@@ -102,6 +102,7 @@ private:
     void HandleDisconnect();
     int32_t CheckJsonData(json &attrJson);
     int32_t NegotiateCodecType(const std::string &remoteCodecInfoStr);
+    int32_t SuccessCreateVirtualScreen(const std::string &taskId);
     int32_t SetUp();
     int32_t Start();
     int32_t Stop();
