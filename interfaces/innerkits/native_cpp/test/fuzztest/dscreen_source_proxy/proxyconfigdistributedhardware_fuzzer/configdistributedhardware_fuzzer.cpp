@@ -25,6 +25,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr int32_t DISTRIBUTED_HARDWARE_DM_SA_ID = 4802;
 void ConfigDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(int32_t))) {
@@ -41,8 +42,8 @@ void ConfigDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
     if (samgr == nullptr) {
         return;
     }
-    int32_t saId = *(reinterpret_cast<const int32_t*>(data));
-    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(saId);
+
+    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_DM_SA_ID);
     if (remoteObject == nullptr) {
         return;
     }
