@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,20 +24,20 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr int32_t DISTRIBUTED_HARDWARE_DM_SA_ID = 4802;
 void OnRemoteSourceSvrDiedFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(int32_t))) {
         return;
     }
 
-    int32_t saId = *(reinterpret_cast<const int32_t*>(data));
     sptr<ISystemAbilityManager> samgr =
             SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (samgr == nullptr) {
         return;
     }
 
-    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(saId);
+    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_DM_SA_ID);
     if (remoteObject == nullptr) {
         return;
     }
