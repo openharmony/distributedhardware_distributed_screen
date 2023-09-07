@@ -297,6 +297,20 @@ HWTEST_F(DScreenTestV2, SetUp_002, TestSize.Level1)
     EXPECT_EQ(ERR_DH_AV_TRANS_SETUP_FAILED, ret);
 }
 
+/**
+ * @tc.name: SetUp_003
+ * @tc.desc: Verify the SetUp function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV2, SetUp_003, TestSize.Level1)
+{
+    dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
+    dScreen_->screenId_ = 2;
+    int32_t ret = dScreen_->SetUp();
+    EXPECT_EQ(ERR_DH_AV_TRANS_SETUP_FAILED, ret);
+}
+
 /** 
  * @tc.name: WaitForSinkStarted_001
  * @tc.desc: Verify the WaitForSinkStarted function failed.
