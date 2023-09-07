@@ -311,7 +311,7 @@ HWTEST_F(DScreenTestV2, SetUp_003, TestSize.Level1)
     EXPECT_EQ(ERR_DH_AV_TRANS_SETUP_FAILED, ret);
 }
 
-/** 
+/**
  * @tc.name: WaitForSinkStarted_001
  * @tc.desc: Verify the WaitForSinkStarted function failed.
  * @tc.type: FUNC
