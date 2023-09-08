@@ -306,7 +306,7 @@ HWTEST_F(DScreenTestV2, SetUp_002, TestSize.Level1)
 HWTEST_F(DScreenTestV2, SetUp_003, TestSize.Level1)
 {
     dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
-    dScreen_->screenId_ = 1;
+    dScreen_->screenId_ = 2;
     int32_t ret = dScreen_->SetUp();
     EXPECT_EQ(ERR_DH_AV_TRANS_SETUP_FAILED, ret);
 }
