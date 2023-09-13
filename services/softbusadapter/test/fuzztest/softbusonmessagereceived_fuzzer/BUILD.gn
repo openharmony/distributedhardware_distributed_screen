@@ -18,7 +18,7 @@ import("../../../../../distributedscreen.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("SoftbusOnMessageReceivedFuzzTest") {
-  module_out_path = "distributed_screen/softbusadapter"
+  module_out_path = "${fuzz_test_path}/softbusadapter"
   fuzz_config_file = "${services_path}/softbusadapter/test/fuzztest/softbusonmessagereceived_fuzzer"
 
   cflags = [

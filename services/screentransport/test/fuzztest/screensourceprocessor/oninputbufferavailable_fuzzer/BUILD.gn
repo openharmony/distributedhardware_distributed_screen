@@ -18,7 +18,7 @@ import("../../../../../../distributedscreen.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("OnInputBufferAvailableFuzzTest") {
-  module_out_path = "distributed_screen/imageencodercallback"
+  module_out_path = "${fuzz_test_path}/imageencodercallback"
   fuzz_config_file = "${services_path}/screentransport/test/fuzztest/screensourceprocessor/oninputbufferavailable_fuzzer"
 
   cflags = [

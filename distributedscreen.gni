@@ -14,6 +14,7 @@
 distributedscreen_path = "//foundation/distributedhardware/distributed_screen"
 distributedhardwarefwk_path =
     "//foundation/distributedhardware/distributed_hardware_fwk"
+fuzz_test_path = "distributed_screen/distributed_screen"
 windowmanager_path = "//foundation/window/window_manager"
 mediastandard_path = "//foundation/multimedia/player_framework"
 driver_path = "//drivers/peripheral/display"

@@ -19,7 +19,7 @@ import(
 
 ##############################fuzztest##########################################
 ohos_fuzztest("CallbackOnRemoteRequestFuzzTest") {
-  module_out_path = "distributed_screen/dscreensourcecallback"
+  module_out_path = "${fuzz_test_path}/dscreensourcecallback"
 
   fuzz_config_file = "${interfaces_path}/innerkits/native_cpp/test/fuzztest/dscreen_source_callback/callbackonremoterequest_fuzzer"
 

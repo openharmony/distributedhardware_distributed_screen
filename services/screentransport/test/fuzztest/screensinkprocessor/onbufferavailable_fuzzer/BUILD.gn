@@ -18,7 +18,7 @@ import("../../../../../../distributedscreen.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("OnBufferAvailableFuzzTest") {
-  module_out_path = "distributed_screen/imagesinkdecoder"
+  module_out_path = "${fuzz_test_path}/imagesinkdecoder"
 
   fuzz_config_file = "${services_path}/screentransport/test/fuzztest/screensinkprocessor/onbufferavailable_fuzzer"
 
