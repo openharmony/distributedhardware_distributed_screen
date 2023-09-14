@@ -19,7 +19,7 @@ import(
 
 ##############################fuzztest##########################################
 ohos_fuzztest("PluginHardwareFuzzTest") {
-  module_out_path = "distributed_screen/dscreenhandler"
+  module_out_path = "${fuzz_test_path}/dscreenhandler"
 
   fuzz_config_file = "${distributedscreen_path}/screenhandler/test/fuzztest/pluginhardware_fuzzer"
 
