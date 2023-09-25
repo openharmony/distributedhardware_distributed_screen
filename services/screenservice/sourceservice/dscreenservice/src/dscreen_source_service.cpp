@@ -22,6 +22,7 @@
 #include "string_ex.h"
 #include "system_ability_definition.h"
 
+#include "dscreen_source_hidumper.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
@@ -194,7 +195,22 @@ int32_t DScreenSourceService::Dump(int32_t fd, const std::vector<std::u16string>
         DHLOGE("dprintf error");
         return ERR_DH_SCREEN_SA_HIDUMPER_ERROR;
     }
+    std::string result;
+    std::vector<std::string> argsStr;
 
+    std::transform(args.cbegin(), args.cend(), std::back_inserter(argsStr),
+        [](const std::u16string &item) { return Str16ToStr8(item); });
+
+    if (!DscreenSourceHidumper::GetInstance().Dump(argsStr, result)) {
+        DHLOGE("Hidump error");
+        return ERR_DH_SCREEN_SA_HIDUMPER_ERROR;
+    }
+
+    ret = dprintf(fd, "%s\n", result.c_str());
+    if (ret < 0) {
+        DHLOGE("Dprintf error");
+        return DSCREEN_BAD_VALUE;
+    }
     return ERR_OK;
 }
 } // namespace DistributedHardware

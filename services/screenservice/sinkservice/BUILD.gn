@@ -46,6 +46,7 @@ ohos_shared_library("distributed_screen_sink") {
     "${services_path}/common/utils/src/dscreen_fwkkit.cpp",
     "${services_path}/common/utils/src/dscreen_maprelation.cpp",
     "${services_path}/common/utils/src/video_param.cpp",
+    "./dscreenservice/src/dscreen_sink_hidumper.cpp",
     "./dscreenservice/src/dscreen_sink_service.cpp",
     "./dscreenservice/src/dscreen_sink_stub.cpp",
     "./screenregionmgr/1.0/src/screenregion.cpp",
@@ -66,6 +67,12 @@ ohos_shared_library("distributed_screen_sink") {
     "DH_LOG_TAG=\"dscreensink\"",
     "LOG_DOMAIN=0xD004100",
   ]
+
+  if (build_variant == "root") {
+    defines += [
+      "DUMP_DSCREENREGION_FILE",
+    ]
+  }
 
   external_deps = [
     "c_utils:utils",

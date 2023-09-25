@@ -28,6 +28,15 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+struct VideoData {
+    uint8_t *data;
+    size_t size;
+    uint32_t width;
+    uint32_t height;
+    int64_t timestamp;
+    std::string format;
+};
+
 class AVReceiverAdapterCallback {
 public:
     AVReceiverAdapterCallback() {};

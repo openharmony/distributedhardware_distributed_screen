@@ -58,6 +58,7 @@ ohos_shared_library("distributed_screen_source") {
     "./dscreenmgr/2.0/src/dscreen_manager.cpp",
     "./dscreenmgr/common/src/screen_manager_adapter.cpp",
     "./dscreenservice/src/callback/dscreen_source_callback_proxy.cpp",
+    "./dscreenservice/src/dscreen_source_hidumper.cpp",
     "./dscreenservice/src/dscreen_source_service.cpp",
     "./dscreenservice/src/dscreen_source_stub.cpp",
   ]
@@ -72,6 +73,12 @@ ohos_shared_library("distributed_screen_source") {
     "DH_LOG_TAG=\"dscreensource\"",
     "LOG_DOMAIN=0xD004100",
   ]
+
+  if (build_variant == "root") {
+    defines += [
+      "DUMP_DSCREEN_FILE",
+    ]
+  }
 
   external_deps = [
     "c_utils:utils",

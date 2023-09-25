@@ -17,9 +17,12 @@
 #define OHOS_DSCREEN_V2_0_H
 
 #include <condition_variable>
+#include <cstdio>
+#include <fstream>
 #include <mutex>
 #include <queue>
 #include <thread>
+#include <string>
 #include "sync_fence.h"
 
 #include "surface.h"
@@ -93,6 +96,7 @@ public:
     int32_t AddTask(const std::shared_ptr<Task> &task);
     int32_t InitSenderEngine(IAVEngineProvider *providerPtr, const std::string &peerDevId);
     void ConsumeSurface();
+    void SaveFile(std::string file, const VideoData &video);
     std::string GetDHId() const;
     std::string GetDevId() const;
     uint64_t GetScreenId() const;

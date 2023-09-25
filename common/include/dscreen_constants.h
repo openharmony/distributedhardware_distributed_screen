@@ -80,6 +80,10 @@ const std::string PKG_NAME = "ohos.dhardware.dscreen";
 /* Screen data session name */
 const std::string DATA_SESSION_NAME = "ohos.dhardware.dscreen.data";
 const std::string JPEG_SESSION_NAME = "ohos.dhardware.dscreen.jpeg";
+
+/* Screen dump data file path name */
+const std::string DUMP_FILE_PATH = "/data/data/dscreen";
+
 /*YUV*/
 constexpr int32_t YR_PARAM = 66;
 constexpr int32_t YG_PARAM = 129;
@@ -122,6 +126,9 @@ constexpr uint32_t DSCREEN_MAX_SCREEN_DATA_WIDTH = 2560;
 
 /* Screen max screen data height */
 constexpr uint32_t DSCREEN_MAX_SCREEN_DATA_HEIGHT = 2772;
+
+/* Screen dump data max file size */
+constexpr uint32_t DUMP_FILE_MAX_SIZE = 295 * 1024 * 1024;
 
 /* YUV420 buffer size max size */
 constexpr int64_t MAX_YUV420_BUFFER_SIZE = 2560 * 1600 * (3 / 2) * 2;
