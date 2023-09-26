@@ -27,6 +27,7 @@
 #include "dscreen_hisysevent.h"
 #include "dscreen_json_util.h"
 #include "dscreen_log.h"
+#include "dscreen_source_hidumper.h"
 #include "dscreen_util.h"
 #include "common/include/screen_manager_adapter.h"
 
@@ -319,12 +320,49 @@ void DScreen::ConsumeSurface()
     uint32_t videoWidth = videoParam_->GetVideoWidth();
     uint32_t videoHeight = videoParam_->GetVideoHeight();
     VideoData data = { surBufAddr, surBufSize, videoWidth, videoHeight, timestamp, VIDEO_FORMAT_RGBA8888 };
+#ifdef DUMP_DSCREEN_FILE
+    if (DscreenSourceHidumper::GetInstance().GetFlagStatus() == true) {
+        DHLOGE("HidumperFlag_ = true, exec SaveFile");
+        SaveFile("Screen_BeforeCoding_width(", data);
+        DscreenSourceHidumper::GetInstance().SetFlagFalse();
+    }
+#endif
     int32_t ret = senderAdapter_->PushData(data);
     if (ret != DH_SUCCESS) {
         DHLOGE("feed buffer to av transport sender failed.");
     }
     consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
     DHLOGI("ConsumeSurface success. timestamp=%lld", (long long)timestamp);
+}
+
+void DScreen::SaveFile(std::string file, const VideoData &video)
+{
+    DHLOGE("Saving File.");
+    std::string fileName = DUMP_FILE_PATH + "/" + file + std::to_string(video.width) + ")_height(" +
+         std::to_string(video.height) + ")_" + video.format + ".jpg";
+    DHLOGE("fileName = %s", fileName.c_str());
+    if (DscreenSourceHidumper::GetInstance().GetReDumpFlag() == true) {
+        std::remove(fileName.c_str());
+        DscreenSourceHidumper::GetInstance().SetReDumpFlagFalse();
+    }
+    std::ofstream ofs(fileName, std::ios::binary | std::ios::out | std::ios::app);
+
+    if (!ofs.is_open()) {
+        DHLOGE("open file failed.");
+        return;
+    }
+    DHLOGE("open Hidumper SaveFile file success.");
+    ofs.seekp(0, std::ios::end);
+    uint32_t fileSize = ofs.tellp();
+    DHLOGE("fileSize = %d, video.size = %d, maxsize = %d", fileSize, video.size,
+        DUMP_FILE_MAX_SIZE);
+    if ((fileSize + video.size) < DUMP_FILE_MAX_SIZE) {
+        DscreenSourceHidumper::GetInstance().SetFileFlagFalse();
+        ofs.write((const char *)(video.data), video.size);
+    } else {
+        DscreenSourceHidumper::GetInstance().SetFileFlagTrue();
+    }
+    ofs.close();
 }
 
 int32_t DScreen::InitSenderEngine(IAVEngineProvider *providerPtr, const std::string &peerDevId)

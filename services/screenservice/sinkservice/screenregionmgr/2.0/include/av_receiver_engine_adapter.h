@@ -23,6 +23,7 @@
 #include <string>
 #include <thread>
 
+#include "dscreen_constants.h"
 #include "i_av_engine_provider.h"
 #include "video_param.h"
 

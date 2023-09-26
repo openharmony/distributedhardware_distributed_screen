@@ -16,7 +16,10 @@
 #ifndef OHOS_DSCREEN_SCREEN_REGION_V2_0_H
 #define OHOS_DSCREEN_SCREEN_REGION_V2_0_H
 
+#include <cstdio>
+#include <fstream>
 #include <mutex>
+#include <string>
 
 #include "surface.h"
 
@@ -39,6 +42,7 @@ public:
     void OnEngineMessage(const std::shared_ptr<AVTransMessage> &message) override;
     void OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer) override;
     void GetWSBuffer(sptr<OHOS::SurfaceBuffer> &wsBuffer, const std::shared_ptr<AVTransBuffer> &buffer);
+    void SaveFile(std::string file, const VideoData &video);
 
     int32_t Release();
     int32_t InitReceiverEngine(IAVEngineProvider *providerPtr);
