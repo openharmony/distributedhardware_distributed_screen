@@ -61,7 +61,7 @@ int32_t DScreenSinkStub::InitSinkInner(MessageParcel &data, MessageParcel &reply
     MessageOption &option)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
         "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         (void)option;
@@ -82,7 +82,7 @@ int32_t DScreenSinkStub::ReleaseSinkInner(MessageParcel &data, MessageParcel &re
     MessageOption &option)
 {
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
         "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
     if (result == Security::AccessToken::PERMISSION_GRANTED) {
         (void)data;
