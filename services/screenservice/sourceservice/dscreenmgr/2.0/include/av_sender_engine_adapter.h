@@ -23,19 +23,12 @@
 #include <string>
 #include <thread>
 
+#include "dscreen_constants.h"
 #include "i_av_engine_provider.h"
 #include "video_param.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-struct VideoData {
-    uint8_t *data;
-    size_t size;
-    uint32_t width;
-    uint32_t height;
-    int64_t timestamp;
-    std::string format;
-};
 class AVSenderAdapterCallback {
 public:
     AVSenderAdapterCallback() {};

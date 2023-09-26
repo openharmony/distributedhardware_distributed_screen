@@ -379,7 +379,7 @@ void ScreenRegion::SaveFile(std::string file, const VideoData &video)
     ofs.seekp(0, std::ios::end);
     uint32_t fileSize = ofs.tellp();
     DHLOGE("fileSize = %d, video.size = %d, maxsize = %d", fileSize, video.size,
-         DUMP_FILE_MAX_SIZE);
+        DUMP_FILE_MAX_SIZE);
     if ((fileSize + video.size) < DUMP_FILE_MAX_SIZE) {
         DscreenSinkHidumper::GetInstance().SetFileFlagFalse();
         ofs.write((const char *)(video.data), video.size);

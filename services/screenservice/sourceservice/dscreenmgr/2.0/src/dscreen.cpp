@@ -326,7 +326,7 @@ void DScreen::ConsumeSurface()
         SaveFile("Screen_BeforeCoding_width(", data);
         DscreenSourceHidumper::GetInstance().SetFlagFalse();
     }
-#endif 
+#endif
     int32_t ret = senderAdapter_->PushData(data);
     if (ret != DH_SUCCESS) {
         DHLOGE("feed buffer to av transport sender failed.");
@@ -355,7 +355,7 @@ void DScreen::SaveFile(std::string file, const VideoData &video)
     ofs.seekp(0, std::ios::end);
     uint32_t fileSize = ofs.tellp();
     DHLOGE("fileSize = %d, video.size = %d, maxsize = %d", fileSize, video.size,
-         DUMP_FILE_MAX_SIZE);
+        DUMP_FILE_MAX_SIZE);
     if ((fileSize + video.size) < DUMP_FILE_MAX_SIZE) {
         DscreenSourceHidumper::GetInstance().SetFileFlagFalse();
         ofs.write((const char *)(video.data), video.size);

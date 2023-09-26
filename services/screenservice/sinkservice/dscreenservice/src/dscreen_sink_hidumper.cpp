@@ -26,7 +26,6 @@
 namespace OHOS {
 namespace DistributedHardware {
 IMPLEMENT_SINGLE_INSTANCE(DscreenSinkHidumper);
-
 namespace {
 const std::string ARGS_HELP = "-h";
 const std::string ARGS_DUMP_SINK_SCREEN_DATA = "--dump";

@@ -74,6 +74,15 @@ enum DScreenEventType : uint32_t {
     TRANS_CHANNEL_CLOSED = 1,
 };
 
+struct VideoData {
+    uint8_t *data;
+    size_t size;
+    uint32_t width;
+    uint32_t height;
+    int64_t timestamp;
+    std::string format;
+};
+
 /* Screen package name */
 const std::string PKG_NAME = "ohos.dhardware.dscreen";
 
