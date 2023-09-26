@@ -75,9 +75,7 @@ ohos_shared_library("distributed_screen_source") {
   ]
 
   if (build_variant == "root") {
-    defines += [
-      "DUMP_DSCREEN_FILE",
-    ]
+    defines += [ "DUMP_DSCREEN_FILE" ]
   }
 
   external_deps = [

@@ -69,9 +69,7 @@ ohos_shared_library("distributed_screen_sink") {
   ]
 
   if (build_variant == "root") {
-    defines += [
-      "DUMP_DSCREENREGION_FILE",
-    ]
+    defines += [ "DUMP_DSCREENREGION_FILE" ]
   }
 
   external_deps = [
