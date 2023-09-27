@@ -71,7 +71,7 @@ int32_t DScreenSinkStub::InitSinkInner(MessageParcel &data, MessageParcel &reply
 {
     (void)option;
     if (!HasEnableDHPermission()) {
-        DHLOGE("Enable Permission inlvaliable");
+        DHLOGE("Enable Permission invalid");
         return DSCREEN_INIT_ERR;
     }
     std::string param = data.ReadString();
@@ -90,7 +90,7 @@ int32_t DScreenSinkStub::ReleaseSinkInner(MessageParcel &data, MessageParcel &re
     (void)data;
     (void)option;
     if (!HasEnableDHPermission()) {
-        DHLOGE("Enable Permission inlvaliable");
+        DHLOGE("Enable Permission invalid");
         return DSCREEN_INIT_ERR;
     }
     int32_t ret = ReleaseSink();
