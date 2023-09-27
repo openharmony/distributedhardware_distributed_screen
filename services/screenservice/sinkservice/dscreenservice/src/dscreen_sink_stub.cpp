@@ -38,6 +38,15 @@ DScreenSinkStub::DScreenSinkStub()
         &DScreenSinkStub::DScreenNotifyInner;
 }
 
+bool DScreenSinkStub::HasEnableDHPermission()
+{
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    const std::string permissionName = "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE";
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+        permissionName);
+    return (result = Security::AccessToken::PERMISSION_GRANTED);
+}
+
 int32_t DScreenSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
@@ -60,39 +69,33 @@ int32_t DScreenSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &data, Mes
 int32_t DScreenSinkStub::InitSinkInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
-        "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
-    if (result == Security::AccessToken::PERMISSION_GRANTED) {
-        (void)option;
-        std::string param = data.ReadString();
-        if (param.empty() || param.size() > PARAM_MAX_SIZE) {
-            DHLOGE("InitSinkInner error: invalid parameter.");
-            return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
-        }
-        int32_t ret = InitSink(param);
-        reply.WriteInt32(ret);
-        return DH_SUCCESS;
+    (void)option;
+    if (!HasEnableDHPermission) {
+        DHLOGE("Enable Permission inlvaliable");
+        return DSCREEN_INIT_ERR;
     }
-    DHLOGE("AccessToken err.");
-    return DSCREEN_INIT_ERR;
+    std::string param = data.ReadString();
+    if (param.empty() || param.size() > PARAM_MAX_SIZE) {
+        DHLOGE("InitSinkInner error: invalid parameter.");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
+    int32_t ret = InitSink(param);
+    reply.WriteInt32(ret);
+    return DH_SUCCESS;
 }
 
 int32_t DScreenSinkStub::ReleaseSinkInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
-        "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
-    if (result == Security::AccessToken::PERMISSION_GRANTED) {
-        (void)data;
-        (void)option;
-        int32_t ret = ReleaseSink();
-        reply.WriteInt32(ret);
-        return DH_SUCCESS;
+    (void)data;
+    (void)option;
+    if (!HasEnableDHPermission) {
+        DHLOGE("Enable Permission inlvaliable");
+        return DSCREEN_INIT_ERR;
     }
-    DHLOGE("AccessToken err.");
-    return DSCREEN_INIT_ERR;
+    int32_t ret = ReleaseSink();
+    reply.WriteInt32(ret);
+    return DH_SUCCESS;
 }
 
 int32_t DScreenSinkStub::SubscribeDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
