@@ -43,6 +43,15 @@ DScreenSourceStub::DScreenSourceStub()
         &DScreenSourceStub::DScreenNotifyInner;
 }
 
+bool DScreenSourceStub::HasEnableDHPermission()
+{
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    const std::string permissionName = "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE";
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+        permissionName);
+    return (result = Security::AccessToken::PERMISSION_GRANTED);
+}
+
 int32_t DScreenSourceStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
@@ -65,103 +74,91 @@ int32_t DScreenSourceStub::OnRemoteRequest(uint32_t code, MessageParcel &data, M
 int32_t DScreenSourceStub::InitSourceInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
-        "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
-    if (result == Security::AccessToken::PERMISSION_GRANTED) {
-        (void)option;
-        std::string param = data.ReadString();
-        if (param.empty() || param.size() > PARAM_MAX_SIZE) {
-            DHLOGE("InitSourceInner error: invalid parameter");
-            return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
-        }
-        sptr<IRemoteObject> remoteObject = data.ReadRemoteObject();
-        if (remoteObject == nullptr) {
-            DHLOGE("Read param failed.");
-            return ERR_DH_SCREEN_SA_READPARAM_FAILED;
-        }
-
-        sptr<DScreenSourceCallbackProxy> dScreenSourceCallbackProxy(new DScreenSourceCallbackProxy(remoteObject));
-        if (dScreenSourceCallbackProxy == nullptr) {
-            DHLOGE("dScreenSourceCallbackProxy is nullptr.");
-            return ERR_DH_SCREEN_SA_READPARAM_FAILED;
-        }
-        int32_t ret = InitSource(param, dScreenSourceCallbackProxy);
-        reply.WriteInt32(ret);
-        return DH_SUCCESS;
+    (void)option;
+    if (!HasEnableDHPermission) {
+        DHLOGE("Enable Permission inlvaliable");
+        return DSCREEN_INIT_ERR;
     }
-    DHLOGE("AccessToken err.");
-    return DSCREEN_INIT_ERR;
+    std::string param = data.ReadString();
+    if (param.empty() || param.size() > PARAM_MAX_SIZE) {
+        DHLOGE("InitSourceInner error: invalid parameter");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
+    sptr<IRemoteObject> remoteObject = data.ReadRemoteObject();
+    if (remoteObject == nullptr) {
+        DHLOGE("Read param failed.");
+        return ERR_DH_SCREEN_SA_READPARAM_FAILED;
+    }
+
+    sptr<DScreenSourceCallbackProxy> dScreenSourceCallbackProxy(new DScreenSourceCallbackProxy(remoteObject));
+    if (dScreenSourceCallbackProxy == nullptr) {
+        DHLOGE("dScreenSourceCallbackProxy is nullptr.");
+        return ERR_DH_SCREEN_SA_READPARAM_FAILED;
+    }
+    int32_t ret = InitSource(param, dScreenSourceCallbackProxy);
+    reply.WriteInt32(ret);
+    return DH_SUCCESS;    
 }
 
 int32_t DScreenSourceStub::ReleaseSourceInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
-        "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
-    if (result == Security::AccessToken::PERMISSION_GRANTED) {
-        (void)data;
-        (void)option;
-        int32_t ret = ReleaseSource();
-        reply.WriteInt32(ret);
-        return DH_SUCCESS;
+    (void)data;
+    (void)option;
+    if (!HasEnableDHPermission) {
+        DHLOGE("Enable Permission inlvaliable");
+        return DSCREEN_INIT_ERR;
     }
-    DHLOGE("AccessToken err.");
-    return DSCREEN_INIT_ERR;
+    int32_t ret = ReleaseSource();
+    reply.WriteInt32(ret);
+    return DH_SUCCESS;
 }
 
 int32_t DScreenSourceStub::RegisterDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
-        "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
-    if (result == Security::AccessToken::PERMISSION_GRANTED) {
-        (void)option;
-        std::string devId = data.ReadString();
-        std::string dhId = data.ReadString();
-        std::string version = data.ReadString();
-        std::string attrs = data.ReadString();
-        std::string reqId = data.ReadString();
-        if (!CheckRegParams(devId, dhId, version, attrs, reqId)) {
-            DHLOGE("RegisterDistributedHardwareInner error: invalid parameter");
-            return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
-        }
-        EnableParam enableParam;
-        enableParam.version = version;
-        enableParam.attrs = attrs;
-
-        int32_t ret = RegisterDistributedHardware(devId, dhId, enableParam, reqId);
-        reply.WriteInt32(ret);
-        return DH_SUCCESS;
+    (void)option;
+    if (!HasEnableDHPermission) {
+        DHLOGE("Enable Permission inlvaliable");
+        return DSCREEN_INIT_ERR;
     }
-    DHLOGE("AccessToken err.");
-    return DSCREEN_INIT_ERR;
+    std::string devId = data.ReadString();
+    std::string dhId = data.ReadString();
+    std::string version = data.ReadString();
+    std::string attrs = data.ReadString();
+    std::string reqId = data.ReadString();
+    if (!CheckRegParams(devId, dhId, version, attrs, reqId)) {
+        DHLOGE("RegisterDistributedHardwareInner error: invalid parameter");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
+    EnableParam enableParam;
+    enableParam.version = version;
+    enableParam.attrs = attrs;
+
+    int32_t ret = RegisterDistributedHardware(devId, dhId, enableParam, reqId);
+    reply.WriteInt32(ret);
+    return DH_SUCCESS;
 }
 
 int32_t DScreenSourceStub::UnregisterDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
     MessageOption &option)
 {
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
-        "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE");
-    if (result == Security::AccessToken::PERMISSION_GRANTED) {
-        (void)option;
-        std::string devId = data.ReadString();
-        std::string dhId = data.ReadString();
-        std::string reqId = data.ReadString();
-        if (!CheckUnregParams(devId, dhId, reqId)) {
-            DHLOGE("UnregisterDistributedHardwareInner error: invalid parameter");
-            return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
-        }
-
-        int32_t ret = UnregisterDistributedHardware(devId, dhId, reqId);
-        reply.WriteInt32(ret);
-        return DH_SUCCESS;
+    (void)option;
+    if (!HasEnableDHPermission) {
+        DHLOGE("Enable Permission inlvaliable");
+        return DSCREEN_INIT_ERR;
     }
-    DHLOGE("AccessToken err.");
-    return DSCREEN_INIT_ERR;
+    std::string devId = data.ReadString();
+    std::string dhId = data.ReadString();
+    std::string reqId = data.ReadString();
+    if (!CheckUnregParams(devId, dhId, reqId)) {
+        DHLOGE("UnregisterDistributedHardwareInner error: invalid parameter");
+        return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+    }
+
+    int32_t ret = UnregisterDistributedHardware(devId, dhId, reqId);
+    reply.WriteInt32(ret);
+    return DH_SUCCESS;
 }
 
 int32_t DScreenSourceStub::ConfigDistributedHardwareInner(MessageParcel &data, MessageParcel &reply,
