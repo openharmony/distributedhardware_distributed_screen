@@ -70,7 +70,7 @@ int32_t DScreenSinkStub::InitSinkInner(MessageParcel &data, MessageParcel &reply
     MessageOption &option)
 {
     (void)option;
-    if (!HasEnableDHPermission) {
+    if (!HasEnableDHPermission()) {
         DHLOGE("Enable Permission inlvaliable");
         return DSCREEN_INIT_ERR;
     }
@@ -89,7 +89,7 @@ int32_t DScreenSinkStub::ReleaseSinkInner(MessageParcel &data, MessageParcel &re
 {
     (void)data;
     (void)option;
-    if (!HasEnableDHPermission) {
+    if (!HasEnableDHPermission()) {
         DHLOGE("Enable Permission inlvaliable");
         return DSCREEN_INIT_ERR;
     }
