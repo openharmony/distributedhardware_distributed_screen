@@ -45,6 +45,7 @@ private:
         MessageOption &option);
     int32_t DScreenNotifyInner(MessageParcel &data, MessageParcel &reply,
         MessageOption &option);
+    bool HasEnableDHPermission();
 };
 } // namespace DistributedHardware
 } // namespace OHOS
