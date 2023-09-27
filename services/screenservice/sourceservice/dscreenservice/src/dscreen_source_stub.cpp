@@ -76,7 +76,7 @@ int32_t DScreenSourceStub::InitSourceInner(MessageParcel &data, MessageParcel &r
 {
     (void)option;
     if (!HasEnableDHPermission()) {
-        DHLOGE("Enable Permission inlvaliable");
+        DHLOGE("Enable Permission invalid");
         return DSCREEN_INIT_ERR;
     }
     std::string param = data.ReadString();
@@ -106,7 +106,7 @@ int32_t DScreenSourceStub::ReleaseSourceInner(MessageParcel &data, MessageParcel
     (void)data;
     (void)option;
     if (!HasEnableDHPermission()) {
-        DHLOGE("Enable Permission inlvaliable");
+        DHLOGE("Enable Permission invalid");
         return DSCREEN_INIT_ERR;
     }
     int32_t ret = ReleaseSource();
@@ -119,7 +119,7 @@ int32_t DScreenSourceStub::RegisterDistributedHardwareInner(MessageParcel &data,
 {
     (void)option;
     if (!HasEnableDHPermission()) {
-        DHLOGE("Enable Permission inlvaliable");
+        DHLOGE("Enable Permission invalid");
         return DSCREEN_INIT_ERR;
     }
     std::string devId = data.ReadString();
@@ -145,7 +145,7 @@ int32_t DScreenSourceStub::UnregisterDistributedHardwareInner(MessageParcel &dat
 {
     (void)option;
     if (!HasEnableDHPermission()) {
-        DHLOGE("Enable Permission inlvaliable");
+        DHLOGE("Enable Permission invalid");
         return DSCREEN_INIT_ERR;
     }
     std::string devId = data.ReadString();
