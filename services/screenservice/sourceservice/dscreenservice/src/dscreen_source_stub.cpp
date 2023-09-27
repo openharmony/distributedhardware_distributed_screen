@@ -75,7 +75,7 @@ int32_t DScreenSourceStub::InitSourceInner(MessageParcel &data, MessageParcel &r
     MessageOption &option)
 {
     (void)option;
-    if (!HasEnableDHPermission) {
+    if (!HasEnableDHPermission()) {
         DHLOGE("Enable Permission inlvaliable");
         return DSCREEN_INIT_ERR;
     }
@@ -105,7 +105,7 @@ int32_t DScreenSourceStub::ReleaseSourceInner(MessageParcel &data, MessageParcel
 {
     (void)data;
     (void)option;
-    if (!HasEnableDHPermission) {
+    if (!HasEnableDHPermission()) {
         DHLOGE("Enable Permission inlvaliable");
         return DSCREEN_INIT_ERR;
     }
@@ -118,7 +118,7 @@ int32_t DScreenSourceStub::RegisterDistributedHardwareInner(MessageParcel &data,
     MessageOption &option)
 {
     (void)option;
-    if (!HasEnableDHPermission) {
+    if (!HasEnableDHPermission()) {
         DHLOGE("Enable Permission inlvaliable");
         return DSCREEN_INIT_ERR;
     }
@@ -144,7 +144,7 @@ int32_t DScreenSourceStub::UnregisterDistributedHardwareInner(MessageParcel &dat
     MessageOption &option)
 {
     (void)option;
-    if (!HasEnableDHPermission) {
+    if (!HasEnableDHPermission()) {
         DHLOGE("Enable Permission inlvaliable");
         return DSCREEN_INIT_ERR;
     }
