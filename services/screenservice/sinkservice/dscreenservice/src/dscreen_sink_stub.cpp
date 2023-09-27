@@ -44,7 +44,7 @@ bool DScreenSinkStub::HasEnableDHPermission()
     const std::string permissionName = "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE";
     int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
         permissionName);
-    return (result = Security::AccessToken::PERMISSION_GRANTED);
+    return (result == Security::AccessToken::PERMISSION_GRANTED);
 }
 
 int32_t DScreenSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
