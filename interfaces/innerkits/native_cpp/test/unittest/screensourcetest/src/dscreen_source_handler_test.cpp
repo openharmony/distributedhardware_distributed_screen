@@ -81,8 +81,8 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_001, TestSize.Lev
     const std::string devId = "devId";
     const std::string dhId = "dhId";
     EnableParam param;
-    param.version = "2.0";
-    param.attrs = "attrs";
+    param.sinkVersion = "2.0";
+    param.sinkAttrs = "attrs";
     std::string callbackParam = "callbackParam";
     sptr<DScreenSourceLoadCallback> loadCallback(new DScreenSourceLoadCallback(callbackParam));
     loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, nullptr);
@@ -102,8 +102,8 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_002, TestSize.Lev
     const std::string devId = "devId";
     const std::string dhId = "dhId";
     EnableParam param;
-    param.version = "1";
-    param.attrs = "attrs";
+    param.sinkVersion = "1";
+    param.sinkAttrs = "attrs";
     std::string callbackParam = "callbackParam";
     sptr<DScreenSourceLoadCallback> loadCallback(new DScreenSourceLoadCallback(callbackParam));
     loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, nullptr);
@@ -124,8 +124,8 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_003, TestSize.Lev
     const std::string devId = "devId";
     const std::string dhId = "dhId";
     EnableParam param;
-    param.version = "1";
-    param.attrs = "attrs";
+    param.sinkVersion = "1";
+    param.sinkAttrs = "attrs";
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = nullptr;
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
@@ -143,8 +143,8 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_004, TestSize.Lev
     const std::string devId = "";
     const std::string dhId = "";
     EnableParam param;
-    param.version = "1";
-    param.attrs = "attrs";
+    param.sinkVersion = "1";
+    param.sinkAttrs = "attrs";
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
     EXPECT_EQ(ERR_DH_SCREEN_STRING_PARAM_EMPTY, ret);
@@ -161,8 +161,8 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_005, TestSize.Lev
     const std::string devId = "devId";
     const std::string dhId = "dhId";
     EnableParam param;
-    param.version = "1";
-    param.attrs = "attrs";
+    param.sinkVersion = "1";
+    param.sinkAttrs = "attrs";
     std::shared_ptr<RegisterCallback> callback = nullptr;
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
     EXPECT_EQ(ERR_DH_SCREEN_REGISTER_CALLBACK_NOT_INIT, ret);
@@ -182,8 +182,8 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_006, TestSize.Lev
         devIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevIddevId";
     const std::string dhId = "dhId";
     EnableParam param;
-    param.version = "1";
-    param.attrs = "attrs";
+    param.sinkVersion = "1";
+    param.sinkAttrs = "attrs";
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     if (DScreenSourceHandler::GetInstance().dScreenSourceCallback_ == nullptr) {
         DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = new (std::nothrow) DScreenSourceCallback();

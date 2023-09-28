@@ -132,8 +132,8 @@ int32_t DScreenSourceStub::RegisterDistributedHardwareInner(MessageParcel &data,
         return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
     }
     EnableParam enableParam;
-    enableParam.version = version;
-    enableParam.attrs = attrs;
+    enableParam.sinkVersion = version;
+    enableParam.sinkAttrs = attrs;
 
     int32_t ret = RegisterDistributedHardware(devId, dhId, enableParam, reqId);
     reply.WriteInt32(ret);
