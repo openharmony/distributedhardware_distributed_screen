@@ -47,6 +47,7 @@ private:
     bool CheckUnregParams(const std::string &devId, const std::string &dhId, const std::string &reqId) const;
     bool CheckConfigParams(const std::string &devId, const std::string &dhId,
         const std::string &key, const std::string &value) const;
+    bool HasEnableDHPermission();
     using DScreenSourceFunc = int32_t (DScreenSourceStub::*)(MessageParcel &data, MessageParcel &reply,
         MessageOption &option);
     std::map<int32_t, DScreenSourceFunc> memberFuncMap_;

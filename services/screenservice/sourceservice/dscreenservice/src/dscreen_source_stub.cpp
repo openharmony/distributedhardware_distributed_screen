@@ -17,11 +17,13 @@
 
 #include "iservice_registry.h"
 
+#include "accesstoken_kit.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_ipc_interface_code.h"
 #include "dscreen_log.h"
 #include "dscreen_source_callback_proxy.h"
+#include "ipc_skeleton.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -39,6 +41,15 @@ DScreenSourceStub::DScreenSourceStub()
         &DScreenSourceStub::ConfigDistributedHardwareInner;
     memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::DSCREEN_NOTIFY)] =
         &DScreenSourceStub::DScreenNotifyInner;
+}
+
+bool DScreenSourceStub::HasEnableDHPermission()
+{
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    const std::string permissionName = "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE";
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+        permissionName);
+    return (result == Security::AccessToken::PERMISSION_GRANTED);
 }
 
 int32_t DScreenSourceStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
@@ -64,6 +75,10 @@ int32_t DScreenSourceStub::InitSourceInner(MessageParcel &data, MessageParcel &r
     MessageOption &option)
 {
     (void)option;
+    if (!HasEnableDHPermission()) {
+        DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
+        return DSCREEN_INIT_ERR;
+    }
     std::string param = data.ReadString();
     if (param.empty() || param.size() > PARAM_MAX_SIZE) {
         DHLOGE("InitSourceInner error: invalid parameter");
@@ -90,6 +105,10 @@ int32_t DScreenSourceStub::ReleaseSourceInner(MessageParcel &data, MessageParcel
 {
     (void)data;
     (void)option;
+    if (!HasEnableDHPermission()) {
+        DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
+        return DSCREEN_INIT_ERR;
+    }
     int32_t ret = ReleaseSource();
     reply.WriteInt32(ret);
     return DH_SUCCESS;
@@ -99,6 +118,10 @@ int32_t DScreenSourceStub::RegisterDistributedHardwareInner(MessageParcel &data,
     MessageOption &option)
 {
     (void)option;
+    if (!HasEnableDHPermission()) {
+        DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
+        return DSCREEN_INIT_ERR;
+    }
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string version = data.ReadString();
@@ -121,6 +144,10 @@ int32_t DScreenSourceStub::UnregisterDistributedHardwareInner(MessageParcel &dat
     MessageOption &option)
 {
     (void)option;
+    if (!HasEnableDHPermission()) {
+        DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
+        return DSCREEN_INIT_ERR;
+    }
     std::string devId = data.ReadString();
     std::string dhId = data.ReadString();
     std::string reqId = data.ReadString();

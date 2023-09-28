@@ -15,10 +15,12 @@
 
 #include "dscreen_sink_stub.h"
 
+#include "accesstoken_kit.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_ipc_interface_code.h"
 #include "dscreen_log.h"
+#include "ipc_skeleton.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -34,6 +36,15 @@ DScreenSinkStub::DScreenSinkStub()
         &DScreenSinkStub::UnsubscribeDistributedHardwareInner;
     memberFuncMap_[static_cast<uint32_t>(IDScreenSinkInterfaceCode::DSCREEN_NOTIFY)] =
         &DScreenSinkStub::DScreenNotifyInner;
+}
+
+bool DScreenSinkStub::HasEnableDHPermission()
+{
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    const std::string permissionName = "ohos.permission.ENABLE_DISTRIBUTED_HARDWARE";
+    int32_t result = Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken,
+        permissionName);
+    return (result == Security::AccessToken::PERMISSION_GRANTED);
 }
 
 int32_t DScreenSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &data, MessageParcel &reply,
@@ -59,6 +70,10 @@ int32_t DScreenSinkStub::InitSinkInner(MessageParcel &data, MessageParcel &reply
     MessageOption &option)
 {
     (void)option;
+    if (!HasEnableDHPermission()) {
+        DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
+        return DSCREEN_INIT_ERR;
+    }
     std::string param = data.ReadString();
     if (param.empty() || param.size() > PARAM_MAX_SIZE) {
         DHLOGE("InitSinkInner error: invalid parameter.");
@@ -74,6 +89,10 @@ int32_t DScreenSinkStub::ReleaseSinkInner(MessageParcel &data, MessageParcel &re
 {
     (void)data;
     (void)option;
+    if (!HasEnableDHPermission()) {
+        DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
+        return DSCREEN_INIT_ERR;
+    }
     int32_t ret = ReleaseSink();
     reply.WriteInt32(ret);
     return DH_SUCCESS;

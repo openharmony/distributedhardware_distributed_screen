@@ -28,6 +28,8 @@
         ],
         "deps": {
             "components": [
+                "access_token",
+                "accessibility",
                 "dsoftbus",
                 "hisysevent",
                 "init",
