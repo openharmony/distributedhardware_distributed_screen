@@ -19,7 +19,6 @@ import(
 ohos_shared_library("distributed_screen_utils") {
   include_dirs = [
     "${services_path}/common/utils/include",
-    "//third_party/json/include",
     "${common_path}/include",
     "${fwk_common_path}/utils/include",
   ]

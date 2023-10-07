@@ -46,7 +46,6 @@
                 "distributed_hardware_fwk"
             ],
             "third_party": [
-                "json",
                 "libjpeg-turbo"
             ]
         },
