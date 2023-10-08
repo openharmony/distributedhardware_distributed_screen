@@ -22,7 +22,7 @@
 #include "dscreen_fwkkit.h"
 #include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
-#include "dscreen_sink_hidumper.h"
+#include "dscreen_hidumper.h"
 #include "dscreen_json_util.h"
 #include "dscreen_util.h"
 #include "screen.h"
@@ -343,10 +343,9 @@ void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer
     auto surBufAddr = static_cast<uint8_t *>(wsBuffer->GetVirAddr());
     int64_t timestamp = 0;
     VideoData data = {surBufAddr, surBufSize, requestConfig.width, requestConfig.height, timestamp, "ycbcr_sp420"};
-    if (DscreenSinkHidumper::GetInstance().GetFlagStatus() == true) {
+    if (DscreenHidumper::GetInstance().GetFlagStatus() == true) {
         DHLOGE("HidumperFlag_ = true, exec SaveFile");
-        SaveFile("Screen_AfterEncoding_width(", data);
-        DscreenSinkHidumper::GetInstance().SetFlagFalse();
+        DscreenHidumper::GetInstance().SaveFile("Screen_AfterEncoding_width(", data);
     }
 #endif
     BufferFlushConfig flushConfig = { {0, 0, wsBuffer->GetWidth(), wsBuffer->GetHeight()}, 0};
@@ -357,36 +356,6 @@ void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer
         return;
     }
     DHLOGI("Fill video buffer data to window surface success. frameNumber: %zu", frameNumber_.load());
-}
-
-void ScreenRegion::SaveFile(std::string file, const VideoData &video)
-{
-    DHLOGE("Saving File.");
-    std::string fileName = DUMP_FILE_PATH + "/" + file + std::to_string(video.width) + ")_height(" +
-         std::to_string(video.height) + ")_" + video.format + ".jpg";
-    DHLOGE("fileName = %s", fileName.c_str());
-    if (DscreenSinkHidumper::GetInstance().GetReDumpFlag() == true) {
-        std::remove(fileName.c_str());
-        DscreenSinkHidumper::GetInstance().SetReDumpFlagFalse();
-    }
-    std::ofstream ofs(fileName, std::ios::binary | std::ios::out | std::ios::app);
-
-    if (!ofs.is_open()) {
-        DHLOGE("open file failed.");
-        return;
-    }
-    DHLOGE("open Hidumper SaveFile file success.");
-    ofs.seekp(0, std::ios::end);
-    uint32_t fileSize = ofs.tellp();
-    DHLOGE("fileSize = %d, video.size = %d, maxsize = %d", fileSize, video.size,
-        DUMP_FILE_MAX_SIZE);
-    if ((fileSize + video.size) < DUMP_FILE_MAX_SIZE) {
-        DscreenSinkHidumper::GetInstance().SetFileFlagFalse();
-        ofs.write((const char *)(video.data), video.size);
-    } else {
-        DscreenSinkHidumper::GetInstance().SetFileFlagTrue();
-    }
-    ofs.close();
 }
 
 uint64_t ScreenRegion::GetScreenId()

@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,30 +13,34 @@
  * limitations under the License.
  */
 
-#ifndef OHOS_DISTRIBUTED_SCREEN_SINK_HIDUMPER_H
-#define OHOS_DISTRIBUTED_SCREEN_SINK_HIDUMPER_H
+#ifndef OHOS_DISTRIBUTED_SCREEN_HIDUMPER_H
+#define OHOS_DISTRIBUTED_SCREEN_HIDUMPER_H
 
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <cstdio>
+#include <fstream>
 #include <map>
 #include <string>
 #include <vector>
 
 #include "single_instance.h"
+#include "dscreen_constants.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 enum class HidumpFlag {
     UNKNOWN = 0,
     GET_HELP,
-    DUMP_SINK_SCREEN_DATA,
-    DUMP_SINK_SCREEN_DATA_RESTART,
+    DUMP_SCREEN_DATA,
+    DUMP_SCREEN_DATA_RESTART,
+    DUMP_SCREEN_DATA_STOP,
 };
 
-class DscreenSinkHidumper {
-    DECLARE_SINGLE_INSTANCE_BASE(DscreenSinkHidumper);
+class DscreenHidumper {
+    DECLARE_SINGLE_INSTANCE_BASE(DscreenHidumper);
 
 public:
     bool Dump(const std::vector<std::string> &args, std::string &result);
@@ -48,8 +52,12 @@ public:
     void SetFileFlagTrue();
     void SetReDumpFlagFalse();
     void SetReDumpFlagTrue();
-    DscreenSinkHidumper();
-    ~DscreenSinkHidumper();
+    bool GetTransReDumpFlag();
+    void SetTransReDumpFlagFalse();
+    void SetTransReDumpFlagTrue();
+    void SaveFile(std::string file, const VideoData &video);
+    DscreenHidumper();
+    ~DscreenHidumper();
 
 private:
     void ShowHelp(std::string &result);
@@ -60,10 +68,11 @@ private:
     int32_t ReDumpScreenData(std::string &result);
 
 private:
-    bool HidumperFlag_ = false;
-    bool FileFullFlag_ = false;
-    bool ReDumpFlag_ = false;
+    bool hidumperFlag_ = false;
+    bool fileFullFlag_ = false;
+    bool reDumpFlag_ = false;
+    bool transReDumpFlag_ = false;
 };
 } // namespace DistributedHardware
 } // namespace OHOS
-#endif // OHOS_DISTRIBUTED_SCREEN_SINK_HIDUMPER_H
+#endif // OHOS_DISTRIBUTED_SCREEN_HIDUMPER_H

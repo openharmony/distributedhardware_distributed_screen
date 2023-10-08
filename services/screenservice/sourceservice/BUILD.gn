@@ -49,6 +49,7 @@ ohos_shared_library("distributed_screen_source") {
     "${interfaces_path}/innerkits/native_cpp/screen_sink/src/dscreen_sink_proxy.cpp",
     "${interfaces_path}/innerkits/native_cpp/screen_source/src/dscreen_source_proxy.cpp",
     "${services_path}/common/utils/src/dscreen_fwkkit.cpp",
+    "${services_path}/common/utils/src/dscreen_hidumper.cpp",
     "${services_path}/common/utils/src/dscreen_maprelation.cpp",
     "${services_path}/common/utils/src/video_param.cpp",
     "./dscreenmgr/1.0/src/dscreen.cpp",
@@ -58,7 +59,6 @@ ohos_shared_library("distributed_screen_source") {
     "./dscreenmgr/2.0/src/dscreen_manager.cpp",
     "./dscreenmgr/common/src/screen_manager_adapter.cpp",
     "./dscreenservice/src/callback/dscreen_source_callback_proxy.cpp",
-    "./dscreenservice/src/dscreen_source_hidumper.cpp",
     "./dscreenservice/src/dscreen_source_service.cpp",
     "./dscreenservice/src/dscreen_source_stub.cpp",
   ]

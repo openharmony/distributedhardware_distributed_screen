@@ -13,43 +13,44 @@
  * limitations under the License.
  */
 
-#include "dscreen_source_hidumper.h"
+#include "dscreen_hidumper.h"
 
-#include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 
 #undef DH_LOG_TAG
-#define DH_LOG_TAG "DscreenSourceHidumper"
+#define DH_LOG_TAG "DscreenHidumper"
 
 namespace OHOS {
 namespace DistributedHardware {
-IMPLEMENT_SINGLE_INSTANCE(DscreenSourceHidumper);
+IMPLEMENT_SINGLE_INSTANCE(DscreenHidumper);
 
 namespace {
 const std::string ARGS_HELP = "-h";
-const std::string ARGS_DUMP_SOURCE_SCREEN_DATA = "--dump";
-const std::string ARGS_DUMP_SOURCE_SCREEN_DATA_RESTART = "--redump";
+const std::string ARGS_DUMP_SCREEN_DATA = "--dump";
+const std::string ARGS_DUMP_SCREEN_DATA_RESTART = "--redump";
+const std::string ARGS_DUMP_SCREEN_DATA_STOP = "--stopdump";
 
 const std::map<std::string, HidumpFlag> ARGS_MAP = {
     { ARGS_HELP, HidumpFlag::GET_HELP },
-    { ARGS_DUMP_SOURCE_SCREEN_DATA, HidumpFlag::DUMP_SOURCE_SCREEN_DATA },
-    { ARGS_DUMP_SOURCE_SCREEN_DATA_RESTART, HidumpFlag::DUMP_SOURCE_SCREEN_DATA_RESTART },
+    { ARGS_DUMP_SCREEN_DATA, HidumpFlag::DUMP_SCREEN_DATA },
+    { ARGS_DUMP_SCREEN_DATA_RESTART, HidumpFlag::DUMP_SCREEN_DATA_RESTART },
+    { ARGS_DUMP_SCREEN_DATA_STOP, HidumpFlag::DUMP_SCREEN_DATA_STOP },
 };
 }
 
-DscreenSourceHidumper::DscreenSourceHidumper()
+DscreenHidumper::DscreenHidumper()
 {
     DHLOGI("Distributed screen hidumper constructed.");
 }
 
-DscreenSourceHidumper::~DscreenSourceHidumper()
+DscreenHidumper::~DscreenHidumper()
 {
     DHLOGI("Distributed screen hidumper deconstructed.");
 }
 
-bool DscreenSourceHidumper::Dump(const std::vector<std::string> &args, std::string &result)
+bool DscreenHidumper::Dump(const std::vector<std::string> &args, std::string &result)
 {
     DHLOGI("Distributed screen hidumper dump args.size():%d.", args.size());
     result.clear();
@@ -69,7 +70,7 @@ bool DscreenSourceHidumper::Dump(const std::vector<std::string> &args, std::stri
     return ProcessDump(args[0], result) == DH_SUCCESS;
 }
 
-int32_t DscreenSourceHidumper::ProcessDump(const std::string &args, std::string &result)
+int32_t DscreenHidumper::ProcessDump(const std::string &args, std::string &result)
 {
     DHLOGI("Process dump.");
     HidumpFlag hf = HidumpFlag::UNKNOWN;
@@ -84,11 +85,15 @@ int32_t DscreenSourceHidumper::ProcessDump(const std::string &args, std::string 
     }
     result.clear();
     switch (hf) {
-        case HidumpFlag::DUMP_SOURCE_SCREEN_DATA: {
+        case HidumpFlag::DUMP_SCREEN_DATA: {
             return DumpScreenData(result);
         }
-        case HidumpFlag::DUMP_SOURCE_SCREEN_DATA_RESTART: {
+        case HidumpFlag::DUMP_SCREEN_DATA_RESTART: {
             return ReDumpScreenData(result);
+        }
+        case HidumpFlag::DUMP_SCREEN_DATA_STOP: {
+            SetFlagFalse();
+            return DH_SUCCESS;
         }
         default: {
             return ShowIllegalInfomation(result);
@@ -96,7 +101,7 @@ int32_t DscreenSourceHidumper::ProcessDump(const std::string &args, std::string 
     }
 }
 
-int32_t DscreenSourceHidumper::DumpScreenData(std::string &result)
+int32_t DscreenHidumper::DumpScreenData(std::string &result)
 {
     DHLOGI("Dump screen data.");
 
@@ -108,16 +113,16 @@ int32_t DscreenSourceHidumper::DumpScreenData(std::string &result)
         }
     }
 
-    if (FileFullFlag_ == false) {
+    if (fileFullFlag_ == false) {
         result.append("Dump...");
-        HidumperFlag_ = true;
+        hidumperFlag_ = true;
     } else {
         result.append("File oversize 300M : stop dump, use parameter \"--redump\" to clear dumpfile and redump");
     }
     return DH_SUCCESS;
 }
 
-int32_t DscreenSourceHidumper::ReDumpScreenData(std::string &result)
+int32_t DscreenHidumper::ReDumpScreenData(std::string &result)
 {
     DHLOGI("Redump screen data.");
 
@@ -131,51 +136,67 @@ int32_t DscreenSourceHidumper::ReDumpScreenData(std::string &result)
     SetFileFlagFalse();
     SetReDumpFlagTrue();
     result.append("ReDumpStart...");
-    HidumperFlag_ = true;
+    hidumperFlag_ = true;
+    SetTransReDumpFlagTrue();
     return DH_SUCCESS;
 }
 
-bool DscreenSourceHidumper::GetFlagStatus()
+bool DscreenHidumper::GetFlagStatus()
 {
-    return HidumperFlag_;
+    return hidumperFlag_;
 }
 
-void DscreenSourceHidumper::SetFlagFalse()
+void DscreenHidumper::SetFlagFalse()
 {
-    HidumperFlag_ = false;
+    hidumperFlag_ = false;
 }
 
-bool DscreenSourceHidumper::GetFileFlag()
+bool DscreenHidumper::GetFileFlag()
 {
-    return FileFullFlag_;
+    return fileFullFlag_;
 }
 
-void DscreenSourceHidumper::SetFileFlagFalse()
+void DscreenHidumper::SetFileFlagFalse()
 {
-    FileFullFlag_ = false;
+    fileFullFlag_ = false;
 }
 
-void DscreenSourceHidumper::SetFileFlagTrue()
+void DscreenHidumper::SetFileFlagTrue()
 {
-    FileFullFlag_ = true;
+    fileFullFlag_ = true;
 }
 
-bool DscreenSourceHidumper::GetReDumpFlag()
+bool DscreenHidumper::GetReDumpFlag()
 {
-    return ReDumpFlag_;
+    return reDumpFlag_;
 }
 
-void DscreenSourceHidumper::SetReDumpFlagFalse()
+void DscreenHidumper::SetReDumpFlagFalse()
 {
-    ReDumpFlag_ = false;
+    reDumpFlag_ = false;
 }
 
-void DscreenSourceHidumper::SetReDumpFlagTrue()
+void DscreenHidumper::SetReDumpFlagTrue()
 {
-    ReDumpFlag_ = true;
+    reDumpFlag_ = true;
 }
 
-void DscreenSourceHidumper::ShowHelp(std::string &result)
+bool DscreenHidumper::GetTransReDumpFlag()
+{
+    return transReDumpFlag_;
+}
+
+void DscreenHidumper::SetTransReDumpFlagFalse()
+{
+    transReDumpFlag_ = false;
+}
+
+void DscreenHidumper::SetTransReDumpFlagTrue()
+{
+    transReDumpFlag_ = true;
+}
+
+void DscreenHidumper::ShowHelp(std::string &result)
 {
     DHLOGI("Show help.");
     result.append("Usage:dump  <command> [options]\n")
@@ -183,16 +204,50 @@ void DscreenSourceHidumper::ShowHelp(std::string &result)
         .append("-h            ")
         .append(": show help\n")
         .append("--dump        ")
-        .append(": dump source screen data in /data/data/dscreen\n")
+        .append(": dump screen data in /data/data/dscreen\n")
         .append("--redump      ")
-        .append(": clear file and restart dump source screen data\n");
+        .append(": clear file and restart dump screen data\n")
+        .append("--stopdump    ")
+        .append(": stop dump screen data\n");
 }
 
-int32_t DscreenSourceHidumper::ShowIllegalInfomation(std::string &result)
+int32_t DscreenHidumper::ShowIllegalInfomation(std::string &result)
 {
     DHLOGI("Show illegal information.");
     result.append("unknown command, -h for help.");
     return DH_SUCCESS;
+}
+
+void DscreenHidumper::SaveFile(std::string file, const VideoData &video)
+{
+    DHLOGE("Saving File.");
+    std::string fileName = DUMP_FILE_PATH + "/" + file + std::to_string(video.width) + ")_height(" +
+         std::to_string(video.height) + ")_" + video.format + ".jpg";
+    DHLOGE("fileName = %s", fileName.c_str());
+    if (GetReDumpFlag() == true) {
+        std::remove(fileName.c_str());
+        SetReDumpFlagFalse();
+    }
+    std::ofstream ofs(fileName, std::ios::binary | std::ios::out | std::ios::app);
+
+    if (!ofs.is_open()) {
+        DHLOGE("open file failed.");
+        return;
+    }
+    DHLOGE("open Hidumper SaveFile file success.");
+    ofs.seekp(0, std::ios::end);
+    std::ofstream::pos_type fileSize = ofs.tellp();
+    if (fileSize < 0) {
+        DHLOGE("filesize get err");
+        fileSize = 0;
+    }
+    if ((static_cast<size_t>(fileSize) + video.size) < DUMP_FILE_MAX_SIZE) {
+        SetFileFlagFalse();
+        ofs.write((const char *)(video.data), video.size);
+    } else {
+        SetFileFlagTrue();
+    }
+    ofs.close();
 }
 } // namespace DistributedHardware
 } // namespace OHOS
