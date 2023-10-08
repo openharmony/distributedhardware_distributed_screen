@@ -21,10 +21,7 @@ module_out_path = "distributed_screen/sink_processor_test"
 
 config("module_private_config") {
   visibility = [ ":*" ]
-  include_dirs = [
-    "//third_party/json/include",
-    "${fwk_common_path}/utils/include",
-  ]
+  include_dirs = [ "${fwk_common_path}/utils/include" ]
 
   include_dirs += [
     "./include",

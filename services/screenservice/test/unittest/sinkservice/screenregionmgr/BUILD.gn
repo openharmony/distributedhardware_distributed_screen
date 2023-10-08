@@ -20,7 +20,6 @@ module_out_path = "distributed_screen/dscreen_sink_service_test"
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
-    "//third_party/json/include",
     "${fwk_common_path}/utils/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "${distributedhardwarefwk_path}/utils/include",

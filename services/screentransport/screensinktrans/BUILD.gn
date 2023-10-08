@@ -18,7 +18,6 @@ import(
 
 ohos_shared_library("distributed_screen_sinktrans") {
   include_dirs = [
-    "//third_party/json/include",
     "//third_party/libjpeg",
     "${fwk_common_path}/utils/include",
     "${fwk_interfaces_path}/inner_kits/include",

@@ -18,7 +18,6 @@ import(
 
 ohos_shared_library("distributed_screen_sink") {
   include_dirs = [
-    "//third_party/json/include",
     "${fwk_common_path}/utils/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
   ]

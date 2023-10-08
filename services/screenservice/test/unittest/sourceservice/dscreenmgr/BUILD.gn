@@ -20,7 +20,6 @@ module_out_path = "distributed_screen/DscreenMgrTest"
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
-    "//third_party/json/include",
     "${driver_path}/interfaces/include",
     "${distributedhardwarefwk_path}/interfaces/inner_kits/include",
     "${distributedhardwarefwk_path}/common/utils/include",
