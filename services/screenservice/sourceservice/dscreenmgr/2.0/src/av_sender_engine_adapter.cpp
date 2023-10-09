@@ -18,6 +18,7 @@
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
+#include "dscreen_hidumper.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -154,7 +155,17 @@ int32_t AVTransSenderAdapter::PushData(const VideoData &video)
     bufferMata->SetMetaItem(AVTransTag::VIDEO_HEIGHT, std::to_string(video.height));
     bufferMata->SetMetaItem(AVTransTag::VIDEO_PIXEL_FORMAT, video.format);
     bufferMata->SetMetaItem(AVTransTag::PRE_TIMESTAMP, std::to_string(video.timestamp));
-
+#ifdef DUMP_DSCREEN_FILE
+    if(DscreenHidumper::GetInstance().GetFlagStatus() == true) {
+        senderEngine_->StartDumpMediaData();
+    } else {
+        senderEngine_->StopDumpMediaData();
+    }
+    if(DscreenHidumper::GetInstance().GetTransReDumpFlag() == true) {
+        senderEngine_->ReStartDumpMediaData();
+        DscreenHidumper::GetInstance().SetTransReDumpFlagFalse();
+    }
+#endif
     int32_t ret = senderEngine_->PushData(transBuffer);
     if (ret != DH_AVT_SUCCESS) {
         DHLOGE("feed data to av transport sender failed, ret:%" PRId32, ret);

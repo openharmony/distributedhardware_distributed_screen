@@ -21,7 +21,7 @@
 #include "string_ex.h"
 #include "system_ability_definition.h"
 
-#include "dscreen_sink_hidumper.h"
+#include "dscreen_hidumper.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
@@ -140,7 +140,7 @@ int32_t DScreenSinkService::Dump(int32_t fd, const std::vector<std::u16string>& 
     std::transform(args.cbegin(), args.cend(), std::back_inserter(argsStr),
         [](const std::u16string &item) { return Str16ToStr8(item); });
 
-    if (!DscreenSinkHidumper::GetInstance().Dump(argsStr, result)) {
+    if (!DscreenHidumper::GetInstance().Dump(argsStr, result)) {
         DHLOGE("Hidump error");
         return ERR_DH_SCREEN_SA_HIDUMPER_ERROR;
     }

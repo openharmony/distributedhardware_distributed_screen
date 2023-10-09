@@ -22,6 +22,7 @@
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
+#include "dscreen_hidumper.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -42,6 +43,17 @@ int32_t AVTransReceiverAdapter::Initialize(IAVEngineProvider *providerPtr, const
     }
     receiverEngine_->RegisterReceiverCallback(shared_from_this());
     initialized_ = true;
+#ifdef DUMP_DSCREENREGION_FILE
+    if(DscreenHidumper::GetInstance().GetFlagStatus() == true) {
+        receiverEngine_->StartDumpMediaData();
+    } else {
+        receiverEngine_->StopDumpMediaData();
+    }
+    if(DscreenHidumper::GetInstance().GetTransReDumpFlag() == true) {
+        receiverEngine_->ReStartDumpMediaData();
+        DscreenHidumper::GetInstance().SetTransReDumpFlagFalse();
+    }
+#endif
     return DH_SUCCESS;
 }
 
@@ -162,6 +174,17 @@ int32_t AVTransReceiverAdapter::OnDataAvailable(const std::shared_ptr<AVTransBuf
 {
     if (adapterCallback_ != nullptr) {
         adapterCallback_->OnEngineDataDone(buffer);
+#ifdef DUMP_DSCREENREGION_FILE
+        if(DscreenHidumper::GetInstance().GetFlagStatus() == true) {
+            receiverEngine_->StartDumpMediaData();
+        } else {
+            receiverEngine_->StopDumpMediaData();
+        }
+        if(DscreenHidumper::GetInstance().GetTransReDumpFlag() == true) {
+            receiverEngine_->ReStartDumpMediaData();
+            DscreenHidumper::GetInstance().SetTransReDumpFlagFalse();
+        }
+#endif
     }
     return DH_AVT_SUCCESS;
 }

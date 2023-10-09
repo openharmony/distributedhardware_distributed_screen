@@ -84,10 +84,25 @@ public:
         return 0;
     }
 
-    int32_t RegisterReceiverCallback(const std::shared_ptr<IAVReceiverEngineCallback> &callback)
+    int32_t RegisterReceiverCallback(const std::shared_ptr<IAVReceiverEngineCallback> &callback) override
     {
         (void) callback;
         return 0;
+    }
+
+    bool StartDumpMediaData() override
+    {
+        return false;
+    }
+
+    bool StopDumpMediaData() override
+    {
+        return false;
+    }
+
+    bool ReStartDumpMediaData() override
+    {
+        return false;
     }
 };
 
@@ -145,6 +160,21 @@ public:
     {
         (void) callback;
         return 0;
+    }
+
+    bool StartDumpMediaData() override
+    {
+        return false;
+    }
+
+    bool StopDumpMediaData() override
+    {
+        return false;
+    }
+
+    bool ReStartDumpMediaData() override
+    {
+        return false;
     }
 };
 } // DistributedHardware

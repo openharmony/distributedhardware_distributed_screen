@@ -42,7 +42,6 @@ public:
     void OnEngineMessage(const std::shared_ptr<AVTransMessage> &message) override;
     void OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer) override;
     void GetWSBuffer(sptr<OHOS::SurfaceBuffer> &wsBuffer, const std::shared_ptr<AVTransBuffer> &buffer);
-    void SaveFile(std::string file, const VideoData &video);
 
     int32_t Release();
     int32_t InitReceiverEngine(IAVEngineProvider *providerPtr);
