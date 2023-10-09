@@ -44,12 +44,12 @@ int32_t AVTransReceiverAdapter::Initialize(IAVEngineProvider *providerPtr, const
     receiverEngine_->RegisterReceiverCallback(shared_from_this());
     initialized_ = true;
 #ifdef DUMP_DSCREENREGION_FILE
-    if(DscreenHidumper::GetInstance().GetFlagStatus() == true) {
+    if (DscreenHidumper::GetInstance().GetFlagStatus()) {
         receiverEngine_->StartDumpMediaData();
     } else {
         receiverEngine_->StopDumpMediaData();
     }
-    if(DscreenHidumper::GetInstance().GetTransReDumpFlag() == true) {
+    if (DscreenHidumper::GetInstance().GetTransReDumpFlag()) {
         receiverEngine_->ReStartDumpMediaData();
         DscreenHidumper::GetInstance().SetTransReDumpFlagFalse();
     }
@@ -175,12 +175,12 @@ int32_t AVTransReceiverAdapter::OnDataAvailable(const std::shared_ptr<AVTransBuf
     if (adapterCallback_ != nullptr) {
         adapterCallback_->OnEngineDataDone(buffer);
 #ifdef DUMP_DSCREENREGION_FILE
-        if(DscreenHidumper::GetInstance().GetFlagStatus() == true) {
+        if (DscreenHidumper::GetInstance().GetFlagStatus()) {
             receiverEngine_->StartDumpMediaData();
         } else {
             receiverEngine_->StopDumpMediaData();
         }
-        if(DscreenHidumper::GetInstance().GetTransReDumpFlag() == true) {
+        if (DscreenHidumper::GetInstance().GetTransReDumpFlag()) {
             receiverEngine_->ReStartDumpMediaData();
             DscreenHidumper::GetInstance().SetTransReDumpFlagFalse();
         }
