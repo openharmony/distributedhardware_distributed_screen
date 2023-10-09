@@ -87,6 +87,7 @@ ohos_shared_library("distributed_screen_source") {
     "graphic_2d:libcomposer",
     "graphic_2d:surface",
     "hisysevent:libhisysevent",
+    "hitrace:hitrace_meter",
     "ipc:ipc_core",
     "player_framework:media_client",
     "safwk:system_ability_fwk",

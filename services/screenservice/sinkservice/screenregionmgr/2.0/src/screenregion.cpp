@@ -29,6 +29,8 @@
 #include "screen_client.h"
 #include "screen_client_common.h"
 #include "2.0/include/screenregionmgr.h"
+#include "hitrace_meter.h"
+#include "dscreen_hitrace.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -82,7 +84,10 @@ int32_t ScreenRegion::Release()
         DHLOGE("sink trans stop failed.");
     }
 
+    StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SINK_CLOSE_SESSION_START);
+    StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SINK_RELEASE_SESSION_START);
     ret = receiverAdapter_->Release();
+    FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
         DHLOGE("release av receiver adapter failed.");
     }

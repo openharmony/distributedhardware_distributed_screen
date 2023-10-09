@@ -19,6 +19,8 @@
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 #include "dscreen_hidumper.h"
+#include "hitrace_meter.h"
+#include "dscreen_hitrace.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -46,7 +48,10 @@ int32_t AVTransSenderAdapter::Release()
 {
     DHLOGI("Release enter");
     if (senderEngine_ != nullptr) {
+        StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_CLOSE_SESSION_START);
+        StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_RELEASE_SESSION_START);
         int32_t ret = senderEngine_->Release();
+        FinishTrace(DSCREEN_HITRACE_LABEL);
         if (ret != DH_AVT_SUCCESS) {
             DHLOGE("release av transport sender engine failed");
         }
@@ -166,7 +171,9 @@ int32_t AVTransSenderAdapter::PushData(const VideoData &video)
         DscreenHidumper::GetInstance().SetTransReDumpFlagFalse();
     }
 #endif
+    StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_START_ENCODER_START);
     int32_t ret = senderEngine_->PushData(transBuffer);
+    FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_AVT_SUCCESS) {
         DHLOGE("feed data to av transport sender failed, ret:%" PRId32, ret);
         return ERR_DH_AV_TRANS_FEED_DATA_FAILED;

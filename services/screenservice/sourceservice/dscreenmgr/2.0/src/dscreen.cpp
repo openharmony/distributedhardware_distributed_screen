@@ -20,6 +20,7 @@
 #include "2.0/include/av_sender_engine_adapter.h"
 #include "distributed_hardware_fwk_kit.h"
 #include "histreamer_query_tool.h"
+#include "hitrace_meter.h"
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
@@ -29,6 +30,7 @@
 #include "dscreen_log.h"
 #include "dscreen_hidumper.h"
 #include "dscreen_util.h"
+#include "dscreen_hitrace.h"
 #include "common/include/screen_manager_adapter.h"
 
 namespace OHOS {
@@ -355,7 +357,9 @@ int32_t DScreen::StartSenderEngine()
         DHLOGE("av transport sender adapter is null.");
         return ERR_DH_AV_TRANS_NULL_VALUE;
     }
+    StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_OPEN_SESSION_START);
     int32_t ret = senderAdapter_->CreateControlChannel(devId_);
+    FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
         DHLOGE("create av sender control channel failed.");
         return ERR_DH_AV_TRANS_CREATE_CHANNEL_FAILED;
