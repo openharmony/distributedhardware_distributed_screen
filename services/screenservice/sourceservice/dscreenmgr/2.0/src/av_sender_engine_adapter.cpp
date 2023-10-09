@@ -156,12 +156,12 @@ int32_t AVTransSenderAdapter::PushData(const VideoData &video)
     bufferMata->SetMetaItem(AVTransTag::VIDEO_PIXEL_FORMAT, video.format);
     bufferMata->SetMetaItem(AVTransTag::PRE_TIMESTAMP, std::to_string(video.timestamp));
 #ifdef DUMP_DSCREEN_FILE
-    if (DscreenHidumper::GetInstance().GetFlagStatus() == true) {
+    if (DscreenHidumper::GetInstance().GetFlagStatus()) {
         senderEngine_->StartDumpMediaData();
     } else {
         senderEngine_->StopDumpMediaData();
     }
-    if (DscreenHidumper::GetInstance().GetTransReDumpFlag() == true) {
+    if (DscreenHidumper::GetInstance().GetTransReDumpFlag()) {
         senderEngine_->ReStartDumpMediaData();
         DscreenHidumper::GetInstance().SetTransReDumpFlagFalse();
     }
