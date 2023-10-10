@@ -20,7 +20,6 @@
 #include "2.0/include/av_sender_engine_adapter.h"
 #include "distributed_hardware_fwk_kit.h"
 #include "histreamer_query_tool.h"
-#include "hitrace_meter.h"
 
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
@@ -30,7 +29,6 @@
 #include "dscreen_log.h"
 #include "dscreen_hidumper.h"
 #include "dscreen_util.h"
-#include "dscreen_hitrace.h"
 #include "common/include/screen_manager_adapter.h"
 
 namespace OHOS {

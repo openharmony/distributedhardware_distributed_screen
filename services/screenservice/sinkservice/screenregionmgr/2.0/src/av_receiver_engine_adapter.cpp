@@ -23,6 +23,8 @@
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 #include "dscreen_hidumper.h"
+#include "hitrace_meter.h"
+#include "dscreen_hitrace.h"
 
 namespace OHOS {
 namespace DistributedHardware {

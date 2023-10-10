@@ -29,8 +29,6 @@
 #include "screen_client.h"
 #include "screen_client_common.h"
 #include "2.0/include/screenregionmgr.h"
-#include "hitrace_meter.h"
-#include "dscreen_hitrace.h"
 
 namespace OHOS {
 namespace DistributedHardware {
