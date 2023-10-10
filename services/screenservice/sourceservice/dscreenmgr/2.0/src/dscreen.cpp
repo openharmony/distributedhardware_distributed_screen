@@ -357,9 +357,7 @@ int32_t DScreen::StartSenderEngine()
         DHLOGE("av transport sender adapter is null.");
         return ERR_DH_AV_TRANS_NULL_VALUE;
     }
-    StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_OPEN_SESSION_START);
     int32_t ret = senderAdapter_->CreateControlChannel(devId_);
-    FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
         DHLOGE("create av sender control channel failed.");
         return ERR_DH_AV_TRANS_CREATE_CHANNEL_FAILED;

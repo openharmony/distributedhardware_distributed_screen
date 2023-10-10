@@ -84,10 +84,7 @@ int32_t ScreenRegion::Release()
         DHLOGE("sink trans stop failed.");
     }
 
-    StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SINK_CLOSE_SESSION_START);
-    StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SINK_RELEASE_SESSION_START);
     ret = receiverAdapter_->Release();
-    FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
         DHLOGE("release av receiver adapter failed.");
     }

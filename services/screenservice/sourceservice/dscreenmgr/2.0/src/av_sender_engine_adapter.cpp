@@ -117,7 +117,9 @@ int32_t AVTransSenderAdapter::CreateControlChannel(const std::string& peerDevId)
         return ERR_DH_AV_TRANS_NULL_VALUE;
     }
     std::vector<std::string> dstDevIds = {peerDevId};
+    StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_OPEN_SESSION_START);
     int32_t ret = senderEngine_->CreateControlChannel(dstDevIds, ChannelAttribute{TransStrategy::LOW_LATANCY_STRATEGY});
+    FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_AVT_SUCCESS) {
         DHLOGE("create av transport sender channel failed, ret:%" PRId32, ret);
         return ERR_DH_AV_TRANS_CREATE_CHANNEL_FAILED;
