@@ -56,10 +56,11 @@ DScreen::DScreen(const std::string &devId, const std::string &dhId,
     dscreenCallback_ = dscreenCallback;
     SetState(DISABLED);
     taskThreadRunning_ = true;
+    watchdogFlag_ = false;
     taskQueueThread_ = std::thread(&DScreen::TaskThreadLoop, this);
     auto taskFunc = [this]() {
-        if (watchdogFalg_) {
-            watchdogFalg_ = false;
+        if (watchdogFlag_) {
+            watchdogFlag_ = false;
         } else {
             DHLOGE("Watchdog : Dscreen TaskThreadLoop dead.");
             _Exit(0);
@@ -573,6 +574,7 @@ void DScreen::TaskThreadLoop()
     DHLOGI("DScreen taskThread start. devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
     while (taskThreadRunning_) {
+        watchdogFlag_ = true;
         std::shared_ptr<Task> task;
         {
             std::unique_lock<std::mutex> lock(taskQueueMtx_);
@@ -590,7 +592,6 @@ void DScreen::TaskThreadLoop()
         }
         DHLOGD("run task, task queue size: %zu", taskQueue_.size());
         HandleTask(task);
-        watchdogFalg_ = true;
     }
 }
 

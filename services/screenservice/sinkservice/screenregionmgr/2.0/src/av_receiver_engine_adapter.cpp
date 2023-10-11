@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
+ */
+/*
  * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -174,6 +177,11 @@ int32_t AVTransReceiverAdapter::OnDataAvailable(const std::shared_ptr<AVTransBuf
 {
     if (adapterCallback_ != nullptr) {
         adapterCallback_->OnEngineDataDone(buffer);
+    }
+    if (receiverEngine_ == nullptr) {
+        DHLOGE("av transport receiver engine is null");
+        return ERR_DH_AV_TRANS_NULL_VALUE;
+    }
 #ifdef DUMP_DSCREENREGION_FILE
         if (DscreenHidumper::GetInstance().GetFlagStatus()) {
             receiverEngine_->StartDumpMediaData();
@@ -185,7 +193,6 @@ int32_t AVTransReceiverAdapter::OnDataAvailable(const std::shared_ptr<AVTransBuf
             DscreenHidumper::GetInstance().SetTransReDumpFlagFalse();
         }
 #endif
-    }
     return DH_AVT_SUCCESS;
 }
 } // namespace DistributedHardware

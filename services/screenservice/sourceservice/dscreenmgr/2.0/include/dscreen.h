@@ -146,7 +146,7 @@ private:
     std::mutex taskQueueMtx_;
     std::queue<std::shared_ptr<Task>> taskQueue_;
     bool taskThreadRunning_;
-    bool watchdogFalg_;
+    bool watchdogFlag_;
     std::shared_ptr<AVTransSenderAdapter> senderAdapter_;
     OHOS::sptr<OHOS::SyncFence> syncFence_ = SyncFence::INVALID_FENCE;
 
