@@ -86,6 +86,7 @@ ohos_shared_library("distributed_screen_source") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_2d:libcomposer",
     "graphic_2d:surface",
+    "hicollie:libhicollie",
     "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "player_framework:media_client",

@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
+ */
+/*
  * Copyright (c) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -243,7 +246,7 @@ void DscreenHidumper::SaveFile(std::string file, const VideoData &video)
     }
     if ((static_cast<size_t>(fileSize) + video.size) < DUMP_FILE_MAX_SIZE) {
         SetFileFlagFalse();
-        ofs.write((const char *)(video.data), video.size);
+        ofs.write(reinterpret_cast<const char *>(video.data), video.size);
     } else {
         SetFileFlagTrue();
     }

@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
+ */
+/*
  * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +96,7 @@ const std::string JPEG_SESSION_NAME = "ohos.dhardware.dscreen.jpeg";
 /* Screen dump data file path name */
 const std::string DUMP_FILE_PATH = "/data/data/dscreen";
 
-/*YUV*/
+/* YUV */
 constexpr int32_t YR_PARAM = 66;
 constexpr int32_t YG_PARAM = 129;
 constexpr int32_t YB_PARAM = 25;
@@ -225,6 +228,8 @@ constexpr int32_t JPEG_QUALITY = 80;
 constexpr uint32_t BIT_RATE = 12000000;
 constexpr int32_t WAIT_TIMEOUT_MS = 5000;
 constexpr uint32_t SYSTEM_PARAM_VALUE_SIZE = 50;
+constexpr uint64_t WATCHDOG_INTERVAL_TIME_MS = 20 * 1000;
+constexpr uint64_t WATCHDOG_DELAY_TIME_MS = 5 * 1000;
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

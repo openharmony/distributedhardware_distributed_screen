@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
+ */
+/*
  * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +32,7 @@
 #include "dscreen_log.h"
 #include "dscreen_hidumper.h"
 #include "dscreen_util.h"
+#include "xcollie/watchdog.h"
 #include "common/include/screen_manager_adapter.h"
 
 namespace OHOS {
@@ -53,6 +57,16 @@ DScreen::DScreen(const std::string &devId, const std::string &dhId,
     SetState(DISABLED);
     taskThreadRunning_ = true;
     taskQueueThread_ = std::thread(&DScreen::TaskThreadLoop, this);
+    auto taskFunc = [this]() {
+        if (watchdogFalg_) {
+            watchdogFalg_ = false;
+        } else {
+            DHLOGE("Watchdog : Dscreen TaskThreadLoop dead.");
+            _Exit(0);
+        }
+    };
+    OHOS::HiviewDFX::Watchdog::GetInstance().RunPeriodicalTask("dscreenwatchdog", taskFunc, WATCHDOG_INTERVAL_TIME_MS,
+        WATCHDOG_DELAY_TIME_MS);
 }
 
 DScreen::~DScreen()
@@ -576,6 +590,7 @@ void DScreen::TaskThreadLoop()
         }
         DHLOGD("run task, task queue size: %zu", taskQueue_.size());
         HandleTask(task);
+        watchdogFalg_ = true;
     }
 }
 

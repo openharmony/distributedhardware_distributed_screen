@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
+ */
+/*
  * Copyright (c) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,6 +146,7 @@ private:
     std::mutex taskQueueMtx_;
     std::queue<std::shared_ptr<Task>> taskQueue_;
     bool taskThreadRunning_;
+    bool watchdogFalg_;
     std::shared_ptr<AVTransSenderAdapter> senderAdapter_;
     OHOS::sptr<OHOS::SyncFence> syncFence_ = SyncFence::INVALID_FENCE;
 
