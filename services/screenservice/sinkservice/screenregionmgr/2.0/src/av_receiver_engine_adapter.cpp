@@ -67,6 +67,7 @@ int32_t AVTransReceiverAdapter::Release()
         StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SINK_RELEASE_SESSION_START);
         int32_t ret = receiverEngine_->Release();
         FinishTrace(DSCREEN_HITRACE_LABEL);
+        FinishTrace(DSCREEN_HITRACE_LABEL);
         if (ret != DH_AVT_SUCCESS) {
             DHLOGE("Release av transport receiver engine failed");
         }
