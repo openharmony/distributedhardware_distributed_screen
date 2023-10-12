@@ -29,6 +29,8 @@
 #include "screen_client.h"
 #include "screen_client_common.h"
 #include "2.0/include/screenregionmgr.h"
+#include "hitrace_meter.h"
+#include "dscreen_hitrace.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -349,7 +351,9 @@ void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer
     }
 #endif
     BufferFlushConfig flushConfig = { {0, 0, wsBuffer->GetWidth(), wsBuffer->GetHeight()}, 0};
+    StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SINK_PUSH_DATA_TO_WINDOW_START);
     surfaceErr = windowSurface_->FlushBuffer(wsBuffer, -1, flushConfig);
+    FinishTrace(DSCREEN_HITRACE_LABEL);
     if (surfaceErr != SURFACE_ERROR_OK) {
         DHLOGE("surface flush buffer failed, surfaceErr: %d.", surfaceErr);
         windowSurface_->CancelBuffer(wsBuffer);
