@@ -101,7 +101,7 @@ int32_t DScreenSourceProxy::RegisterDistributedHardware(const std::string &devId
     }
 
     if (!data.WriteString(devId) || !data.WriteString(dhId) ||
-        !data.WriteString(param.version) || !data.WriteString(param.attrs) || !data.WriteString(reqId)) {
+        !data.WriteString(param.sinkVersion) || !data.WriteString(param.sinkAttrs) || !data.WriteString(reqId)) {
         DHLOGE("Write param failed.");
         return ERR_DH_SCREEN_SA_WRITEPARAM_FAILED;
     }
@@ -214,8 +214,8 @@ bool DScreenSourceProxy::CheckRegParams(const std::string &devId, const std::str
         DHLOGE("DScreenSourceProxy CheckRegParams reqId is invalid.");
         return false;
     }
-    if (param.version.empty() || param.version.size() > PARAM_MAX_SIZE || param.attrs.empty() ||
-        param.attrs.size() > PARAM_MAX_SIZE) {
+    if (param.sinkVersion.empty() || param.sinkVersion.size() > PARAM_MAX_SIZE || param.sinkAttrs.empty() ||
+        param.sinkAttrs.size() > PARAM_MAX_SIZE) {
         DHLOGE("DScreenSourceProxy CheckRegParams param is invalid.");
         return false;
     }

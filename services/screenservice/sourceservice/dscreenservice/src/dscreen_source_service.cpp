@@ -125,16 +125,16 @@ int32_t DScreenSourceService::ReleaseSource()
 int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
     const EnableParam &param, const std::string &reqId)
 {
-    DHLOGI("Register source distributed screen, peer dscreen version: %s", param.version.c_str());
+    DHLOGI("Register source distributed screen, peer dscreen version: %s", param.sinkVersion.c_str());
     int32_t ret = DH_SUCCESS;
-    if (IsSupportAVTransEngine(param.version)) {
+    if (IsSupportAVTransEngine(param.sinkVersion)) {
         ret = V2_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
     } else {
         ret = V1_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
     }
     if (ret != DH_SUCCESS) {
         DHLOGE("enable distributedScreen failed. devId: %s, dhId: %s, reqId: %s, param attrs: %s",
-            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str(), param.attrs.c_str());
+            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str(), param.sinkAttrs.c_str());
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ret, GetAnonyString(devId).c_str(),
             GetAnonyString(dhId).c_str(), "enable distributedScreen failed.");
         return ERR_DH_SCREEN_SA_ENABLE_FAILED;

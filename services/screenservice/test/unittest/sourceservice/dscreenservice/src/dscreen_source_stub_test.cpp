@@ -137,8 +137,8 @@ HWTEST_F(DScreenSourceStubTest, RegisterDistributedHardware_001, TestSize.Level1
     DScreenSourceProxy sourceProxy(sourceStubPtr);
 
     EnableParam param;
-    param.version = "";
-    param.attrs = "";
+    param.sinkVersion = "";
+    param.sinkAttrs = "";
     int32_t ret = sourceProxy.RegisterDistributedHardware("", "dhId000", param, "reqId000");
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 
@@ -163,11 +163,11 @@ HWTEST_F(DScreenSourceStubTest, RegisterDistributedHardware_001, TestSize.Level1
     ret = sourceProxy.RegisterDistributedHardware("devId000", "dhId000", param, "reqId000");
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 
-    param.version = "1";
+    param.sinkVersion = "1";
     ret = sourceProxy.RegisterDistributedHardware("devId000", "dhId000", param, "reqId000");
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 
-    param.attrs = "attrs";
+    param.sinkAttrs = "attrs";
     ret = sourceProxy.RegisterDistributedHardware("devId000", "dhId000", param, "reqId000");
     EXPECT_EQ(DH_SUCCESS, ret);
 }

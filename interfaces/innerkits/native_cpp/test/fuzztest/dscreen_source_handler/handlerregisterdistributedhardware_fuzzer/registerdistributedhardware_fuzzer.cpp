@@ -34,8 +34,8 @@ void RegisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
     std::string version(reinterpret_cast<const char*>(data), size);
     std::string attrs(reinterpret_cast<const char*>(data), size);
     EnableParam param;
-    param.version = version;
-    param.attrs = attrs;
+    param.sinkVersion = version;
+    param.sinkAttrs = attrs;
     std::shared_ptr<RegisterCallback> callback = std::make_shared<ComponentEnable>();
 
     DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
