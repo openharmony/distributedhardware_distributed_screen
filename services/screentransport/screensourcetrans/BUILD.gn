@@ -17,6 +17,12 @@ import(
     "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
 
 ohos_shared_library("distributed_screen_sourcetrans") {
+  sanitize = {
+    boundary_sanitize = true
+    integer_overflow = true
+    ubsan = true
+  }
+  stack_protector_ret = true
   include_dirs = [
     "//third_party/libjpeg-turbo",
     "${fwk_common_path}/utils/include",
