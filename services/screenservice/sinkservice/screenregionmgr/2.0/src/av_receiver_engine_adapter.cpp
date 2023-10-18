@@ -180,18 +180,22 @@ int32_t AVTransReceiverAdapter::OnDataAvailable(const std::shared_ptr<AVTransBuf
 {
     if (adapterCallback_ != nullptr) {
         adapterCallback_->OnEngineDataDone(buffer);
-#ifdef DUMP_DSCREENREGION_FILE
-        if (DscreenHidumper::GetInstance().GetFlagStatus()) {
-            receiverEngine_->StartDumpMediaData();
-        } else {
-            receiverEngine_->StopDumpMediaData();
-        }
-        if (DscreenHidumper::GetInstance().GetTransReDumpFlag()) {
-            receiverEngine_->ReStartDumpMediaData();
-            DscreenHidumper::GetInstance().SetTransReDumpFlagFalse();
-        }
-#endif
     }
+    if (receiverEngine_ == nullptr) {
+        DHLOGE("av transport receiver engine is null");
+        return ERR_DH_AV_TRANS_NULL_VALUE;
+    }
+#ifdef DUMP_DSCREENREGION_FILE
+    if (DscreenHidumper::GetInstance().GetFlagStatus()) {
+        receiverEngine_->StartDumpMediaData();
+    } else {
+        receiverEngine_->StopDumpMediaData();
+    }
+    if (DscreenHidumper::GetInstance().GetTransReDumpFlag()) {
+        receiverEngine_->ReStartDumpMediaData();
+        DscreenHidumper::GetInstance().SetTransReDumpFlagFalse();
+    }
+#endif
     return DH_AVT_SUCCESS;
 }
 } // namespace DistributedHardware

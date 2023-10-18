@@ -243,7 +243,7 @@ void DscreenHidumper::SaveFile(std::string file, const VideoData &video)
     }
     if ((static_cast<size_t>(fileSize) + video.size) < DUMP_FILE_MAX_SIZE) {
         SetFileFlagFalse();
-        ofs.write((const char *)(video.data), video.size);
+        ofs.write(reinterpret_cast<const char *>(video.data), video.size);
     } else {
         SetFileFlagTrue();
     }

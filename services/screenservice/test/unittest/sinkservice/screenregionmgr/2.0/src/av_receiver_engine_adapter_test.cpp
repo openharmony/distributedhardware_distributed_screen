@@ -150,11 +150,13 @@ HWTEST_F(AVReceiverEngineAdapterTest, OnReceiverEvent_001, TestSize.Level1)
     std::shared_ptr<AVTransMessage> message = nullptr;
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->OnMessageReceived(message));
     std::shared_ptr<AVTransBuffer> buffer = nullptr;
-    EXPECT_EQ(DH_SUCCESS, receiverAdapter_->OnDataAvailable(buffer));
+    EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, receiverAdapter_->OnDataAvailable(buffer));
     receiverAdapter_->adapterCallback_ = std::make_shared<MockAVReceiverAdapterCallback>();
+    receiverAdapter_->receiverEngine_ = std::make_shared<MockIAVReceiverEngine>();
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->OnReceiverEvent(event));
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->OnMessageReceived(message));
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->OnDataAvailable(buffer));
+    EXPECT_EQ(DH_SUCCESS, receiverAdapter_->Release());
 }
 } // namespace DistributedHardware
 } // namespace OHOS

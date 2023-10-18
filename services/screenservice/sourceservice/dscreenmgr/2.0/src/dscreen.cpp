@@ -29,6 +29,7 @@
 #include "dscreen_log.h"
 #include "dscreen_hidumper.h"
 #include "dscreen_util.h"
+#include "xcollie/watchdog.h"
 #include "common/include/screen_manager_adapter.h"
 
 namespace OHOS {
@@ -52,7 +53,18 @@ DScreen::DScreen(const std::string &devId, const std::string &dhId,
     dscreenCallback_ = dscreenCallback;
     SetState(DISABLED);
     taskThreadRunning_ = true;
+    watchdogFlag_ = false;
     taskQueueThread_ = std::thread(&DScreen::TaskThreadLoop, this);
+    auto taskFunc = [this]() {
+        if (watchdogFlag_) {
+            watchdogFlag_ = false;
+        } else {
+            DHLOGE("Watchdog : Dscreen TaskThreadLoop dead.");
+            _Exit(0);
+        }
+    };
+    OHOS::HiviewDFX::Watchdog::GetInstance().RunPeriodicalTask("dscreenwatchdog", taskFunc, WATCHDOG_INTERVAL_TIME_MS,
+        WATCHDOG_DELAY_TIME_MS);
 }
 
 DScreen::~DScreen()
@@ -559,6 +571,7 @@ void DScreen::TaskThreadLoop()
     DHLOGI("DScreen taskThread start. devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
     while (taskThreadRunning_) {
+        watchdogFlag_ = true;
         std::shared_ptr<Task> task;
         {
             std::unique_lock<std::mutex> lock(taskQueueMtx_);
