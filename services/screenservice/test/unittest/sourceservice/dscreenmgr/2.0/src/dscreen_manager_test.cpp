@@ -166,12 +166,12 @@ HWTEST_F(DScreenManagerTestV2, OnUnregResult_001, TestSize.Level1)
  */
 HWTEST_F(DScreenManagerTestV2, EnableDistributedScreen_001, TestSize.Level1)
 {
-    int32_t ret = DScreenManager::GetInstance().EnableDistributedScreen("", "", EnableParam{"", ""}, "");
+    int32_t ret = DScreenManager::GetInstance().EnableDistributedScreen("", "", EnableParam{"", "", "", ""}, "");
     EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_FAILED, ret);
 
     std::string devId = "devId000";
     std::string dhId = "dhId000";
-    EnableParam param = {"2.0", "attrs000"};
+    EnableParam param = {"", "", "2.0", "attrs000"};
     std::string reqId = "reqId000";
 
     DScreenManager::GetInstance().dScreenCallback_ = std::make_shared<DScreenCallback>();
