@@ -170,7 +170,7 @@ HWTEST_F(DScreenManagerTestV1, EnableDistributedScreen_001, TestSize.Level1)
     int32_t ret = DScreenManager::GetInstance().UnInit();
     EXPECT_EQ(DH_SUCCESS, ret);
 
-    ret = DScreenManager::GetInstance().EnableDistributedScreen("", "", EnableParam{"", ""}, "");
+    ret = DScreenManager::GetInstance().EnableDistributedScreen("", "", EnableParam{"", "", "", ""}, "");
     EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_FAILED, ret);
 
     ret = DScreenManager::GetInstance().Init();
@@ -178,7 +178,7 @@ HWTEST_F(DScreenManagerTestV1, EnableDistributedScreen_001, TestSize.Level1)
 
     std::string devId = "devId000";
     std::string dhId = "dhId000";
-    EnableParam param = {"2.0", "attrs000"};
+    EnableParam param = {"", "", "2.0", "attrs000"};
     std::string reqId = "reqId000";
     ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
     EXPECT_EQ(DH_SUCCESS, ret);
