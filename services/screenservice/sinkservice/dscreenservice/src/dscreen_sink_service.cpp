@@ -122,7 +122,7 @@ void DScreenSinkService::DScreenNotify(const std::string &devId, int32_t eventCo
 
 int32_t DScreenSinkService::Dump(int32_t fd, const std::vector<std::u16string>& args)
 {
-    DHLOGI("DScreenSinkService  Dump.");
+    DHLOGI("DScreenSinkService Dump.");
     (void)args;
     std::string result_v1;
     V1_0::ScreenRegionManager::GetInstance().GetScreenDumpInfo(result_v1);

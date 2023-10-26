@@ -39,12 +39,12 @@ void ConfigDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
 
     sptr<ISystemAbilityManager> samgr =
             SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (samgr == nullptr) {
+    if (!samgr) {
         return;
     }
 
     sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_DM_SA_ID);
-    if (remoteObject == nullptr) {
+    if (!remoteObject) {
         return;
     }
 

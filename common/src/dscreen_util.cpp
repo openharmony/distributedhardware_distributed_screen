@@ -49,34 +49,34 @@ int32_t GetLocalDeviceNetworkId(std::string &networkId)
 
 std::string GetRandomID()
 {
-    static std::random_device rd;
+    static std::random_device randomDevice;
     static std::uniform_int_distribution<uint64_t> dist(0ULL, 0xFFFFFFFFFFFFFFFFULL);
-    uint64_t ab = dist(rd);
-    uint64_t cd = dist(rd);
+    uint64_t ab = dist(randomDevice);
+    uint64_t cd = dist(randomDevice);
     uint32_t a, b, c, d;
-    std::stringstream ss;
+    std::stringstream stringStream;
     ab = (ab & 0xFFFFFFFFFFFF0FFFULL) | 0x0000000000004000ULL;
     cd = (cd & 0x3FFFFFFFFFFFFFFFULL) | 0x8000000000000000ULL;
     a = (ab >> 32U);
     b = (ab & 0xFFFFFFFFU);
     c = (cd >> 32U);
     d = (cd & 0xFFFFFFFFU);
-    ss << std::hex << std::nouppercase << std::setfill('0');
-    ss << std::setw(WORD_WIDTH_8) << (a);
-    ss << std::setw(WORD_WIDTH_4) << (b >> 16U);
-    ss << std::setw(WORD_WIDTH_4) << (b & 0xFFFFU);
-    ss << std::setw(WORD_WIDTH_4) << (c >> 16U);
-    ss << std::setw(WORD_WIDTH_4) << (c & 0xFFFFU);
-    ss << std::setw(WORD_WIDTH_8) << d;
+    stringStream << std::hex << std::nouppercase << std::setfill('0');
+    stringStream << std::setw(WORD_WIDTH_8) << (a);
+    stringStream << std::setw(WORD_WIDTH_4) << (b >> 16U);
+    stringStream << std::setw(WORD_WIDTH_4) << (b & 0xFFFFU);
+    stringStream << std::setw(WORD_WIDTH_4) << (c >> 16U);
+    stringStream << std::setw(WORD_WIDTH_4) << (c & 0xFFFFU);
+    stringStream << std::setw(WORD_WIDTH_8) << d;
 
-    return ss.str();
+    return stringStream.str();
 }
 
 std::string GetAnonyString(const std::string &value)
 {
     constexpr size_t INT32_SHORT_ID_LENGTH = 20;
     constexpr size_t INT32_MIN_ID_LENGTH = 3;
-    std::string res;
+    std::string result;
     std::string tmpStr("******");
     size_t strLen = value.length();
     if (strLen < INT32_MIN_ID_LENGTH) {
@@ -84,17 +84,17 @@ std::string GetAnonyString(const std::string &value)
     }
 
     if (strLen <= INT32_SHORT_ID_LENGTH) {
-        res += value[0];
-        res += tmpStr;
-        res += value[strLen - 1];
+        result += value[0];
+        result += tmpStr;
+        result += value[strLen - 1];
     } else {
         constexpr size_t INT32_PLAINTEXT_LENGTH = 4;
-        res.append(value, 0, INT32_PLAINTEXT_LENGTH);
-        res += tmpStr;
-        res.append(value, strLen - INT32_PLAINTEXT_LENGTH, INT32_PLAINTEXT_LENGTH);
+        result.append(value, 0, INT32_PLAINTEXT_LENGTH);
+        result += tmpStr;
+        result.append(value, strLen - INT32_PLAINTEXT_LENGTH, INT32_PLAINTEXT_LENGTH);
     }
 
-    return res;
+    return result;
 }
 
 std::string GetInterruptString(const std::string &value)

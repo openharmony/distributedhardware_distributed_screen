@@ -28,7 +28,7 @@ namespace DistributedHardware {
 constexpr int32_t DISTRIBUTED_HARDWARE_DM_SA_ID = 4802;
 void DScreenNotifyFuzzTest(const uint8_t* data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((size < sizeof(int32_t)) || (data == nullptr)) {
         return;
     }
 

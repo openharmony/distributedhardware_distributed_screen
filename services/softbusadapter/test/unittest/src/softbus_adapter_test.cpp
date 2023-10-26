@@ -30,16 +30,17 @@ void SoftbusAdapterTest::TearDownTestCase(void) {}
 void SoftbusAdapterTest::SetUp(void)
 {
     uint64_t tokenId;
-    const char *perms[2];
-    perms[0] = OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER;
-    perms[1] = OHOS_PERMISSION_DISTRIBUTED_DATASYNC;
+    const char *perms[] = {
+        OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER,
+        OHOS_PERMISSION_DISTRIBUTED_DATASYNC
+    };
     NativeTokenInfoParams infoInstance = {
         .dcapsNum = 0,
         .permsNum = 2,
         .aclsNum = 0,
-        .dcaps = NULL,
+        .dcaps = nullptr,
         .perms = perms,
-        .acls = NULL,
+        .acls = nullptr,
         .processName = "softbus_adapter_test",
         .aplStr = "system_basic",
     };

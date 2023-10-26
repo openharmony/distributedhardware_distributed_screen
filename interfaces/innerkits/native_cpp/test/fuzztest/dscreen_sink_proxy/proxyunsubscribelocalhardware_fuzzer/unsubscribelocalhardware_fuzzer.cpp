@@ -34,13 +34,13 @@ void UnsubscribeLocalHardwareFuzzTest(const uint8_t* data, size_t size)
 
     std::string dhId(reinterpret_cast<const char*>(data), size);
 
-    sptr<ISystemAbilityManager> samgr =
+    sptr<ISystemAbilityManager> saMgr =
             SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (samgr == nullptr) {
+    if (saMgr == nullptr) {
         return;
     }
 
-    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_DM_SA_ID);
+    sptr<IRemoteObject> remoteObject = saMgr->GetSystemAbility(DISTRIBUTED_HARDWARE_DM_SA_ID);
     if (remoteObject == nullptr) {
         return;
     }

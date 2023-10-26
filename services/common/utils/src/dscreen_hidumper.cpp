@@ -62,7 +62,9 @@ bool DscreenHidumper::Dump(const std::vector<std::string> &args, std::string &re
     if (args.empty()) {
         ShowHelp(result);
         return true;
-    } else if (args.size() > 1) {
+    }
+
+    if (args.size() > 1) {
         ShowIllegalInfomation(result);
         return true;
     }
@@ -73,18 +75,18 @@ bool DscreenHidumper::Dump(const std::vector<std::string> &args, std::string &re
 int32_t DscreenHidumper::ProcessDump(const std::string &args, std::string &result)
 {
     DHLOGI("Process dump.");
-    HidumpFlag hf = HidumpFlag::UNKNOWN;
+    HidumpFlag hidumpFlag = HidumpFlag::UNKNOWN;
     auto operatorIter = ARGS_MAP.find(args);
     if (operatorIter != ARGS_MAP.end()) {
-        hf = operatorIter->second;
+        hidumpFlag = operatorIter->second;
     }
 
-    if (hf == HidumpFlag::GET_HELP) {
+    if (hidumpFlag == HidumpFlag::GET_HELP) {
         ShowHelp(result);
         return DH_SUCCESS;
     }
     result.clear();
-    switch (hf) {
+    switch (hidumpFlag) {
         case HidumpFlag::DUMP_SCREEN_DATA: {
             return DumpScreenData(result);
         }

@@ -62,12 +62,12 @@ int32_t DScreenSourceCallbackStub::OnNotifyRegResultInner(MessageParcel &data, M
     std::string dhId = data.ReadString();
     std::string reqId = data.ReadString();
     int32_t status = data.ReadInt32();
-    std::string resultData = data.ReadString();
-    if (!CheckParams(devId, dhId, reqId, resultData)) {
+    std::string resultDataStr = data.ReadString();
+    if (!CheckParams(devId, dhId, reqId, resultDataStr)) {
         DHLOGE("OnNotifyRegResultInner error: Invalid parameter.");
         return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
     }
-    int32_t ret = OnNotifyRegResult(devId, dhId, reqId, status, resultData);
+    int32_t ret = OnNotifyRegResult(devId, dhId, reqId, status, resultDataStr);
     return ret;
 }
 

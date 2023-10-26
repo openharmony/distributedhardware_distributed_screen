@@ -31,13 +31,12 @@ void OnRemoteSourceSvrDiedFuzzTest(const uint8_t* data, size_t size)
         return;
     }
 
-    sptr<ISystemAbilityManager> samgr =
-            SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (samgr == nullptr) {
+    sptr<ISystemAbilityManager> systemAbilityManager = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (systemAbilityManager == nullptr) {
         return;
     }
 
-    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_DM_SA_ID);
+    sptr<IRemoteObject> remoteObject = systemAbilityManager->GetSystemAbility(DISTRIBUTED_HARDWARE_DM_SA_ID);
     if (remoteObject == nullptr) {
         return;
     }

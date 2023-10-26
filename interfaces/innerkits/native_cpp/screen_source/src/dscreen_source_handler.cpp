@@ -152,7 +152,7 @@ int32_t DScreenSourceHandler::RegisterDistributedHardware(const std::string &dev
         GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(proxyMutex_);
     if (dScreenSourceProxy_ == nullptr) {
-        DHLOGE("screen source proxy not init.");
+        DHLOGE("screen source proxy not init");
         return ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT;
     }
     if (dScreenSourceCallback_ == nullptr) {

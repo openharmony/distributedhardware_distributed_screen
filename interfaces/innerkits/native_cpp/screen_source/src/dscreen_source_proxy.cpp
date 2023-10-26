@@ -36,7 +36,7 @@ int32_t DScreenSourceProxy::InitSource(const std::string &params, const sptr<IDS
     }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
-        DHLOGE("DScreenSourceProxy remote service null");
+        DHLOGE("DScreenSourceProxy remote service null.");
         return DSCREEN_BAD_VALUE;
     }
 
@@ -44,7 +44,7 @@ int32_t DScreenSourceProxy::InitSource(const std::string &params, const sptr<IDS
     MessageParcel reply;
     MessageOption option;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
-        DHLOGE("WriteInterfaceToken failed");
+        DHLOGE("WriteInterfaceToken Failed.");
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 
@@ -70,7 +70,7 @@ int32_t DScreenSourceProxy::ReleaseSource()
     MessageParcel reply;
     MessageOption option;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
-        DHLOGE("WriteInterfaceToken failed");
+        DHLOGE("WriteInterfaceToken failed.");
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 
@@ -88,7 +88,7 @@ int32_t DScreenSourceProxy::RegisterDistributedHardware(const std::string &devId
     }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
-        DHLOGE("DScreenSourceProxy remote service null");
+        DHLOGE("DScreenSourceProxy remote service null!");
         return DSCREEN_BAD_VALUE;
     }
 
@@ -96,7 +96,7 @@ int32_t DScreenSourceProxy::RegisterDistributedHardware(const std::string &devId
     MessageParcel reply;
     MessageOption option;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
-        DHLOGE("WriteInterfaceToken failed");
+        DHLOGE("WriteInterfaceToken failed!");
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 
@@ -120,7 +120,7 @@ int32_t DScreenSourceProxy::UnregisterDistributedHardware(const std::string &dev
     }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
-        DHLOGE("DScreenSourceProxy remote service null");
+        DHLOGE("DScreenSourceProxy remote service is null");
         return DSCREEN_BAD_VALUE;
     }
 
@@ -128,7 +128,7 @@ int32_t DScreenSourceProxy::UnregisterDistributedHardware(const std::string &dev
     MessageParcel reply;
     MessageOption option;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
-        DHLOGE("WriteInterfaceToken failed");
+        DHLOGE("WriteInterfaceToken Failed");
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 
@@ -190,7 +190,7 @@ void DScreenSourceProxy::DScreenNotify(const std::string &devId, int32_t eventCo
     MessageParcel reply;
     MessageOption option = { MessageOption::TF_ASYNC };
     if (!data.WriteInterfaceToken(GetDescriptor())) {
-        DHLOGE("WriteInterfaceToken failed");
+        DHLOGE("WriteInterfaceToken failed.");
         return;
     }
 
