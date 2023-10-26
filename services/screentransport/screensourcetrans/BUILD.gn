@@ -63,12 +63,6 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "//third_party/libjpeg-turbo:turbojpeg_static",
   ]
 
-  if (!distributed_screen_common) {
-    cflags = [ "-DLIBYUV" ]
-    include_dirs += [ "//third_party/libyuv/files/include" ]
-    deps += [ "//third_party/libyuv:yuv" ]
-  }
-
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"dscreensourcetrans\"",
@@ -87,6 +81,11 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "hitrace:hitrace_meter",
     "player_framework:media_client",
   ]
+
+  if (!distributed_screen_common) {
+    cflags = [ "-DLIBYUV" ]
+    external_deps += [ "libyuv:yuv" ]
+  }
 
   subsystem_name = "distributedhardware"
 
