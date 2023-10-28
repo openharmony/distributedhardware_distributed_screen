@@ -75,9 +75,9 @@ void DHLog(DHLogLevel logLevel, const char *fmt, ...)
 
     (void)memset_s(&arg, sizeof(va_list), 0, sizeof(va_list));
     va_start(arg, fmt);
-    int32_t ret = vsprintf_s(logBuf, sizeof(logBuf), fmt, arg);
+    int32_t result = vsprintf_s(logBuf, sizeof(logBuf), fmt, arg);
     va_end(arg);
-    if (ret < 0) {
+    if (result < 0) {
         DHLogOut(logLevel, "DH log length error.");
         return;
     }

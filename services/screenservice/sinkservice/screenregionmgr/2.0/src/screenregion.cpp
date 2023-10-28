@@ -185,36 +185,36 @@ int32_t ScreenRegion::SetUp(const std::string &content)
 int32_t ScreenRegion::ConfigWindow()
 {
     DHLOGI("ConfigWindow enter");
-    std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
-    windowProperty->displayId = displayId_;
     if (mapRelation_ == nullptr) {
         DHLOGE("mapRelation is nullptr.");
         return ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED;
     }
     ScreenRect screenRect = mapRelation_->GetScreenRect();
-    windowProperty->startX = screenRect.startX;
-    windowProperty->startY = screenRect.startY;
-    windowProperty->width = screenRect.width;
-    windowProperty->height = screenRect.height;
+    std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>(WindowProperty {
+        .displayId = displayId_,
+        .startX = screenRect.startX,
+        .startY = screenRect.startY,
+        .width = screenRect.width,
+        .height = screenRect.height
+    });
     windowProperty_ = windowProperty;
-
     windowId_ = ScreenClient::GetInstance().AddWindow(windowProperty);
     if (windowId_ < 0) {
-        DHLOGE("AddWindow failed.");
-        ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, "AddWindow failed.");
+        DHLOGE("Add window failed.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, "Add window failed.");
         return ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED;
     }
     int32_t ret = ScreenClient::GetInstance().ShowWindow(windowId_);
     if (ret != DH_SUCCESS) {
-        DHLOGE("show window failed.");
-        ReportOptFail(DSCREEN_OPT_FAIL, ret, "show window failed.");
+        DHLOGE("Show window failed.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ret, "Show window failed.");
         return ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED;
     }
 
     sptr<Surface> surface = ScreenClient::GetInstance().GetSurface(windowId_);
     if (surface == nullptr) {
-        DHLOGE("get window surface failed.");
-        ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, "get window surface failed.");
+        DHLOGE("Get window surface failed.");
+        ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED, "Get window surface failed.");
         return ERR_DH_SCREEN_SA_DSCREEN_SCREENGION_SETUP_FAILED;
     }
     windowSurface_ = surface;
@@ -232,8 +232,8 @@ void ScreenRegion::PublishMessage(const DHTopic topic, const uint64_t &screenId,
     json messageJosn;
     std::string message;
     messageJosn[SOURCE_WIN_ID] = screenId;
-    messageJosn[SOURCE_DEV_ID] = remoteDevId;
     messageJosn[SINK_SHOW_WIN_ID] = windowId;
+    messageJosn[SOURCE_DEV_ID] = remoteDevId;
     messageJosn[SINK_PROJ_SHOW_WIDTH] = windowProperty->width;
     messageJosn[SINK_PROJ_SHOW_HEIGHT] = windowProperty->height;
     messageJosn[SINK_WIN_SHOW_X] = windowProperty->startX;
@@ -372,14 +372,14 @@ std::string ScreenRegion::GetRemoteDevId()
     return remoteDevId_;
 }
 
-std::shared_ptr<VideoParam> ScreenRegion::GetVideoParam()
-{
-    return videoParam_;
-}
-
 int32_t ScreenRegion::GetWindowId()
 {
     return windowId_;
+}
+
+std::shared_ptr<VideoParam> ScreenRegion::GetVideoParam()
+{
+    return videoParam_;
 }
 
 std::shared_ptr<WindowProperty> ScreenRegion::GetWindowProperty()

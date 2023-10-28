@@ -35,7 +35,7 @@ int32_t DScreenSinkProxy::InitSink(const std::string &params)
     }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
-        DHLOGE("DScreenSinkProxy remote service null");
+        DHLOGE("DScreenSinkProxy remote service nullptr");
         return DSCREEN_BAD_VALUE;
     }
     MessageParcel data;
@@ -60,7 +60,7 @@ int32_t DScreenSinkProxy::ReleaseSink()
 {
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
-        DHLOGE("DScreenSinkProxy remote service null");
+        DHLOGE("DScreenSinkProxy remote service null.");
         return DSCREEN_BAD_VALUE;
     }
     MessageParcel data;
@@ -114,14 +114,14 @@ int32_t DScreenSinkProxy::UnsubscribeLocalHardware(const std::string &dhId)
     }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
-        DHLOGE("DScreenSinkProxy remote service null");
+        DHLOGE("DScreenSinkProxy remote service nullptr.");
         return DSCREEN_BAD_VALUE;
     }
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
-        DHLOGE("WriteInterfaceToken failed");
+        DHLOGE("WriteInterfaceToken failed.");
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 
@@ -145,14 +145,14 @@ void DScreenSinkProxy::DScreenNotify(const std::string &devId, int32_t eventCode
     }
     sptr<IRemoteObject> remote = Remote();
     if (remote == nullptr) {
-        DHLOGE("DScreenSinkProxy remote service null");
+        DHLOGE("DScreenSinkProxy remote service null.");
         return;
     }
     MessageParcel data;
     MessageParcel reply;
     MessageOption option = { MessageOption::TF_ASYNC };
     if (!data.WriteInterfaceToken(GetDescriptor())) {
-        DHLOGE("WriteInterfaceToken failed");
+        DHLOGE("WriteInterfaceToken failed.");
         return;
     }
 

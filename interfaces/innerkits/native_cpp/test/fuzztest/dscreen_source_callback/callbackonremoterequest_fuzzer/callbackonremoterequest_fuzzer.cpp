@@ -31,7 +31,7 @@ namespace OHOS {
 namespace DistributedHardware {
 void CallbackOnRemoteRequestFuzzTest(const uint8_t* data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(uint32_t))) {
+    if ((size < sizeof(uint32_t)) || (data == nullptr)) {
         return;
     }
 
@@ -40,8 +40,8 @@ void CallbackOnRemoteRequestFuzzTest(const uint8_t* data, size_t size)
     MessageOption option;
     uint32_t code = *(reinterpret_cast<const uint32_t*>(data)) % 2;
     int32_t status = *(reinterpret_cast<const int32_t*>(data));
-    std::string devId(reinterpret_cast<const char*>(data), size);
     std::string dhId(reinterpret_cast<const char*>(data), size);
+    std::string devId(reinterpret_cast<const char*>(data), size);
     std::string reqId(reinterpret_cast<const char*>(data), size);
     std::string dataStr(reinterpret_cast<const char*>(data), size);
     pdata.WriteInt32(status);

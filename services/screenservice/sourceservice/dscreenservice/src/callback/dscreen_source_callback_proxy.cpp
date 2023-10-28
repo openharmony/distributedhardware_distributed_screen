@@ -40,7 +40,7 @@ int32_t DScreenSourceCallbackProxy::OnNotifyRegResult(const std::string &devId, 
     MessageParcel reply;
     MessageOption option;
     if (!data.WriteInterfaceToken(GetDescriptor())) {
-        DHLOGE("WriteInterfaceToken failed.");
+        DHLOGE("WriteInterfaceToken failed");
         return ERR_DH_SCREEN_SA_WRITEINTERFACETOKEN_FAILED;
     }
 

@@ -146,8 +146,8 @@ HWTEST_F(VideoParamTest, to_json_001, TestSize.Level1)
     uint32_t videoWidth = 100;
     uint32_t videoHeight = 100;
     uint32_t fps = 30;
-    uint8_t codecType = DEFAULT_CODECTYPE;
     uint8_t videoFormat = DEFAULT_VIDEO_FORMAT;
+    uint8_t codecType = DEFAULT_CODECTYPE;
 
     VideoParam videoParam;
     videoParam.SetScreenWidth(screenWidth);
@@ -155,8 +155,8 @@ HWTEST_F(VideoParamTest, to_json_001, TestSize.Level1)
     videoParam.SetVideoWidth(videoWidth);
     videoParam.SetVideoHeight(videoHeight);
     videoParam.SetFps(fps);
-    videoParam.SetCodecType(codecType);
     videoParam.SetVideoFormat(videoFormat);
+    videoParam.SetCodecType(codecType);
     to_json(j, videoParam);
 
     uint32_t jsonVideoWidth = 0;

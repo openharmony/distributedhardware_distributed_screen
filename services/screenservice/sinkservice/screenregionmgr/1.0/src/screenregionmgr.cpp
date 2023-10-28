@@ -20,15 +20,15 @@
 #include "iservice_registry.h"
 #include "nlohmann/json.hpp"
 
-#include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "dscreen_constants.h"
 #include "dscreen_fwkkit.h"
 #include "dscreen_json_util.h"
 #include "dscreen_log.h"
 #include "dscreen_maprelation.h"
 #include "dscreen_util.h"
-#include "idscreen_source.h"
 #include "screen_client.h"
+#include "idscreen_source.h"
 #include "screen_client_common.h"
 
 using json = nlohmann::json;

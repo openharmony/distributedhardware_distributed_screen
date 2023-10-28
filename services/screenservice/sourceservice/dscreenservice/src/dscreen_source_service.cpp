@@ -184,7 +184,7 @@ void DScreenSourceService::DScreenNotify(const std::string &devId, const int32_t
 
 int32_t DScreenSourceService::Dump(int32_t fd, const std::vector<std::u16string>& args)
 {
-    DHLOGI("DScreenSourceService  Dump.");
+    DHLOGI("DScreenSourceService Dump.");
     (void)args;
     std::string result_v1;
     V1_0::DScreenManager::GetInstance().GetScreenDumpInfo(result_v1);
@@ -192,7 +192,7 @@ int32_t DScreenSourceService::Dump(int32_t fd, const std::vector<std::u16string>
     V2_0::DScreenManager::GetInstance().GetScreenDumpInfo(result_v2);
     int ret = dprintf(fd, "%s\n", (result_v1 + result_v2).c_str());
     if (ret < 0) {
-        DHLOGE("dprintf error");
+        DHLOGE("Dprintf error.");
         return ERR_DH_SCREEN_SA_HIDUMPER_ERROR;
     }
     std::string result;
@@ -202,13 +202,13 @@ int32_t DScreenSourceService::Dump(int32_t fd, const std::vector<std::u16string>
         [](const std::u16string &item) { return Str16ToStr8(item); });
 
     if (!DscreenHidumper::GetInstance().Dump(argsStr, result)) {
-        DHLOGE("Hidump error");
+        DHLOGE("Hidump error.");
         return ERR_DH_SCREEN_SA_HIDUMPER_ERROR;
     }
 
     ret = dprintf(fd, "%s\n", result.c_str());
     if (ret < 0) {
-        DHLOGE("Dprintf error");
+        DHLOGE("Dprintf error.");
         return DSCREEN_BAD_VALUE;
     }
     return ERR_OK;

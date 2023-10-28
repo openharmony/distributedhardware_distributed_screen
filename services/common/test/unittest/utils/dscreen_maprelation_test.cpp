@@ -105,8 +105,8 @@ HWTEST_F(DScreenMapRelationTest, to_json_001, TestSize.Level1)
     json j;
     uint64_t displayId = 1;
     uint64_t screenId = 2;
-    DisplayRect displayRect = {0, 0, 100, 100};
     ScreenRect screenRect = {0, 0, 200, 200};
+    DisplayRect displayRect = {0, 0, 100, 100};
     DScreenMapRelation dScreenMapRelation;
     dScreenMapRelation.SetDisplayId(displayId);
     dScreenMapRelation.SetScreenId(screenId);

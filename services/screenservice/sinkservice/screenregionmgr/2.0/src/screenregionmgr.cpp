@@ -18,6 +18,7 @@
 #include <cinttypes>
 #include <dlfcn.h>
 #include <fstream>
+#include <sstream>
 
 #include "display_manager.h"
 #include "if_system_ability_manager.h"
@@ -118,37 +119,43 @@ int32_t ScreenRegionManager::DestoryDScreenRegion(const std::string &peerDevId)
 void ScreenRegionManager::GetScreenDumpInfo(std::string &result)
 {
     DHLOGI("GetScreenDumpInfo.");
+
     result.clear();
     result.append("screenRegion OnLine:\n[\n");
-    if (screenRegions_.size() == 0) {
+
+    if (screenRegions_.empty()) {
         result.append("]");
         DHLOGD("no screenRegion");
         return;
     }
 
+    std::stringstream screenInfo;
+    std::string localDevIdAnony = GetAnonyString(localDevId_);
     for (const auto &screenRegion : screenRegions_) {
-        result.append("    {\n");
-        if (screenRegion == nullptr) {
+        if (!screenRegion) {
             continue;
         }
         uint64_t screenId = screenRegion->GetScreenId();
         std::string remoteDevId = screenRegion->GetRemoteDevId();
         std::shared_ptr<VideoParam> videoParam = screenRegion->GetVideoParam();
-        if (videoParam == nullptr) {
+        if (!videoParam) {
             continue;
         }
         uint32_t screenHeight = videoParam->GetScreenHeight();
         uint32_t screenWidth = videoParam->GetScreenWidth();
         int32_t windowId = screenRegion->GetWindowId();
-        std::string screenInfo = "        \"clientWindowId\" : \"" + std::to_string(windowId) + "\",\n" +
-                                 "        \"remoteScreenId\" : \"" + std::to_string(screenId) + "\",\n" +
-                                 "        \"localDevId\" : \"" + GetAnonyString(localDevId_) + "\",\n" +
-                                 "        \"remoteDevId\" : \"" + GetAnonyString(remoteDevId) + "\",\n" +
-                                 "        \"screenWidth\" : \"" + std::to_string(screenWidth) + "\",\n" +
-                                 "        \"screenHeight\" : \"" + std::to_string(screenHeight) + "\"\n";
-        result.append(screenInfo);
+        screenInfo << "    {\n"
+                   << "        \"clientWindowId\" : \"" << windowId << "\",\n"
+                   << "        \"remoteScreenId\" : \"" << screenId << "\",\n"
+                   << "        \"localDevId\" : \"" << localDevIdAnony << "\",\n"
+                   << "        \"remoteDevId\" : \"" << GetAnonyString(remoteDevId) << "\",\n"
+                   << "        \"screenWidth\" : \"" << screenWidth << "\",\n"
+                   << "        \"screenHeight\" : \"" << screenHeight << "\"\n"
+                   << "    }\n";
     }
-    result.append("    }\n]");
+
+    result.append(screenInfo.str());
+    result.append("]");
 }
 
 int32_t ScreenRegionManager::LoadAVReceiverEngineProvider()

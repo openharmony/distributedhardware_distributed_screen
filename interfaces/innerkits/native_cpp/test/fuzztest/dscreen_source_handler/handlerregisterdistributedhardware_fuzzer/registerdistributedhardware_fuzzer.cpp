@@ -30,8 +30,8 @@ void RegisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
     }
 
     std::string devId(reinterpret_cast<const char*>(data), size);
-    std::string dhId(reinterpret_cast<const char*>(data), size);
     std::string version(reinterpret_cast<const char*>(data), size);
+    std::string dhId(reinterpret_cast<const char*>(data), size);
     std::string attrs(reinterpret_cast<const char*>(data), size);
     EnableParam param;
     param.sinkVersion = version;

@@ -36,13 +36,12 @@ void DScreenNotifyFuzzTest(const uint8_t* data, size_t size)
     int32_t eventCode = *(reinterpret_cast<const int32_t*>(data));
     std::string eventContent(reinterpret_cast<const char*>(data), size);
 
-    sptr<ISystemAbilityManager> samgr =
-            SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (samgr == nullptr) {
+    sptr<ISystemAbilityManager> saMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (saMgr == nullptr) {
         return;
     }
 
-    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_DM_SA_ID);
+    sptr<IRemoteObject> remoteObject = saMgr->GetSystemAbility(DISTRIBUTED_HARDWARE_DM_SA_ID);
     if (remoteObject == nullptr) {
         return;
     }

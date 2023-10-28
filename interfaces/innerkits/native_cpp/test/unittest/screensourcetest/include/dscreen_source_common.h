@@ -67,8 +67,8 @@ public:
     RegisterCallbackTest() = default;
     virtual ~RegisterCallbackTest() = default;
 
-    int32_t OnRegisterResult(const std::string &uuid, const std::string &dhId, int32_t status,
-        const std::string &data)
+    int32_t OnRegisterResult(const std::string &uuid, const std::string &dhId,
+        int32_t status, const std::string &data)
     {
         return 0;
     }
@@ -80,8 +80,8 @@ public:
     UnregisterCallbackTest() = default;
     virtual ~UnregisterCallbackTest() = default;
 
-    int32_t OnUnregisterResult(const std::string &uuid, const std::string &dhId, int32_t status,
-        const std::string &data)
+    int32_t OnUnregisterResult(const std::string &uuid, const std::string &dhId,
+        int32_t status, const std::string &data)
     {
         return 0;
     }
