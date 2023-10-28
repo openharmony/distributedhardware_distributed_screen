@@ -16,6 +16,11 @@ import(
     "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
 
 ohos_executable("distributedScreenTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   install_enable = false
 
   include_dirs = [
