@@ -31,7 +31,8 @@ void OnRemoteSourceSvrDiedFuzzTest(const uint8_t* data, size_t size)
         return;
     }
 
-    sptr<ISystemAbilityManager> systemAbilityManager = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<ISystemAbilityManager> systemAbilityManager =
+        SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (systemAbilityManager == nullptr) {
         return;
     }
