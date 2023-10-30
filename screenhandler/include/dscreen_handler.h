@@ -28,6 +28,7 @@ public:
     void OnConnect(uint64_t screenId) override;
     void OnDisconnect(uint64_t screenId) override;
     void OnChange(uint64_t screenId) override {};
+    uint32_t ByteCalculate(std::uint32_t screenWidth);
 };
 
 class DScreenHandler : public IHardwareHandler {
