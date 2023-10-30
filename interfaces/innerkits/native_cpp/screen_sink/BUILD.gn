@@ -25,7 +25,7 @@ ohos_shared_library("distributed_screen_sink_sdk") {
     integer_overflow = true
     ubsan = true
   }
-  stack_protector_ret = true
+  branch_protector_ret = "pac_ret"
   include_dirs = [ "${fwk_common_path}/utils/include" ]
 
   include_dirs += [
