@@ -18,6 +18,9 @@ import(
 
 ohos_shared_library("distributed_screen_utils") {
   sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
     boundary_sanitize = true
     integer_overflow = true
     ubsan = true
@@ -38,7 +41,6 @@ ohos_shared_library("distributed_screen_utils") {
 
   external_deps = [
     "c_utils:utils",
-    "c_utils:utilsbase",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "hilog:libhilog",

@@ -50,6 +50,7 @@ ohos_unittest("ScreenClientTest") {
   ]
 
   external_deps = [
+    "c_utils:utils",
     "graphic_2d:librender_service_client",
     "graphic_2d:surface",
     "input:libmmi-client",
