@@ -116,6 +116,10 @@ constexpr uint32_t THREE = 3;
 constexpr uint32_t ZERO = 0;
 constexpr uint32_t ALIGNEDBITS = 32;
 
+/* Screen byte alignment size*/
+constexpr uint32_t BYTE_ALIGNMENT = 32;
+constexpr uint32_t BYTE_ALIGNMENT_CALCULATION = 31;
+
 /* Screen session name max len */
 constexpr uint32_t DSCREEN_MAX_SESSION_NAME_LEN = 50;
 
@@ -227,8 +231,6 @@ constexpr int32_t WAIT_TIMEOUT_MS = 5000;
 constexpr uint32_t SYSTEM_PARAM_VALUE_SIZE = 50;
 constexpr uint64_t WATCHDOG_INTERVAL_TIME_MS = 20 * 1000;
 constexpr uint64_t WATCHDOG_DELAY_TIME_MS = 5 * 1000;
-constexpr uint32_t Byte_Alignment = 32;
-constexpr uint32_t Byte_Alignment_Calculation = 31;
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

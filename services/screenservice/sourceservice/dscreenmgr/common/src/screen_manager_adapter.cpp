@@ -38,10 +38,10 @@ ScreenMgrAdapter::~ScreenMgrAdapter()
 
 uint32_t ScreenMgrAdapter::ByteCalculate(std::uint32_t screenWidth)
 {
-    if (screenWidth % Byte_Alignment == 0) {
+    if (screenWidth % BYTE_ALIGNMENT == 0) {
         return screenWidth;
     }
-    uint32_t alignedInt = (screenWidth + Byte_Alignment_Calculation) / Byte_Alignment * Byte_Alignment;
+    uint32_t alignedInt = (screenWidth + BYTE_ALIGNMENT_CALCULATION) / BYTE_ALIGNMENT * BYTE_ALIGNMENT;
     return alignedInt;
 }
 
