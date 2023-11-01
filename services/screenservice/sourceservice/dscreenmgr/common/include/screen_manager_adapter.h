@@ -39,6 +39,7 @@ public:
     int32_t SetImageSurface(uint64_t screenId, sptr<OHOS::Surface> surface);
     std::shared_ptr<DScreenMapRelation> GetMapRelation(uint64_t screenId);
     void RemoveScreenFromGroup(uint64_t screenId);
+    uint32_t ByteCalculate(uint32_t screenWidth);
 
 private:
     ScreenMgrAdapter() = default;

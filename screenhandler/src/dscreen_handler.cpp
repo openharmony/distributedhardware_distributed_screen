@@ -61,6 +61,15 @@ int32_t DScreenHandler::Initialize()
     return DH_SUCCESS;
 }
 
+uint32_t ScreenListener::ByteCalculate(std::uint32_t screenWidth)
+{
+    if (screenWidth % BYTE_ALIGNMENT == 0) {
+        return screenWidth;
+    }
+    uint32_t alignedInt = (screenWidth + BYTE_ALIGNMENT_CALCULATION) / BYTE_ALIGNMENT * BYTE_ALIGNMENT;
+    return alignedInt;
+}
+
 void ScreenListener::OnConnect(uint64_t screenId)
 {
     DHLOGI("on screen connect");
@@ -77,6 +86,8 @@ void ScreenListener::OnConnect(uint64_t screenId)
     std::string dhId = DSCREEN_PREFIX + SEPERATOR + std::to_string(screenId);
 
     uint32_t screenWidth = screen->GetWidth();
+    screenWidth = ByteCalculate(screenWidth);
+    DHLOGI("screenWidth is : %" PRIu32, screenWidth);
     uint32_t screenHeight = screen->GetHeight();
 
     json attrJson;
@@ -128,6 +139,11 @@ std::vector<DHItem> DScreenHandler::Query()
         }
         std::string dhId = SCREEN_PREFIX + SEPERATOR + std::to_string(screen->GetId());
         uint32_t screenWidth = screen->GetWidth();
+        if (screenListener_ == nullptr) {
+            screenListener_ = new (std::nothrow) ScreenListener();
+        }
+        screenWidth = screenListener_->ByteCalculate(screenWidth);
+        DHLOGI("screenWidth is : %" PRIu32, screenWidth);
         uint32_t screenHeight = screen->GetHeight();
 
         json attrJson;

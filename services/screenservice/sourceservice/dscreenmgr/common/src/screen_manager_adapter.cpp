@@ -36,6 +36,15 @@ ScreenMgrAdapter::~ScreenMgrAdapter()
     DHLOGI("~ScreenMgrAdapter");
 }
 
+uint32_t ScreenMgrAdapter::ByteCalculate(std::uint32_t screenWidth)
+{
+    if (screenWidth % BYTE_ALIGNMENT == 0) {
+        return screenWidth;
+    }
+    uint32_t alignedInt = (screenWidth + BYTE_ALIGNMENT_CALCULATION) / BYTE_ALIGNMENT * BYTE_ALIGNMENT;
+    return alignedInt;
+}
+
 uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const std::string &dhId,
     const std::shared_ptr<VideoParam> &videoParam)
 {
@@ -57,10 +66,12 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
         }
         screenIdMap_.erase(screenName);
     }
-
+    uint32_t width = videoParam->GetScreenWidth();
+    width = ByteCalculate(width);
+    DHLOGI("screenWidth is : %" PRIu32, width);
     Rosen::VirtualScreenOption option = {
         screenName,
-        videoParam->GetScreenWidth(),
+        width,
         videoParam->GetScreenHeight(),
         DEFAULT_DENSITY,
         nullptr,
@@ -161,8 +172,11 @@ std::shared_ptr<DScreenMapRelation> ScreenMgrAdapter::GetMapRelation(uint64_t sc
     mapRelation->SetDisplayId(display->GetId());
     mapRelation->SetScreenId(screenId);
 
-    ScreenRect screenRect = {0, 0, screen->GetWidth(), screen->GetHeight()};
-    DisplayRect displayRect = {0, 0, display->GetWidth(), display->GetHeight()};
+    uint32_t width = screen->GetWidth();
+    width = ByteCalculate(width);
+    DHLOGI("screenWidth is : %" PRIu32, width);
+    ScreenRect screenRect = {0, 0, width, screen->GetHeight()};
+    DisplayRect displayRect = {0, 0, width, display->GetHeight()};
     mapRelation->SetDisplayRect(displayRect);
     mapRelation->SetScreenRect(screenRect);
     return mapRelation;

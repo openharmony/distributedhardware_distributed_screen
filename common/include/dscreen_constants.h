@@ -116,6 +116,10 @@ constexpr uint32_t THREE = 3;
 constexpr uint32_t ZERO = 0;
 constexpr uint32_t ALIGNEDBITS = 32;
 
+/* Screen byte alignment size*/
+constexpr uint32_t BYTE_ALIGNMENT = 32;
+constexpr uint32_t BYTE_ALIGNMENT_CALCULATION = 31;
+
 /* Screen session name max len */
 constexpr uint32_t DSCREEN_MAX_SESSION_NAME_LEN = 50;
 
