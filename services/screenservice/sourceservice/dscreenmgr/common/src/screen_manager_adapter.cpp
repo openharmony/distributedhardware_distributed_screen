@@ -68,7 +68,7 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
     }
     uint32_t width = videoParam->GetScreenWidth();
     width = ByteCalculate(width);
-    DHLOGI("screenWidth is : %" PRIu64, width);
+    DHLOGI("screenWidth is : %" PRIu32, width);
     Rosen::VirtualScreenOption option = {
         screenName,
         width,
@@ -174,7 +174,7 @@ std::shared_ptr<DScreenMapRelation> ScreenMgrAdapter::GetMapRelation(uint64_t sc
 
     uint32_t width = screen->GetWidth();
     width = ByteCalculate(width);
-    DHLOGI("screenWidth is : %" PRIu64, width);
+    DHLOGI("screenWidth is : %" PRIu32, width);
     ScreenRect screenRect = {0, 0, width, screen->GetHeight()};
     DisplayRect displayRect = {0, 0, width, display->GetHeight()};
     mapRelation->SetDisplayRect(displayRect);
