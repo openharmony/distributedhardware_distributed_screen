@@ -12,10 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#define private public
 #include "dscreen_source_stub_test.h"
 
 #include <memory>
+#include "dscreen_constants.h"
 
 using namespace testing;
 using namespace testing::ext;
@@ -271,6 +272,287 @@ HWTEST_F(DScreenSourceStubTest, DScreenNotify_001, TestSize.Level1)
     EXPECT_STREQ(devId.c_str(), ((sptr<TestDScreenSourceStub> &)sourceStubPtr)->devId_.c_str());
     EXPECT_EQ(eventCode, ((sptr<TestDScreenSourceStub> &)sourceStubPtr)->eventCode_);
     EXPECT_STREQ(eventContent.c_str(), ((sptr<TestDScreenSourceStub> &)sourceStubPtr)->eventContent_.c_str());
+}
+
+/**
+ * @tc.name: OnRemoteRequest_001
+ * @tc.desc: Test with valid interface descriptor and request code.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, OnRemoteRequest_001, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    uint32_t requestCode = 1;
+    MessageParcel data;
+    data.WriteInterfaceToken(stubPtr->GetDescriptor());
+    data.WriteUint32(requestCode);
+    MessageParcel reply;
+    MessageOption option;
+    int32_t result = stubPtr->OnRemoteRequest(requestCode, data, reply, option);
+    EXPECT_EQ(SESSION_UNOPEN_ERR, result);
+}
+
+/**
+ * @tc.name: OnRemoteRequest_002
+ * @tc.desc: Test with invalid interface descriptor.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, OnRemoteRequest_002, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    std::u16string requestDescriptor = u"invalid_descriptor";
+    uint32_t requestCode = 1;
+    MessageParcel data;
+    data.WriteInterfaceToken(requestDescriptor);
+    data.WriteUint32(requestCode);
+    MessageParcel reply;
+    MessageOption option;
+    int32_t result = stubPtr->OnRemoteRequest(requestCode, data, reply, option);
+    EXPECT_EQ(ERR_INVALID_DATA, result);
+}
+
+/**
+ * @tc.name: OnRemoteRequest_003
+ * @tc.desc: Test with invalid request code.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, OnRemoteRequest_003, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    std::u16string descriptor = DScreenSourceStub::GetDescriptor();
+    std::u16string requestDescriptor = descriptor;
+    uint32_t requestCode = 999;
+    MessageParcel data;
+    data.WriteInterfaceToken(requestDescriptor);
+    data.WriteUint32(requestCode);
+    MessageParcel reply;
+    MessageOption option;
+    int32_t result = stubPtr->OnRemoteRequest(requestCode, data, reply, option);
+    EXPECT_EQ(IPC_STUB_UNKNOW_TRANS_ERR, result);
+}
+
+/**
+ * @tc.name: InitSourceInner_001
+ * @tc.desc: When there is no permission
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, InitSourceInner_001, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    std::u16string descriptor = stubPtr->GetDescriptor();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    int32_t result = stubPtr->InitSourceInner(data, reply, option);
+    EXPECT_EQ(DSCREEN_INIT_ERR, result);
+}
+
+/**
+ * @tc.name: ReleaseSourceInner_001
+ * @tc.desc: When there is no permission
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, ReleaseSourceInner_001, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    std::u16string descriptor = stubPtr->GetDescriptor();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    int32_t result = stubPtr->ReleaseSourceInner(data, reply, option);
+    EXPECT_EQ(DSCREEN_INIT_ERR, result);
+}
+
+/**
+ * @tc.name: RegisterDistributedHardwareInner_001
+ * @tc.desc: When there is no permission
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, RegisterDistributedHardwareInner_001, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    std::u16string descriptor = stubPtr->GetDescriptor();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    int32_t result = stubPtr->RegisterDistributedHardwareInner(data, reply, option);
+    EXPECT_EQ(DSCREEN_INIT_ERR, result);
+}
+
+/**
+ * @tc.name: CheckRegParams_001
+ * @tc.desc: ValidParams
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, CheckRegParams_001, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    bool result = stubPtr->CheckRegParams("devId", "dhId", "version", "attrs", "reqId");
+    EXPECT_TRUE(result);
+}
+
+/**
+ * @tc.name: CheckRegParams_002
+ * @tc.desc: Parameter is empty
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+
+HWTEST_F(DScreenSourceStubTest, CheckRegParams_002, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    bool result;
+    result = stubPtr->CheckRegParams("", "dhId", "version", "attrs", "reqId");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckRegParams("devId", "", "version", "attrs", "reqId");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckRegParams("devId", "dhId", "", "attrs", "reqId");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckRegParams("devId", "dhId", "version", "", "reqId");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckRegParams("devId", "dhId", "version", "attrs", "");
+    EXPECT_FALSE(result);
+}
+
+/**
+ * @tc.name: CheckRegParams_003
+ * @tc.desc: parameter exceeds maximum length
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+
+HWTEST_F(DScreenSourceStubTest, CheckRegParams_003, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    std::string exceedDidMaxSizeStr(DID_MAX_SIZE + 1, 'a');
+    std::string exceedParamMaxSizeStr(PARAM_MAX_SIZE + 1, 'a');
+    bool result;
+    result = stubPtr->CheckRegParams(exceedDidMaxSizeStr, "dhId", "version", "attrs", "reqId");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckRegParams("devId", exceedDidMaxSizeStr, "version", "attrs", "reqId");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckRegParams("devId", "dhId", exceedParamMaxSizeStr, "attrs", "reqId");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckRegParams("devId", "dhId", "version", exceedParamMaxSizeStr, "reqId");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckRegParams("devId", "dhId", "version", "attrs", exceedDidMaxSizeStr);
+    EXPECT_FALSE(result);
+}
+
+/**
+ * @tc.name: CheckUnregParams_001
+ * @tc.desc: ValidParams
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, CheckUnregParams_001, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    bool result = stubPtr->CheckUnregParams("devId", "dhId", "reqId");
+    EXPECT_TRUE(result);
+}
+
+/**
+ * @tc.name: CheckUnregParams_002
+ * @tc.desc: Parameter is empty
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+
+HWTEST_F(DScreenSourceStubTest, CheckUnregParams_002, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    bool result;
+    result = stubPtr->CheckUnregParams("", "dhId", "reqId");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckUnregParams("devId", "", "reqId");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckUnregParams("devId", "dhId", "");
+    EXPECT_FALSE(result);
+}
+
+/**
+ * @tc.name: CheckUnregParams_003
+ * @tc.desc: parameter exceeds maximum length
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+
+HWTEST_F(DScreenSourceStubTest, CheckUnregParams_003, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    std::string exceedDidMaxSizeStr(DID_MAX_SIZE + 1, 'a');
+    bool result;
+    result = stubPtr->CheckUnregParams(exceedDidMaxSizeStr, "dhId", "reqId");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckUnregParams("devId", exceedDidMaxSizeStr, "reqId");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckUnregParams("devId", "dhId", exceedDidMaxSizeStr);
+    EXPECT_FALSE(result);
+}
+
+/**
+ * @tc.name: CheckConfigParams_001
+ * @tc.desc: ValidParams
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, CheckConfigParams_001, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    bool result = stubPtr->CheckConfigParams("devId", "dhId", "key", "value");
+    EXPECT_TRUE(result);
+}
+
+/**
+ * @tc.name: CheckConfigParams_002
+ * @tc.desc: Parameter is empty
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+
+HWTEST_F(DScreenSourceStubTest, CheckConfigParams_002, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    bool result;
+    result = stubPtr->CheckConfigParams("", "dhId", "key", "value");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckConfigParams("devId", "", "key", "value");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckConfigParams("devId", "dhId", "", "value");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckConfigParams("devId", "dhId", "key", "");
+    EXPECT_FALSE(result);
+}
+
+/**
+ * @tc.name: CheckConfigParams_003
+ * @tc.desc: parameter exceeds maximum length
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+
+HWTEST_F(DScreenSourceStubTest, CheckConfigParams_003, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    std::string exceedDidMaxSizeStr(DID_MAX_SIZE + 1, 'a');
+    std::string exceedParamMaxSizeStr(PARAM_MAX_SIZE + 1, 'a');
+    bool result;
+    result = stubPtr->CheckConfigParams(exceedDidMaxSizeStr, "dhId", "key", "value");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckConfigParams("devId", exceedDidMaxSizeStr, "key", "value");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckConfigParams("devId", "dhId", exceedParamMaxSizeStr, "value");
+    EXPECT_FALSE(result);
+    result = stubPtr->CheckConfigParams("devId", "dhId", "key", exceedParamMaxSizeStr);
+    EXPECT_FALSE(result);
 }
 }
 }
