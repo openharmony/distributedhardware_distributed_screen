@@ -312,6 +312,33 @@ HWTEST_F(DScreenTestV2, SetUp_003, TestSize.Level1)
 }
 
 /**
+ * @tc.name: SetUp_004
+ * @tc.desc: Verify the SetUp function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV2, SetUp_004, TestSize.Level1)
+{
+    dScreen_->senderAdapter_ = nullptr;
+    int32_t ret = dScreen_->SetUp();
+    EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, ret);
+}
+
+/**
+ * @tc.name: SetUp_005
+ * @tc.desc: Verify the SetUp function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV2, SetUp_005, TestSize.Level1)
+{
+    dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
+    dScreen_->videoParam_ = nullptr;
+    int32_t ret = dScreen_->SetUp();
+    EXPECT_EQ(ERR_DH_SCREEN_SA_VALUE_NOT_INIT, ret);
+}
+
+/**
  * @tc.name: WaitForSinkStarted_001
  * @tc.desc: Verify the WaitForSinkStarted function failed.
  * @tc.type: FUNC
