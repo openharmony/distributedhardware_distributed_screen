@@ -12,11 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #define private public
 #include "dscreen_source_stub_test.h"
+#include "dscreen_constants.h"
+#undef private
 
 #include <memory>
-#include "dscreen_constants.h"
 
 using namespace testing;
 using namespace testing::ext;

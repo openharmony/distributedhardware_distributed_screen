@@ -15,6 +15,8 @@
 
 #define private public
 #include "screen_data_channel_impl_test.h"
+#include "dscreen_util.h"
+#include "dscreen_json_util.h"
 #undef private
 
 using namespace testing;
@@ -264,5 +266,84 @@ HWTEST_F(ScreenDataChannelImplTest, on_session_opened_test_002, TestSize.Level1)
     dataChannelImpl_->OnSessionOpened(-1, -1);
     EXPECT_EQ(0, dataChannelImpl_->sessionId_);
 }
+
+/**
+ * @tc.name: on_session_opened_test_003
+ * @tc.desc: Verify the OnSessionOpened function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenDataChannelImplTest, on_session_opened_test_003, TestSize.Level1)
+{
+    std::shared_ptr<IScreenChannelListener>  mockListener = std::make_shared<MockIScreenChannelListener>();
+    dataChannelImpl_->channelListener_ = mockListener;
+    int32_t sessionId = 1;
+    int32_t result = 1;
+    dataChannelImpl_->jpegSessionFlag_ = true;
+    dataChannelImpl_->sessionId_ = 1;
+    dataChannelImpl_->jpegSessionId_ = 1;
+    dataChannelImpl_->jpegSessionOpened = false;
+    dataChannelImpl_->OnSessionOpened(sessionId, result);
+
+    dataChannelImpl_->sessionId_ = 2;
+    dataChannelImpl_->dataSessionOpened = false;
+    dataChannelImpl_->OnSessionOpened(sessionId, result);
+    EXPECT_NE(nullptr, dataChannelImpl_->channelListener_.lock());
+}
+
+/**
+ * @tc.name: JsonToDirtyJson_001
+ * @tc.desc: Verify the JsonToDirtyJson function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenDataChannelImplTest, JsonToDirtyJson_001, TestSize.Level1)
+{
+    std::shared_ptr<DataBuffer> screenData = std::make_shared<DataBuffer>(10);
+    nlohmann::json rectJson;
+    dataChannelImpl_->JsonToDirtyJson(rectJson, screenData);
+
+    rectJson["dirtySize"] = 2;
+    dataChannelImpl_->JsonToDirtyJson(rectJson, screenData);
+
+    rectJson["dirtySize"] = INT32_MAX + 1;
+    rectJson["dataType"] = 2;
+    dataChannelImpl_->JsonToDirtyJson(rectJson, screenData);
+
+    rectJson["dirtySize"] = DIRTY_MAX_SIZE;
+    rectJson["dataType"] = 2;
+    dataChannelImpl_->JsonToDirtyJson(rectJson, screenData);
+
+    rectJson["dirtySize"] = 2;
+    rectJson["dataType"] = 2;
+    rectJson["3"] = 2;
+    dataChannelImpl_->JsonToDirtyJson(rectJson, screenData);
+
+    nlohmann::json testJson;
+    rectJson["0"] = testJson;
+    rectJson["0"][KEY_POINT_DIRTY_X] = INT32_MAX + 1;
+    rectJson["0"][KEY_POINT_DIRTY_Y] = INT32_MAX + 1;
+    rectJson["0"][KEY_POINT_DIRTY_W] = INT32_MAX + 1;
+    rectJson["0"][KEY_POINT_DIRTY_H] = INT32_MAX + 1;
+    rectJson["0"][KEY_POINT_DIRTY_SIZE] = INT32_MAX + 1;
+    dataChannelImpl_->JsonToDirtyJson(rectJson, screenData);
+
+    rectJson["0"][KEY_POINT_DIRTY_SIZE] = 2;
+    dataChannelImpl_->JsonToDirtyJson(rectJson, screenData);
+
+    rectJson["0"][KEY_POINT_DIRTY_H] = 2;
+    dataChannelImpl_->JsonToDirtyJson(rectJson, screenData);
+
+    rectJson["0"][KEY_POINT_DIRTY_W] = 2;
+    dataChannelImpl_->JsonToDirtyJson(rectJson, screenData);
+
+    rectJson["0"][KEY_POINT_DIRTY_Y] = 2;
+    dataChannelImpl_->JsonToDirtyJson(rectJson, screenData);
+
+    rectJson["0"][KEY_POINT_DIRTY_X] = 2;
+    dataChannelImpl_->JsonToDirtyJson(rectJson, screenData);
+    EXPECT_EQ(nullptr, dataChannelImpl_->channelListener_.lock());
+}
+
 } // DistributedHardware
 } // OHOS
