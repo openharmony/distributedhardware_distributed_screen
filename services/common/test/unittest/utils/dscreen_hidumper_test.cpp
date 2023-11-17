@@ -37,7 +37,6 @@ void DScreenHidumperTest::TearDown() {}
  */
 HWTEST_F(DScreenHidumperTest, Dump_001, TestSize.Level1)
 {
-
     std::string result;
     std::string helpStr;
     std::vector<std::string> argsStr;
@@ -55,7 +54,6 @@ HWTEST_F(DScreenHidumperTest, Dump_001, TestSize.Level1)
  */
 HWTEST_F(DScreenHidumperTest, Dump_002, TestSize.Level1)
 {
-
     std::string result;
     std::vector<std::string> argsStr = {"arg1", "arg2"};
     bool ret = DscreenHidumper::GetInstance().Dump(argsStr, result);
@@ -71,7 +69,6 @@ HWTEST_F(DScreenHidumperTest, Dump_002, TestSize.Level1)
  */
 HWTEST_F(DScreenHidumperTest, Dump_003, TestSize.Level1)
 {
-
     std::string result;
     std::string helpStr;
     std::vector<std::string> argsStr = {"-h"};
