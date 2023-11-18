@@ -41,6 +41,7 @@ ohos_unittest("UtilsTest") {
 
   sources = [
     "${services_path}/common/test/unittest/utils/dscreen_fwkkit_test.cpp",
+    "${services_path}/common/test/unittest/utils/dscreen_hidumper_test.cpp",
     "${services_path}/common/test/unittest/utils/dscreen_maprelation_test.cpp",
     "${services_path}/common/test/unittest/utils/video_param_test.cpp",
   ]

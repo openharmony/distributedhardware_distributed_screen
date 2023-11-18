@@ -13,7 +13,10 @@
  * limitations under the License.
  */
 
+#define private public
 #include "2.0/include/dscreen_manager_test.h"
+#include "common/include/screen_manager_adapter.h"
+#undef private
 
 using namespace testing;
 using namespace testing::ext;
@@ -205,6 +208,51 @@ HWTEST_F(DScreenManagerTestV2, DisableDistributedScreen_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: DisableDistributedScreen_002
+ * @tc.desc: erify the DisableDistributedScreen function failed
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenManagerTestV2, DisableDistributedScreen_002, TestSize.Level1)
+{
+    std::shared_ptr<IDScreenCallback> dScreenCallback = nullptr;
+    std::string devId = "devId000";
+    std::string dhId = "dhId000";
+    std::string reqId = "reqId000";
+    std::string dScreenIdx = devId + SEPERATOR + dhId;
+    std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>(devId, dhId, dScreenCallback);
+    DScreenManager::GetInstance().dScreens_[dScreenIdx] = dScreen;
+
+    DScreenManager::GetInstance().dScreens_[dScreenIdx]->SetState(DScreenState::DISABLED);
+    int32_t ret = DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_DISABLE_FAILED, ret);
+
+    DScreenManager::GetInstance().dScreens_[dScreenIdx]->SetState(DScreenState::DISABLING);
+    ret = DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_DISABLE_FAILED, ret);
+
+    DScreenManager::GetInstance().dScreens_[dScreenIdx]->SetState(DScreenState::ENABLED);
+    ret = DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+    EXPECT_EQ(DH_SUCCESS, ret);
+
+    DScreenManager::GetInstance().dScreens_[dScreenIdx]->SetState(DScreenState::ENABLING);
+    ret = DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+    EXPECT_EQ(DH_SUCCESS, ret);
+
+    DScreenManager::GetInstance().dScreens_[dScreenIdx]->SetState(DScreenState::CONNECTING);
+    ret = DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+    EXPECT_EQ(DH_SUCCESS, ret);
+
+    DScreenManager::GetInstance().dScreens_[dScreenIdx]->SetState(DScreenState::CONNECTED);
+    ret = DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+    EXPECT_EQ(DH_SUCCESS, ret);
+
+    DScreenManager::GetInstance().dScreens_[dScreenIdx]->SetState(DScreenState::DISCONNECTING);
+    ret = DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+/**
  * @tc.name: FindDScreenById_001
  * @tc.desc: Verify the FindDScreenById function failed.
  * @tc.type: FUNC
@@ -214,6 +262,58 @@ HWTEST_F(DScreenManagerTestV2, FindDScreenById_001, TestSize.Level1)
 {
     std::shared_ptr<DScreen> dScreen = DScreenManager::GetInstance().FindDScreenById(99);
     EXPECT_EQ(nullptr, dScreen);
+}
+
+/**
+ * @tc.name: FindDScreenById_002
+ * @tc.desc: Verify the FindDScreenById function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenManagerTestV2, FindDScreenById_002, TestSize.Level1)
+{
+    std::string devId = "devId000";
+    std::string dhId = "dhId000";
+    std::string dScreenIdx = devId + SEPERATOR + dhId;
+    std::shared_ptr<DScreen> dScreen = nullptr;
+    DScreenManager::GetInstance().dScreens_[dScreenIdx] = dScreen;
+    EXPECT_EQ(nullptr, DScreenManager::GetInstance().FindDScreenById(99));
+}
+
+/**
+ * @tc.name: FindDScreenById_003
+ * @tc.desc: Verify the FindDScreenById function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenManagerTestV2, FindDScreenById_003, TestSize.Level1)
+{
+    std::shared_ptr<IDScreenCallback> dScreenCallback = nullptr;
+    std::string devId = "devId000";
+    std::string dhId = "dhId000";
+    std::string dScreenIdx = devId + SEPERATOR + dhId;
+    std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>(devId, dhId, dScreenCallback);
+    dScreen->screenId_ = 99;
+    DScreenManager::GetInstance().dScreens_[dScreenIdx] = dScreen;
+    EXPECT_EQ(dScreen, DScreenManager::GetInstance().FindDScreenById(99));
+}
+
+/**
+ * @tc.name: FindDScreenById_004
+ * @tc.desc: Verify the FindDScreenById function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenManagerTestV2, FindDScreenById_004, TestSize.Level1)
+{
+    std::shared_ptr<IDScreenCallback> dScreenCallback = nullptr;
+    std::string devId = "devId000";
+    std::string dhId = "dhId000";
+    std::string dScreenIdx = devId + SEPERATOR + dhId;
+    std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>(devId, dhId, dScreenCallback);
+    dScreen->screenId_ = 90;
+    DScreenManager::GetInstance().dScreens_[dScreenIdx] = dScreen;
+    EXPECT_EQ(nullptr, DScreenManager::GetInstance().FindDScreenById(99));
 }
 
 /**
