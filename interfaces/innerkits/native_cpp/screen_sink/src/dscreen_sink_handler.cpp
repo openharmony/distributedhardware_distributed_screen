@@ -194,6 +194,26 @@ void DScreenSinkHandler::OnRemoteSinkSvrDied(const wptr<IRemoteObject> &remote)
     dScreenSinkProxy_ = nullptr;
 }
 
+int32_t DScreenSinkHandler::RegisterPrivacyResources(std::shared_ptr<PrivacyResourcesListener> listener)
+{
+    return DH_SUCCESS;
+}
+
+int32_t DScreenSinkHandler::PauseDistributedHardware(const std::string &networkId)
+{
+    return DH_SUCCESS;
+}
+
+int32_t DScreenSinkHandler::ResumeDistributedHardware(const std::string &networkId)
+{
+    return DH_SUCCESS;
+}
+
+int32_t DScreenSinkHandler::StopDistributedHardware(const std::string &networkId)
+{
+    return DH_SUCCESS;
+}
+
 IDistributedHardwareSink *GetSinkHardwareHandler()
 {
     DHLOGI("GetSinkHardwareHandler");
