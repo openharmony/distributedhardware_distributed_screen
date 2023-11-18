@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "screen_source_trans_test.h"
 #include "screentrans_test_utils.h"
 
@@ -524,7 +525,6 @@ HWTEST_F(ScreenSourceTransTest, OnImageProcessDone_002, TestSize.Level1)
  */
 HWTEST_F(ScreenSourceTransTest, SetConsumerSurface_001, TestSize.Level1)
 {
-
     VideoParam videoParam;
     std::vector<OHOS::Rect> damages;
     sptr<SurfaceBuffer> surfaceBuffer = nullptr;
@@ -544,13 +544,6 @@ HWTEST_F(ScreenSourceTransTest, SetConsumerSurface_001, TestSize.Level1)
  */
 HWTEST_F(ScreenSourceTransTest, SetConsumerSurface_002, TestSize.Level1)
 {
-    VideoParam localParam;
-    localParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
-    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
-    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
-    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
-    localParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
-    localParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
     VideoParam remoteParam;
     remoteParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
     remoteParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
@@ -558,6 +551,13 @@ HWTEST_F(ScreenSourceTransTest, SetConsumerSurface_002, TestSize.Level1)
     remoteParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
     remoteParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
     remoteParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    VideoParam localParam;
+    localParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    localParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    localParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
     trans->imageProcessor_ = std::make_shared<ImageSourceProcessor>();
     std::shared_ptr<IImageSourceProcessorListener> listener = std::make_shared<ScreenSourceTrans>();
     trans->imageProcessor_->ConfigureImageProcessor(localParam, remoteParam, listener);
