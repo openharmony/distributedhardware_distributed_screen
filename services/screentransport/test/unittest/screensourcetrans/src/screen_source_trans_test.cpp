@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "screen_source_trans_test.h"
 #include "screentrans_test_utils.h"
 
@@ -515,6 +514,55 @@ HWTEST_F(ScreenSourceTransTest, OnImageProcessDone_002, TestSize.Level1)
     trans->OnImageProcessDone(data);
 
     EXPECT_NE(queueSize, trans->dataQueue_.size());
+}
+
+/**
+ * @tc.name: SetConsumerSurface_001
+ * @tc.desc: Verify the SetConsumerSurface function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, SetConsumerSurface_001, TestSize.Level1)
+{
+
+    VideoParam videoParam;
+    std::vector<OHOS::Rect> damages;
+    sptr<SurfaceBuffer> surfaceBuffer = nullptr;
+    trans->OnDamageProcessDone(surfaceBuffer, damages);
+    trans->imageProcessor_ = std::make_shared<ImageSourceProcessor>();
+    std::shared_ptr<IImageSourceProcessorListener> listener = std::make_shared<ScreenSourceTrans>();
+    trans->imageProcessor_->ConfigureImageProcessor(videoParam, videoParam, listener);
+    int32_t ret = trans->SetConsumerSurface();
+    EXPECT_EQ(ERR_DH_SCREEN_SURFACE_INVALIED, ret);
+}
+
+/**
+ * @tc.name: SetConsumerSurface_002
+ * @tc.desc: Verify the SetConsumerSurface function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, SetConsumerSurface_002, TestSize.Level1)
+{
+    VideoParam localParam;
+    localParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    localParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    localParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
+    VideoParam remoteParam;
+    remoteParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    remoteParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    remoteParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    remoteParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    remoteParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
+    remoteParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    trans->imageProcessor_ = std::make_shared<ImageSourceProcessor>();
+    std::shared_ptr<IImageSourceProcessorListener> listener = std::make_shared<ScreenSourceTrans>();
+    trans->imageProcessor_->ConfigureImageProcessor(localParam, remoteParam, listener);
+    int32_t ret = trans->SetConsumerSurface();
+    EXPECT_EQ(DH_SUCCESS, ret);
 }
 }
 }

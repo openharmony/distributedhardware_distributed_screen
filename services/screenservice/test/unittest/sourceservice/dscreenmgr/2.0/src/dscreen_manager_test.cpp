@@ -265,6 +265,58 @@ HWTEST_F(DScreenManagerTestV2, FindDScreenById_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: FindDScreenById_002
+ * @tc.desc: Verify the FindDScreenById function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenManagerTestV2, FindDScreenById_002, TestSize.Level1)
+{
+    std::string devId = "devId000";
+    std::string dhId = "dhId000";
+    std::string dScreenIdx = devId + SEPERATOR + dhId;
+    std::shared_ptr<DScreen> dScreen = nullptr;
+    DScreenManager::GetInstance().dScreens_[dScreenIdx] = dScreen;
+    EXPECT_EQ(nullptr, DScreenManager::GetInstance().FindDScreenById(99));
+}
+
+/**
+ * @tc.name: FindDScreenById_003
+ * @tc.desc: Verify the FindDScreenById function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenManagerTestV2, FindDScreenById_003, TestSize.Level1)
+{
+    std::shared_ptr<IDScreenCallback> dScreenCallback = nullptr;
+    std::string devId = "devId000";
+    std::string dhId = "dhId000";
+    std::string dScreenIdx = devId + SEPERATOR + dhId;
+    std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>(devId, dhId, dScreenCallback);
+    dScreen->screenId_ = 99;
+    DScreenManager::GetInstance().dScreens_[dScreenIdx] = dScreen;
+    EXPECT_EQ(dScreen, DScreenManager::GetInstance().FindDScreenById(99));
+}
+
+/**
+ * @tc.name: FindDScreenById_004
+ * @tc.desc: Verify the FindDScreenById function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenManagerTestV2, FindDScreenById_004, TestSize.Level1)
+{
+    std::shared_ptr<IDScreenCallback> dScreenCallback = nullptr;
+    std::string devId = "devId000";
+    std::string dhId = "dhId000";
+    std::string dScreenIdx = devId + SEPERATOR + dhId;
+    std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>(devId, dhId, dScreenCallback);
+    dScreen->screenId_ = 90;
+    DScreenManager::GetInstance().dScreens_[dScreenIdx] = dScreen;
+    EXPECT_EQ(nullptr, DScreenManager::GetInstance().FindDScreenById(99));
+}
+
+/**
  * @tc.name: GetScreenDumpInfo_001
  * @tc.desc: Verify the GetScreenDumpInfo function failed.
  * @tc.type: FUNC
