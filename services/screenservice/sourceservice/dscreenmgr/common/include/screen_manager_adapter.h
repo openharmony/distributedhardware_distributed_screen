@@ -24,7 +24,7 @@
 
 #include "dscreen_maprelation.h"
 #include "video_param.h"
-#include "transsction/rs_interfaces.h"
+#include "transaction/rs_interfaces.h"
 
 namespace OHOS {
 namespace DistributedHardware {
