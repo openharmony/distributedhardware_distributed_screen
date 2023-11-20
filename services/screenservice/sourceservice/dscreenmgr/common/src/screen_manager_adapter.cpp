@@ -79,7 +79,6 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
         false
     };
 
-    Rosen::RSInterfaces::GetInstance().SetVirtualScreenUsingStatus(true);
     uint64_t screenId = Rosen::ScreenManager::GetInstance().CreateVirtualScreen(option);
     DHLOGI("virtualScreen id is: %" PRIu64, screenId);
     screenIdMap_.emplace(screenName, screenId);
@@ -152,7 +151,7 @@ int32_t ScreenMgrAdapter::SetImageSurface(uint64_t screenId, sptr<OHOS::Surface>
         return ERR_DH_SCREEN_SA_SET_IMAGESURFACE_FAIL;
     }
     DHLOGI("SetImageSurface for virtualscreen, screenId: %" PRIu64, screenId);
-    Rosen::RSInterfaces::GetInstance().SetVirtualScreenUsingStatus(false);
+    Rosen::RSInterfaces::GetInstance().SetVirtualScreenUsingStatus(true);
     Rosen::ScreenManager::GetInstance().SetVirtualScreenSurface(screenId, surface);
     return DH_SUCCESS;
 }
