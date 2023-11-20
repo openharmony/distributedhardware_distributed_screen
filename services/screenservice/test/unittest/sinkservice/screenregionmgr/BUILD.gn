@@ -75,6 +75,7 @@ ohos_unittest("DscreenRegionMgrTest") {
     "distributed_hardware_fwk:distributedhardwareutils",
     "graphic_2d:libcomposer",
     "graphic_2d:libgraphic_utils",
+    "graphic_2d:librender_service_client",
     "graphic_2d:surface",
     "hisysevent:libhisysevent",
     "window_manager:libdm",

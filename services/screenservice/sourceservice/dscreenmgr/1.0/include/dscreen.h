@@ -25,6 +25,7 @@
 #include "iscreen_source_trans.h"
 #include "iscreen_source_trans_callback.h"
 #include "video_param.h"
+#include "transaction/rs_interfaces.h"
 
 namespace OHOS {
 namespace DistributedHardware {

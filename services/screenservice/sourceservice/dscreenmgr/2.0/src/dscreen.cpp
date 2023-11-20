@@ -242,6 +242,7 @@ void DScreen::HandleDisconnect()
     }
     SetState(ENABLED);
     RemoveSurface();
+    Rosen::RSInterfaces::GetInstance().SetVirtualScreenUsingStatus(false);
     ReportScreenMirrorEvent(DSCREEN_PROJECT_END, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
         "dscreen disconnect success");
 }
