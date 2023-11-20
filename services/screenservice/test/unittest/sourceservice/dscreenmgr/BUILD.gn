@@ -79,6 +79,7 @@ ohos_unittest("DscreenMgrTest") {
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_2d:libcomposer",
+    "graphic_2d:librender_service_client",
     "graphic_2d:surface",
     "graphic_2d:sync_fence",
     "hdf_core:libhdi",
