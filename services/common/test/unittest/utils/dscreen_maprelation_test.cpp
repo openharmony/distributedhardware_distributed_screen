@@ -143,5 +143,90 @@ HWTEST_F(DScreenMapRelationTest, from_json_001, TestSize.Level1)
     from_json(j, jsonDScreenMapRelation);
     EXPECT_EQ(displayId, jsonDScreenMapRelation.GetDisplayId());
 }
+
+/**
+ * @tc.name: from_json_002
+ * @tc.desc: Verify the from_json function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenMapRelationTest, from_json_002, TestSize.Level1)
+{
+    json j;
+    uint64_t displayId = 1;
+    uint64_t screenId = 2;
+    DScreenMapRelation jsonDScreenMapRelation;
+    from_json(j, jsonDScreenMapRelation);
+    j[KEY_DISPLAY_ID] = displayId;
+    from_json(j, jsonDScreenMapRelation);
+    j[KEY_SCREEN_ID] = screenId;
+    from_json(j, jsonDScreenMapRelation);
+    j[KEY_DISPLAY_RECT] = 2;
+    from_json(j, jsonDScreenMapRelation);
+    DisplayRect displayRect = {0, 0, 100, 100};
+    j[KEY_SCREEN_ID] = displayRect;
+    from_json(j, jsonDScreenMapRelation);
+    EXPECT_EQ(displayId, jsonDScreenMapRelation.GetDisplayId());
+}
+
+/**
+ * @tc.name: from_json_003
+ * @tc.desc: Verify the from_json function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenMapRelationTest, from_json_003, TestSize.Level1)
+{
+    json j;
+    int32_t startX = 1;
+    int32_t startY = 2;
+    int32_t width = 3;
+    int32_t height = 4;
+    DisplayRect displayRect;
+    from_json(j, displayRect);
+    EXPECT_EQ(0, displayRect.startX);
+    j[KEY_POINT_START_X] = startX;
+    from_json(j, displayRect);
+    EXPECT_EQ(0, displayRect.startX);
+    j[KEY_POINT_START_Y] = startY;
+    from_json(j, displayRect);
+    EXPECT_EQ(0, displayRect.startY);
+    j[KEY_WIDTH] = width;
+    from_json(j, displayRect);
+    EXPECT_EQ(0, displayRect.width);
+    j[KEY_HEIGHT] = height;
+    from_json(j, displayRect);
+    EXPECT_EQ(height, displayRect.height);
+}
+
+/**
+ * @tc.name: from_json_004
+ * @tc.desc: Verify the from_json function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenMapRelationTest, from_json_004, TestSize.Level1)
+{
+    json j;
+    int32_t startX = 1;
+    int32_t startY = 2;
+    uint32_t width = 3;
+    uint32_t height = 4;
+    ScreenRect screenRect;
+    from_json(j, screenRect);
+    EXPECT_EQ(0, screenRect.startX);
+    j[KEY_POINT_START_X] = startX;
+    from_json(j, screenRect);
+    EXPECT_EQ(0, screenRect.startX);
+    j[KEY_POINT_START_Y] = startY;
+    from_json(j, screenRect);
+    EXPECT_EQ(0, screenRect.startY);
+    j[KEY_WIDTH] = width;
+    from_json(j, screenRect);
+    EXPECT_EQ(0, screenRect.width);
+    j[KEY_HEIGHT] = height;
+    from_json(j, screenRect);
+    EXPECT_EQ(height, screenRect.height);
+}
 } // namespace DistributedHardware
 } // namespace OHOS

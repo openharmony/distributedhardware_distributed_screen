@@ -209,8 +209,11 @@ HWTEST_F(ScreenDecisionCenterTest, ConfigureDecisionCenter_001, TestSize.Level1)
 HWTEST_F(ScreenDecisionCenterTest, SetJpegSurface_001, TestSize.Level1)
 {
     decision->imageJpeg_ = std::make_shared<JpegImageProcessor>(param_);
-    sptr<Surface> jpegSurface = IConsumerSurface::Create();
+    sptr<Surface> jpegSurface;
     int32_t ret = decision->SetJpegSurface(jpegSurface);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
+    jpegSurface = IConsumerSurface::Create();
+    ret = decision->SetJpegSurface(jpegSurface);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 } // namespace DistributedHardware
