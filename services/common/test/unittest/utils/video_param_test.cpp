@@ -194,5 +194,41 @@ HWTEST_F(VideoParamTest, from_json_001, TestSize.Level1)
     from_json(j, jsonVideoParam);
     EXPECT_EQ(videoWidth, jsonVideoParam.GetVideoWidth());
 }
+
+/**
+ * @tc.name: from_json_002
+ * @tc.desc: Verify the from_json function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(VideoParamTest, from_json_002, TestSize.Level1)
+{
+    json j;
+    uint32_t screenWidth = 200;
+    uint32_t screenHeight = 200;
+    uint32_t videoWidth = 200;
+    uint32_t videoHeight = 200;
+    uint32_t fps = 30;
+    uint8_t codecType = DEFAULT_CODECTYPE;
+    uint8_t videoFormat = DEFAULT_VIDEO_FORMAT;
+    VideoParam jsonVideoParam;
+    jsonVideoParam.isPartialRefresh_ = true;
+    from_json(j, jsonVideoParam);
+    j[KEY_SCREEN_WIDTH] = screenWidth;
+    from_json(j, jsonVideoParam);
+    j[KEY_SCREEN_HEIGHT] = screenHeight;
+    from_json(j, jsonVideoParam);
+    j[KEY_VIDEO_WIDTH] = videoWidth;
+    from_json(j, jsonVideoParam);
+    j[KEY_VIDEO_HEIGHT] = videoHeight;
+    from_json(j, jsonVideoParam);
+    j[KEY_FPS] = fps;
+    from_json(j, jsonVideoParam);
+    j[KEY_CODECTYPE] = codecType;
+    from_json(j, jsonVideoParam);
+    j[KEY_COLOR_FORMAT] = videoFormat;
+    from_json(j, jsonVideoParam);
+    EXPECT_EQ(false, jsonVideoParam.isPartialRefresh_);
+}
 } // namespace DistributedHardware
 } // namespace OHOS
