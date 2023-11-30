@@ -30,8 +30,9 @@ void PluginHardwareFuzzTest(const uint8_t* data, size_t size)
 
     std::string dhId(reinterpret_cast<const char*>(data), size);
     std::string attr(reinterpret_cast<const char*>(data), size);
+    std::string subtype(reinterpret_cast<const char*>(data), size);
 
-    DScreenHandler::GetInstance().PluginHardware(dhId, attr);
+    DScreenHandler::GetInstance().PluginHardware(dhId, attr, subtype);
 }
 }
 }
