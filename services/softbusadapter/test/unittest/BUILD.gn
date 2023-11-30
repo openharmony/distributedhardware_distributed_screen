@@ -41,6 +41,11 @@ config("module_private_config") {
 
 ## UnitTest screen_soft_bus_adapter_test
 ohos_unittest("SoftBusAdapterTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [ "${services_path}/softbusadapter/test/unittest/src/softbus_adapter_test.cpp" ]

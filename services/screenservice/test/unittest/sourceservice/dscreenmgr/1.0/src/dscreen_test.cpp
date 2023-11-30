@@ -14,6 +14,10 @@
  */
 
 #include "1.0/include/dscreen_test.h"
+#include "accesstoken_kit.h"
+#include "nativetoken_kit.h"
+#include "token_setproc.h"
+#include "softbus_common.h"
 
 #define private public
 #include "dscreen_constants.h"
@@ -38,6 +42,24 @@ void DScreenTestV1::TearDownTestCase(void) {}
 
 void DScreenTestV1::SetUp(void)
 {
+    uint64_t tokenId;
+    const char *perms[] = {
+        OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER,
+        OHOS_PERMISSION_DISTRIBUTED_DATASYNC
+    };
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = 2,
+        .aclsNum = 0,
+        .dcaps = NULL,
+        .perms = perms,
+        .acls = NULL,
+        .processName = "DscreenMgrTest",
+        .aplStr = "system_basic"
+    };
+    tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
     std::string devId = "devId";
     std::string dhId = "dhId";
     std::shared_ptr<DScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
@@ -331,7 +353,7 @@ HWTEST_F(DScreenTestV1, SetUp_001, TestSize.Level1)
     dScreen_->videoParam_->SetScreenWidth(100);
     dScreen_->version_ = "1.0";
     int32_t ret = dScreen_->SetUp();
-    EXPECT_EQ(-1, ret);
+    EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 /**
@@ -352,7 +374,7 @@ HWTEST_F(DScreenTestV1, SetUp_002, TestSize.Level1)
     dScreen_->videoParam_->SetScreenWidth(100);
     dScreen_->version_ = "1.0";
     int32_t ret = dScreen_->SetUp();
-    EXPECT_EQ(-1, ret);
+    EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 /**

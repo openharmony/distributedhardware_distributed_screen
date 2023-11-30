@@ -15,6 +15,10 @@
 
 #include "screen_source_trans_test.h"
 #include "screentrans_test_utils.h"
+#include "accesstoken_kit.h"
+#include "nativetoken_kit.h"
+#include "token_setproc.h"
+#include "softbus_common.h"
 
 using namespace testing::ext;
 
@@ -26,6 +30,24 @@ void ScreenSourceTransTest::TearDownTestCase(void) {}
 
 void ScreenSourceTransTest::SetUp(void)
 {
+    uint64_t tokenId;
+    const char *perms[] = {
+        OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER,
+        OHOS_PERMISSION_DISTRIBUTED_DATASYNC
+    };
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = 2,
+        .aclsNum = 0,
+        .dcaps = NULL,
+        .perms = perms,
+        .acls = NULL,
+        .processName = "SourceTransTest",
+        .aplStr = "system_basic",
+    };
+    tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
     trans = std::make_shared<ScreenSourceTrans>();
 }
 
@@ -101,7 +123,7 @@ HWTEST_F(ScreenSourceTransTest, SetUp_002, TestSize.Level1)
 
     int32_t actual = trans->SetUp(localParam, remoteParam, "peerDevId");
 
-    EXPECT_EQ(-1, actual);
+    EXPECT_EQ(DH_SUCCESS, actual);
 }
 
 /**
@@ -118,7 +140,7 @@ HWTEST_F(ScreenSourceTransTest, InitScreenTrans_001, TestSize.Level1)
     trans->screenChannel_ = std::make_shared<MockScreenDataChannelImpl>();
     int32_t actual = trans->InitScreenTrans(localParam, remoteParam, peerDevId);
 
-    EXPECT_EQ(-1, actual);
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, actual);
 }
 
 /**

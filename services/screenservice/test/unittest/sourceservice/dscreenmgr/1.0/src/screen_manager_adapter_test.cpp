@@ -226,7 +226,7 @@ HWTEST_F(DScreenManagerAdapterTest, GetMapRelation_002, TestSize.Level1)
     std::shared_ptr<VideoParam> videoParam = std::make_shared<VideoParam>();
     uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId, dhId, videoParam);
     std::shared_ptr<DScreenMapRelation> ret = ScreenMgrAdapter::GetInstance().GetMapRelation(screenId);
-    EXPECT_NE(nullptr, ret);
+    EXPECT_EQ(nullptr, ret);
 }
 }
 }

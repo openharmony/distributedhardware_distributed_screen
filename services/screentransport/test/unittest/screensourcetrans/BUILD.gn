@@ -48,6 +48,11 @@ config("module_private_config") {
 
 ## UnitTest screen_source_trans_test
 ohos_unittest("SourceTransTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [ "${services_path}/screentransport/test/unittest/screensourcetrans/src/screen_source_trans_test.cpp" ]
@@ -61,7 +66,11 @@ ohos_unittest("SourceTransTest") {
   ]
 
   external_deps = [
+    "access_token:libaccesstoken_sdk",
+    "access_token:libnativetoken",
+    "access_token:libtoken_setproc",
     "c_utils:utils",
+    "dsoftbus:softbus_client",
     "graphic_2d:libgraphic_utils",
     "graphic_2d:surface",
     "graphic_2d:sync_fence",

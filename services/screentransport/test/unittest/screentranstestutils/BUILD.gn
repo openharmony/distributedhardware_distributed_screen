@@ -49,6 +49,11 @@ config("module_private_config") {
 
 ## UnitTest screen_callback_test
 ohos_unittest("ScreenCallbackTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [ "${services_path}/screentransport/test/unittest/screentranstestutils/src/screen_callback_test.cpp" ]
