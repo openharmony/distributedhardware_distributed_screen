@@ -43,6 +43,11 @@ config("module_private_config") {
 
 ## UnitTest screen_sink_processor_test
 ohos_unittest("SinkProcessorTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [

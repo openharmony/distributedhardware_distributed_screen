@@ -18,6 +18,10 @@
 #include "dscreen_util.h"
 #include "dscreen_json_util.h"
 #undef private
+#include "accesstoken_kit.h"
+#include "nativetoken_kit.h"
+#include "token_setproc.h"
+#include "softbus_common.h"
 
 using namespace testing;
 using namespace testing::ext;
@@ -30,6 +34,24 @@ void ScreenDataChannelImplTest::TearDownTestCase(void) {}
 
 void ScreenDataChannelImplTest::SetUp(void)
 {
+    uint64_t tokenId;
+    const char *perms[] = {
+        OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER,
+        OHOS_PERMISSION_DISTRIBUTED_DATASYNC
+    };
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = 2,
+        .aclsNum = 0,
+        .dcaps = NULL,
+        .perms = perms,
+        .acls = NULL,
+        .processName = "DataChannelTest",
+        .aplStr = "system_basic",
+    };
+    tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
     std::string peerDevId = "test";
     dataChannelImpl_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
 }
@@ -65,7 +87,7 @@ HWTEST_F(ScreenDataChannelImplTest, CreateSession_002, TestSize.Level1)
     dataChannelImpl_->jpegSessionFlag_ = false;
     int32_t ret = dataChannelImpl_->CreateSession(listener);
 
-    EXPECT_EQ(-1, ret);
+    EXPECT_EQ(DH_SUCCESS, ret);
 }
 
 /**
@@ -147,7 +169,7 @@ HWTEST_F(ScreenDataChannelImplTest, SendDirtyData_002, TestSize.Level1)
  */
 HWTEST_F(ScreenDataChannelImplTest, release_session_test_002, TestSize.Level1)
 {
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_OPERATION, dataChannelImpl_->ReleaseSession());
+    EXPECT_EQ(DH_SUCCESS, dataChannelImpl_->ReleaseSession());
 }
 
 /**

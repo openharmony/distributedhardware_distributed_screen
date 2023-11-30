@@ -36,6 +36,11 @@ config("module_private_config") {
 
 ## UnitTest data_buffer_test
 ohos_unittest("DataBufferTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [

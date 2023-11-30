@@ -33,6 +33,11 @@ config("module_private_config") {
 
 ## UnitTest screen_client_test
 ohos_unittest("ScreenClientTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [
