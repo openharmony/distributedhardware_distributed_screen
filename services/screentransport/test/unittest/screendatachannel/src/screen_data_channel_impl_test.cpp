@@ -34,24 +34,6 @@ void ScreenDataChannelImplTest::TearDownTestCase(void) {}
 
 void ScreenDataChannelImplTest::SetUp(void)
 {
-    uint64_t tokenId;
-    const char *perms[] = {
-        OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER,
-        OHOS_PERMISSION_DISTRIBUTED_DATASYNC
-    };
-    NativeTokenInfoParams infoInstance = {
-        .dcapsNum = 0,
-        .permsNum = 2,
-        .aclsNum = 0,
-        .dcaps = NULL,
-        .perms = perms,
-        .acls = NULL,
-        .processName = "DataChannelTest",
-        .aplStr = "system_basic",
-    };
-    tokenId = GetAccessTokenId(&infoInstance);
-    SetSelfTokenID(tokenId);
-    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
     std::string peerDevId = "test";
     dataChannelImpl_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
 }
@@ -59,6 +41,39 @@ void ScreenDataChannelImplTest::SetUp(void)
 void ScreenDataChannelImplTest::TearDown(void)
 {
     dataChannelImpl_ = nullptr;
+}
+
+void NativeTokenGet(const char* perms[], int size)
+{
+    uint64_t tokenId;
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = size,
+        .aclsNum = 0,
+        .dcaps = nullptr,
+        .perms = perms,
+        .acls = nullptr,
+        .aplStr = "system_basic",
+    };
+
+    infoInstance.processName = "DataChannelTest";
+    tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
+}
+
+void EnablePermissionAccess()
+{
+    const char* perms[] = {
+        "ohos.permission.DISTRIBUTED_DATASYNC",
+        "ohos.permission.CAPTURE_SCREEN",
+    };
+    NativeTokenGet(perms, 2); // 2 is the size of the array which consists of required permissions.
+}
+
+void DisablePermissionAccess()
+{
+    NativeTokenGet(nullptr, 0); // empty permission array.
 }
 
 /**
@@ -83,11 +98,13 @@ HWTEST_F(ScreenDataChannelImplTest, CreateSession_001, TestSize.Level1)
  */
 HWTEST_F(ScreenDataChannelImplTest, CreateSession_002, TestSize.Level1)
 {
+    EnablePermissionAccess();
     std::shared_ptr<IScreenChannelListener> listener = std::make_shared<MockIScreenChannelListener>();
     dataChannelImpl_->jpegSessionFlag_ = false;
     int32_t ret = dataChannelImpl_->CreateSession(listener);
 
     EXPECT_EQ(DH_SUCCESS, ret);
+    DisablePermissionAccess();
 }
 
 /**
@@ -169,7 +186,9 @@ HWTEST_F(ScreenDataChannelImplTest, SendDirtyData_002, TestSize.Level1)
  */
 HWTEST_F(ScreenDataChannelImplTest, release_session_test_001, TestSize.Level1)
 {
+    EnablePermissionAccess();
     EXPECT_EQ(DH_SUCCESS, dataChannelImpl_->ReleaseSession());
+    DisablePermissionAccess();
 }
 
 /**

@@ -42,24 +42,6 @@ void DScreenTestV1::TearDownTestCase(void) {}
 
 void DScreenTestV1::SetUp(void)
 {
-    uint64_t tokenId;
-    const char *perms[] = {
-        OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER,
-        OHOS_PERMISSION_DISTRIBUTED_DATASYNC
-    };
-    NativeTokenInfoParams infoInstance = {
-        .dcapsNum = 0,
-        .permsNum = 2,
-        .aclsNum = 0,
-        .dcaps = NULL,
-        .perms = perms,
-        .acls = NULL,
-        .processName = "DscreenMgrTest",
-        .aplStr = "system_basic"
-    };
-    tokenId = GetAccessTokenId(&infoInstance);
-    SetSelfTokenID(tokenId);
-    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
     std::string devId = "devId";
     std::string dhId = "dhId";
     std::shared_ptr<DScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
@@ -76,6 +58,39 @@ void DScreenTestV1::SetUp(void)
 }
 
 void DScreenTestV1::TearDown(void) {}
+
+void NativeTokenGet(const char* perms[], int size)
+{
+    uint64_t tokenId;
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = size,
+        .aclsNum = 0,
+        .dcaps = nullptr,
+        .perms = perms,
+        .acls = nullptr,
+        .aplStr = "system_basic",
+    };
+
+    infoInstance.processName = "DscreenMgrTest";
+    tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
+}
+
+void EnablePermissionAccess()
+{
+    const char* perms[] = {
+        "ohos.permission.DISTRIBUTED_DATASYNC",
+        "ohos.permission.CAPTURE_SCREEN",
+    };
+    NativeTokenGet(perms, 2); // 2 is the size of the array which consists of required permissions.
+}
+
+void DisablePermissionAccess()
+{
+    NativeTokenGet(nullptr, 0); // empty permission array.
+}
 
 /**
  * @tc.name: AddTask_001
@@ -343,6 +358,7 @@ HWTEST_F(DScreenTestV1, NegotiateCodecType_002, TestSize.Level1)
  */
 HWTEST_F(DScreenTestV1, SetUp_001, TestSize.Level1)
 {
+    EnablePermissionAccess();
     dScreen_->sourceTrans_ = nullptr;
     dScreen_->videoParam_ = std::make_shared<VideoParam>();
     dScreen_->videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
@@ -354,6 +370,7 @@ HWTEST_F(DScreenTestV1, SetUp_001, TestSize.Level1)
     dScreen_->version_ = "1.0";
     int32_t ret = dScreen_->SetUp();
     EXPECT_EQ(DH_SUCCESS, ret);
+    DisablePermissionAccess();
 }
 
 /**
@@ -364,6 +381,7 @@ HWTEST_F(DScreenTestV1, SetUp_001, TestSize.Level1)
  */
 HWTEST_F(DScreenTestV1, SetUp_002, TestSize.Level1)
 {
+    EnablePermissionAccess();
     dScreen_->sourceTrans_ = std::make_shared<ScreenSourceTrans>();
     dScreen_->videoParam_ = std::make_shared<VideoParam>();
     dScreen_->videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
@@ -374,7 +392,8 @@ HWTEST_F(DScreenTestV1, SetUp_002, TestSize.Level1)
     dScreen_->videoParam_->SetScreenWidth(100);
     dScreen_->version_ = "1.0";
     int32_t ret = dScreen_->SetUp();
-    EXPECT_EQ(DH_SUCCESS, ret);
+    EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_REGISTER_SOFTBUS_LISTENER_FAIL, ret);
+    DisablePermissionAccess();
 }
 
 /**

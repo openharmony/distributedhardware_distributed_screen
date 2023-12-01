@@ -27,30 +27,42 @@ void SoftbusAdapterTest::SetUpTestCase(void) {}
 
 void SoftbusAdapterTest::TearDownTestCase(void) {}
 
-void SoftbusAdapterTest::SetUp(void)
+void SoftbusAdapterTest::SetUp(void) {}
+
+void SoftbusAdapterTest::TearDown(void) {}
+
+void NativeTokenGet(const char* perms[], int size)
 {
     uint64_t tokenId;
-    const char *perms[] = {
-        OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER,
-        OHOS_PERMISSION_DISTRIBUTED_DATASYNC
-    };
     NativeTokenInfoParams infoInstance = {
         .dcapsNum = 0,
-        .permsNum = 2,
+        .permsNum = size,
         .aclsNum = 0,
         .dcaps = nullptr,
         .perms = perms,
         .acls = nullptr,
-        .processName = "softbus_adapter_test",
         .aplStr = "system_basic",
     };
+
+    infoInstance.processName = "SoftBusAdapterTest";
     tokenId = GetAccessTokenId(&infoInstance);
     SetSelfTokenID(tokenId);
     OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
 }
 
-void SoftbusAdapterTest::TearDown(void) {}
+void EnablePermissionAccess()
+{
+    const char* perms[] = {
+        "ohos.permission.DISTRIBUTED_DATASYNC",
+        "ohos.permission.CAPTURE_SCREEN",
+    };
+    NativeTokenGet(perms, 2);
+}
 
+void DisablePermissionAccess()
+{
+    NativeTokenGet(nullptr, 0);
+}
 static int32_t ScreenOnSoftbusSessionOpened(int32_t sessionId, int32_t result)
 {
     return 0;
@@ -75,6 +87,7 @@ static void ScreenOnQosEvent(int sessionId, int eventId, int tvCount, const QosT
  */
 HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_001, TestSize.Level1)
 {
+    EnablePermissionAccess();
     softbusAdapter.sessListener_.OnSessionOpened = ScreenOnSoftbusSessionOpened;
     softbusAdapter.sessListener_.OnSessionClosed = ScreenOnSoftbusSessionClosed;
     softbusAdapter.sessListener_.OnBytesReceived = ScreenOnBytesReceived;
@@ -107,6 +120,7 @@ HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_001, TestSize.Level1)
     int32_t actual = softbusAdapter.CreateSoftbusSessionServer(pkgname, sessionName, peerDevId);
     EXPECT_EQ(DH_SUCCESS, actual);
     softbusAdapter.RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
+    DisablePermissionAccess();
 }
 
 /**
