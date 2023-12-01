@@ -39,6 +39,11 @@ config("module_private_config") {
 
 ## UnitTest ScreenSinkTest
 ohos_unittest("ScreenSinkTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [ "${interfaces_path}/innerkits/native_cpp/test/unittest/screensinktest/src/dscreen_sink_handler_test.cpp" ]

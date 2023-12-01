@@ -34,6 +34,11 @@ config("module_private_config") {
 
 ## UnitTest screen_decision_center_test
 ohos_unittest("ScreenDecisionCenterTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [ "${services_path}/common/test/unittest/decision_center/screen_decision_center_test.cpp" ]

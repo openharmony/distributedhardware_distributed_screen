@@ -18,6 +18,10 @@
 #include "dscreen_util.h"
 #include "dscreen_json_util.h"
 #undef private
+#include "accesstoken_kit.h"
+#include "nativetoken_kit.h"
+#include "token_setproc.h"
+#include "softbus_common.h"
 
 using namespace testing;
 using namespace testing::ext;
@@ -37,6 +41,39 @@ void ScreenDataChannelImplTest::SetUp(void)
 void ScreenDataChannelImplTest::TearDown(void)
 {
     dataChannelImpl_ = nullptr;
+}
+
+void NativeTokenGet(const char* perms[], int size)
+{
+    uint64_t tokenId;
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = size,
+        .aclsNum = 0,
+        .dcaps = nullptr,
+        .perms = perms,
+        .acls = nullptr,
+        .aplStr = "system_basic",
+    };
+
+    infoInstance.processName = "DataChannelTest";
+    tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
+}
+
+void EnablePermissionAccess()
+{
+    const char* perms[] = {
+        "ohos.permission.DISTRIBUTED_DATASYNC",
+        "ohos.permission.CAPTURE_SCREEN",
+    };
+    NativeTokenGet(perms, 2); // 2 is the size of an array composed of the required permissions.
+}
+
+void DisablePermissionAccess()
+{
+    NativeTokenGet(nullptr, 0); // empty permission array.
 }
 
 /**
@@ -61,11 +98,13 @@ HWTEST_F(ScreenDataChannelImplTest, CreateSession_001, TestSize.Level1)
  */
 HWTEST_F(ScreenDataChannelImplTest, CreateSession_002, TestSize.Level1)
 {
+    EnablePermissionAccess();
     std::shared_ptr<IScreenChannelListener> listener = std::make_shared<MockIScreenChannelListener>();
     dataChannelImpl_->jpegSessionFlag_ = false;
     int32_t ret = dataChannelImpl_->CreateSession(listener);
 
-    EXPECT_EQ(-1, ret);
+    EXPECT_EQ(DH_SUCCESS, ret);
+    DisablePermissionAccess();
 }
 
 /**
@@ -140,14 +179,16 @@ HWTEST_F(ScreenDataChannelImplTest, SendDirtyData_002, TestSize.Level1)
 }
 
 /**
- * @tc.name: release_session_test_002
+ * @tc.name: release_session_test_001
  * @tc.desc: Verify the ReleaseSession function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenDataChannelImplTest, release_session_test_002, TestSize.Level1)
+HWTEST_F(ScreenDataChannelImplTest, release_session_test_001, TestSize.Level1)
 {
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_OPERATION, dataChannelImpl_->ReleaseSession());
+    EnablePermissionAccess();
+    EXPECT_EQ(DH_SUCCESS, dataChannelImpl_->ReleaseSession());
+    DisablePermissionAccess();
 }
 
 /**

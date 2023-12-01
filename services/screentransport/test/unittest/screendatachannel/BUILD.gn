@@ -40,6 +40,11 @@ config("module_private_config") {
 
 ## UnitTest screen_data_channel_test
 ohos_unittest("DataChannelTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [ "${services_path}/screentransport/test/unittest/screendatachannel/src/screen_data_channel_impl_test.cpp" ]
@@ -53,6 +58,9 @@ ohos_unittest("DataChannelTest") {
   ]
 
   external_deps = [
+    "access_token:libaccesstoken_sdk",
+    "access_token:libnativetoken",
+    "access_token:libtoken_setproc",
     "c_utils:utils",
     "dsoftbus:softbus_client",
   ]

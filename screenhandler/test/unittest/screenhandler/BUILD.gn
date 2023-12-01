@@ -30,6 +30,11 @@ config("module_private_config") {
 
 ## UnitTest dscreen_handler_test
 ohos_unittest("DscreenHandlerTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [ "${distributedscreen_path}/screenhandler/test/unittest/screenhandler/src/dscreen_handler_test.cpp" ]

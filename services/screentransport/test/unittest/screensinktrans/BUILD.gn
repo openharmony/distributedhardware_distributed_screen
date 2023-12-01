@@ -43,6 +43,11 @@ config("module_private_config") {
 
 ## UnitTest sink_trans_test
 ohos_unittest("SinkTransTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [ "${services_path}/screentransport/test/unittest/screensinktrans/src/screen_sink_trans_test.cpp" ]

@@ -33,6 +33,11 @@ config("module_private_config") {
 
 ## UnitTest jpeg_image_processor_test
 ohos_unittest("JpegImageProcessorTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [ "${services_path}/common/test/unittest/imageJpeg/jpeg_image_processor_test.cpp" ]

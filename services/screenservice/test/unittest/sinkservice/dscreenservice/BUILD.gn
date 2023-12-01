@@ -30,6 +30,11 @@ config("module_private_config") {
 
 ## UnitTest DScreenSinkStubTest
 ohos_unittest("DScreenSinkStubTest") {
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   module_out_path = module_out_path
 
   sources = [ "${services_path}/screenservice/test/unittest/sinkservice/dscreenservice/src/dscreen_sink_stub_test.cpp" ]
