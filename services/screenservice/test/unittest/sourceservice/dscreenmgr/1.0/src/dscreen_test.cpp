@@ -84,7 +84,7 @@ void EnablePermissionAccess()
         "ohos.permission.DISTRIBUTED_DATASYNC",
         "ohos.permission.CAPTURE_SCREEN",
     };
-    NativeTokenGet(perms, 2); // 2 is the size of the array which consists of required permissions.
+    NativeTokenGet(perms, 2); // 2 is the size of an array composed of the required permissions.
 }
 
 void DisablePermissionAccess()

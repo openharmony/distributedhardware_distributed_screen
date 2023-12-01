@@ -56,12 +56,12 @@ void EnablePermissionAccess()
         "ohos.permission.DISTRIBUTED_DATASYNC",
         "ohos.permission.CAPTURE_SCREEN",
     };
-    NativeTokenGet(perms, 2);
+    NativeTokenGet(perms, 2); // 2 is the size of an array composed of the required permissions.
 }
 
 void DisablePermissionAccess()
 {
-    NativeTokenGet(nullptr, 0);
+    NativeTokenGet(nullptr, 0); // empty permission array.
 }
 static int32_t ScreenOnSoftbusSessionOpened(int32_t sessionId, int32_t result)
 {
