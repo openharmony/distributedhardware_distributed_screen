@@ -39,10 +39,11 @@ class MockPluginListener : public PluginListener {
 public:
     MockPluginListener() = default;
     virtual ~MockPluginListener() = default;
-    void PluginHardware(const std::string &dhId, const std::string &attrs) override
+    void PluginHardware(const std::string &dhId, const std::string &attrs,  const std::string &subtype) override
     {
         (void) dhId;
         (void) attrs;
+        (void) subtype;
         return;
     }
     void UnPluginHardware(const std::string &dhId) override

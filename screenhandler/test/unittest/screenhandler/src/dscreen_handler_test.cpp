@@ -47,11 +47,12 @@ HWTEST_F(DScreenHandlerTest, Initialize_001, TestSize.Level1)
 
     const std::string dhId = "dhId";
     const std::string attr = "attr";
+    const std::string subtype = "screen";
     DScreenHandler::GetInstance().listener_ = nullptr;
-    DScreenHandler::GetInstance().PluginHardware(dhId, attr);
+    DScreenHandler::GetInstance().PluginHardware(dhId, attr, subtype);
     DScreenHandler::GetInstance().UnPluginHardware(dhId);
     DScreenHandler::GetInstance().listener_ = std::make_shared<MockPluginListener>();
-    DScreenHandler::GetInstance().PluginHardware(dhId, attr);
+    DScreenHandler::GetInstance().PluginHardware(dhId, attr, subtype);
     DScreenHandler::GetInstance().UnPluginHardware(dhId);
     EXPECT_EQ(DH_SUCCESS, ret);
 }

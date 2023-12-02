@@ -40,7 +40,7 @@ public:
     bool IsSupportPlugin() override;
     void RegisterPluginListener(std::shared_ptr<PluginListener> listener) override;
     void UnRegisterPluginListener() override;
-    void PluginHardware(const std::string &dhId, const std::string &attr);
+    void PluginHardware(const std::string &dhId, const std::string &attr, const std::string &subtype);
     void UnPluginHardware(const std::string &dhId);
     std::string QueryCodecInfo();
 

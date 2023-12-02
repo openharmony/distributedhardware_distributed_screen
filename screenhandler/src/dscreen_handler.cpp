@@ -95,8 +95,9 @@ void ScreenListener::OnConnect(uint64_t screenId)
     attrJson[KEY_SCREEN_WIDTH] = screenWidth;
     attrJson[KEY_SCREEN_HEIGHT] = screenHeight;
     attrJson[KEY_CODECTYPE] = DScreenHandler::GetInstance().QueryCodecInfo();
+    std::string subtype = "screen";
 
-    DScreenHandler::GetInstance().PluginHardware(dhId, attrJson.dump());
+    DScreenHandler::GetInstance().PluginHardware(dhId, attrJson.dump(), subtype);
 }
 
 void ScreenListener::OnDisconnect(uint64_t screenId)
@@ -106,11 +107,11 @@ void ScreenListener::OnDisconnect(uint64_t screenId)
     DScreenHandler::GetInstance().UnPluginHardware(dhId);
 }
 
-void DScreenHandler::PluginHardware(const std::string &dhId, const std::string &attr)
+void DScreenHandler::PluginHardware(const std::string &dhId, const std::string &attr, const std::string &subtype)
 {
     DHLOGI("DScreenHandler PluginHardware");
     if (listener_ != nullptr) {
-        listener_->PluginHardware(dhId, attr);
+        listener_->PluginHardware(dhId, attr, subtype);
     }
 }
 
