@@ -37,6 +37,7 @@ public:
     void TearDown();
 
     std::shared_ptr<ScreenSourceTrans> trans = nullptr;
+    uint64_t tokenId_;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

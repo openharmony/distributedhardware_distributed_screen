@@ -22,6 +22,9 @@
 #include "dscreen_errcode.h"
 #include "dscreen_util.h"
 #include "video_param.h"
+#include "accesstoken_kit.h"
+#include "nativetoken_kit.h"
+#include "token_setproc.h"
 
 using namespace testing;
 using namespace testing::ext;
@@ -35,6 +38,29 @@ void DScreenManagerAdapterTest::TearDownTestCase(void) {}
 void DScreenManagerAdapterTest::SetUp(void) {}
 
 void DScreenManagerAdapterTest::TearDown(void) {}
+
+void EnablePermissionAccess(const char* perms[], size_t permsNum, uint64_t &tokenId)
+{
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = permsNum,
+        .aclsNum = 0,
+        .dcaps = nullptr,
+        .perms = perms,
+        .acls = nullptr,
+        .aplStr = "system_basic",
+    };
+
+    infoInstance.processName = "DscreenMgrTest";
+    tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
+}
+
+void DisablePermissionAccess(const uint64_t &tokenId)
+{
+    OHOS::Security::AccessToken::AccessTokenKit::DeleteToken(tokenId);
+}
 
 /**
  * @tc.name: CreateVirtualScreen_001
@@ -220,12 +246,18 @@ HWTEST_F(DScreenManagerAdapterTest, GetMapRelation_001, TestSize.Level1)
  */
 HWTEST_F(DScreenManagerAdapterTest, GetMapRelation_002, TestSize.Level1)
 {
+    const char* perms[] = {
+        "ohos.permission.DISTRIBUTED_DATASYNC",
+        "ohos.permission.CAPTURE_SCREEN",
+    };
+    EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
     std::string devId = "devId";
     std::string dhId = "dhId";
     ScreenMgrAdapter::GetInstance().screenIdMap_.clear();
     std::shared_ptr<VideoParam> videoParam = std::make_shared<VideoParam>();
     uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId, dhId, videoParam);
     std::shared_ptr<DScreenMapRelation> ret = ScreenMgrAdapter::GetInstance().GetMapRelation(screenId);
+    DisablePermissionAccess(tokenId_);
     EXPECT_NE(nullptr, ret);
 }
 }

@@ -40,6 +40,7 @@ public:
     void TearDown();
 
     SoftbusAdapter softbusAdapter;
+    uint64_t tokenId_;
 };
 class MockSoftbusListener : public ISoftbusListener {
 public:

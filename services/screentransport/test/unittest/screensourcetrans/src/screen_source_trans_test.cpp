@@ -18,7 +18,6 @@
 #include "accesstoken_kit.h"
 #include "nativetoken_kit.h"
 #include "token_setproc.h"
-#include "softbus_common.h"
 
 using namespace testing::ext;
 
@@ -30,28 +29,33 @@ void ScreenSourceTransTest::TearDownTestCase(void) {}
 
 void ScreenSourceTransTest::SetUp(void)
 {
-    uint64_t tokenId;
-    const char *perms[] = {
-        OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER,
-        OHOS_PERMISSION_DISTRIBUTED_DATASYNC
-    };
-    NativeTokenInfoParams infoInstance = {
-        .dcapsNum = 0,
-        .permsNum = 2,
-        .aclsNum = 0,
-        .dcaps = NULL,
-        .perms = perms,
-        .acls = NULL,
-        .processName = "SourceTransTest",
-        .aplStr = "system_basic",
-    };
-    tokenId = GetAccessTokenId(&infoInstance);
-    SetSelfTokenID(tokenId);
-    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
     trans = std::make_shared<ScreenSourceTrans>();
 }
 
 void ScreenSourceTransTest::TearDown(void) {}
+
+void EnablePermissionAccess(const char* perms[], size_t permsNum, uint64_t &tokenId)
+{
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = permsNum,
+        .aclsNum = 0,
+        .dcaps = nullptr,
+        .perms = perms,
+        .acls = nullptr,
+        .aplStr = "system_basic",
+    };
+
+    infoInstance.processName = "SourceTransTest";
+    tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
+}
+
+void DisablePermissionAccess(const uint64_t &tokenId)
+{
+    OHOS::Security::AccessToken::AccessTokenKit::DeleteToken(tokenId);
+}
 
 /**
  * @tc.name: RegisterChannelListener_001
@@ -106,6 +110,11 @@ HWTEST_F(ScreenSourceTransTest, SetUp_001, TestSize.Level1)
  */
 HWTEST_F(ScreenSourceTransTest, SetUp_002, TestSize.Level1)
 {
+    const char* perms[] = {
+        "ohos.permission.DISTRIBUTED_DATASYNC",
+        "ohos.permission.CAPTURE_SCREEN",
+    };
+    EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
     VideoParam localParam;
     localParam.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
     localParam.SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
@@ -122,6 +131,7 @@ HWTEST_F(ScreenSourceTransTest, SetUp_002, TestSize.Level1)
     remoteParam.SetScreenWidth(100);
 
     int32_t actual = trans->SetUp(localParam, remoteParam, "peerDevId");
+    DisablePermissionAccess(tokenId_);
 
     EXPECT_EQ(DH_SUCCESS, actual);
 }
@@ -134,11 +144,17 @@ HWTEST_F(ScreenSourceTransTest, SetUp_002, TestSize.Level1)
  */
 HWTEST_F(ScreenSourceTransTest, InitScreenTrans_001, TestSize.Level1)
 {
+    const char* perms[] = {
+        "ohos.permission.DISTRIBUTED_DATASYNC",
+        "ohos.permission.CAPTURE_SCREEN",
+    };
+    EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
     VideoParam localParam;
     VideoParam remoteParam;
     std::string peerDevId = "sinkDevId";
     trans->screenChannel_ = std::make_shared<MockScreenDataChannelImpl>();
     int32_t actual = trans->InitScreenTrans(localParam, remoteParam, peerDevId);
+    DisablePermissionAccess(tokenId_);
 
     EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, actual);
 }

@@ -37,6 +37,7 @@ public:
     void SetUp();
     void TearDown();
     std::shared_ptr<ScreenDataChannelImpl> dataChannelImpl_ = nullptr;
+    uint64_t tokenId_;
 };
 } // namespace DistributedHardware
 } // namespace OHOS
