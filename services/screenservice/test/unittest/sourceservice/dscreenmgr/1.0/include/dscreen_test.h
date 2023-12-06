@@ -32,6 +32,7 @@ public:
     void SetUp();
     void TearDown();
     std::shared_ptr<DScreen> dScreen_ = nullptr;
+    uint64_t tokenId_;
 };
 } // namespace V1_0
 } // namespace DistributedHardware

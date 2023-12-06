@@ -14,7 +14,6 @@
  */
 
 #include "softbus_adapter_test.h"
-
 #include "accesstoken_kit.h"
 #include "nativetoken_kit.h"
 #include "token_setproc.h"
@@ -31,12 +30,11 @@ void SoftbusAdapterTest::SetUp(void) {}
 
 void SoftbusAdapterTest::TearDown(void) {}
 
-void NativeTokenGet(const char* perms[], int size)
+void EnablePermissionAccess(const char* perms[], size_t permsNum, uint64_t &tokenId)
 {
-    uint64_t tokenId;
     NativeTokenInfoParams infoInstance = {
         .dcapsNum = 0,
-        .permsNum = size,
+        .permsNum = permsNum,
         .aclsNum = 0,
         .dcaps = nullptr,
         .perms = perms,
@@ -50,19 +48,11 @@ void NativeTokenGet(const char* perms[], int size)
     OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
 }
 
-void EnablePermissionAccess()
+void DisablePermissionAccess(const uint64_t &tokenId)
 {
-    const char* perms[] = {
-        "ohos.permission.DISTRIBUTED_DATASYNC",
-        "ohos.permission.CAPTURE_SCREEN",
-    };
-    NativeTokenGet(perms, 2); // 2 is the size of an array composed of the required permissions.
+    OHOS::Security::AccessToken::AccessTokenKit::DeleteToken(tokenId);
 }
 
-void DisablePermissionAccess()
-{
-    NativeTokenGet(nullptr, 0); // empty permission array.
-}
 static int32_t ScreenOnSoftbusSessionOpened(int32_t sessionId, int32_t result)
 {
     return 0;
@@ -87,7 +77,11 @@ static void ScreenOnQosEvent(int sessionId, int eventId, int tvCount, const QosT
  */
 HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_001, TestSize.Level1)
 {
-    EnablePermissionAccess();
+    const char* perms[] = {
+        "ohos.permission.DISTRIBUTED_DATASYNC",
+        "ohos.permission.CAPTURE_SCREEN",
+    };
+    EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
     softbusAdapter.sessListener_.OnSessionOpened = ScreenOnSoftbusSessionOpened;
     softbusAdapter.sessListener_.OnSessionClosed = ScreenOnSoftbusSessionClosed;
     softbusAdapter.sessListener_.OnBytesReceived = ScreenOnBytesReceived;
@@ -120,7 +114,7 @@ HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_001, TestSize.Level1)
     int32_t actual = softbusAdapter.CreateSoftbusSessionServer(pkgname, sessionName, peerDevId);
     EXPECT_EQ(DH_SUCCESS, actual);
     softbusAdapter.RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
-    DisablePermissionAccess();
+    DisablePermissionAccess(tokenId_);
 }
 
 /**

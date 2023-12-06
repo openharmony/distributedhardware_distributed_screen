@@ -29,6 +29,7 @@ public:
     static void TearDownTestCase(void);
     void SetUp();
     void TearDown();
+    uint64_t tokenId_;
 };
 
 class MockScreenGroupListener : public Rosen::ScreenManager::IScreenGroupListener {
