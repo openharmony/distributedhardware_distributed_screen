@@ -80,11 +80,6 @@ int32_t AVTransSenderAdapter::Start()
         DHLOGE("start av transport sender engine failed, ret:%" PRId32, ret);
         return ERR_DH_AV_TRANS_START_FAILED;
     }
-    ret = WaitForAVTransStarted();
-    if (ret != DH_SUCCESS) {
-        DHLOGE("wait for start av transport sender engine failed, ret:%" PRId32, ret);
-        return ERR_DH_AV_TRANS_START_FAILED;
-    }
     DHLOGI("Start Success");
     return DH_SUCCESS;
 }
