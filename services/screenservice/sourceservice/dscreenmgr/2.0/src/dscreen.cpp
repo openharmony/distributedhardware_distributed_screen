@@ -130,8 +130,8 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         return;
     }
     std::lock_guard<std::mutex> lock(ableMtx_);
-    if ((curState_ == ENABLED) || (curState_ == ENABLING) || (curState_ == CONNECTING) || 
-        (curState_ == CONNECTED)) {
+    if ((curState_ == ENABLED) || (curState_ == ENABLING) || (curState_ == CONNECTING) ||
+         (curState_ == CONNECTED)) {
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
         return;
     }
