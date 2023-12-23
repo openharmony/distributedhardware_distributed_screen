@@ -139,6 +139,7 @@ private:
 
     DScreenState curState_;
     std::mutex stateMtx_;
+    std::mutex ableMtx_;
     std::thread taskQueueThread_;
     std::condition_variable taskQueueCond_;
     std::mutex taskQueueMtx_;
