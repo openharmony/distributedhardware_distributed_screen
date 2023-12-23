@@ -137,7 +137,6 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         }
         SetState(ENABLING);
     }
-    
 
     json attrJson = json::parse(param, nullptr, false);
     if (!CheckJsonData(attrJson)) {
