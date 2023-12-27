@@ -92,6 +92,7 @@ ohos_unittest("DscreenMgrTest") {
     "graphic_2d:surface",
     "graphic_2d:sync_fence",
     "hdf_core:libhdi",
+    "hicollie:libhicollie",
     "player_framework:media_client",
     "window_manager:libdm",
   ]

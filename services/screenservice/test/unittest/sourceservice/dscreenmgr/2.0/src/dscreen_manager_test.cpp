@@ -17,6 +17,7 @@
 #include "2.0/include/dscreen_manager_test.h"
 #include "common/include/screen_manager_adapter.h"
 #undef private
+#include "xcollie/watchdog.h"
 
 using namespace testing;
 using namespace testing::ext;
@@ -30,7 +31,10 @@ void DScreenManagerTestV2::TearDownTestCase(void) {}
 
 void DScreenManagerTestV2::SetUp() {}
 
-void DScreenManagerTestV2::TearDown() {}
+void DScreenManagerTestV2::TearDown()
+{
+    OHOS::HiviewDFX::Watchdog::GetInstance().StopWatchdog();
+}
 
 /**
  * @tc.name: Initialize_001

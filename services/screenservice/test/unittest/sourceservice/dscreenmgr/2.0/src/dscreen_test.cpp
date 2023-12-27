@@ -14,6 +14,7 @@
  */
 
 #include "2.0/include/dscreen_test.h"
+#include "xcollie/watchdog.h"
 
 #define private public
 #include "dscreen_constants.h"
@@ -53,7 +54,10 @@ void DScreenTestV2::SetUp(void)
     dScreen_->devId_ = "peerDevId";
 }
 
-void DScreenTestV2::TearDown(void) {}
+void DScreenTestV2::TearDown(void)
+{
+    OHOS::HiviewDFX::Watchdog::GetInstance().StopWatchdog();
+}
 
 /**
  * @tc.name: AddTask_001
