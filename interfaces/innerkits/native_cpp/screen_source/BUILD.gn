@@ -52,9 +52,13 @@ ohos_shared_library("distributed_screen_source_sdk") {
 
   external_deps = [
     "c_utils:utils",
+    "graphic_2d:libcomposer",
+    "graphic_2d:librender_service_client",
+    "graphic_2d:surface",
     "hitrace:hitrace_meter",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
+    "window_manager:libdm",
   ]
 
   subsystem_name = "distributedhardware"
