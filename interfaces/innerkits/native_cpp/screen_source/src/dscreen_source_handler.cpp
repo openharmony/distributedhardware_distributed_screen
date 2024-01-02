@@ -150,8 +150,7 @@ void DScreenSourceHandler::DeleteExistDScreens()
         }
         std::string screenName = screen->GetName();
         DHLOGI("DeleteExistDScreens, screenName:%s", screenName.c_str());
-        if (screenName.find(DSCREEN_PREFIX) != std::string::npos)
-        {
+        if (screenName.find(DSCREEN_PREFIX) != std::string::npos) {
             DHLOGI("DestroyVirtualScreen");
             Rosen::DMError err = Rosen::ScreenManager::GetInstance().DestroyVirtualScreen(screen->GetId());
             if (err != Rosen::DMError::DM_OK) {
