@@ -87,7 +87,6 @@ void ScreenListener::OnConnect(uint64_t screenId)
         return;
     }
     std::string dhId = DSCREEN_PREFIX + SEPERATOR + std::to_string(screenId);
-
     uint32_t screenWidth = screen->GetWidth();
     screenWidth = ByteCalculate(screenWidth);
     DHLOGI("screenWidth is : %" PRIu32, screenWidth);

@@ -156,7 +156,7 @@ void DScreenSourceHandler::DeleteExistDScreens()
             if (err != Rosen::DMError::DM_OK) {
                 DHLOGE("remove virtual screen failed, screenId:%" PRIu64, screen->GetId());
             }
-        } 
+        }
     }
 }
 
