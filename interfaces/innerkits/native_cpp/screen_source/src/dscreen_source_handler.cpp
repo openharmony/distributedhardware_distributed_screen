@@ -34,6 +34,7 @@
 #include "dscreen_log.h"
 #include "dscreen_source_load_callback.h"
 #include "dscreen_util.h"
+#include "screen_manager.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -137,9 +138,32 @@ int32_t DScreenSourceHandler::ReleaseSource()
     return ret;
 }
 
+void DScreenSourceHandler::DeleteExistDScreens()
+{
+    std::vector<sptr<Rosen::Screen>> screens;
+    Rosen::ScreenManager::GetInstance().GetAllScreens(screens);
+    DHLOGI("screens size is: %" PRId32, screens.size());
+    for (const auto &screen : screens) {
+        if (screen == nullptr) {
+            DHLOGE("screen is nullptr.");
+            continue;
+        }
+        std::string screenName = screen->GetName();
+        DHLOGI("DeleteExistDScreens, screenName:%s", screenName.c_str());
+        if (screenName.find(DSCREEN_PREFIX) != std::string::npos) {
+            DHLOGI("DestroyVirtualScreen");
+            Rosen::DMError err = Rosen::ScreenManager::GetInstance().DestroyVirtualScreen(screen->GetId());
+            if (err != Rosen::DMError::DM_OK) {
+                DHLOGE("remove virtual screen failed, screenId:%" PRIu64, screen->GetId());
+            }
+        }
+    }
+}
+
 int32_t DScreenSourceHandler::RegisterDistributedHardware(const std::string &devId,
     const std::string &dhId, const EnableParam &param, std::shared_ptr<RegisterCallback> callback)
 {
+    DeleteExistDScreens();
     if (devId.empty() || dhId.empty()) {
         DHLOGE("device id or dh id empty.");
         return ERR_DH_SCREEN_STRING_PARAM_EMPTY;

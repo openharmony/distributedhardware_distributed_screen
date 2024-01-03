@@ -82,9 +82,11 @@ void ScreenListener::OnConnect(uint64_t screenId)
         DHLOGE("screen not found, screenId is: %" PRIu64, screenId);
         return;
     }
-
+    if (!screen->IsReal()) {
+        DHLOGI("screen is not real");
+        return;
+    }
     std::string dhId = DSCREEN_PREFIX + SEPERATOR + std::to_string(screenId);
-
     uint32_t screenWidth = screen->GetWidth();
     screenWidth = ByteCalculate(screenWidth);
     DHLOGI("screenWidth is : %" PRIu32, screenWidth);
@@ -138,7 +140,10 @@ std::vector<DHItem> DScreenHandler::Query()
         if (screen->GetWidth() <= 0) {
             continue;
         }
-        std::string dhId = SCREEN_PREFIX + SEPERATOR + std::to_string(screen->GetId());
+        if (!screen->IsReal()) {
+            continue;
+        }
+        std::string dhId = DSCREEN_PREFIX + SEPERATOR + std::to_string(screen->GetId());
         uint32_t screenWidth = screen->GetWidth();
         if (screenListener_ == nullptr) {
             screenListener_ = new (std::nothrow) ScreenListener();
