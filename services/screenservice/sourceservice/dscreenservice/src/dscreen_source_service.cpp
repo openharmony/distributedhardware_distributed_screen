@@ -41,8 +41,8 @@ DScreenSourceService::DScreenSourceService(int32_t saId, bool runOnCreate) : Sys
 void DScreenSourceService::OnStart()
 {
     DHLOGI("dscreen source service start.");
-    DeleteExistDScreens();
     Init();
+    DeleteExistDScreens();
 }
 
 void DScreenSourceService::DeleteExistDScreens()
