@@ -18,7 +18,7 @@
 
 #include <gtest/gtest.h>
 #include <new>
-#include <stddef.h>
+#include <cstddef>
 
 #include "data_buffer.h"
 

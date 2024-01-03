@@ -171,7 +171,7 @@ std::vector<DHItem> DScreenHandler::Query()
         dhItem.subtype = "screen";
         dhItem.attrs = attrJson.dump();
         dhItemVec.push_back(dhItem);
-        DHLOGD("query result: dhId: %s, attrs: %s", GetAnonyString(dhId).c_str(), attrJson.dump().c_str());
+        DHLOGD("query result: dhId: %s, attrs: %s", dhId.c_str(), attrJson.dump().c_str());
     }
     return dhItemVec;
 }

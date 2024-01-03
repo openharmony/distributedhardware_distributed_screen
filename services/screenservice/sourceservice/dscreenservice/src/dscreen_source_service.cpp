@@ -42,6 +42,29 @@ void DScreenSourceService::OnStart()
 {
     DHLOGI("dscreen source service start.");
     Init();
+    DeleteExistDScreens();
+}
+
+void DScreenSourceService::DeleteExistDScreens()
+{
+    std::vector<sptr<Rosen::Screen>> screens;
+    Rosen::ScreenManager::GetInstance().GetAllScreens(screens);
+    DHLOGI("screens size is: %" PRId32, screens.size());
+    for (const auto &screen : screens) {
+        if (screen == nullptr) {
+            DHLOGE("screen is nullptr.");
+            continue;
+        }
+        std::string screenName = screen->GetName();
+        DHLOGI("DeleteExistDScreens, screenName:%s", screenName.c_str());
+        if (screenName.find(DSCREEN_PREFIX) != std::string::npos) {
+            DHLOGI("DestroyVirtualScreen");
+            Rosen::DMError err = Rosen::ScreenManager::GetInstance().DestroyVirtualScreen(screen->GetId());
+            if (err != Rosen::DMError::DM_OK) {
+                DHLOGE("remove virtual screen failed, screenId:%" PRIu64, screen->GetId());
+            }
+        }
+    }
 }
 
 void DScreenSourceService::OnStop()
