@@ -50,6 +50,7 @@ protected:
 
 private:
     bool Init();
+    void DeleteExistDScreens();
 
     bool registerToService_ = false;
 };
