@@ -52,7 +52,6 @@ private:
 
     DScreenSourceHandler();
     ~DScreenSourceHandler() = default;
-    void DeleteExistDScreens();
     std::mutex proxyMutex_;
     std::condition_variable proxyConVar_;
     sptr<IDScreenSource> dScreenSourceProxy_ = nullptr;
