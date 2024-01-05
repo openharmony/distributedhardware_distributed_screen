@@ -129,6 +129,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         DHLOGE("DScreen::HandleEnable, dscreenCallback_ is nullptr");
         return;
     }
+    CHECK_NULL_VOID(dscreenCallback_);
     std::lock_guard<std::mutex> lock(ableMtx_);
     if ((curState_ == ENABLED) || (curState_ == ENABLING) || (curState_ == CONNECTING) ||
          (curState_ == CONNECTED)) {
