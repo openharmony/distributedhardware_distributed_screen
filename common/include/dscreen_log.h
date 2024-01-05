@@ -40,11 +40,11 @@ void DHLog(DHLogLevel logLevel, const char *fmt, ...);
 #define DHLOGE(fmt, ...) DHLog( \
     DH_LOG_ERROR, (std::string("[") + DH_LOG_TAG + "][" + __FUNCTION__ + "]:" + fmt).c_str(), ##__VA_ARGS__)
 
-#define CHECK_NULL_RETURN(ptr, ret)         \
+#define CHECK_NULL_VOID(ptr)                  \
     do {                                        \
         if ((ptr) == nullptr) {                 \
             DHLOGE("Address pointer is null");  \
-            return (ret);                       \
+            return;                             \
         }                                       \
     } while (0)
 } // namespace DistributedHardware

@@ -125,7 +125,7 @@ void DScreen::HandleTask(const std::shared_ptr<Task> &task)
 void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
 {
     DHLOGI("HandleEnable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
-    CHECK_NULL_RETURN(dscreenCallback_);
+    CHECK_NULL_VOID(dscreenCallback_);
     std::lock_guard<std::mutex> lock(ableMtx_);
     if ((curState_ == ENABLED) || (curState_ == ENABLING) || (curState_ == CONNECTING) ||
          (curState_ == CONNECTED)) {
