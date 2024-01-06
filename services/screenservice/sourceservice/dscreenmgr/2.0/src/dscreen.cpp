@@ -137,11 +137,10 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     }
     SetState(ENABLING);
     ParseInputScreenParam(param, taskId);
-    if (videoParam_ == nullptr)
-    {
+    if (videoParam_ == nullptr) {
         DHLOGE("DScreen::HandleEnable, videoParam_ is nullptr");
         return;
-    } 
+    }
     uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId_, dhId_, videoParam_);
     if (screenId == SCREEN_ID_INVALID) {
         DHLOGE("HandleEnable, create virtual screen failed.");
@@ -157,7 +156,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
     ReportRegisterScreenEvent(DSCREEN_REGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
         "dscreen enable success.");
-}
+}       
 
 void DScreen::ParseInputScreenParam(const std::string &param, const std::string &taskId)
 {
