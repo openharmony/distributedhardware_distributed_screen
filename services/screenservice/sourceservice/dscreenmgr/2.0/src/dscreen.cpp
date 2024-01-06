@@ -125,7 +125,10 @@ void DScreen::HandleTask(const std::shared_ptr<Task> &task)
 void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
 {
     DHLOGI("HandleEnable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
-    CHECK_NULL_VOID(dscreenCallback_);
+    if (dscreenCallback_ == nullptr) {
+        DHLOGE("DScreen::HandleEnable, dscreenCallback_ is nullptr");
+        return;
+    }
     std::lock_guard<std::mutex> lock(ableMtx_);
     if ((curState_ == ENABLED) || (curState_ == ENABLING) || (curState_ == CONNECTING) ||
          (curState_ == CONNECTED)) {
@@ -133,7 +136,31 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         return;
     }
     SetState(ENABLING);
+    ParseInputScreenParam(const std::string &param, const std::string &taskId);
+    if (videoParam_ == nullptr)
+    {
+        DHLOGE("DScreen::HandleEnable, videoParam_ is nullptr");
+        return;
+    } 
+    uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId_, dhId_, videoParam_);
+    if (screenId == SCREEN_ID_INVALID) {
+        DHLOGE("HandleEnable, create virtual screen failed.");
+        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
+            "create virtual screen failed.");
+        ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
+            GetAnonyString(dhId_).c_str(), "create virtual screen failed.");
+        return;
+    }
 
+    screenId_ = screenId;
+    SetState(ENABLED);
+    dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
+    ReportRegisterScreenEvent(DSCREEN_REGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
+        "dscreen enable success.");
+}
+
+void DScreen::ParseInputScreenParam(const std::string &param, const std::string &taskId)
+{
     json attrJson = json::parse(param, nullptr, false);
     if (!CheckJsonData(attrJson)) {
         DHLOGE("HandleEnable, check json data failed.");
@@ -158,21 +185,6 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     }
     videoParam_->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH].get<uint32_t>());
     videoParam_->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT].get<uint32_t>());
-    uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId_, dhId_, videoParam_);
-    if (screenId == SCREEN_ID_INVALID) {
-        DHLOGE("HandleEnable, create virtual screen failed.");
-        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
-            "create virtual screen failed.");
-        ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
-            GetAnonyString(dhId_).c_str(), "create virtual screen failed.");
-        return;
-    }
-
-    screenId_ = screenId;
-    SetState(ENABLED);
-    dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
-    ReportRegisterScreenEvent(DSCREEN_REGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
-        "dscreen enable success.");
 }
 
 void DScreen::HandleDisable(const std::string &taskId)

@@ -38,15 +38,7 @@ void DHLog(DHLogLevel logLevel, const char *fmt, ...);
     DH_LOG_WARN, (std::string("[") + DH_LOG_TAG + "][" + __FUNCTION__ + "]:" + fmt).c_str(), ##__VA_ARGS__)
 
 #define DHLOGE(fmt, ...) DHLog( \
-    DH_LOG_ERROR, (std::string("[") + DH_LOG_TAG + "][" + __FUNCTION__ + "]:" + fmt).c_str(), ##__VA_ARGS__)
-
-#define CHECK_NULL_VOID(ptr)                  \
-    do {                                        \
-        if ((ptr) == nullptr) {                 \
-            DHLOGE("Address pointer is null");  \
-            return;                             \
-        }                                       \
-    } while (0)
+    DH_LOG_ERROR, (std::string("[") + DH_LOG_TAG + "][" + __FUNCTION__ + "]:" + fmt).c_str(), ##__VA_ARGS__) 
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif
