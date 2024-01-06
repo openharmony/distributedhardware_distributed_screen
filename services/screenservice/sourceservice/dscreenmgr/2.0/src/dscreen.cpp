@@ -136,7 +136,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         return;
     }
     SetState(ENABLING);
-    ParseInputScreenParam(const std::string &param, const std::string &taskId);
+    ParseInputScreenParam(param, taskId);
     if (videoParam_ == nullptr)
     {
         DHLOGE("DScreen::HandleEnable, videoParam_ is nullptr");
