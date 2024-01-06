@@ -179,7 +179,7 @@ std::shared_ptr<VideoParam> DScreen::ParseInputScreenParam(const std::string &pa
             GetAnonyString(dhId_).c_str(), "negotiate codec type failed.");
         return nullptr;
     }
-    auto videoParam = std::shared_ptr<VideoParam>;
+    auto videoParam = std::make_shared<VideoParam>();
     videoParam->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH].get<uint32_t>());
     videoParam->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT].get<uint32_t>());
     return videoParam;
