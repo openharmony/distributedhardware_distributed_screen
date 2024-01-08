@@ -136,31 +136,11 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         return;
     }
     SetState(ENABLING);
-
-    json attrJson = json::parse(param, nullptr, false);
-    if (!CheckJsonData(attrJson)) {
-        DHLOGE("HandleEnable, check json data failed.");
-        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
-            "enable param json is invalid.");
-        ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
-            GetAnonyString(dhId_).c_str(), "check json data failed.");
-        SetState(DISABLED);
-        return;
-    }
+    videoParam_ = ParseInputScreenParam(param, taskId);
     if (videoParam_ == nullptr) {
-        videoParam_ = std::make_shared<VideoParam>();
-    }
-    int32_t ret = NegotiateCodecType(attrJson[KEY_HISTREAMER_VIDEO_DECODER]);
-    if (ret != DH_SUCCESS) {
-        DHLOGE("HandleEnable, negotiate codec type failed.");
-        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
-            "negotiate codec type failed.");
-        ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
-            GetAnonyString(dhId_).c_str(), "negotiate codec type failed.");
+        DHLOGE("DScreen::HandleEnable, videoParam_ is nullptr");
         return;
     }
-    videoParam_->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH].get<uint32_t>());
-    videoParam_->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT].get<uint32_t>());
     uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId_, dhId_, videoParam_);
     if (screenId == SCREEN_ID_INVALID) {
         DHLOGE("HandleEnable, create virtual screen failed.");
@@ -176,6 +156,33 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
     dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
     ReportRegisterScreenEvent(DSCREEN_REGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
         "dscreen enable success.");
+}
+
+std::shared_ptr<VideoParam> DScreen::ParseInputScreenParam(const std::string &param, const std::string &taskId)
+{
+    json attrJson = json::parse(param, nullptr, false);
+    if (!CheckJsonData(attrJson)) {
+        DHLOGE("HandleEnable, check json data failed.");
+        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
+            "enable param json is invalid.");
+        ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
+            GetAnonyString(dhId_).c_str(), "check json data failed.");
+        SetState(DISABLED);
+        return nullptr;
+    }
+    int32_t ret = NegotiateCodecType(attrJson[KEY_HISTREAMER_VIDEO_DECODER]);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("HandleEnable, negotiate codec type failed.");
+        dscreenCallback_->OnRegResult(shared_from_this(), taskId, ERR_DH_SCREEN_SA_ENABLE_FAILED,
+            "negotiate codec type failed.");
+        ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
+            GetAnonyString(dhId_).c_str(), "negotiate codec type failed.");
+        return nullptr;
+    }
+    auto videoParam = std::make_shared<VideoParam>();
+    videoParam->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH].get<uint32_t>());
+    videoParam->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT].get<uint32_t>());
+    return videoParam;
 }
 
 void DScreen::HandleDisable(const std::string &taskId)
