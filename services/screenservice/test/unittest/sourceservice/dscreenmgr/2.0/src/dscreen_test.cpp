@@ -131,7 +131,7 @@ HWTEST_F(DScreenTestV2, ParseInputScreenParam_001, TestSize.Level1)
 {
     std::string param = "param";
     std::string taskId = "taskId";
-    EXPECT_NE(nullptr, dScreen_->ParseInputScreenParam(param, taskId));
+    EXPECT_EQ(nullptr, dScreen_->ParseInputScreenParam(param, taskId));
 }
 
 /**
