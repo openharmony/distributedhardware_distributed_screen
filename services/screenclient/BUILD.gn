@@ -53,7 +53,7 @@ ohos_shared_library("distributed_screen_client") {
     "c_utils:utils",
     "graphic_2d:libgraphic_utils",
     "graphic_2d:librender_service_client",
-    "graphic_2d:surface",
+    "graphic_surface:surface",
     "input:libmmi-client",
     "window_manager:libwm",
   ]

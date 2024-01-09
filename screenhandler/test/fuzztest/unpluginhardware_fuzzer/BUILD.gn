@@ -56,7 +56,7 @@ ohos_fuzztest("UnPluginHardwareFuzzTest") {
   external_deps = [
     "c_utils:utils",
     "graphic_2d:libgraphic_utils",
-    "graphic_2d:surface",
+    "graphic_surface:surface",
     "ipc:ipc_core",
     "window_manager:libdm",
   ]

@@ -81,7 +81,7 @@ ohos_unittest("DscreenRegionMgrTest") {
     "graphic_2d:libcomposer",
     "graphic_2d:libgraphic_utils",
     "graphic_2d:librender_service_client",
-    "graphic_2d:surface",
+    "graphic_surface:surface",
     "hisysevent:libhisysevent",
     "window_manager:libdm",
   ]
