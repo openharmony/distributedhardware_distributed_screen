@@ -168,7 +168,7 @@ void DScreen::ParseInputScreenParam(const std::string &param, const std::string 
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
             GetAnonyString(dhId_).c_str(), "check json data failed.");
         SetState(DISABLED);
-        return nullptr;
+        return;
     }
     if (videoParam_ == nullptr) {
         videoParam_ = std::make_shared<VideoParam>();
@@ -180,7 +180,7 @@ void DScreen::ParseInputScreenParam(const std::string &param, const std::string 
             "negotiate codec type failed.");
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
             GetAnonyString(dhId_).c_str(), "negotiate codec type failed.");
-        return nullptr;
+        return;
     }
     videoParam_->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH].get<uint32_t>());
     videoParam_->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT].get<uint32_t>());
