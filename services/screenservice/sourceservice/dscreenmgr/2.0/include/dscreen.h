@@ -112,7 +112,7 @@ private:
     void HandleDisconnect();
     int32_t StartSenderEngine();
     int32_t StopSenderEngine();
-    std::shared_ptr<VideoParam> ParseInputScreenParam(const std::string &param, const std::string &taskId);
+    void ParseInputScreenParam(const std::string &param, const std::string &taskId);
 
     /*
      * Negotiate the codec format between local to remote device,
