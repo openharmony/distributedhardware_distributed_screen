@@ -136,7 +136,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         return;
     }
     SetState(ENABLING);
-    videoParam_ = ParseInputScreenParam(param, taskId);
+    ParseInputScreenParam(param, taskId);
     if (videoParam_ == nullptr) {
         DHLOGE("DScreen::HandleEnable, videoParam_ is nullptr");
         return;
@@ -158,7 +158,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         "dscreen enable success.");
 }
 
-std::shared_ptr<VideoParam> DScreen::ParseInputScreenParam(const std::string &param, const std::string &taskId)
+void DScreen::ParseInputScreenParam(const std::string &param, const std::string &taskId)
 {
     json attrJson = json::parse(param, nullptr, false);
     if (!CheckJsonData(attrJson)) {
@@ -168,7 +168,10 @@ std::shared_ptr<VideoParam> DScreen::ParseInputScreenParam(const std::string &pa
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
             GetAnonyString(dhId_).c_str(), "check json data failed.");
         SetState(DISABLED);
-        return nullptr;
+        return;
+    }
+    if (videoParam_ == nullptr) {
+        videoParam_ = std::make_shared<VideoParam>();
     }
     int32_t ret = NegotiateCodecType(attrJson[KEY_HISTREAMER_VIDEO_DECODER]);
     if (ret != DH_SUCCESS) {
@@ -177,12 +180,10 @@ std::shared_ptr<VideoParam> DScreen::ParseInputScreenParam(const std::string &pa
             "negotiate codec type failed.");
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ERR_DH_SCREEN_SA_ENABLE_FAILED, GetAnonyString(devId_).c_str(),
             GetAnonyString(dhId_).c_str(), "negotiate codec type failed.");
-        return nullptr;
+        return;
     }
-    auto videoParam = std::make_shared<VideoParam>();
-    videoParam->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH].get<uint32_t>());
-    videoParam->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT].get<uint32_t>());
-    return videoParam;
+    videoParam_->SetScreenWidth(attrJson[KEY_SCREEN_WIDTH].get<uint32_t>());
+    videoParam_->SetScreenHeight(attrJson[KEY_SCREEN_HEIGHT].get<uint32_t>());
 }
 
 void DScreen::HandleDisable(const std::string &taskId)

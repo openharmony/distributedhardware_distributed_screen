@@ -122,19 +122,6 @@ HWTEST_F(DScreenTestV2, HandleEnable_001, TestSize.Level1)
 }
 
 /**
- * @tc.name: ParseInputScreenParam_001
- * @tc.desc: Verify the ParseInputScreenParam function failed.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(DScreenTestV2, ParseInputScreenParam_001, TestSize.Level1)
-{
-    std::string param = "param";
-    std::string taskId = "taskId";
-    EXPECT_EQ(nullptr, dScreen_->ParseInputScreenParam(param, taskId));
-}
-
-/**
  * @tc.name: HandleDisable_001
  * @tc.desc: Verify the HandleDisable function failed.
  * @tc.type: FUNC
