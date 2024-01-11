@@ -171,7 +171,7 @@ std::shared_ptr<VideoParam> DScreen::ParseInputScreenParam(const std::string &pa
         return nullptr;
     }
     if (videoParam_ == nullptr) {
-       videoParam_ = std::make_shared<VideoParam>();
+        videoParam_ = std::make_shared<VideoParam>();
     }
     int32_t ret = NegotiateCodecType(attrJson[KEY_HISTREAMER_VIDEO_DECODER]);
     if (ret != DH_SUCCESS) {
