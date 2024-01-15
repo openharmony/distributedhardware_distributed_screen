@@ -334,7 +334,7 @@ void DScreen::ConsumeSurface()
     }
     int32_t retcode = syncFence_->Wait(SURFACE_SYNC_FENCE_TIMEOUT);
     if (retcode == -ETIME) {
-        DHLOGE("Sync fence wait timeout, retcode is %." PRId32, retcode);
+        DHLOGE("%s: Sync fence wait timeout, retcode is %." PRId32, retcode);
         consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
         return;
     }
