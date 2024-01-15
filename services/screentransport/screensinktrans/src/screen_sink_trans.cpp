@@ -195,13 +195,6 @@ int32_t ScreenSinkTrans::CheckTransParam(const VideoParam &localParam, const Vid
         DHLOGE("%s: check remoteParam param failed.", LOG_TAG);
         return ret;
     }
-
-    DHLOGI("%s: Local: codecType(%u), videoFormat(%u), videoSize(%ux%u), screenSize(%ux%u).", LOG_TAG,
-        localParam.GetCodecType(), localParam.GetVideoFormat(), localParam.GetVideoWidth(),
-        localParam.GetVideoHeight(), localParam.GetScreenWidth(), localParam.GetScreenHeight());
-    DHLOGI("%s: Remote: codecType(%u), videoFormat(%u), videoSize(%ux%u), screenSize(%ux%u).", LOG_TAG,
-        remoteParam.GetCodecType(), remoteParam.GetVideoFormat(), remoteParam.GetVideoWidth(),
-        remoteParam.GetVideoHeight(), remoteParam.GetScreenWidth(), remoteParam.GetScreenHeight());
     return DH_SUCCESS;
 }
 
