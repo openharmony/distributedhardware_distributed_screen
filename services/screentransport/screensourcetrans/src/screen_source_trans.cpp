@@ -254,12 +254,6 @@ int32_t ScreenSourceTrans::CheckTransParam(const VideoParam &localParam, const V
         DHLOGE("%s: check remoteParam param failed.", LOG_TAG);
         return ret;
     }
- 
-    DHLOGI("%s: Local: codecType(%u), videoFormat(%u), videoSize(%ux%u), screenSize(%ux%u).", LOG_TAG,
-        localParam.GetVideoHeight(), localParam.GetScreenWidth(), localParam.GetScreenHeight());
-    DHLOGI("%s: Remote: codecType(%u), videoFormat(%u), videoSize(%ux%u), screenSize(%ux%u).", LOG_TAG,
-        remoteParam.GetCodecType(), remoteParam.GetVideoFormat(), remoteParam.GetVideoWidth(),
-        remoteParam.GetVideoHeight(), remoteParam.GetScreenWidth(), remoteParam.GetScreenHeight());
     return DH_SUCCESS;
 }
 
@@ -305,7 +299,7 @@ int32_t ScreenSourceTrans::RegisterChannelListener()
     }
     int32_t ret = screenChannel_->CreateSession(listener);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Create session failed ret: %" PRId32, LOG_TAG);
+        DHLOGE("%s: Create session failed ret: %" PRId32, LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "dscreen source Create session failed.");
         return ret;
     }
