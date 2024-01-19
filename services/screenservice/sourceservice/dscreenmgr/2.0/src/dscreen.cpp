@@ -500,7 +500,7 @@ int32_t DScreen::WaitForSinkStarted()
 {
     std::unique_lock<std::mutex> lock(waitSinkMtx_);
     auto status = waitSinkCondVar_.wait_for(lock, std::chrono::milliseconds(WAIT_TIMEOUT_MS),
-        [this]() { return sinkStartSuccess_.load() ? true : false; });
+        [this]() { return sinkStartSuccess_.load(); });
     if (!status) {
         DHLOGE("wait for sink device engine start timeout");
         return ERR_DH_AV_TRANS_TIMEOUT;
