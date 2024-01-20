@@ -206,8 +206,9 @@ int32_t AVTransSenderAdapter::RegisterAdapterCallback(const std::shared_ptr<AVSe
 int32_t AVTransSenderAdapter::WaitForChannelCreated()
 {
     std::unique_lock<std::mutex> lock(chnCreatedMtx_);
-    auto status = chnCreatedCondVar_.wait_for(lock, std::chrono::milliseconds(WAIT_TIMEOUT_MS));
-    if (status == std::cv_status::timeout) {
+    auto status = chnCreatedCondVar_.wait_for(lock, std::chrono::milliseconds(WAIT_TIMEOUT_MS),
+        [this]() { return chnCreateSuccess_.load(); });
+    if (!status) {
         DHLOGE("wait for av transport sender channel created timeout");
         return ERR_DH_AV_TRANS_TIMEOUT;
     }
@@ -221,8 +222,9 @@ int32_t AVTransSenderAdapter::WaitForChannelCreated()
 int32_t AVTransSenderAdapter::WaitForAVTransStarted()
 {
     std::unique_lock<std::mutex> lock(transStartedMtx_);
-    auto status = transStartedCondVar_.wait_for(lock, std::chrono::milliseconds(WAIT_TIMEOUT_MS));
-    if (status == std::cv_status::timeout) {
+    auto status = transStartedCondVar_.wait_for(lock, std::chrono::milliseconds(WAIT_TIMEOUT_MS),
+        [this]() { return transStartSuccess_.load(); });
+    if (!status) {
         DHLOGE("wait for av transport sender started timeout");
         return ERR_DH_AV_TRANS_TIMEOUT;
     }
