@@ -80,6 +80,7 @@ DScreen::~DScreen()
     ScreenMgrAdapter::GetInstance().RemoveVirtualScreen(screenId_);
     videoParam_ = nullptr;
     senderAdapter_ = nullptr;
+    sinkStartSuccess_ = false;
     DHLOGD("DScreen deconstruct end.");
 }
 
@@ -498,8 +499,9 @@ int32_t DScreen::SetUp()
 int32_t DScreen::WaitForSinkStarted()
 {
     std::unique_lock<std::mutex> lock(waitSinkMtx_);
-    auto status = waitSinkCondVar_.wait_for(lock, std::chrono::milliseconds(WAIT_TIMEOUT_MS));
-    if (status == std::cv_status::timeout) {
+    auto status = waitSinkCondVar_.wait_for(lock, std::chrono::milliseconds(WAIT_TIMEOUT_MS),
+        [this]() { return sinkStartSuccess_.load(); });
+    if (!status) {
         DHLOGE("wait for sink device engine start timeout");
         return ERR_DH_AV_TRANS_TIMEOUT;
     }
