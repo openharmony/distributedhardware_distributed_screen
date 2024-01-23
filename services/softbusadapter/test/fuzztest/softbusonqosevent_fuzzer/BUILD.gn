@@ -54,7 +54,7 @@ ohos_fuzztest("SoftbusOnQosEventFuzzTest") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"SoftbusOnQosEventFuzzTest\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004140",
   ]
 }
 

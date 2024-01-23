@@ -72,7 +72,7 @@ ohos_unittest("SinkProcessorTest") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"sinkprocessorest\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004140",
   ]
 
   cflags = [ "-frtti" ]

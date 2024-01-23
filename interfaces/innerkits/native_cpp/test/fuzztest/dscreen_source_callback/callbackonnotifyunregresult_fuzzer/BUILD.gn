@@ -52,7 +52,7 @@ ohos_fuzztest("CallBackOnNotifyUnregResultFuzzTest") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"CallBackOnNotifyUnregResultFuzzTest\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004140",
   ]
 
   external_deps = [

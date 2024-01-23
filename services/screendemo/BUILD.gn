@@ -48,7 +48,7 @@ ohos_executable("distributedScreenTest") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"distributedScreenTest\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004140",
   ]
 
   external_deps = [

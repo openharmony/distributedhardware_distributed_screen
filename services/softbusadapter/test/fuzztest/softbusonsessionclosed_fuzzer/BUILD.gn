@@ -53,7 +53,7 @@ ohos_fuzztest("SoftbusOnSessionClosedFuzzTest") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"SoftbusOnSessionClosedFuzzTest\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004140",
   ]
 }
 

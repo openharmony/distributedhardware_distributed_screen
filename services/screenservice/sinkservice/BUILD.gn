@@ -73,7 +73,7 @@ ohos_shared_library("distributed_screen_sink") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"dscreensink\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004140",
   ]
 
   if (build_variant == "root") {

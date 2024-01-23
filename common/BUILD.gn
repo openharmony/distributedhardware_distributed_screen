@@ -53,7 +53,7 @@ ohos_shared_library("distributed_screen_utils") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"dscreenutil\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004140",
   ]
 
   subsystem_name = "distributedhardware"
