@@ -47,7 +47,7 @@ ohos_shared_library("distributed_screen_source_sdk") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"dscreensourcesdk\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004140",
   ]
 
   external_deps = [

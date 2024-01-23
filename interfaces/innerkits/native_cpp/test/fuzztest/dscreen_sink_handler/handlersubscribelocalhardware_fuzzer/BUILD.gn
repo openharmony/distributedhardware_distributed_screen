@@ -45,7 +45,7 @@ ohos_fuzztest("HandlerSubscribeLocalHardwareFuzzTest") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"HandlerSubscribeLocalHardwareFuzzTest\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004140",
   ]
 
   external_deps = [

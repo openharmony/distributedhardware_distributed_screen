@@ -56,7 +56,7 @@ ohos_fuzztest("OnChangeFuzzTest") {
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"OnChangeFuzzTest\"",
-    "LOG_DOMAIN=0xD004100",
+    "LOG_DOMAIN=0xD004140",
   ]
 
   external_deps = [
