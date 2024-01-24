@@ -95,7 +95,7 @@ ohos_shared_library("distributed_screen_source") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_2d:libcomposer",
     "graphic_2d:librender_service_client",
-    "graphic_2d:surface",
+    "graphic_surface:surface",
     "hicollie:libhicollie",
     "hisysevent:libhisysevent",
     "hitrace:hitrace_meter",

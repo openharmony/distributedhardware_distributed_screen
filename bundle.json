@@ -37,6 +37,7 @@
                 "hilog",
                 "input",
                 "graphic_2d",
+                "graphic_surface",
                 "samgr",
                 "safwk",
                 "hicollie",

@@ -50,7 +50,7 @@ ohos_unittest("DscreenHandlerTest") {
   external_deps = [
     "c_utils:utils",
     "graphic_2d:libgraphic_utils",
-    "graphic_2d:surface",
+    "graphic_surface:surface",
     "ipc:ipc_core",
     "player_framework:media_client",
     "window_manager:libdm",

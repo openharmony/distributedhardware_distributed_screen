@@ -88,7 +88,7 @@ ohos_shared_library("distributed_screen_sink") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_2d:libgraphic_utils",
     "graphic_2d:librender_service_client",
-    "graphic_2d:surface",
+    "graphic_surface:surface",
     "hisysevent:libhisysevent",
     "hitrace:hitrace_meter",
     "ipc:ipc_core",

@@ -65,7 +65,7 @@ ohos_unittest("SinkProcessorTest") {
 
   external_deps = [
     "c_utils:utils",
-    "graphic_2d:surface",
+    "graphic_surface:surface",
     "player_framework:media_client",
   ]
 

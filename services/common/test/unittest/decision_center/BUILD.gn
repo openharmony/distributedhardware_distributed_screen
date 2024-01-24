@@ -49,8 +49,8 @@ ohos_unittest("ScreenDecisionCenterTest") {
 
   external_deps = [
     "c_utils:utils",
-    "graphic_2d:surface",
-    "graphic_2d:sync_fence",
+    "graphic_surface:surface",
+    "graphic_surface:sync_fence",
     "player_framework:media_client",
   ]
 }

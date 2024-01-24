@@ -70,8 +70,8 @@ ohos_unittest("ScreenCallbackTest") {
   external_deps = [
     "c_utils:utils",
     "graphic_2d:libgraphic_utils",
-    "graphic_2d:surface",
-    "graphic_2d:sync_fence",
+    "graphic_surface:surface",
+    "graphic_surface:sync_fence",
     "ipc:ipc_core",
     "player_framework:media_client",
   ]
