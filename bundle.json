@@ -14,9 +14,7 @@
     "component": {
         "name": "distributed_screen",
         "subsystem": "distributedhardware",
-        "syscap": [
-            "SystemCapability.DistributedHardware.DistributedScreen"
-        ],
+        "syscap": [],
         "features": [],
         "adapted_system_type": [
             "standard"
