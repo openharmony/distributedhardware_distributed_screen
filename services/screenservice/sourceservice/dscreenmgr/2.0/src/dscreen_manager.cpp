@@ -181,7 +181,8 @@ void DScreenCallback::OnRegResult(const std::shared_ptr<DScreen> &dScreen,
         return;
     }
     DHLOGI("DScreenCallback::OnRegResult, devId: %s, dhId: %s, reqId: %s",
-        GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(), reqId.c_str());
+        GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(),
+        GetAnonyString(reqId).c_str());
     DScreenManager::GetInstance().OnRegResult(dScreen, reqId, status, data);
 }
 
@@ -193,7 +194,8 @@ void DScreenCallback::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
         return;
     }
     DHLOGI("DScreenCallback::OnUnregResult, devId: %s, dhId: %s, reqId: %s",
-        GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(), reqId.c_str());
+        GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(),
+        GetAnonyString(reqId).c_str());
     DScreenManager::GetInstance().OnUnregResult(dScreen, reqId, status, data);
 }
 
@@ -201,7 +203,8 @@ void DScreenManager::OnRegResult(const std::shared_ptr<DScreen> &dScreen,
     const std::string &reqId, int32_t status, const std::string &data)
 {
     DHLOGI("DScreenManager::OnRegResult, devId: %s, dhId: %s, reqId: %s",
-        GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(), reqId.c_str());
+        GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(),
+        GetAnonyString(reqId).c_str());
     if (dScreenSourceCallbackProxy_ == nullptr) {
         DHLOGE("dScreenSourceCallbackProxy is null");
         return;
@@ -213,7 +216,8 @@ void DScreenManager::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
     const std::string &reqId, int32_t status, const std::string &data)
 {
     DHLOGI("DScreenManager::OnUnregResult, devId: %s, dhId: %s, reqId: %s",
-        GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(), reqId.c_str());
+        GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(),
+        GetAnonyString(reqId).c_str());
     if (dScreenSourceCallbackProxy_ == nullptr) {
         DHLOGE("dScreenSourceCallbackProxy is null");
         return;
