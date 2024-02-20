@@ -157,7 +157,8 @@ int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &dev
     }
     if (ret != DH_SUCCESS) {
         DHLOGE("enable distributedScreen failed. devId: %s, dhId: %s, reqId: %s, param attrs: %s",
-            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str(), param.sinkAttrs.c_str());
+            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), GetAnonyString(reqId).c_str(),
+            param.sinkAttrs.c_str());
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ret, GetAnonyString(devId).c_str(),
             GetAnonyString(dhId).c_str(), "enable distributedScreen failed.");
         return ERR_DH_SCREEN_SA_ENABLE_FAILED;
@@ -171,7 +172,7 @@ int32_t DScreenSourceService::UnregisterDistributedHardware(const std::string &d
     int ret = V1_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
     if (ret != DH_SUCCESS) {
         DHLOGE("V1_0::DScreenManager disable distributedScreen failed. devId: %s, dhId: %s, reqId: %s",
-            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str());
+            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), GetAnonyString(reqId).c_str());
         ReportUnRegisterFail(DSCREEN_REGISTER_FAIL, ret, GetAnonyString(devId).c_str(),
             GetAnonyString(dhId).c_str(), "disable distributedScreen failed.");
         return ERR_DH_SCREEN_SA_DISABLE_FAILED;
@@ -180,7 +181,7 @@ int32_t DScreenSourceService::UnregisterDistributedHardware(const std::string &d
     ret = V2_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
     if (ret != DH_SUCCESS) {
         DHLOGE("V2_0::DScreenManager disable distributedScreen failed. devId: %s, dhId: %s, reqId: %s",
-            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), reqId.c_str());
+            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), GetAnonyString(reqId).c_str());
         ReportUnRegisterFail(DSCREEN_REGISTER_FAIL, ret, GetAnonyString(devId).c_str(),
             GetAnonyString(dhId).c_str(), "disable distributedScreen failed.");
         return ERR_DH_SCREEN_SA_DISABLE_FAILED;
