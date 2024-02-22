@@ -225,13 +225,10 @@ int32_t ScreenDataChannelImpl::SendDirtyData(const std::shared_ptr<DataBuffer> &
 }
 
 
-void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, int32_t result)
+void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, PeerSocketInfo info)
 {
+    void(info);
     DHLOGI("%s: OnScreenSessionOpened, sessionId: %" PRId32", result: %" PRId32, LOG_TAG, sessionId, result);
-    if (result != 0) {
-        DHLOGE("Session open failed", LOG_TAG);
-        return;
-    }
     if (jpegSessionFlag_ == false) {
         dataSessionOpened = true;
         sessionId_ = sessionId;
@@ -255,8 +252,9 @@ void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, int32_t result)
     listener->OnSessionOpened();
 }
 
-void ScreenDataChannelImpl::OnSessionClosed(int32_t sessionId)
+void ScreenDataChannelImpl::OnSessionClosed(int32_t sessionId, ShutdownReason reason)
 {
+    (void)reason;
     DHLOGI("%s: OnScreenSessionClosed, sessionId %" PRId32, LOG_TAG, sessionId);
     std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
     if (listener == nullptr) {

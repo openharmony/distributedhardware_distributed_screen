@@ -42,8 +42,8 @@ public:
     int32_t SendDirtyData(const std::shared_ptr<DataBuffer> &screenData);
     void ProcessDirtyData(const StreamData *data, std::shared_ptr<DataBuffer> dataBuffer, const StreamData *ext);
     void ProcessDullData(const StreamData *data, std::shared_ptr<DataBuffer> dataBuffer);
-    void OnSessionOpened(int32_t sessionId, int32_t result) override;
-    void OnSessionClosed(int32_t sessionId) override;
+    void OnSessionOpened(int32_t sessionId, PeerSocketInfo info) override;
+    void OnSessionClosed(int32_t sessionId, ShutdownReason reason) override;
     void OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen) override;
     void OnStreamReceived(int32_t sessionId, const StreamData *data, const StreamData *ext,
         const StreamFrameInfo *param) override;

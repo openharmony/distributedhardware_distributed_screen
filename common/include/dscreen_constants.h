@@ -231,6 +231,7 @@ constexpr int32_t WAIT_TIMEOUT_MS = 5000;
 constexpr uint32_t SYSTEM_PARAM_VALUE_SIZE = 50;
 constexpr uint64_t WATCHDOG_INTERVAL_TIME_MS = 20 * 1000;
 constexpr uint64_t WATCHDOG_DELAY_TIME_MS = 5 * 1000;
+constexpr int32_t INVALID_SESSION_ID = -1;
 } // namespace DistributedHardware
 } // namespace OHOS
 #endif

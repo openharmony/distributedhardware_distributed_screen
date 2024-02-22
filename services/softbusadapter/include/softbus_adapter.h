@@ -20,7 +20,8 @@
 #include <map>
 #include <set>
 
-#include "session.h"
+#include "transport/socket.h"
+#include "transport/trans_type.h"
 #include "single_instance.h"
 
 #include "dscreen_constants.h"
@@ -70,9 +71,13 @@ private:
     std::mutex listenerMtx_;
     std::mutex sessInfoMtx_;
     std::mutex sessSetMtx_;
+    std::mutex serverMapMtx_;
 
-    ISessionListener sessListener_;
+    ISocketListener sessListener_;
     /* while can not find the listener in mapListeners_, return nullListener_ point to null ptr. */
+    std::string localSessName_;
+    std::string peerDevId_;
+    std::map<std::string, int32_t> serverMap_;
     std::shared_ptr<ISoftbusListener> nullListener_;
     std::map<int32_t, SessionInfo> mapSessionInfos_;
     std::map<std::string, std::set<std::string>> mapSessionSet_;
