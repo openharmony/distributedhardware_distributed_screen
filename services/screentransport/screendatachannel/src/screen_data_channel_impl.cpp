@@ -227,8 +227,8 @@ int32_t ScreenDataChannelImpl::SendDirtyData(const std::shared_ptr<DataBuffer> &
 
 void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, PeerSocketInfo info)
 {
-    void(info);
-    DHLOGI("%s: OnScreenSessionOpened, sessionId: %" PRId32", result: %" PRId32, LOG_TAG, sessionId, result);
+    (void)info;
+    DHLOGI("%s: OnScreenSessionOpened, sessionId: %" PRId32, LOG_TAG, sessionId);
     if (jpegSessionFlag_ == false) {
         dataSessionOpened = true;
         sessionId_ = sessionId;

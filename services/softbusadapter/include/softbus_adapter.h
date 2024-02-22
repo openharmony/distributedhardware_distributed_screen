@@ -52,13 +52,12 @@ public:
         const std::string &peerDevId);
     int32_t UnRegisterSoftbusListener(const std::string &sessionName, const std::string &peerDevId);
 
-    int32_t OnSoftbusSessionOpened(int32_t sessionId, int32_t result);
-    void OnSoftbusSessionClosed(int32_t sessionId);
+    int32_t OnSoftbusSessionOpened(int32_t sessionId, PeerSocketInfo info);
+    void OnSoftbusSessionClosed(int32_t sessionId, ShutdownReason reason);
     void OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen);
     void OnStreamReceived(int32_t sessionId, const StreamData *data, const StreamData *ext,
         const StreamFrameInfo *frameInfo);
     void OnMessageReceived(int sessionId, const void *data, unsigned int dataLen) const;
-    void OnQosEvent(int sessionId, int eventId, int tvCount, const QosTv *tvList) const;
 
 private:
     SoftbusAdapter();
@@ -70,17 +69,17 @@ private:
     static const constexpr char *LOG_TAG = "SoftbusAdapter";
     std::mutex listenerMtx_;
     std::mutex sessInfoMtx_;
-    std::mutex sessSetMtx_;
     std::mutex serverMapMtx_;
+    std::mutex idMapMutex_;
 
     ISocketListener sessListener_;
     /* while can not find the listener in mapListeners_, return nullListener_ point to null ptr. */
     std::string localSessName_;
     std::string peerDevId_;
     std::map<std::string, int32_t> serverMap_;
+    std::map<int32_t, std::string > devId2SessIdMap_;
     std::shared_ptr<ISoftbusListener> nullListener_;
     std::map<int32_t, SessionInfo> mapSessionInfos_;
-    std::map<std::string, std::set<std::string>> mapSessionSet_;
     std::map<std::string, std::shared_ptr<ISoftbusListener>> mapListeners_;
     std::map<int32_t, std::shared_ptr<ISoftbusListener>> mapSessListeners_;
 };
