@@ -68,18 +68,12 @@ private:
 private:
     static const constexpr char *LOG_TAG = "SoftbusAdapter";
     std::mutex listenerMtx_;
-    std::mutex sessInfoMtx_;
-    std::mutex serverMapMtx_;
     std::mutex idMapMutex_;
 
     ISocketListener sessListener_;
     /* while can not find the listener in mapListeners_, return nullListener_ point to null ptr. */
-    std::string localSessName_;
-    std::string peerDevId_;
-    std::map<std::string, int32_t> serverMap_;
-    std::map<int32_t, std::string > devId2SessIdMap_;
+    std::map<std::int32_t, std::string > devId2SessIdMap_;
     std::shared_ptr<ISoftbusListener> nullListener_;
-    std::map<int32_t, SessionInfo> mapSessionInfos_;
     std::map<std::string, std::shared_ptr<ISoftbusListener>> mapListeners_;
     std::map<int32_t, std::shared_ptr<ISoftbusListener>> mapSessListeners_;
 };

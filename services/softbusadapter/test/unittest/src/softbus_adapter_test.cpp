@@ -338,7 +338,6 @@ HWTEST_F(SoftbusAdapterTest, GetSoftbusListener_002, TestSize.Level1)
     SessionInfo sessionInfo;
     sessionInfo.sessionName = "hello";
     sessionInfo.peerDevId = "world";
-    softbusAdapter.mapSessionInfos_[sessionId] = sessionInfo;
     std::shared_ptr<ISoftbusListener> listener = nullptr;
     softbusAdapter.mapListeners_["hello_world"] = listener;
     std::shared_ptr<ISoftbusListener> actual = softbusAdapter.GetSoftbusListenerById(sessionId);
@@ -373,7 +372,6 @@ HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionOpened_002, TestSize.Level1)
     SessionInfo sessionInfo;
     sessionInfo.sessionName = "hello";
     sessionInfo.peerDevId = "world";
-    softbusAdapter.mapSessionInfos_[sessionId] = sessionInfo;
     softbusAdapter.mapListeners_["hello_world"] = nullptr;
     softbusAdapter.OnSoftbusSessionClosed(sessionId);
     int32_t result = -1;

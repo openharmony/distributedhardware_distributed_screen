@@ -78,7 +78,6 @@ int32_t SoftbusAdapter::RegisterSoftbusListener(const std::shared_ptr<ISoftbusLi
     }
     DHLOGI("%s: RegisterListener sess:%s id:%s.", LOG_TAG, sessionName.c_str(), GetAnonyString(peerDevId).c_str());
     std::string strListenerKey = sessionName + "_" + peerDevId;
-
     std::lock_guard<std::mutex> lisLock(listenerMtx_);
     if (mapListeners_.find(strListenerKey) != mapListeners_.end()) {
         DHLOGE("%s: Session listener already register.", LOG_TAG);
@@ -105,10 +104,10 @@ int32_t SoftbusAdapter::CreateSoftbusSessionServer(const std::string &pkgname, c
 {
     DHLOGI("%s: CreateSessionServer sess:%s id:%s.", LOG_TAG, sessionName.c_str(), GetAnonyString(peerDevId).c_str());
     {
-        std::lock_guard<std::mutex> setLock(idMapMutex_);
-        std::string idMapKey = sessionName + "_" + peerDevId;
+        std::lock_guard<std::mutex> lock(idMapMutex_);
+        std::string idMapValue = sessionName + "_" + peerDevId;
         for (auto it = devId2SessIdMap_.begin(); it != devId2SessIdMap_.end(); it++) {
-            if (((it->second).find(idMapKey) != std::string::npos)) {
+            if (((it->second).find(idMapValue) != std::string::npos)) {
                 DHLOGI("%s: Session already create.", sessionName.c_str());
                 return DH_SUCCESS;
             }
@@ -149,11 +148,11 @@ int32_t SoftbusAdapter::RemoveSoftbusSessionServer(const std::string &pkgname, c
 {
     DHLOGI("%s: RemoveSessionServer sess:%s id:%s", LOG_TAG, sessionName.c_str(), GetAnonyString(peerDevId).c_str());
     int32_t serverSocketId = INVALID_SESSION_ID;
-    std::string idMapKey = sessionName + "_" + peerDevId;    
+    std::string idMapValue = sessionName + "_" + peerDevId;    
     {
         std::lock_guard<std::mutex> lock(idMapMutex_);
         for (auto it = devId2SessIdMap_.begin(); it != devId2SessIdMap_.end(); it++) {
-            if (((it->second).find(idMapKey) != std::string::npos)) {
+            if (((it->second).find(idMapValue) != std::string::npos)) {
                 serverSocketId = it->first;
                 it = devId2SessIdMap_.erase(it);
             }
@@ -206,7 +205,7 @@ int32_t SoftbusAdapter::CloseSoftbusSession(const int32_t sessionId)
     Shutdown(sessionId);
     {
         std::lock_guard<std::mutex> lock(idMapMutex_);
-        devId2SessIdMap_.erase(sessName + "_" + peerDevId);
+        devId2SessIdMap_.erase(sessionId);
     }
     std::lock_guard<std::mutex> lisLock(listenerMtx_);
     mapSessListeners_.erase(sessionId);
@@ -248,8 +247,9 @@ std::shared_ptr<ISoftbusListener> &SoftbusAdapter::GetSoftbusListenerByName(int3
     {
         std::lock_guard<std::mutex> lock(idMapMutex_);
         for (auto it = devId2SessIdMap_.begin(); it != devId2SessIdMap_.end(); it++) {
-            if ((it->first).find(sessionId) != std::string::npos) {
+            if (it->first == sessionId) {
                 strListenerKey = it->second;
+                break;
             }
         }
     }
