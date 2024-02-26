@@ -164,7 +164,7 @@ int32_t SoftbusAdapter::RemoveSoftbusSessionServer(const std::string &pkgname, c
 }
 
 int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, const std::string &peerSessionName,
-    const std::string &peerDevId) const
+    const std::string &peerDevId)
 {
     DHLOGI("%s: OpenSoftbusSession mysess:%s peersess:%s id:%s.", LOG_TAG, mySessionName.c_str(),
         peerSessionName.c_str(), GetAnonyString(peerDevId).c_str());
@@ -241,8 +241,7 @@ int32_t SoftbusAdapter::SendSoftbusStream(int32_t sessionId, const StreamData *d
 
 std::shared_ptr<ISoftbusListener> &SoftbusAdapter::GetSoftbusListenerByName(int32_t sessionId)
 {
-    DHLOGD("%s: GetSoftbusListenerByName sessionName:%s, peerDevId:%s.", LOG_TAG, localSessName_.c_str(),
-        GetAnonyString(peerDevId_).c_str());
+    DHLOGD("%s: SendSoftbusStream, sessionId:%" PRId32, LOG_TAG, sessionId);
     std::string strListenerKey = "";
     {
         std::lock_guard<std::mutex> lock(idMapMutex_);

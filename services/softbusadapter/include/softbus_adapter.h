@@ -43,7 +43,7 @@ public:
     int32_t RemoveSoftbusSessionServer(const std::string &pkgname, const std::string &sessionName,
         const std::string &peerDevId);
     int32_t OpenSoftbusSession(const std::string &mySessionName, const std::string &peerSessionName,
-        const std::string &peerDevId) const;
+        const std::string &peerDevId);
     int32_t CloseSoftbusSession(const int32_t sessionId);
     int32_t SendSoftbusBytes(int32_t sessionId, const void *data, int32_t dataLen) const;
     int32_t SendSoftbusStream(int32_t sessionId, const StreamData *data, const StreamData *ext,
