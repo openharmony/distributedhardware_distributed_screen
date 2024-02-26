@@ -118,7 +118,7 @@ int32_t ScreenSourceTrans::Start()
         DHLOGE("%s: Channel is null", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
-    int32_t ret = screenChannel_->OpenSession();
+    int32_t ret = screenChannel_->OpenSession(listener);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Open channel session failed ret: %" PRId32, LOG_TAG, ret);
         return ret;

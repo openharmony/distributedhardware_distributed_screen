@@ -147,8 +147,7 @@ int32_t SoftbusAdapter::RemoveSoftbusSessionServer(const std::string &pkgname, c
     const std::string &peerDevId)
 {
     (void)pkgname;
-    if (sessionName.empty() || peerDevId.empty())
-    {
+    if (sessionName.empty() || peerDevId.empty()) {
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     DHLOGI("%s: RemoveSessionServer sess:%s id:%s", LOG_TAG, sessionName.c_str(), GetAnonyString(peerDevId).c_str());
@@ -291,8 +290,9 @@ int32_t SoftbusAdapter::OnSoftbusSessionOpened(int32_t sessionId, PeerSocketInfo
         std::lock_guard<std::mutex> lock(serverIdMapMutex_);
         for (auto it = serverIdMap_.begin(); it != serverIdMap_.end(); it++) {
             if (((it->second).find(peerDevId) != std::string::npos)) {
-                std::lock_guard<std::mutex> lock(idMapMutex_);
+                std::lock_guard<std::mutex> sessionLock(idMapMutex_);
                 devId2SessIdMap_.insert(std::make_pair(sessionId, it->second));
+                break;
             }
         }
     }
