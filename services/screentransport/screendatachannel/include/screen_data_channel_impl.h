@@ -34,7 +34,7 @@ public:
     ~ScreenDataChannelImpl() override = default;
     int32_t CreateSession(const std::shared_ptr<IScreenChannelListener> &listener) override;
     int32_t ReleaseSession() override;
-    int32_t OpenSession() override;
+    int32_t OpenSession(const std::shared_ptr<IScreenChannelListener> &listener) override;
     int32_t CloseSession() override;
     int32_t SendData(const std::shared_ptr<DataBuffer> &screenData) override;
     void SetJpegSessionFlag(bool flag) override;
