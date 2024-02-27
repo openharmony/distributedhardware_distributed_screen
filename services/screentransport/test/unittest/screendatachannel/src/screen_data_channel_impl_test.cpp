@@ -243,7 +243,7 @@ HWTEST_F(ScreenDataChannelImplTest, send_data_test_001, TestSize.Level1)
     };
     dataChannelImpl_->OnSessionOpened(sessionId, peerSocketInfo);
     ShutdownReason reason = SHUTDOWN_REASON_UNKNOWN;
-    dataChannelImpl_->OnSessionClosed(sessionId, SHUTDOWN_REASON_UNKNON);
+    dataChannelImpl_->OnSessionClosed(sessionId, reason);
     std::shared_ptr<DataBuffer> data = std::make_shared<DataBuffer>(10);
     data->SetDataType(VIDEO_PART_SCREEN_DATA);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, dataChannelImpl_->SendData(data));
