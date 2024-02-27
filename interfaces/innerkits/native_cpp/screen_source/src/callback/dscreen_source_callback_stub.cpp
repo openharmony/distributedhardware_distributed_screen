@@ -28,7 +28,7 @@
 namespace OHOS { class MessageOption; }
 namespace OHOS {
 namespace DistributedHardware {
-DScreenSourceCallbackStub::DScreenSourceCallbackStub()
+DScreenSourceCallbackStub::DScreenSourceCallbackStub() : IRemoteStub(true)
 {
     memberFuncMap_[NOTIFY_REG_RESULT] = &DScreenSourceCallbackStub::OnNotifyRegResultInner;
     memberFuncMap_[NOTIFY_UNREG_RESULT] = &DScreenSourceCallbackStub::OnNotifyUnregResultInner;

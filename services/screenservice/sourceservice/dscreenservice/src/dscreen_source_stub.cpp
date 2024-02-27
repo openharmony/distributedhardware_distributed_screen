@@ -27,7 +27,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-DScreenSourceStub::DScreenSourceStub()
+DScreenSourceStub::DScreenSourceStub() : IRemoteStub(true)
 {
     memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::INIT_SOURCE)] =
         &DScreenSourceStub::InitSourceInner;
