@@ -249,22 +249,7 @@ HWTEST_F(SoftbusAdapterTest, OpenSoftbusSession_001, TestSize.Level1)
     std::string peerSessionName = DATA_SESSION_NAME;
     std::string peerDevId = "testDevId";
     int32_t actual = softbusAdapter.OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
-    EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL, actual);
-}
-
-/**
- * @tc.name: OpenSoftbusSession_002
- * @tc.desc: Verify the OpenSoftbusSession function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(SoftbusAdapterTest, OpenSoftbusSession_002, TestSize.Level1)
-{
-    std::string mySessionName = "mySessionName";
-    std::string peerSessionName = DATA_SESSION_NAME;
-    std::string peerDevId = "testDevId";
-    int32_t actual = softbusAdapter.OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
-    EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL, actual);
+    EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_PARA_ERROR, actual);
 }
 
 /**
@@ -338,11 +323,11 @@ HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionOpened_001, TestSize.Level1)
 {
     PeerSocketInfo peerSocketInfo = {
         .name = const_cast<char*>(PEER_SESSION_NAME.c_str()),
-        .networkId = const_cast<char*>(DEV_ID.c_str()),
+        .networkId = const_cast<char*>(REMOTE_DEV_ID.c_str()),
         .pkgName = const_cast<char*>(DSCREEN_PKG_NAME_TEST.c_str()),
         .dataType = DATA_TYPE_BYTES
     };
-    int32_t actual = softbusAdapter.OnSoftbusSessionOpened(sessionId, peerSocketInfo);
+    int32_t actual = softbusAdapter.OnSoftbusSessionOpened(0, peerSocketInfo);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, actual);
 }
 

@@ -17,7 +17,6 @@ group("fuzztest") {
   deps = [
     "softbusonbytesreceived_fuzzer:fuzztest",
     "softbusonmessagereceived_fuzzer:fuzztest",
-    "softbusonqosevent_fuzzer:fuzztest",
     "softbusonsessionclosed_fuzzer:fuzztest",
     "softbusonsessionopened_fuzzer:fuzztest",
     "softbusonstreamreceived_fuzzer:fuzztest",

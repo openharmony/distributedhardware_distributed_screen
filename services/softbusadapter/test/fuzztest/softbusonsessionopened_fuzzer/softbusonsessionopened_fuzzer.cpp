@@ -42,7 +42,7 @@ void SoftbusOnSessionOpenedFuzzTest(const uint8_t* data, size_t size)
     int32_t sessionId = *(reinterpret_cast<const int32_t*>(data));
     PeerSocketInfo peerSocketInfo = {
         .name = const_cast<char*>(PEER_SESSION_NAME.c_str()),
-        .networkId = const_cast<char*>(DEV_ID.c_str()),
+        .networkId = const_cast<char*>(REMOTE_DEV_ID.c_str()),
         .pkgName = const_cast<char*>(DSCREEN_PKG_NAME_TEST.c_str()),
         .dataType = DATA_TYPE_BYTES
     };

@@ -291,7 +291,7 @@ int32_t SoftbusAdapter::OnSoftbusSessionOpened(int32_t sessionId, PeerSocketInfo
     {
         std::lock_guard<std::mutex> lock(serverIdMapMutex_);
         for (auto it = serverIdMap_.begin(); it != serverIdMap_.end(); it++) {
-            if ((it->second).find(peerDevId) != std::string::npos) {5
+            if ((it->second).find(peerDevId) != std::string::npos) {
                 std::lock_guard<std::mutex> sessionLock(idMapMutex_);
                 devId2SessIdMap_.insert(std::make_pair(sessionId, it->second));
                 break;

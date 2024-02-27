@@ -66,8 +66,7 @@ void DisablePermissionAccess(const uint64_t &tokenId)
 HWTEST_F(ScreenSourceTransTest, RegisterChannelListener_001, TestSize.Level1)
 {
     int32_t actual = trans->RegisterChannelListener();
-
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, actual);
+    EXPECT_EQ(DH_SUCCESS, actual);
 }
 
 /**

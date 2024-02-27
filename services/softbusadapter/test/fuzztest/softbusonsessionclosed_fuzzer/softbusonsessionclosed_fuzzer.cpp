@@ -36,7 +36,7 @@ void SoftbusOnSessionClosedFuzzTest(const uint8_t* data, size_t size)
     }
     int32_t sessionId = *(reinterpret_cast<const int32_t*>(data));
     std::shared_ptr<SoftbusAdapter> adapter = std::make_shared<SoftbusAdapter>();
-    ShutdownReason reason = SHUTDOWN_REASON_UNKNOW;
+    ShutdownReason reason = SHUTDOWN_REASON_UNKNN;
     adapter->OnSoftbusSessionClosed(sessionId, reason);
 }
 }
