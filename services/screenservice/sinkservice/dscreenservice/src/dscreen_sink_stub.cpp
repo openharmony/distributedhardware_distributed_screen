@@ -72,7 +72,7 @@ int32_t DScreenSinkStub::InitSinkInner(MessageParcel &data, MessageParcel &reply
     (void)option;
     if (!HasEnableDHPermission()) {
         DHLOGE("The caller has no ENABLE_DISTRIBUTED_HARDWARE permission.");
-        return DSCREEN_INIT_ERR;
+        return ERR_DH_SCREEN_SA_CHECK_ENABLE_PERMISSION_FAIL;
     }
     std::string param = data.ReadString();
     if (param.empty() || param.size() > PARAM_MAX_SIZE) {
