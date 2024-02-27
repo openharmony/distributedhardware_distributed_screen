@@ -62,9 +62,6 @@ HWTEST_F(ScreenCallbackTest, RegisterStateCallback_003, TestSize.Level1)
     std::shared_ptr<IScreenChannelListener> listener = std::make_shared<ScreenSourceTrans>();
     screenChannel->channelListener_ = listener;
     int32_t sessionId = 0;
-    int32_t result = 0;
-    screenChannel->OnSessionOpened(sessionId, result);
-    screenChannel->OnSessionClosed(sessionId);
     const void *data = nullptr;
     uint32_t dataLen = 0;
     screenChannel->OnBytesReceived(sessionId, data, dataLen);
@@ -155,9 +152,6 @@ HWTEST_F(ScreenCallbackTest, RegisterStateCallback_006, TestSize.Level1)
     std::shared_ptr<IScreenChannelListener> listener = std::make_shared<ScreenSinkTrans>();
     screenChannel->channelListener_ = listener;
     int32_t sessionId = 0;
-    int32_t result = 0;
-    screenChannel->OnSessionOpened(sessionId, result);
-    screenChannel->OnSessionClosed(sessionId);
     const void *data = nullptr;
     uint32_t dataLen = 0;
     screenChannel->OnBytesReceived(sessionId, data, dataLen);

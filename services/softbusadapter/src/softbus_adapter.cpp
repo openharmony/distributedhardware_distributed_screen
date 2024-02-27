@@ -104,9 +104,9 @@ int32_t SoftbusAdapter::CreateSoftbusSessionServer(const std::string &pkgname, c
 {
     DHLOGI("%s: CreateSessionServer sess:%s id:%s.", LOG_TAG, sessionName.c_str(), GetAnonyString(peerDevId).c_str());
     {
-        std::lock_guard<std::mutex> lock(idMapMutex_);
+        std::lock_guard<std::mutex> lock(serverIdMapMutex_);
         std::string idMapValue = sessionName + "_" + peerDevId;
-        for (auto it = devId2SessIdMap_.begin(); it != devId2SessIdMap_.end(); it++) {
+        for (auto it = serverIdMap_.begin(); it != serverIdMap_.end(); it++) {
             if (((it->second).find(idMapValue) != std::string::npos)) {
                 DHLOGI("%s: Session already create.", sessionName.c_str());
                 return DH_SUCCESS;
@@ -155,10 +155,12 @@ int32_t SoftbusAdapter::RemoveSoftbusSessionServer(const std::string &pkgname, c
     {
         std::lock_guard<std::mutex> lock(serverIdMapMutex_);
         std::string idMapValue = sessionName + "_" + peerDevId;  
-        for (auto it = serverIdMap_.begin(); it != serverIdMap_.end(); it++) {
+        for (auto it = serverIdMap_.begin(); it != serverIdMap_.end();) {
             if (((it->second).find(idMapValue) != std::string::npos)) {
                 serverSocketId = it->first;
                 it = serverIdMap_.erase(it);
+            } else {
+                ++it;
             }
         }
     }
@@ -289,7 +291,7 @@ int32_t SoftbusAdapter::OnSoftbusSessionOpened(int32_t sessionId, PeerSocketInfo
     {
         std::lock_guard<std::mutex> lock(serverIdMapMutex_);
         for (auto it = serverIdMap_.begin(); it != serverIdMap_.end(); it++) {
-            if (((it->second).find(peerDevId) != std::string::npos)) {
+            if ((it->second).find(peerDevId) != std::string::npos) {5
                 std::lock_guard<std::mutex> sessionLock(idMapMutex_);
                 devId2SessIdMap_.insert(std::make_pair(sessionId, it->second));
                 break;
