@@ -126,8 +126,8 @@ int32_t SoftbusAdapter::CreateSoftbusSessionServer(const std::string &pkgname, c
     }
     QosTV qos[] = {
         {.qos = QOS_TYPE_MIN_BW,        .value = 40 * 1024 * 1024},
-        {.qos = QOS_TYPE_MAX_LATENCY,       .value = 8000},
-        {.qos = QOS_TYPE_MIN_LATENCY,       .value = 2000},
+        {.qos = QOS_TYPE_MAX_LATENCY,        .value = 8000},
+        {.qos = QOS_TYPE_MIN_LATENCY,        .value = 2000},
     };
 
     int32_t ret = Listen(socketId, qos, sizeof(qos) / sizeof(qos[0]), &sessListener_);
@@ -175,8 +175,8 @@ int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, con
     DHLOGI("%s: OpenSoftbusSession mysess:%s peersess:%s id:%s.", LOG_TAG, mySessionName.c_str(),
         peerSessionName.c_str(), GetAnonyString(peerDevId).c_str());
 
-     QosTV qos[] = {
-        {.qos = QOS_TYPE_MIN_BW,        .value = 160 * 1024 * 1024},
+    QosTV qos[] = {
+        {.qos = QOS_TYPE_MIN_BW,        .value = 40 * 1024 * 1024},
         {.qos = QOS_TYPE_MAX_LATENCY,        .value = 8000},
         {.qos = QOS_TYPE_MIN_LATENCY,        .value = 2000},
     };
