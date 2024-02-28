@@ -17,7 +17,6 @@
 
 #include <securec.h>
 #include <unistd.h>
-#include <>
 
 #include "softbus_bus_center.h"
 #include "softbus_common.h"
