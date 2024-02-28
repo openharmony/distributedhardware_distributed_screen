@@ -34,6 +34,14 @@ namespace DistributedHardware {
 constexpr int32_t WORD_WIDTH_8 = 8;
 constexpr int32_t WORD_WIDTH_4 = 4;
 
+uint64_t GetCurrentTimeUs()
+{
+    constexpr int32_t usOneSecond = 1000 * 1000;
+    struct timeval tv;
+    gettimeofday(&tv, nullptr);
+    return tv.tv_sec * usOneSecond + tv.tv_usec;
+}
+
 int32_t GetLocalDeviceNetworkId(std::string &networkId)
 {
     NodeBasicInfo basicInfo = { { 0 } };

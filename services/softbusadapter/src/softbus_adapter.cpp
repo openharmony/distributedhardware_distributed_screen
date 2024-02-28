@@ -17,6 +17,7 @@
 
 #include <securec.h>
 #include <unistd.h>
+#include <>
 
 #include "softbus_bus_center.h"
 #include "softbus_common.h"
@@ -180,8 +181,9 @@ int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, con
         {.qos = QOS_TYPE_MAX_LATENCY,        .value = 8000},
         {.qos = QOS_TYPE_MIN_LATENCY,        .value = 2000},
     };
+    std::string localSesionName = mySessionName + "_" + std::to_string(GetCurrentTimeUs());
     SocketInfo clientInfo = {
-        .name = const_cast<char*>((mySessionName.c_str())),
+        .name = const_cast<char*>((localSesionName.c_str())),
         .peerName = const_cast<char*>(peerSessionName.c_str()),
         .peerNetworkId = const_cast<char*>(peerDevId.c_str()),
         .pkgName = const_cast<char*>(PKG_NAME.c_str()),
