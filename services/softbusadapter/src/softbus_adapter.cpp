@@ -177,8 +177,8 @@ int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, con
 
      QosTV qos[] = {
         {.qos = QOS_TYPE_MIN_BW,        .value = 160 * 1024 * 1024},
-        {.qos = QOS_TYPE_MAX_LATENCY,       .value = 8000},
-        {.qos = QOS_TYPE_MIN_LATENCY,       .value = 2000},
+        {.qos = QOS_TYPE_MAX_LATENCY,        .value = 8000},
+        {.qos = QOS_TYPE_MIN_LATENCY,        .value = 2000},
     };
     SocketInfo clientInfo = {
         .name = const_cast<char*>((mySessionName.c_str())),
