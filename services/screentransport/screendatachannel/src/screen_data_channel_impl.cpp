@@ -374,7 +374,7 @@ void ScreenDataChannelImpl::JsonToDirtyJson(nlohmann::json &rectJson, std::share
         if (!IsInt32(rectJson[item], KEY_POINT_DIRTY_X) || !IsInt32(rectJson[item], KEY_POINT_DIRTY_Y) ||
             !IsInt32(rectJson[item], KEY_POINT_DIRTY_W) || !IsInt32(rectJson[item], KEY_POINT_DIRTY_H) ||
             !IsInt32(rectJson[item], KEY_POINT_DIRTY_SIZE)) {
-            DHLOGE("%s: JsonToDirtyJson rectJson not contain int32.", LOG_TAG);
+            DHLOGE("%s: JsonToDirtyJson rectJson not contain int32", LOG_TAG);
             return;
         }
         int32_t X = rectJson[item][KEY_POINT_DIRTY_X].get<int32_t>();
