@@ -21,6 +21,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
+uint64_t GetCurrentTimeUs();
 int32_t GetLocalDeviceNetworkId(std::string &networkId);
 std::string GetRandomID();
 std::string GetAnonyString(const std::string &value);

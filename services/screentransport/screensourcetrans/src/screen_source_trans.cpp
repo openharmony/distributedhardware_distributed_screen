@@ -109,7 +109,16 @@ int32_t ScreenSourceTrans::Start()
     }
 
     StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_OPEN_SESSION_START);
-    int32_t ret = screenChannel_->OpenSession();
+    std::shared_ptr<IScreenChannelListener> listener = shared_from_this();
+    if (listener == nullptr) {
+        DHLOGE("%s: Channel listener is null", LOG_TAG);
+        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
+    }
+    if (screenChannel_ == nullptr) {
+        DHLOGE("%s: Channel is null", LOG_TAG);
+        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
+    }
+    int32_t ret = screenChannel_->OpenSession(listener);
     if (ret != DH_SUCCESS) {
         DHLOGE("%s: Open channel session failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
@@ -287,23 +296,6 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
 int32_t ScreenSourceTrans::RegisterChannelListener()
 {
     DHLOGI("%s: RegisterChannelListener.", LOG_TAG);
-    std::shared_ptr<IScreenChannelListener> listener = shared_from_this();
-    if (listener == nullptr) {
-        DHLOGE("%s: Channel listener is null", LOG_TAG);
-        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
-    }
-
-    if (screenChannel_ == nullptr) {
-        DHLOGE("%s: Channel is null", LOG_TAG);
-        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
-    }
-    int32_t ret = screenChannel_->CreateSession(listener);
-    if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Create session failed ret: %" PRId32, LOG_TAG, ret);
-        ReportOptFail(DSCREEN_OPT_FAIL, ret, "dscreen source Create session failed.");
-        return ret;
-    }
-
     return DH_SUCCESS;
 }
 

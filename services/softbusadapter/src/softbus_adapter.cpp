@@ -28,14 +28,14 @@
 namespace OHOS {
 namespace DistributedHardware {
 IMPLEMENT_SINGLE_INSTANCE(SoftbusAdapter);
-static int32_t ScreenOnSoftbusSessionOpened(int32_t sessionId, int32_t result)
+static void ScreenOnSoftbusSessionOpened(int32_t sessionId, PeerSocketInfo info)
 {
-    return SoftbusAdapter::GetInstance().OnSoftbusSessionOpened(sessionId, result);
+    SoftbusAdapter::GetInstance().OnSoftbusSessionOpened(sessionId, info);
 }
 
-static void ScreenOnSoftbusSessionClosed(int32_t sessionId)
+static void ScreenOnSoftbusSessionClosed(int32_t sessionId, ShutdownReason reason)
 {
-    SoftbusAdapter::GetInstance().OnSoftbusSessionClosed(sessionId);
+    SoftbusAdapter::GetInstance().OnSoftbusSessionClosed(sessionId, reason);
 }
 
 static void ScreenOnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen)
@@ -54,20 +54,14 @@ static void ScreenOnMessageReceived(int sessionId, const void *data, unsigned in
     SoftbusAdapter::GetInstance().OnMessageReceived(sessionId, data, dataLen);
 }
 
-static void ScreenOnQosEvent(int sessionId, int eventId, int tvCount, const QosTv *tvList)
-{
-    SoftbusAdapter::GetInstance().OnQosEvent(sessionId, eventId, tvCount, tvList);
-}
-
 SoftbusAdapter::SoftbusAdapter()
 {
     DHLOGI("SoftbusAdapter");
-    sessListener_.OnSessionOpened = ScreenOnSoftbusSessionOpened;
-    sessListener_.OnSessionClosed = ScreenOnSoftbusSessionClosed;
-    sessListener_.OnBytesReceived = ScreenOnBytesReceived;
-    sessListener_.OnStreamReceived = ScreenOnStreamReceived;
-    sessListener_.OnMessageReceived = ScreenOnMessageReceived;
-    sessListener_.OnQosEvent = ScreenOnQosEvent;
+    sessListener_.OnBind = ScreenOnSoftbusSessionOpened;
+    sessListener_.OnShutdown = ScreenOnSoftbusSessionClosed;
+    sessListener_.OnBytes = ScreenOnBytesReceived;
+    sessListener_.OnStream = ScreenOnStreamReceived;
+    sessListener_.OnMessage = ScreenOnMessageReceived;
 }
 
 SoftbusAdapter::~SoftbusAdapter()
@@ -84,7 +78,6 @@ int32_t SoftbusAdapter::RegisterSoftbusListener(const std::shared_ptr<ISoftbusLi
     }
     DHLOGI("%s: RegisterListener sess:%s id:%s.", LOG_TAG, sessionName.c_str(), GetAnonyString(peerDevId).c_str());
     std::string strListenerKey = sessionName + "_" + peerDevId;
-
     std::lock_guard<std::mutex> lisLock(listenerMtx_);
     if (mapListeners_.find(strListenerKey) != mapListeners_.end()) {
         DHLOGE("%s: Session listener already register.", LOG_TAG);
@@ -110,86 +103,124 @@ int32_t SoftbusAdapter::CreateSoftbusSessionServer(const std::string &pkgname, c
     const std::string &peerDevId)
 {
     DHLOGI("%s: CreateSessionServer sess:%s id:%s.", LOG_TAG, sessionName.c_str(), GetAnonyString(peerDevId).c_str());
-    std::lock_guard<std::mutex> setLock(sessSetMtx_);
-    if (mapSessionSet_.find(sessionName) == mapSessionSet_.end()) {
-        int32_t ret = CreateSessionServer(pkgname.c_str(), sessionName.c_str(), &sessListener_);
-        if (ret != DH_SUCCESS) {
-            DHLOGE("%s: CreateSessionServer failed.", LOG_TAG);
-            return ret;
+    {
+        std::lock_guard<std::mutex> lock(serverIdMapMutex_);
+        std::string idMapValue = sessionName + "_" + peerDevId;
+        for (auto it = serverIdMap_.begin(); it != serverIdMap_.end(); it++) {
+            if (((it->second).find(idMapValue) != std::string::npos)) {
+                DHLOGI("%s: Session already create.", sessionName.c_str());
+                return DH_SUCCESS;
+            }
         }
-    } else {
-        DHLOGD("%s: Session already create.", sessionName.c_str());
     }
+    
+    SocketInfo serverInfo = {
+        .name = const_cast<char*>(sessionName.c_str()),
+        .pkgName = const_cast<char*>(pkgname.c_str()),
+        .dataType = DATA_TYPE_VIDEO_STREAM,
+    };
+    int32_t socketId = Socket(serverInfo);
+    if (socketId < 0) {
+        DHLOGE("Create Socket fail socketId:%" PRId32, socketId);
+        return ERR_DH_SCREEN_ADAPTER_BAD_VALUE;
+    }
+    QosTV qos[] = {
+        {.qos = QOS_TYPE_MIN_BW,        .value = 40 * 1024 * 1024},
+        {.qos = QOS_TYPE_MAX_LATENCY,        .value = 8000},
+        {.qos = QOS_TYPE_MIN_LATENCY,        .value = 2000},
+    };
 
-    mapSessionSet_[sessionName].insert(peerDevId);
-    DHLOGI("%s: CreateSessionServer success.", LOG_TAG);
+    int32_t ret = Listen(socketId, qos, sizeof(qos) / sizeof(qos[0]), &sessListener_);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("Listen socket error for sessionName:%s", sessionName.c_str());
+        return ERR_DH_SCREEN_ADAPTER_BAD_VALUE;
+    }
+    {
+        std::lock_guard<std::mutex> lock(serverIdMapMutex_);
+        serverIdMap_.insert(std::make_pair(socketId, sessionName + "_" + peerDevId));
+    }
+    DHLOGI("%s: CreateSessionServer success sessionId. %." PRId32, LOG_TAG, socketId);
     return DH_SUCCESS;
 }
 
 int32_t SoftbusAdapter::RemoveSoftbusSessionServer(const std::string &pkgname, const std::string &sessionName,
     const std::string &peerDevId)
 {
+    (void)pkgname;
+    if (sessionName.empty() || peerDevId.empty()) {
+        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
+    }
     DHLOGI("%s: RemoveSessionServer sess:%s id:%s", LOG_TAG, sessionName.c_str(), GetAnonyString(peerDevId).c_str());
-    std::lock_guard<std::mutex> setLock(sessSetMtx_);
-    if (mapSessionSet_.find(sessionName) == mapSessionSet_.end()) {
-        DHLOGE("%s: Session name can not find.", LOG_TAG);
-        return ERR_DH_SCREEN_TRANS_ILLEGAL_OPERATION;
-    } else if (mapSessionSet_[sessionName].find(peerDevId) == mapSessionSet_[sessionName].end()) {
-        DHLOGE("%s: PeerDevId can not find.", LOG_TAG);
-        return ERR_DH_SCREEN_TRANS_ILLEGAL_OPERATION;
+    int32_t serverSocketId = INVALID_SESSION_ID;
+    {
+        std::lock_guard<std::mutex> lock(serverIdMapMutex_);
+        std::string idMapValue = sessionName + "_" + peerDevId;
+        for (auto it = serverIdMap_.begin(); it != serverIdMap_.end();) {
+            if (((it->second).find(idMapValue) != std::string::npos)) {
+                serverSocketId = it->first;
+                it = serverIdMap_.erase(it);
+            } else {
+                ++it;
+            }
+        }
     }
-
-    int32_t ret = RemoveSessionServer(pkgname.c_str(), sessionName.c_str());
-    if (ret != DH_SUCCESS) {
-        DHLOGE("%s: RemoveSessionServer failed.", LOG_TAG);
-        return ret;
-    }
-
-    mapSessionSet_[sessionName].erase(peerDevId);
-    if (mapSessionSet_[sessionName].empty()) {
-        mapSessionSet_.erase(sessionName);
-    }
+    Shutdown(serverSocketId);
     DHLOGI("%s: RemoveSessionServer success.", LOG_TAG);
     return DH_SUCCESS;
 }
 
 int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, const std::string &peerSessionName,
-    const std::string &peerDevId) const
+    const std::string &peerDevId)
 {
     DHLOGI("%s: OpenSoftbusSession mysess:%s peersess:%s id:%s.", LOG_TAG, mySessionName.c_str(),
         peerSessionName.c_str(), GetAnonyString(peerDevId).c_str());
-    int dataType = TYPE_STREAM;
-    int streamType = COMMON_VIDEO_STREAM;
-    SessionAttribute attr = { 0 };
-    attr.dataType = dataType;
-    attr.linkTypeNum = LINK_TYPE_MAX;
-    LinkType linkTypeList[LINK_TYPE_MAX] = {
-        LINK_TYPE_WIFI_P2P,
-        LINK_TYPE_WIFI_WLAN_5G,
-        LINK_TYPE_WIFI_WLAN_2G,
-        LINK_TYPE_BR,
+
+    QosTV qos[] = {
+        {.qos = QOS_TYPE_MIN_BW,        .value = 40 * 1024 * 1024},
+        {.qos = QOS_TYPE_MAX_LATENCY,        .value = 8000},
+        {.qos = QOS_TYPE_MIN_LATENCY,        .value = 2000},
     };
-    int32_t ret = memcpy_s(attr.linkType, sizeof(attr.linkType), linkTypeList, sizeof(linkTypeList));
-    if (ret != EOK) {
-        DHLOGE("%s: Data copy failed.", LOG_TAG);
+    std::string localSesionName = mySessionName + "_" + std::to_string(GetCurrentTimeUs());
+    SocketInfo clientInfo = {
+        .name = const_cast<char*>((localSesionName.c_str())),
+        .peerName = const_cast<char*>(peerSessionName.c_str()),
+        .peerNetworkId = const_cast<char*>(peerDevId.c_str()),
+        .pkgName = const_cast<char*>(PKG_NAME.c_str()),
+        .dataType = DATA_TYPE_VIDEO_STREAM,
+    };
+    int32_t socketId = Socket(clientInfo);
+    if (socketId < 0) {
+        DHLOGE("Create OpenSoftbusChannel Socket error");
         return ERR_DH_SCREEN_ADAPTER_PARA_ERROR;
     }
-    attr.attr.streamAttr.streamType = streamType;
-    int32_t sessionId = OpenSession(mySessionName.c_str(), peerSessionName.c_str(), peerDevId.c_str(), "0", &attr);
-    if (sessionId < 0) {
-        DHLOGE("%s: OpenSession failed sessionId: %." PRId32, LOG_TAG, sessionId);
-        return ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL;
+    int32_t ret = Bind(socketId, qos, sizeof(qos) / sizeof(qos[0]), &sessListener_);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("Bind SocketClient error");
+        return ERR_DH_SCREEN_ADAPTER_PARA_ERROR;
     }
-
-    DHLOGI("%s: OpenSoftbusSession success sessionId: %." PRId32, LOG_TAG, sessionId);
-    return sessionId;
+    {
+        std::lock_guard<std::mutex> lock(idMapMutex_);
+        devId2SessIdMap_.insert(std::make_pair(socketId, mySessionName + "_" + peerDevId));
+    }
+    std::shared_ptr<ISoftbusListener> &listener = GetSoftbusListenerByName(socketId);
+    if (listener == nullptr) {
+        DHLOGE("Get softbus listener failed.");
+        return ERR_DH_SCREEN_TRANS_ERROR;
+    }
+    PeerSocketInfo info;
+    listener->OnSessionOpened(socketId, info);
+    DHLOGI("%s: OpenSoftbusSession success sessionId: %." PRId32, LOG_TAG, socketId);
+    return socketId;
 }
 
 int32_t SoftbusAdapter::CloseSoftbusSession(const int32_t sessionId)
 {
     DHLOGI("%s: CloseSoftbusSession, sessid:%" PRId32, LOG_TAG, sessionId);
-    CloseSession(sessionId);
-
+    Shutdown(sessionId);
+    {
+        std::lock_guard<std::mutex> lock(idMapMutex_);
+        devId2SessIdMap_.erase(sessionId);
+    }
     std::lock_guard<std::mutex> lisLock(listenerMtx_);
     mapSessListeners_.erase(sessionId);
 
@@ -224,25 +255,17 @@ int32_t SoftbusAdapter::SendSoftbusStream(int32_t sessionId, const StreamData *d
 
 std::shared_ptr<ISoftbusListener> &SoftbusAdapter::GetSoftbusListenerByName(int32_t sessionId)
 {
-    char sessionName[DSCREEN_MAX_SESSION_NAME_LEN] = "";
-    char peerDevId[DSCREEN_MAX_DEVICE_ID_LEN] = "";
-    int32_t ret = GetPeerSessionName(sessionId, sessionName, sizeof(sessionName));
-    if (ret != DH_SUCCESS) {
-        DHLOGE("%s: GetPeerSessionName failed ret:%" PRId32, LOG_TAG, ret);
-        return nullListener_;
+    DHLOGD("%s: SendSoftbusStream, sessionId:%" PRId32, LOG_TAG, sessionId);
+    std::string strListenerKey = "";
+    {
+        std::lock_guard<std::mutex> lock(idMapMutex_);
+        for (auto it = devId2SessIdMap_.begin(); it != devId2SessIdMap_.end(); it++) {
+            if (it->first == sessionId) {
+                strListenerKey = it->second;
+                break;
+            }
+        }
     }
-    ret = GetPeerDeviceId(sessionId, peerDevId, sizeof(peerDevId));
-    if (ret != DH_SUCCESS) {
-        DHLOGE("%s: GetPeerDeviceId failed ret:%" PRId32, LOG_TAG, ret);
-        return nullListener_;
-    }
-
-    std::string sessionNameStr(sessionName);
-    std::string peerDevIdStr(peerDevId);
-    DHLOGD("%s: GetSoftbusListenerByName sessionName:%s, peerDevId:%s.", LOG_TAG, sessionNameStr.c_str(),
-        GetAnonyString(peerDevIdStr).c_str());
-    std::string strListenerKey = sessionNameStr + "_" + peerDevIdStr;
-
     std::lock_guard<std::mutex> lisLock(listenerMtx_);
     if (mapListeners_.find(strListenerKey) == mapListeners_.end()) {
         DHLOGE("%s: Find listener failed.", LOG_TAG);
@@ -262,12 +285,19 @@ std::shared_ptr<ISoftbusListener> &SoftbusAdapter::GetSoftbusListenerById(int32_
     return mapSessListeners_[sessionId];
 }
 
-int32_t SoftbusAdapter::OnSoftbusSessionOpened(int32_t sessionId, int32_t result)
+int32_t SoftbusAdapter::OnSoftbusSessionOpened(int32_t sessionId, PeerSocketInfo info)
 {
-    DHLOGI("%s: OnSessionOpened session:%" PRId32", result:%" PRId32, LOG_TAG, sessionId, result);
-    if (result != DH_SUCCESS) {
-        DHLOGE("%s: OnSessionOpened failed.", LOG_TAG);
-        return ERR_DH_SCREEN_ADAPTER_OPEN_SESSION_FAIL;
+    DHLOGI("%s: OnSessionOpened session:%" PRId32, LOG_TAG, sessionId);
+    std::string peerDevId(info.networkId);
+    {
+        std::lock_guard<std::mutex> lock(serverIdMapMutex_);
+        for (auto it = serverIdMap_.begin(); it != serverIdMap_.end(); it++) {
+            if ((it->second).find(peerDevId) != std::string::npos) {
+                std::lock_guard<std::mutex> sessionLock(idMapMutex_);
+                devId2SessIdMap_.insert(std::make_pair(sessionId, it->second));
+                break;
+            }
+        }
     }
 
     std::shared_ptr<ISoftbusListener> &listener = GetSoftbusListenerByName(sessionId);
@@ -275,7 +305,7 @@ int32_t SoftbusAdapter::OnSoftbusSessionOpened(int32_t sessionId, int32_t result
         DHLOGE("Get softbus listener failed.");
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
-    listener->OnSessionOpened(sessionId, result);
+    listener->OnSessionOpened(sessionId, info);
 
     std::lock_guard<std::mutex> lisLock(listenerMtx_);
     mapSessListeners_.insert(std::make_pair(sessionId, listener));
@@ -283,7 +313,7 @@ int32_t SoftbusAdapter::OnSoftbusSessionOpened(int32_t sessionId, int32_t result
     return DH_SUCCESS;
 }
 
-void SoftbusAdapter::OnSoftbusSessionClosed(int32_t sessionId)
+void SoftbusAdapter::OnSoftbusSessionClosed(int32_t sessionId, ShutdownReason reason)
 {
     DHLOGI("%s: OnSessionClosed sessionId:%" PRId32, LOG_TAG, sessionId);
     std::shared_ptr<ISoftbusListener> &listener = GetSoftbusListenerById(sessionId);
@@ -291,8 +321,11 @@ void SoftbusAdapter::OnSoftbusSessionClosed(int32_t sessionId)
         DHLOGE("Get softbus listener failed.");
         return;
     }
-    listener->OnSessionClosed(sessionId);
-
+    listener->OnSessionClosed(sessionId, reason);
+    {
+        std::lock_guard<std::mutex> lock(idMapMutex_);
+        devId2SessIdMap_.erase(sessionId);
+    }
     std::lock_guard<std::mutex> lisLock(listenerMtx_);
     mapSessListeners_.erase(sessionId);
 }
@@ -343,14 +376,6 @@ void SoftbusAdapter::OnMessageReceived(int sessionId, const void *data, unsigned
     (void)data;
     (void)dataLen;
     DHLOGD("%s OnMessageReceived, sessionId:%" PRId32, LOG_TAG, sessionId);
-}
-
-void SoftbusAdapter::OnQosEvent(int sessionId, int eventId, int tvCount, const QosTv *tvList) const
-{
-    (void)eventId;
-    (void)tvCount;
-    (void)tvList;
-    DHLOGD("%s OnQosEvent, sessionId:%" PRId32, LOG_TAG, sessionId);
 }
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -27,6 +27,11 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+    namespace {
+    const std::string PEER_SESSION_NAME = "ohos.dhardware.dscreen.session8647073e02e7a78f09473aa122";
+    const std::string REMOTE_DEV_ID = "f6d4c0864707aefte7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
+    const std::string DSCREEN_PKG_NAME_TEST = "ohos.dhardware.dscreen";
+}
 void ScreenDataChannelImplTest::SetUpTestCase(void) {}
 
 void ScreenDataChannelImplTest::TearDownTestCase(void) {}
@@ -96,7 +101,6 @@ HWTEST_F(ScreenDataChannelImplTest, CreateSession_002, TestSize.Level1)
     dataChannelImpl_->jpegSessionFlag_ = false;
     int32_t ret = dataChannelImpl_->CreateSession(listener);
     DisablePermissionAccess(tokenId_);
-
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
@@ -108,9 +112,9 @@ HWTEST_F(ScreenDataChannelImplTest, CreateSession_002, TestSize.Level1)
  */
 HWTEST_F(ScreenDataChannelImplTest, OpenSession_001, TestSize.Level1)
 {
-    int32_t ret = dataChannelImpl_->OpenSession();
-
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, ret);
+    std::shared_ptr<IScreenChannelListener> listener = std::make_shared<MockIScreenChannelListener>();
+    int32_t ret = dataChannelImpl_->OpenSession(listener);
+    EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_REGISTER_SOFTBUS_LISTENER_FAIL, ret);
 }
 
 /**
@@ -123,7 +127,6 @@ HWTEST_F(ScreenDataChannelImplTest, SendFullData_001, TestSize.Level1)
 {
     std::shared_ptr<DataBuffer> screenData = nullptr;
     int32_t ret = dataChannelImpl_->SendFullData(screenData);
-
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
 }
 
@@ -138,7 +141,6 @@ HWTEST_F(ScreenDataChannelImplTest, SendFullData_002, TestSize.Level1)
     std::shared_ptr<DataBuffer> data = std::make_shared<DataBuffer>(10);
     dataChannelImpl_->sessionId_ = 1;
     int32_t ret = dataChannelImpl_->SendFullData(data);
-
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, ret);
 }
 
@@ -152,7 +154,6 @@ HWTEST_F(ScreenDataChannelImplTest, SendDirtyData_001, TestSize.Level1)
 {
     std::shared_ptr<DataBuffer> screenData = nullptr;
     int32_t ret = dataChannelImpl_->SendDirtyData(screenData);
-
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
 }
 
@@ -167,7 +168,6 @@ HWTEST_F(ScreenDataChannelImplTest, SendDirtyData_002, TestSize.Level1)
     std::shared_ptr<DataBuffer> data = std::make_shared<DataBuffer>(10);
     dataChannelImpl_->jpegSessionId_ = 1;
     int32_t ret = dataChannelImpl_->SendFullData(data);
-
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, ret);
 }
 
@@ -235,8 +235,15 @@ HWTEST_F(ScreenDataChannelImplTest, send_data_test_001, TestSize.Level1)
     std::shared_ptr<IScreenChannelListener> listener = nullptr;
     dataChannelImpl_->channelListener_ = listener;
     int32_t sessionId = 0;
-    dataChannelImpl_->OnSessionOpened(sessionId, 0);
-    dataChannelImpl_->OnSessionClosed(sessionId);
+    PeerSocketInfo peerSocketInfo = {
+        .name = const_cast<char*>(PEER_SESSION_NAME.c_str()),
+        .networkId = const_cast<char*>(REMOTE_DEV_ID.c_str()),
+        .pkgName = const_cast<char*>(DSCREEN_PKG_NAME_TEST.c_str()),
+        .dataType = DATA_TYPE_BYTES
+    };
+    dataChannelImpl_->OnSessionOpened(sessionId, peerSocketInfo);
+    ShutdownReason reason = SHUTDOWN_REASON_UNKNOWN;
+    dataChannelImpl_->OnSessionClosed(sessionId, reason);
     std::shared_ptr<DataBuffer> data = std::make_shared<DataBuffer>(10);
     data->SetDataType(VIDEO_PART_SCREEN_DATA);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, dataChannelImpl_->SendData(data));
@@ -252,9 +259,6 @@ HWTEST_F(ScreenDataChannelImplTest, send_data_test_002, TestSize.Level1)
 {
     std::shared_ptr<IScreenChannelListener> listener = nullptr;
     dataChannelImpl_->channelListener_ = listener;
-    int32_t sessionId = 0;
-    dataChannelImpl_->OnSessionOpened(sessionId, 0);
-    dataChannelImpl_->OnSessionClosed(sessionId);
     std::shared_ptr<DataBuffer> data = nullptr;
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, dataChannelImpl_->SendData(data));
 }
@@ -269,9 +273,6 @@ HWTEST_F(ScreenDataChannelImplTest, send_data_test_003, TestSize.Level1)
 {
     std::shared_ptr<IScreenChannelListener> listener = nullptr;
     dataChannelImpl_->channelListener_ = listener;
-    int32_t sessionId = 0;
-    dataChannelImpl_->OnSessionOpened(sessionId, 10);
-    dataChannelImpl_->OnSessionClosed(sessionId);
     std::shared_ptr<DataBuffer> data = std::make_shared<DataBuffer>(10);
     data->SetDataType(VIDEO_FULL_SCREEN_DATA);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, dataChannelImpl_->SendData(data));
@@ -288,21 +289,14 @@ HWTEST_F(ScreenDataChannelImplTest, on_session_opened_test_001, TestSize.Level1)
     std::shared_ptr<IScreenChannelListener> listener = std::make_shared<MockIScreenChannelListener>();
     dataChannelImpl_->channelListener_ = listener;
     int32_t sessionId = 1;
-    dataChannelImpl_->OnSessionOpened(sessionId, 0);
+    PeerSocketInfo peerSocketInfo = {
+        .name = const_cast<char*>(PEER_SESSION_NAME.c_str()),
+        .networkId = const_cast<char*>(REMOTE_DEV_ID.c_str()),
+        .pkgName = const_cast<char*>(DSCREEN_PKG_NAME_TEST.c_str()),
+        .dataType = DATA_TYPE_BYTES
+    };
+    dataChannelImpl_->OnSessionOpened(sessionId, peerSocketInfo);
     EXPECT_EQ(sessionId, dataChannelImpl_->sessionId_);
-}
-
-/**
- * @tc.name: on_session_opened_test_002
- * @tc.desc: Verify the OnSessionOpened function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ScreenDataChannelImplTest, on_session_opened_test_002, TestSize.Level1)
-{
-    dataChannelImpl_->channelListener_ = std::make_shared<MockIScreenChannelListener>();
-    dataChannelImpl_->OnSessionOpened(-1, -1);
-    EXPECT_EQ(0, dataChannelImpl_->sessionId_);
 }
 
 /**
@@ -316,16 +310,21 @@ HWTEST_F(ScreenDataChannelImplTest, on_session_opened_test_003, TestSize.Level1)
     std::shared_ptr<IScreenChannelListener>  mockListener = std::make_shared<MockIScreenChannelListener>();
     dataChannelImpl_->channelListener_ = mockListener;
     int32_t sessionId = 1;
-    int32_t result = 1;
     dataChannelImpl_->jpegSessionFlag_ = true;
     dataChannelImpl_->sessionId_ = 1;
     dataChannelImpl_->jpegSessionId_ = 1;
     dataChannelImpl_->jpegSessionOpened = false;
-    dataChannelImpl_->OnSessionOpened(sessionId, result);
+    PeerSocketInfo peerSocketInfo = {
+        .name = const_cast<char*>(PEER_SESSION_NAME.c_str()),
+        .networkId = const_cast<char*>(REMOTE_DEV_ID.c_str()),
+        .pkgName = const_cast<char*>(DSCREEN_PKG_NAME_TEST.c_str()),
+        .dataType = DATA_TYPE_BYTES
+    };
+    dataChannelImpl_->OnSessionOpened(sessionId, peerSocketInfo);
 
     dataChannelImpl_->sessionId_ = 2;
     dataChannelImpl_->dataSessionOpened = false;
-    dataChannelImpl_->OnSessionOpened(sessionId, result);
+    dataChannelImpl_->OnSessionOpened(sessionId, peerSocketInfo);
     EXPECT_NE(nullptr, dataChannelImpl_->channelListener_.lock());
 }
 

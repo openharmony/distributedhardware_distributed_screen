@@ -100,9 +100,20 @@ int32_t ScreenDataChannelImpl::ReleaseSession()
     return DH_SUCCESS;
 }
 
-int32_t ScreenDataChannelImpl::OpenSession()
+int32_t ScreenDataChannelImpl::OpenSession(const std::shared_ptr<IScreenChannelListener> &listener)
 {
     DHLOGI("%s: OpenSession, peerDevId(%s)", LOG_TAG, GetAnonyString(peerDevId_).c_str());
+    if (listener == nullptr) {
+        DHLOGE("%s: Channel listener is null", LOG_TAG);
+        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
+    }
+    channelListener_ = listener;
+    std::shared_ptr<ISoftbusListener> softbusListener = shared_from_this();
+    int32_t ret = SoftbusAdapter::GetInstance().RegisterSoftbusListener(softbusListener, DATA_SESSION_NAME, peerDevId_);
+    if (ret != DH_SUCCESS) {
+        DHLOGE("%s: Register data adapter listener failed ret: %" PRId32, LOG_TAG, ret);
+        return ret;
+    }
     int32_t sessionId =
         SoftbusAdapter::GetInstance().OpenSoftbusSession(DATA_SESSION_NAME, DATA_SESSION_NAME, peerDevId_);
     if (sessionId < 0) {
@@ -112,8 +123,14 @@ int32_t ScreenDataChannelImpl::OpenSession()
     }
     sessionId_ = sessionId;
     if (jpegSessionFlag_ == true) {
+        ret =
+            SoftbusAdapter::GetInstance().RegisterSoftbusListener(softbusListener, JPEG_SESSION_NAME, peerDevId_);
+        if (ret != DH_SUCCESS) {
+            DHLOGE("%s: Register jpeg adapter listener failed ret: %" PRId32, LOG_TAG, ret);
+            return ret;
+        }
         sessionId =
-            SoftbusAdapter::GetInstance().OpenSoftbusSession(DATA_SESSION_NAME, JPEG_SESSION_NAME, peerDevId_);
+            SoftbusAdapter::GetInstance().OpenSoftbusSession(JPEG_SESSION_NAME, JPEG_SESSION_NAME, peerDevId_);
         if (sessionId < 0) {
             DHLOGE("%s: Open jpeg session failed, ret: %" PRId32, LOG_TAG, sessionId);
             ReportOptFail(DSCREEN_OPT_FAIL, sessionId, "Open jpeg session failed");
@@ -225,13 +242,10 @@ int32_t ScreenDataChannelImpl::SendDirtyData(const std::shared_ptr<DataBuffer> &
 }
 
 
-void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, int32_t result)
+void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, PeerSocketInfo info)
 {
-    DHLOGI("%s: OnScreenSessionOpened, sessionId: %" PRId32", result: %" PRId32, LOG_TAG, sessionId, result);
-    if (result != 0) {
-        DHLOGE("Session open failed", LOG_TAG);
-        return;
-    }
+    (void)info;
+    DHLOGI("%s: OnScreenSessionOpened, sessionId: %" PRId32, LOG_TAG, sessionId);
     if (jpegSessionFlag_ == false) {
         dataSessionOpened = true;
         sessionId_ = sessionId;
@@ -243,9 +257,6 @@ void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, int32_t result)
             jpegSessionOpened = true;
             jpegSessionId_ = sessionId;
         }
-        if (!dataSessionOpened || !jpegSessionOpened) {
-            return;
-        }
     }
     std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
     if (listener == nullptr) {
@@ -255,8 +266,9 @@ void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, int32_t result)
     listener->OnSessionOpened();
 }
 
-void ScreenDataChannelImpl::OnSessionClosed(int32_t sessionId)
+void ScreenDataChannelImpl::OnSessionClosed(int32_t sessionId, ShutdownReason reason)
 {
+    (void)reason;
     DHLOGI("%s: OnScreenSessionClosed, sessionId %" PRId32, LOG_TAG, sessionId);
     std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
     if (listener == nullptr) {

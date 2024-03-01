@@ -17,7 +17,8 @@
 #define OHOS_ISOFTBUS_LISTENER
 
 #include "data_buffer.h"
-#include "session.h"
+#include "transport/socket.h"
+#include "transport/trans_type.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -25,8 +26,8 @@ class ISoftbusListener {
 public:
     virtual ~ISoftbusListener() = default;
 
-    virtual void OnSessionOpened(int32_t sessionId, int32_t result) = 0;
-    virtual void OnSessionClosed(int32_t sessionId) = 0;
+    virtual void OnSessionOpened(int32_t sessionId, PeerSocketInfo info) = 0;
+    virtual void OnSessionClosed(int32_t sessionId, ShutdownReason reason) = 0;
     virtual void OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen) = 0;
     virtual void OnStreamReceived(int32_t sessionId, const StreamData *data, const StreamData *ext,
         const StreamFrameInfo *param) = 0;

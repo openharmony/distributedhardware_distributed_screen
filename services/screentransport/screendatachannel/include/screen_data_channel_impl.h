@@ -34,7 +34,7 @@ public:
     ~ScreenDataChannelImpl() override = default;
     int32_t CreateSession(const std::shared_ptr<IScreenChannelListener> &listener) override;
     int32_t ReleaseSession() override;
-    int32_t OpenSession() override;
+    int32_t OpenSession(const std::shared_ptr<IScreenChannelListener> &listener) override;
     int32_t CloseSession() override;
     int32_t SendData(const std::shared_ptr<DataBuffer> &screenData) override;
     void SetJpegSessionFlag(bool flag) override;
@@ -42,8 +42,8 @@ public:
     int32_t SendDirtyData(const std::shared_ptr<DataBuffer> &screenData);
     void ProcessDirtyData(const StreamData *data, std::shared_ptr<DataBuffer> dataBuffer, const StreamData *ext);
     void ProcessDullData(const StreamData *data, std::shared_ptr<DataBuffer> dataBuffer);
-    void OnSessionOpened(int32_t sessionId, int32_t result) override;
-    void OnSessionClosed(int32_t sessionId) override;
+    void OnSessionOpened(int32_t sessionId, PeerSocketInfo info) override;
+    void OnSessionClosed(int32_t sessionId, ShutdownReason reason) override;
     void OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen) override;
     void OnStreamReceived(int32_t sessionId, const StreamData *data, const StreamData *ext,
         const StreamFrameInfo *param) override;
