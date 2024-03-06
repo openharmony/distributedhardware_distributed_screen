@@ -24,7 +24,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-DScreenSinkStub::DScreenSinkStub() : IRemoteStub(true)
+DScreenSinkStub::DScreenSinkStub()
 {
     memberFuncMap_[static_cast<uint32_t>(IDScreenSinkInterfaceCode::INIT_SINK)] =
         &DScreenSinkStub::InitSinkInner;
