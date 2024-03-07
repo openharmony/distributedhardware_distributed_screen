@@ -20,7 +20,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-void ImageEncoderCallback::OnError(Media::AVCodecErrorType errorType, int32_t errorCode)
+void ImageEncoderCallback::OnError(MediaAVCodec::AVCodecErrorType errorType, int32_t errorCode)
 {
     DHLOGD("%s: OnError.", LOG_TAG);
     std::shared_ptr<ImageSourceEncoder> encoder = videoEncoder_.lock();
@@ -31,8 +31,8 @@ void ImageEncoderCallback::OnError(Media::AVCodecErrorType errorType, int32_t er
     encoder->OnError(errorType, errorCode);
 }
 
-void ImageEncoderCallback::OnOutputBufferAvailable(uint32_t index, Media::AVCodecBufferInfo info,
-    Media::AVCodecBufferFlag flag)
+void ImageEncoderCallback::OnOutputBufferAvailable(uint32_t index, MediaAVCodec::AVCodecBufferInfo info,
+    MediaAVCodec::AVCodecBufferFlag flag, std::shared_ptr<Media::AVSharedMemory> buffer)
 {
     DHLOGD("%s: OnOutputBufferAvailable.", LOG_TAG);
     std::shared_ptr<ImageSourceEncoder> encoder = videoEncoder_.lock();
@@ -40,10 +40,10 @@ void ImageEncoderCallback::OnOutputBufferAvailable(uint32_t index, Media::AVCode
         DHLOGE("encoder is nullptr.");
         return;
     }
-    encoder->OnOutputBufferAvailable(index, info, flag);
+    encoder->OnOutputBufferAvailable(index, info, flag, buffer);
 }
 
-void ImageEncoderCallback::OnInputBufferAvailable(uint32_t index)
+void ImageEncoderCallback::OnInputBufferAvailable(uint32_t index, std::shared_ptr<Media::AVSharedMemory> buffer)
 {
     DHLOGD("%s: OnInputBufferAvailable.", LOG_TAG);
     std::shared_ptr<ImageSourceEncoder> encoder = videoEncoder_.lock();
@@ -51,7 +51,7 @@ void ImageEncoderCallback::OnInputBufferAvailable(uint32_t index)
         DHLOGE("encoder is nullptr.");
         return;
     }
-    encoder->OnInputBufferAvailable(index);
+    encoder->OnInputBufferAvailable(index, buffer);
 }
 
 void ImageEncoderCallback::OnOutputFormatChanged(const Media::Format &format)

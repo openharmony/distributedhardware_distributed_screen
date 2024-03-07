@@ -48,11 +48,12 @@ ohos_unittest("DscreenHandlerTest") {
   ]
 
   external_deps = [
+    "av_codec:av_codec_client",
     "c_utils:utils",
     "graphic_2d:libgraphic_utils",
     "graphic_surface:surface",
     "ipc:ipc_core",
-    "player_framework:media_client",
+    "media_foundation:media_foundation",
     "window_manager:libdm",
   ]
 

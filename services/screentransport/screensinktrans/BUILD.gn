@@ -74,6 +74,7 @@ ohos_shared_library("distributed_screen_sinktrans") {
   ]
 
   external_deps = [
+    "av_codec:av_codec_client",
     "c_utils:utils",
     "distributed_hardware_fwk:distributed_av_receiver",
     "distributed_hardware_fwk:libdhfwk_sdk",
@@ -82,7 +83,7 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "hitrace:hitrace_meter",
-    "player_framework:media_client",
+    "media_foundation:media_foundation",
   ]
 
   if (!distributed_screen_common) {

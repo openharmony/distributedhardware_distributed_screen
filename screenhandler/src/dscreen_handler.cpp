@@ -213,22 +213,23 @@ std::string DScreenHandler::QueryCodecInfo()
     }
 
     // query codec info
-    std::shared_ptr<Media::AVCodecList> codecList = Media::AVCodecListFactory::CreateAVCodecList();
+    std::shared_ptr<MediaAVCodec::AVCodecList> codecList = MediaAVCodec::AVCodecListFactory::CreateAVCodecList();
     if (codecList == nullptr) {
+        DHLOGE("Create avCodecList failed.");
         return codecInfoStr_;
     }
-    std::vector<std::shared_ptr<Media::VideoCaps>> caps = codecList->GetVideoEncoderCaps();
+    const std::vector<std::string> encoderName = {std::string(MediaAVCodec::CodecMimeType::VIDEO_AVC),
+                                                  std::string(MediaAVCodec::CodecMimeType::VIDEO_HEVC)};
     json codecTypeArray = json::array();
 
-    for (const auto &cap : caps) {
-        if (cap == nullptr) {
-            continue;
-        }
-        std::shared_ptr<Media::AVCodecInfo> codecInfo = cap->GetCodecInfo();
-        if (codecInfo == nullptr) {
-            continue;
-        }
-        codecTypeArray.push_back(codecInfo->GetName());
+    for (const auto &coder : encoderName) {
+        MediaAVCodec::CapabilityData *capData = codecList->GetCapability(coder, true,
+            MediaAVCodec::AVCodecCategory::AVCODEC_HARDWARE);
+            if (capData == nullptr) {
+                continue;
+            }
+        std::string mimeType = capData->mimeType;
+        codecTypeArray.push_back(mimeType);
     }
 
     codecInfoStr_ = codecTypeArray.dump();

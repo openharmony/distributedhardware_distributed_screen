@@ -43,7 +43,7 @@ void ImageSinkProcessorTest::SetUp(void)
     processor_ = std::make_shared<ImageSinkProcessor>();
     imageListener_ = std::make_shared<MockIImageSinkProcessorListener>();
     processor_->imageDecoder_ = std::make_shared<ImageSinkDecoder>(imageListener_);
-    processor_->imageDecoder_->videoDecoder_ = Media::VideoDecoderFactory::CreateByMime("video/avc");
+    processor_->imageDecoder_->videoDecoder_ = MediaAVCodec::VideoDecoderFactory::CreateByMime("video/avc");
 }
 
 void ImageSinkProcessorTest::TearDown(void) {}
@@ -103,7 +103,8 @@ HWTEST_F(ImageSinkProcessorTest, release_image_processor_test_002, TestSize.Leve
  */
 HWTEST_F(ImageSinkProcessorTest, start_image_processor_test_001, TestSize.Level1)
 {
-    EXPECT_EQ(ERR_DH_SCREEN_CODEC_PREPARE_FAILED, processor_->StartImageProcessor());
+    processor_->imageDecoder_->videoDecoder_ = nullptr;
+    EXPECT_NE(DH_SUCCESS, processor_->StartImageProcessor());
 }
 
 /**

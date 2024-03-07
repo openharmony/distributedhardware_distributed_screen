@@ -155,7 +155,31 @@ HWTEST_F(ScreenSourceTransTest, InitScreenTrans_001, TestSize.Level1)
     int32_t actual = trans->InitScreenTrans(localParam, remoteParam, peerDevId);
     DisablePermissionAccess(tokenId_);
 
-    EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, actual);
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_CONFIGURE_FAILED, actual);
+}
+
+/**
+ * @tc.name: InitScreenTrans_002
+ * @tc.desc: Verify the InitScreenTrans function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, InitScreenTrans_002, TestSize.Level1)
+{
+    const char* perms[] = {
+        "ohos.permission.DISTRIBUTED_DATASYNC",
+        "ohos.permission.CAPTURE_SCREEN",
+    };
+    EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
+    VideoParam localParam;
+    VideoParam remoteParam;
+    std::string peerDevId = "sinkDevId";
+    trans->SetScreenVersion("0");
+    trans->screenChannel_ = std::make_shared<MockScreenDataChannelImpl>();
+    int32_t actual = trans->InitScreenTrans(localParam, remoteParam, peerDevId);
+    DisablePermissionAccess(tokenId_);
+
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_CONFIGURE_FAILED, actual);
 }
 
 /**

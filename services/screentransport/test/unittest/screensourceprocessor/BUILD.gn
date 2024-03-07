@@ -64,11 +64,12 @@ ohos_unittest("SourceProcessorTest") {
   ]
 
   external_deps = [
+    "av_codec:av_codec_client",
     "c_utils:utils",
     "graphic_surface:surface",
     "graphic_surface:sync_fence",
     "ipc:ipc_core",
-    "player_framework:media_client",
+    "media_foundation:media_foundation",
   ]
 }
 

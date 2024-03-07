@@ -18,7 +18,7 @@
 #include <iostream>
 
 #include "avcodec_common.h"
-#include "format.h"
+#include "meta/format.h"
 #include "image_encoder_callback.h"
 #include "screen_source_trans.h"
 
@@ -33,9 +33,10 @@ void OnOutputBufferAvailableFuzzTest(const uint8_t* data, size_t size)
     std::shared_ptr<ImageSourceEncoder> encoder = std::make_shared<ImageSourceEncoder>(listener);
     std::shared_ptr<ImageEncoderCallback> encoderCallback = std::make_shared<ImageEncoderCallback>(encoder);
     uint32_t index = *(reinterpret_cast<const uint32_t*>(data));
-    Media::AVCodecBufferInfo info;
-    Media::AVCodecBufferFlag flag = Media::AVCODEC_BUFFER_FLAG_NONE;
-    encoderCallback->OnOutputBufferAvailable(index, info, flag);
+    MediaAVCodec::AVCodecBufferInfo info;
+    MediaAVCodec::AVCodecBufferFlag flag = MediaAVCodec::AVCODEC_BUFFER_FLAG_NONE;
+    std::shared_ptr<Media::AVSharedMemory> buffer = nullptr;
+    encoderCallback->OnOutputBufferAvailable(index, info, flag, buffer);
 }
 }
 }

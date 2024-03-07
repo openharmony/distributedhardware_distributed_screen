@@ -19,12 +19,12 @@
 
 #include "avcodec_common.h"
 #include "dscreen_constants.h"
-#include "format.h"
+#include "meta/format.h"
 #include "iimage_source_processor_listener.h"
 #include "image_source_encoder.h"
 #include "image_encoder_callback.h"
 #include "iscreen_channel_listener.h"
-#include "media_errors.h"
+#include "avcodec_errors.h"
 #include "screen_source_trans.h"
 
 namespace OHOS {
@@ -38,7 +38,7 @@ void OnErrorFuzzTest(const uint8_t* data, size_t size)
     std::shared_ptr<ImageSourceEncoder> encoder = std::make_shared<ImageSourceEncoder>(listener);
     std::shared_ptr<ImageEncoderCallback> encoderCallback = std::make_shared<ImageEncoderCallback>(encoder);
     int32_t errorCode = *(reinterpret_cast<const uint32_t*>(data));
-    Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_INTERNAL;
+    MediaAVCodec::AVCodecErrorType errorType = MediaAVCodec::AVCODEC_ERROR_INTERNAL;
     encoderCallback->OnError(errorType, errorCode);
 }
 }

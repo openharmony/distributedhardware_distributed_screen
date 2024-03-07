@@ -41,7 +41,7 @@ using namespace std;
 using namespace OHOS;
 using namespace OHOS::DistributedHardware;
 using namespace OHOS::Rosen;
-using namespace OHOS::Media;
+using namespace OHOS::MediaAVCodec;
 using namespace OHOS::Security::AccessToken;
 
 namespace {

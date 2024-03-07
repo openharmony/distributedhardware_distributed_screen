@@ -64,9 +64,10 @@ ohos_unittest("SinkProcessorTest") {
   ]
 
   external_deps = [
+    "av_codec:av_codec_client",
     "c_utils:utils",
     "graphic_surface:surface",
-    "player_framework:media_client",
+    "media_foundation:media_foundation",
   ]
 
   defines = [
