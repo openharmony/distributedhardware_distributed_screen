@@ -22,10 +22,6 @@
 #include <securec.h>
 #include <string>
 
-#ifdef LIBYUV
-#include <libyuv/convert_from_argb.h>
-#endif
-
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
 
@@ -277,21 +273,10 @@ void JpegImageProcessor::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputDat
     JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo, JPOOL_IMAGE, row_stride, 1);
     uint32_t uvIndex = cinfo.output_width * cinfo.output_height;
     int32_t i = 0;
-#ifdef LIBYUV
-    uint8_t *rgb = new uint8_t[cinfo.output_width * cinfo.output_height * RGBA_CHROMA];
-    int32_t rgbIndex = 0;
-#else
     int32_t yIndex = 0;
-#endif
     while (cinfo.output_scanline < cinfo.output_height) {
         (void)jpeg_read_scanlines(&cinfo, buffer, 1);
         for (unsigned int j = 0 ; j < cinfo.output_width ; j++) {
-#ifdef LIBYUV
-            rgb[rgbIndex++] = buffer[0][j * RGB_CHROMA + TWO];
-            rgb[rgbIndex++] = buffer[0][j * RGB_CHROMA + 1];
-            rgb[rgbIndex++] = buffer[0][j * RGB_CHROMA];
-            rgb[rgbIndex++] = 0xff;
-#else
             int32_t y = ((YR_PARAM * buffer[0][j * RGB_CHROMA] + YG_PARAM * buffer[0][j * RGB_CHROMA + 1] +
                 YB_PARAM * buffer[0][j * RGB_CHROMA + TWO] + UA_PARAM) >> MOVEBITS) + YA_PARAM;
             int32_t u = ((UB_PARAM * buffer[0][j * RGB_CHROMA + TWO] - UR_PARAM * buffer[0][j * RGB_CHROMA] -
@@ -303,17 +288,11 @@ void JpegImageProcessor::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputDat
                 outputData[uvIndex++] = static_cast<uint8_t>((u < 0) ? 0 : (u > YUV_PARAM) ? YUV_PARAM : u);
                 outputData[uvIndex++] = static_cast<uint8_t>((v < 0) ? 0 : (v > YUV_PARAM) ? YUV_PARAM : v);
             }
-#endif
         }
         ++i;
     }
     (void)jpeg_finish_decompress(&cinfo);
     jpeg_destroy_decompress(&cinfo);
-#ifdef LIBYUV
-    libyuv::ARGBToNV12(rgb, cinfo.output_width * RGBA_CHROMA, outputData, cinfo.output_width,
-        outputData + uvIndex, cinfo.output_width, cinfo.output_width, cinfo.output_height);
-    delete [] rgb;
-#endif
 }
 } // namespace DistributedHardware
 } // namespace OHOS
