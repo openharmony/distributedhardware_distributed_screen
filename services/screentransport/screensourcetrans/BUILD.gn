@@ -85,11 +85,6 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "player_framework:media_client",
   ]
 
-  if (!distributed_screen_common) {
-    cflags = [ "-DLIBYUV" ]
-    external_deps += [ "libyuv:yuv" ]
-  }
-
   subsystem_name = "distributedhardware"
 
   part_name = "distributed_screen"

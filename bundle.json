@@ -43,8 +43,7 @@
                 "c_utils",
                 "player_framework",
                 "window_manager",
-                "distributed_hardware_fwk",
-                "libyuv"
+                "distributed_hardware_fwk"
             ],
             "third_party": [
                 "libjpeg-turbo"

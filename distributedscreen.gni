@@ -28,7 +28,3 @@ fwk_services_path = "${distributedhardwarefwk_path}/services"
 fwk_interfaces_path = "${distributedhardwarefwk_path}/interfaces"
 ipc_interfaces_path = "${ipc_path}/interfaces"
 build_flags = [ "-Werror" ]
-
-declare_args() {
-  distributed_screen_common = true
-}
