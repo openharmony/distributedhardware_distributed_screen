@@ -232,7 +232,7 @@ int32_t ImageSourceEncoder::FeedEncoderData(sptr<SurfaceBuffer> &surfaceBuffer)
         return ret;
     }
     BufferFlushConfig flushConfig = { {0, 0, encoderSurfaceBuffer->GetWidth(), encoderSurfaceBuffer->GetHeight()}, 0};
-    DHLOGI("%s: FeedEncoderData to H264 encoder.", LOG_TAG);
+    DHLOGI("%s: FeedEncoderData to encoder.", LOG_TAG);
     SurfaceError surfaceErr = encoderSurface_->FlushBuffer(encoderSurfaceBuffer, -1, flushConfig);
     if (surfaceErr != SURFACE_ERROR_OK) {
         DHLOGE("%s: encoderSurface_ flush buffer failed.", LOG_TAG);
@@ -253,7 +253,7 @@ int32_t ImageSourceEncoder::ReleaseEncoder()
     }
 
     int32_t ret = videoEncoder_->Release();
-    if (ret != Media::MSERR_OK) {
+    if (ret != MediaAVCodec::AVCS_ERR_OK) {
         DHLOGE("%s: Release encoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_RELEASE_FAILED;
     }
@@ -276,13 +276,13 @@ int32_t ImageSourceEncoder::StartEncoder()
     }
 
     int32_t ret = videoEncoder_->Prepare();
-    if (ret != Media::MSERR_OK) {
+    if (ret != MediaAVCodec::AVCS_ERR_OK) {
         DHLOGE("%s: Prepare encoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_PREPARE_FAILED;
     }
 
     ret = videoEncoder_->Start();
-    if (ret != Media::MSERR_OK) {
+    if (ret != MediaAVCodec::AVCS_ERR_OK) {
         DHLOGE("%s: Start encoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_START_FAILED;
     }
@@ -299,12 +299,12 @@ int32_t ImageSourceEncoder::StopEncoder()
     }
 
     int32_t ret = videoEncoder_->Flush();
-    if (ret != Media::MSERR_OK) {
+    if (ret != MediaAVCodec::AVCS_ERR_OK) {
         DHLOGE("%s: Flush encoder failed.", LOG_TAG);
     }
 
     ret = videoEncoder_->Stop();
-    if (ret != Media::MSERR_OK) {
+    if (ret != MediaAVCodec::AVCS_ERR_OK) {
         DHLOGE("%s: Stop encoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_STOP_FAILED;
     }
@@ -322,13 +322,12 @@ int32_t ImageSourceEncoder::InitVideoEncoder(const VideoParam &configParam)
     DHLOGI("%s: InitVideoEncoder.", LOG_TAG);
     switch (configParam.GetCodecType()) {
         case VIDEO_CODEC_TYPE_VIDEO_H264:
-            videoEncoder_ = Media::VideoEncoderFactory::CreateByMime("video/avc");
+            videoEncoder_ = MediaAVCodec::VideoEncoderFactory::CreateByMime(
+                std::string(MediaAVCodec::CodecMimeType::VIDEO_AVC));
             break;
         case VIDEO_CODEC_TYPE_VIDEO_H265:
-            videoEncoder_ = Media::VideoEncoderFactory::CreateByMime("video/hevc");
-            break;
-        case VIDEO_CODEC_TYPE_VIDEO_MPEG4:
-            videoEncoder_ = Media::VideoEncoderFactory::CreateByMime("video/mp4v-es");
+            videoEncoder_ = MediaAVCodec::VideoEncoderFactory::CreateByMime(
+                std::string(MediaAVCodec::CodecMimeType::VIDEO_HEVC));
             break;
         default:
             DHLOGE("%s: codecType is invalid!", LOG_TAG);
@@ -342,7 +341,7 @@ int32_t ImageSourceEncoder::InitVideoEncoder(const VideoParam &configParam)
 
     encodeVideoCallback_ = std::make_shared<ImageEncoderCallback>(shared_from_this());
     int32_t ret = videoEncoder_->SetCallback(encodeVideoCallback_);
-    if (ret != Media::MSERR_OK) {
+    if (ret != MediaAVCodec::AVCS_ERR_OK) {
         DHLOGE("%s: Set codec callback failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_SET_CALLBACK_FAILED;
     }
@@ -360,49 +359,31 @@ int32_t ImageSourceEncoder::SetEncoderFormat(const VideoParam &configParam)
 
     switch (configParam.GetCodecType()) {
         case VIDEO_CODEC_TYPE_VIDEO_H264:
-            imageFormat_.PutStringValue("codec_mime", "video/avc");
+            imageFormat_.PutStringValue("codec_mime", MediaAVCodec::CodecMimeType::VIDEO_AVC);
             break;
         case VIDEO_CODEC_TYPE_VIDEO_H265:
-            imageFormat_.PutStringValue("codec_mime", "video/hevc");
-            break;
-        case VIDEO_CODEC_TYPE_VIDEO_MPEG4:
-            imageFormat_.PutStringValue("codec_mime", "video/mp4v-es");
+            imageFormat_.PutStringValue("codec_mime", MediaAVCodec::CodecMimeType::VIDEO_HEVC);
             break;
         default:
             DHLOGE("%s: Codec type is invalid.", LOG_TAG);
             return ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM;
     }
-    switch (configParam.GetVideoFormat()) {
-        case VIDEO_DATA_FORMAT_YUVI420:
-            imageFormat_.PutIntValue("pixel_format", Media::VideoPixelFormat::YUVI420);
-            break;
-        case VIDEO_DATA_FORMAT_NV12:
-            imageFormat_.PutIntValue("pixel_format", Media::VideoPixelFormat::NV12);
-            break;
-        case VIDEO_DATA_FORMAT_NV21:
-            imageFormat_.PutIntValue("pixel_format", Media::VideoPixelFormat::NV21);
-            break;
-        case VIDEO_DATA_FORMAT_RGBA8888:
-            imageFormat_.PutIntValue("pixel_format", Media::VideoPixelFormat::RGBA);
-            break;
-        default:
-            DHLOGE("%s: Video format is invalid.", LOG_TAG);
-            return ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM;
-    }
+
+    imageFormat_.PutIntValue("pixel_format", static_cast<int32_t>(MediaAVCodec::VideoPixelFormat::RGBA));
     imageFormat_.PutLongValue("max_input_size", MAX_YUV420_BUFFER_SIZE);
     imageFormat_.PutIntValue("width", configParam.GetVideoWidth());
     imageFormat_.PutIntValue("height", configParam.GetVideoHeight());
     imageFormat_.PutIntValue("frame_rate", configParam.GetFps());
 
     int32_t ret = videoEncoder_->Configure(imageFormat_);
-    if (ret != Media::MSERR_OK) {
+    if (ret != MediaAVCodec::AVCS_ERR_OK) {
         DHLOGE("%s: Configure encoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_CONFIGURE_FAILED;
     }
     return DH_SUCCESS;
 }
 
-void ImageSourceEncoder::OnError(Media::AVCodecErrorType errorType, int32_t errorCode)
+void ImageSourceEncoder::OnError(MediaAVCodec::AVCodecErrorType errorType, int32_t errorCode)
 {
     DHLOGI("%s: Encoder error, errorType:%" PRId32", errorCode:%" PRId32, LOG_TAG, errorType, errorCode);
     std::shared_ptr<IImageSourceProcessorListener> listener = imageProcessorListener_.lock();
@@ -413,8 +394,8 @@ void ImageSourceEncoder::OnError(Media::AVCodecErrorType errorType, int32_t erro
     listener->OnProcessorStateNotify(errorCode);
 }
 
-void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecBufferInfo info,
-    Media::AVCodecBufferFlag flag)
+void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, MediaAVCodec::AVCodecBufferInfo info,
+    MediaAVCodec::AVCodecBufferFlag flag, std::shared_ptr<Media::AVSharedMemory> buffer)
 {
     DHLOGD("%s: OnOutputBufferAvailable, receiv H264 data from encoder.", LOG_TAG);
     std::shared_ptr<IImageSourceProcessorListener> listener = imageProcessorListener_.lock();
@@ -428,9 +409,8 @@ void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecB
     }
 
     encoderBufferInfo_ = info;
-    videoSharedMemory_ = videoEncoder_->GetOutputBuffer(index);
-    if (videoSharedMemory_ == nullptr) {
-        DHLOGE("%s: GetOutputBuffer failed.", LOG_TAG);
+    if (buffer == nullptr) {
+        DHLOGE("%s: Buffer is null, index = %d", LOG_TAG, index);
         return;
     }
 
@@ -440,7 +420,7 @@ void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecB
         return;
     }
     auto dataBuf = std::make_shared<DataBuffer>(dataSize);
-    int32_t ret = memcpy_s(dataBuf->Data(), dataBuf->Capacity(), videoSharedMemory_->GetBase(), dataSize);
+    int32_t ret = memcpy_s(dataBuf->Data(), dataBuf->Capacity(), buffer->GetBase(), dataSize);
     if (ret != EOK) {
         DHLOGE("%s: Copy data failed.", LOG_TAG);
         return;
@@ -449,12 +429,12 @@ void ImageSourceEncoder::OnOutputBufferAvailable(uint32_t index, Media::AVCodecB
     dataBuf->SetSize(dataSize);
     listener->OnImageProcessDone(dataBuf);
     ret = videoEncoder_->ReleaseOutputBuffer(index);
-    if (ret != Media::MSERR_OK) {
+    if (ret != MediaAVCodec::AVCS_ERR_OK) {
         DHLOGE("%s: videoEncoder ReleaseOutputBuffer failed.", LOG_TAG);
     }
 }
 
-void ImageSourceEncoder::OnInputBufferAvailable(uint32_t index)
+void ImageSourceEncoder::OnInputBufferAvailable(uint32_t index, std::shared_ptr<Media::AVSharedMemory> buffer)
 {
     (void) index;
 }

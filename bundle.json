@@ -28,6 +28,7 @@
             "components": [
                 "access_token",
                 "accessibility",
+                "av_codec",
                 "dsoftbus",
                 "hisysevent",
                 "init",
@@ -36,12 +37,12 @@
                 "input",
                 "graphic_2d",
                 "graphic_surface",
+                "media_foundation",
                 "samgr",
                 "safwk",
                 "hicollie",
                 "hitrace",
                 "c_utils",
-                "player_framework",
                 "window_manager",
                 "distributed_hardware_fwk"
             ],

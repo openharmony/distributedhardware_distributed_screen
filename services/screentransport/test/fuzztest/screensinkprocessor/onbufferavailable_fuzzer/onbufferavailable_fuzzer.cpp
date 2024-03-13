@@ -21,7 +21,7 @@
 #include "avcodec_common.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
-#include "format.h"
+#include "meta/format.h"
 #include "iimage_source_processor_listener.h"
 #include "screen_sink_trans.h"
 #include "image_sink_decoder.h"

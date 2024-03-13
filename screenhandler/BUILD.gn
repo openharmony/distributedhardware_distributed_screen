@@ -47,11 +47,12 @@ ohos_shared_library("distributed_screen_handler") {
   ]
 
   external_deps = [
+    "av_codec:av_codec_client",
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
     "graphic_surface:surface",
     "ipc:ipc_core",
-    "player_framework:media_client",
+    "media_foundation:media_foundation",
     "window_manager:libdm",
   ]
 

@@ -73,6 +73,7 @@ ohos_shared_library("distributed_screen_sourcetrans") {
   ]
 
   external_deps = [
+    "av_codec:av_codec_client",
     "c_utils:utils",
     "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:libdhfwk_sdk",
@@ -82,7 +83,7 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "hitrace:hitrace_meter",
-    "player_framework:media_client",
+    "media_foundation:media_foundation",
   ]
 
   subsystem_name = "distributedhardware"

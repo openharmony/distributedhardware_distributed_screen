@@ -46,7 +46,7 @@ ScreenRegion::~ScreenRegion()
 
 void ScreenRegion::OnTransError(int32_t err, const std::string &content)
 {
-    DHLOGE("OnTransError, err: %" PRId32, err);
+    DHLOGW("OnTransError, err: %" PRId32, err);
     Stop();
 }
 

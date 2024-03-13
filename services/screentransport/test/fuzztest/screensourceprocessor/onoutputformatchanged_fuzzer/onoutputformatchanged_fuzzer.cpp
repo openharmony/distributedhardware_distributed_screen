@@ -20,12 +20,12 @@
 #include "avcodec_common.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
-#include "format.h"
+#include "meta/format.h"
 #include "iimage_source_processor_listener.h"
 #include "image_source_encoder.h"
 #include "image_encoder_callback.h"
 #include "iscreen_channel_listener.h"
-#include "media_errors.h"
+#include "avcodec_errors.h"
 #include "screen_source_trans.h"
 
 namespace OHOS {

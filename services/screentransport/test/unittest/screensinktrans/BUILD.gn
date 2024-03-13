@@ -61,10 +61,11 @@ ohos_unittest("SinkTransTest") {
   ]
 
   external_deps = [
+    "av_codec:av_codec_client",
     "c_utils:utils",
     "dsoftbus:softbus_client",
     "graphic_surface:surface",
-    "player_framework:media_client",
+    "media_foundation:media_foundation",
   ]
 
   defines = [

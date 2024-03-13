@@ -22,11 +22,11 @@
 #include <condition_variable>
 #include <cstddef>
 
-#include "avsharedmemory.h"
+#include "buffer/avsharedmemory.h"
 #include "avcodec_common.h"
 #include "avcodec_video_decoder.h"
-#include "media_errors.h"
-#include "format.h"
+#include "avcodec_errors.h"
+#include "meta/format.h"
 #include "surface.h"
 #include "iconsumer_surface.h"
 
@@ -64,10 +64,10 @@ public:
     sptr<SurfaceBuffer> GetWinSurfaceBuffer();
     void NormalProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<SurfaceBuffer> windowSurfaceBuffer);
     void OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<SurfaceBuffer> windowSurfaceBuffer);
-
-    void OnError(Media::AVCodecErrorType errorType, int32_t errorCode);
-    void OnInputBufferAvailable(uint32_t index);
-    void OnOutputBufferAvailable(uint32_t index, Media::AVCodecBufferInfo info, Media::AVCodecBufferFlag flag);
+    void OnError(MediaAVCodec::AVCodecErrorType errorType, int32_t errorCode);
+    void OnInputBufferAvailable(uint32_t index, std::shared_ptr<Media::AVSharedMemory> buffer);
+    void OnOutputBufferAvailable(uint32_t index, MediaAVCodec::AVCodecBufferInfo info,
+                                 MediaAVCodec::AVCodecBufferFlag flag, std::shared_ptr<Media::AVSharedMemory> buffer);
     void OnOutputFormatChanged(const Media::Format &format);
 
 private:
@@ -89,7 +89,8 @@ private:
     uint8_t *lastFrame_ = nullptr;
     int32_t lastFrameSize_ = 0;
     Media::Format imageFormat_;
-    Media::AVCodecBufferInfo decoderBufferInfo_;
+    Media::Format decodeOutputFormat_;
+    MediaAVCodec::AVCodecBufferInfo decoderBufferInfo_;
 
     bool isDecoderReady_ = false;
     uint32_t alignedHeight_ = 0;
@@ -98,9 +99,10 @@ private:
     sptr<Surface> windowSurface_;
     sptr<IBufferConsumerListener> consumerBufferListener_;
     std::queue<std::shared_ptr<DataBuffer>> videoDataQueue_;
-    std::queue<int32_t> bufferIndexQueue_;
-    std::shared_ptr<Media::AVCodecVideoDecoder> videoDecoder_;
-    std::shared_ptr<Media::AVCodecCallback> decodeVideoCallback_;
+    std::queue<int32_t> availableInputIndexsQueue_;
+    std::queue<std::shared_ptr<Media::AVSharedMemory>> availableInputBufferQueue_;
+    std::shared_ptr<MediaAVCodec::AVCodecVideoDecoder> videoDecoder_;
+    std::shared_ptr<MediaAVCodec::AVCodecCallback> decodeVideoCallback_;
     std::weak_ptr<IImageSinkProcessorListener> imageProcessorListener_;
 };
 } // namespace DistributedHardware

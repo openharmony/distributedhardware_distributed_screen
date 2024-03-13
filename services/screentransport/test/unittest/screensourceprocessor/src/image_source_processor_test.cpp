@@ -41,7 +41,7 @@ HWTEST_F(ImageSourceProcessorTest, ConfigureImageProcessor_001, TestSize.Level1)
 
     int32_t actual = processor.ConfigureImageProcessor(localParam, remoteParam, listener);
 
-    EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, actual);
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_CONFIGURE_FAILED, actual);
 }
 
 /**
@@ -53,13 +53,15 @@ HWTEST_F(ImageSourceProcessorTest, ConfigureImageProcessor_001, TestSize.Level1)
 HWTEST_F(ImageSourceProcessorTest, ConfigureImageProcessor_002, TestSize.Level1)
 {
     VideoParam localParam;
-    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
     VideoParam remoteParam;
-    std::shared_ptr<IImageSourceProcessorListener> listener = nullptr;
+    localParam.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
+    localParam.SetVideoWidth(DSCREEN_MAX_VIDEO_DATA_WIDTH);
+    localParam.SetVideoHeight(DSCREEN_MAX_VIDEO_DATA_HEIGHT);
 
+    std::shared_ptr<IImageSourceProcessorListener> listener = nullptr;
     int32_t actual = processor.ConfigureImageProcessor(localParam, remoteParam, listener);
 
-    EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, actual);
+    EXPECT_EQ(DH_SUCCESS, actual);
 }
 
 /**
