@@ -208,7 +208,10 @@ int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, con
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
     PeerSocketInfo info;
-    listener->OnSessionOpened(socketId, info);
+    ret = OnSoftbusSessionOpened(socketId, info);
+    if (ret != DH_SUCCESS) {
+        return ret;
+    }
     DHLOGI("%s: OpenSoftbusSession success sessionId: %." PRId32, LOG_TAG, socketId);
     return socketId;
 }
@@ -255,7 +258,7 @@ int32_t SoftbusAdapter::SendSoftbusStream(int32_t sessionId, const StreamData *d
 
 std::shared_ptr<ISoftbusListener> &SoftbusAdapter::GetSoftbusListenerByName(int32_t sessionId)
 {
-    DHLOGD("%s: SendSoftbusStream, sessionId:%" PRId32, LOG_TAG, sessionId);
+    DHLOGD("%s: GetSoftbusListenerByName, sessionId:%" PRId32, LOG_TAG, sessionId);
     std::string strListenerKey = "";
     {
         std::lock_guard<std::mutex> lock(idMapMutex_);
@@ -287,11 +290,14 @@ std::shared_ptr<ISoftbusListener> &SoftbusAdapter::GetSoftbusListenerById(int32_
 
 int32_t SoftbusAdapter::OnSoftbusSessionOpened(int32_t sessionId, PeerSocketInfo info)
 {
-    DHLOGI("%s: OnSessionOpened session:%" PRId32, LOG_TAG, sessionId);
-    std::string peerDevId(info.networkId);
+    DHLOGI("%s: OnSoftbusSessionOpened session:%" PRId32, LOG_TAG, sessionId);
     {
         std::lock_guard<std::mutex> lock(serverIdMapMutex_);
         for (auto it = serverIdMap_.begin(); it != serverIdMap_.end(); it++) {
+            if (info.networkId == nullptr) {
+                break;
+            }
+            std::string peerDevId(info.networkId);
             if ((it->second).find(peerDevId) != std::string::npos) {
                 std::lock_guard<std::mutex> sessionLock(idMapMutex_);
                 devId2SessIdMap_.insert(std::make_pair(sessionId, it->second));

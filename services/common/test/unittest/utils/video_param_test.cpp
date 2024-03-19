@@ -98,9 +98,9 @@ HWTEST_F(VideoParamTest, GetVideoHeight_001, TestSize.Level1)
  */
 HWTEST_F(VideoParamTest, GetFps_001, TestSize.Level1)
 {
-    uint32_t fps = 1;
+    double fps = 1.0;
     videoParam_->SetFps(fps);
-    uint32_t actual = videoParam_->GetFps();
+    double actual = videoParam_->GetFps();
     EXPECT_EQ(fps, actual);
 }
 
@@ -145,7 +145,7 @@ HWTEST_F(VideoParamTest, to_json_001, TestSize.Level1)
     uint32_t screenHeight = 100;
     uint32_t videoWidth = 100;
     uint32_t videoHeight = 100;
-    uint32_t fps = 30;
+    double fps = 30.0;
     uint8_t videoFormat = DEFAULT_VIDEO_FORMAT;
     uint8_t codecType = DEFAULT_CODECTYPE;
 
@@ -177,7 +177,7 @@ HWTEST_F(VideoParamTest, from_json_001, TestSize.Level1)
     uint32_t screenHeight = 100;
     uint32_t videoWidth = 100;
     uint32_t videoHeight = 100;
-    uint32_t fps = 30;
+    double fps = 30.0;
     uint8_t codecType = DEFAULT_CODECTYPE;
     uint8_t videoFormat = DEFAULT_VIDEO_FORMAT;
 
@@ -208,7 +208,7 @@ HWTEST_F(VideoParamTest, from_json_002, TestSize.Level1)
     uint32_t screenHeight = 200;
     uint32_t videoWidth = 200;
     uint32_t videoHeight = 200;
-    uint32_t fps = 30;
+    double fps = 30.0;
     uint8_t codecType = DEFAULT_CODECTYPE;
     uint8_t videoFormat = DEFAULT_VIDEO_FORMAT;
     VideoParam jsonVideoParam;

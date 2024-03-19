@@ -52,7 +52,7 @@ void DScreenTestV1::SetUp(void)
     dScreen_->videoParam_->SetVideoWidth(videoDataNum);
     dScreen_->videoParam_->SetScreenHeight(videoDataNum);
     dScreen_->videoParam_->SetScreenWidth(videoDataNum);
-    dScreen_->videoParam_->SetFps(videoDataNum);
+    dScreen_->videoParam_->SetFps(DEFAULT_FPS);
     dScreen_->devId_ = "peerDevId";
 }
 
