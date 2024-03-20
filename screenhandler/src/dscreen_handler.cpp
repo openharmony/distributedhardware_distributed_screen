@@ -74,12 +74,12 @@ void ScreenListener::OnConnect(uint64_t screenId)
 {
     DHLOGI("on screen connect");
     if (screenId != SCREEN_ID_DEFAULT) {
-        DHLOGI("screenId is invalid, screenId is: %" PRIu64, screenId);
+        DHLOGI("screenId is invalid, screenId is: %{public}" PRIu64, screenId);
         return;
     }
     sptr<Rosen::Screen> screen = Rosen::ScreenManager::GetInstance().GetScreenById(screenId);
     if (screen == nullptr) {
-        DHLOGE("screen not found, screenId is: %" PRIu64, screenId);
+        DHLOGE("screen not found, screenId is: %{public}" PRIu64, screenId);
         return;
     }
     if (!screen->IsReal()) {
@@ -89,7 +89,7 @@ void ScreenListener::OnConnect(uint64_t screenId)
     std::string dhId = DSCREEN_PREFIX + SEPERATOR + std::to_string(screenId);
     uint32_t screenWidth = screen->GetWidth();
     screenWidth = ByteCalculate(screenWidth);
-    DHLOGI("screenWidth is : %" PRIu32, screenWidth);
+    DHLOGI("screenWidth is : %{public}" PRIu32, screenWidth);
     uint32_t screenHeight = screen->GetHeight();
 
     json attrJson;
@@ -131,7 +131,7 @@ std::vector<DHItem> DScreenHandler::Query()
     std::vector<DHItem> dhItemVec;
     std::vector<sptr<Rosen::Screen>> screens;
     Rosen::ScreenManager::GetInstance().GetAllScreens(screens);
-    DHLOGI("screens size is: %" PRId32, screens.size());
+    DHLOGI("screens size is: %{public}zu", screens.size());
     for (const auto &screen : screens) {
         if (screen == nullptr) {
             DHLOGE("screen is nullptr.");
@@ -149,7 +149,7 @@ std::vector<DHItem> DScreenHandler::Query()
             screenListener_ = new (std::nothrow) ScreenListener();
         }
         screenWidth = screenListener_->ByteCalculate(screenWidth);
-        DHLOGI("screenWidth is : %" PRIu32, screenWidth);
+        DHLOGI("screenWidth is : %{public}" PRIu32, screenWidth);
         uint32_t screenHeight = screen->GetHeight();
 
         json attrJson;
@@ -159,11 +159,11 @@ std::vector<DHItem> DScreenHandler::Query()
         attrJson[KEY_CODECTYPE] = QueryCodecInfo();
         std::string videoEncoders =
             HiStreamerQueryTool::GetInstance().QueryHiStreamerPluginInfo(HISTREAM_PLUGIN_TYPE::VIDEO_ENCODER);
-        DHLOGI("DScreen QueryVideoEncoderAbility info: %s", videoEncoders.c_str());
+        DHLOGI("DScreen QueryVideoEncoderAbility info: %{public}s", videoEncoders.c_str());
         attrJson[KEY_HISTREAMER_VIDEO_ENCODER] = videoEncoders;
         std::string videoDecoders =
             HiStreamerQueryTool::GetInstance().QueryHiStreamerPluginInfo(HISTREAM_PLUGIN_TYPE::VIDEO_DECODER);
-        DHLOGI("DScreen QueryVideoDecoderAbility info: %s", videoDecoders.c_str());
+        DHLOGI("DScreen QueryVideoDecoderAbility info: %{public}s", videoDecoders.c_str());
         attrJson[KEY_HISTREAMER_VIDEO_DECODER] = videoDecoders;
 
         DHItem dhItem;
@@ -171,7 +171,7 @@ std::vector<DHItem> DScreenHandler::Query()
         dhItem.subtype = "screen";
         dhItem.attrs = attrJson.dump();
         dhItemVec.push_back(dhItem);
-        DHLOGD("query result: dhId: %s, attrs: %s", dhId.c_str(), attrJson.dump().c_str());
+        DHLOGD("query result: dhId: %{public}s, attrs: %{public}s", dhId.c_str(), attrJson.dump().c_str());
     }
     return dhItemVec;
 }

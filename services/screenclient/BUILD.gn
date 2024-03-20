@@ -54,6 +54,7 @@ ohos_shared_library("distributed_screen_client") {
     "graphic_2d:libgraphic_utils",
     "graphic_2d:librender_service_client",
     "graphic_surface:surface",
+    "hilog:libhilog",
     "input:libmmi-client",
     "window_manager:libwm",
   ]

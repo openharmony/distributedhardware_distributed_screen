@@ -52,7 +52,7 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
         DHLOGE("ScreenMgrAdapter::CreateVirtualScreen, videoParam is nullptr");
         return SCREEN_ID_INVALID;
     }
-    DHLOGI("CreateVirtualScreen, width: %u, height: %u", videoParam->GetScreenWidth(),
+    DHLOGI("CreateVirtualScreen, width: %{public}u, height: %{public}" PRIu32, videoParam->GetScreenWidth(),
         videoParam->GetScreenHeight());
     std::string screenName = DSCREEN_PREFIX + SEPERATOR + GetInterruptString(devId) +
                              SEPERATOR + GetInterruptString(dhId);
@@ -61,14 +61,14 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
         DHLOGI("remove an exist virtual screen.");
         Rosen::DMError err = Rosen::ScreenManager::GetInstance().DestroyVirtualScreen(iter->second);
         if (err != Rosen::DMError::DM_OK) {
-            DHLOGE("remove virtual screen failed, screenId:%", PRIu64, iter->second);
+            DHLOGE("remove virtual screen failed, screenId:%{public}" PRIu64, iter->second);
             return SCREEN_ID_INVALID;
         }
         screenIdMap_.erase(screenName);
     }
     uint32_t width = videoParam->GetScreenWidth();
     width = ByteCalculate(width);
-    DHLOGI("screenWidth is : %" PRIu32, width);
+    DHLOGI("screenWidth is : %{public}" PRIu32, width);
     Rosen::VirtualScreenOption option = {
         screenName,
         width,
@@ -80,7 +80,7 @@ uint64_t ScreenMgrAdapter::CreateVirtualScreen(const std::string &devId, const s
     };
 
     uint64_t screenId = Rosen::ScreenManager::GetInstance().CreateVirtualScreen(option);
-    DHLOGI("virtualScreen id is: %" PRIu64, screenId);
+    DHLOGI("virtualScreen id is: %{public}" PRIu64, screenId);
     screenIdMap_.emplace(screenName, screenId);
     return screenId;
 }
@@ -127,7 +127,7 @@ int32_t ScreenMgrAdapter::UnregisterScreenGroupListener(sptr<Rosen::ScreenManage
 
 void ScreenMgrAdapter::RemoveScreenFromGroup(uint64_t screenId)
 {
-    DHLOGI("remove screen from group, screenId: %" PRIu64, screenId);
+    DHLOGI("remove screen from group, screenId: %{public}" PRIu64, screenId);
     std::vector<uint64_t> screenIds;
     screenIds.push_back(screenId);
     Rosen::ScreenManager::GetInstance().RemoveVirtualScreenFromGroup(screenIds);
@@ -135,10 +135,10 @@ void ScreenMgrAdapter::RemoveScreenFromGroup(uint64_t screenId)
 
 int32_t ScreenMgrAdapter::RemoveVirtualScreen(uint64_t screenId)
 {
-    DHLOGI("remove virtual screen, screenId: %" PRIu64, screenId);
+    DHLOGI("remove virtual screen, screenId: %{public}" PRIu64, screenId);
     Rosen::DMError err = Rosen::ScreenManager::GetInstance().DestroyVirtualScreen(screenId);
     if (err != Rosen::DMError::DM_OK) {
-        DHLOGE("remove virtual screen failed, screenId:%" PRIu64, screenId);
+        DHLOGE("remove virtual screen failed, screenId:%{public}" PRIu64, screenId);
         return ERR_DH_SCREEN_SA_REMOVE_VIRTUALSCREEN_FAIL;
     }
     return DH_SUCCESS;
@@ -150,7 +150,7 @@ int32_t ScreenMgrAdapter::SetImageSurface(uint64_t screenId, sptr<OHOS::Surface>
         DHLOGE("ScreenMgrAdapter::SetImageSurface, surface is nullptr");
         return ERR_DH_SCREEN_SA_SET_IMAGESURFACE_FAIL;
     }
-    DHLOGI("SetImageSurface for virtualscreen, screenId: %" PRIu64, screenId);
+    DHLOGI("SetImageSurface for virtualscreen, screenId: %{public}" PRIu64, screenId);
     Rosen::RSInterfaces::GetInstance().SetVirtualScreenUsingStatus(true);
     Rosen::ScreenManager::GetInstance().SetVirtualScreenSurface(screenId, surface);
     return DH_SUCCESS;
@@ -158,7 +158,7 @@ int32_t ScreenMgrAdapter::SetImageSurface(uint64_t screenId, sptr<OHOS::Surface>
 
 std::shared_ptr<DScreenMapRelation> ScreenMgrAdapter::GetMapRelation(uint64_t screenId)
 {
-    DHLOGI("GetMapRelation screenId: %" PRIu64, screenId);
+    DHLOGI("GetMapRelation screenId: %{public}" PRIu64, screenId);
     std::shared_ptr<DScreenMapRelation> mapRelation = std::make_shared<DScreenMapRelation>();
     sptr<Rosen::Screen> screen = Rosen::ScreenManager::GetInstance().GetScreenById(screenId);
     if (screen == nullptr) {
@@ -175,7 +175,7 @@ std::shared_ptr<DScreenMapRelation> ScreenMgrAdapter::GetMapRelation(uint64_t sc
 
     uint32_t width = screen->GetWidth();
     width = ByteCalculate(width);
-    DHLOGI("screenWidth is : %" PRIu32, width);
+    DHLOGI("screenWidth is : %{public}" PRIu32, width);
     ScreenRect screenRect = {0, 0, width, screen->GetHeight()};
     DisplayRect displayRect = {0, 0, width, display->GetHeight()};
     mapRelation->SetDisplayRect(displayRect);

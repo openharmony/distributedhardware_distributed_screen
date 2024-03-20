@@ -77,7 +77,7 @@ int32_t AVTransSenderAdapter::Start()
     }
     int32_t ret = senderEngine_->Start();
     if (ret != DH_AVT_SUCCESS) {
-        DHLOGE("start av transport sender engine failed, ret:%" PRId32, ret);
+        DHLOGE("start av transport sender engine failed, ret:%{public}" PRId32, ret);
         return ERR_DH_AV_TRANS_START_FAILED;
     }
     DHLOGI("Start Success");
@@ -93,7 +93,7 @@ int32_t AVTransSenderAdapter::Stop()
     }
     int32_t ret = senderEngine_->Stop();
     if (ret != DH_AVT_SUCCESS) {
-        DHLOGE("stop av transport sender engine failed, ret:%" PRId32, ret);
+        DHLOGE("stop av transport sender engine failed, ret:%{public}" PRId32, ret);
         return ERR_DH_AV_TRANS_STOP_FAILED;
     }
     DHLOGI("Stop Success");
@@ -103,7 +103,7 @@ int32_t AVTransSenderAdapter::Stop()
 
 int32_t AVTransSenderAdapter::CreateControlChannel(const std::string& peerDevId)
 {
-    DHLOGI("CreateControlChannel enter, peerDevId:%s", GetAnonyString(peerDevId).c_str());
+    DHLOGI("CreateControlChannel enter, peerDevId:%{public}s", GetAnonyString(peerDevId).c_str());
     if (chnCreateSuccess_.load()) {
         DHLOGI("av transport sender channel already created");
         return DH_SUCCESS;
@@ -117,15 +117,15 @@ int32_t AVTransSenderAdapter::CreateControlChannel(const std::string& peerDevId)
     int32_t ret = senderEngine_->CreateControlChannel(dstDevIds, ChannelAttribute{TransStrategy::LOW_LATANCY_STRATEGY});
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_AVT_SUCCESS) {
-        DHLOGE("create av transport sender channel failed, ret:%" PRId32, ret);
+        DHLOGE("create av transport sender channel failed, ret:%{public}" PRId32, ret);
         return ERR_DH_AV_TRANS_CREATE_CHANNEL_FAILED;
     }
     ret = WaitForChannelCreated();
     if (ret != DH_SUCCESS) {
-        DHLOGE("wait for create av transport sender channel failed, ret:%" PRId32, ret);
+        DHLOGE("wait for create av transport sender channel failed, ret:%{public}" PRId32, ret);
         return ERR_DH_AV_TRANS_CREATE_CHANNEL_FAILED;
     }
-    DHLOGI("CreateControlChannel Success, peerDevId:%s", GetAnonyString(peerDevId).c_str());
+    DHLOGI("CreateControlChannel Success, peerDevId:%{public}s", GetAnonyString(peerDevId).c_str());
     return DH_SUCCESS;
 }
 
@@ -138,7 +138,7 @@ int32_t AVTransSenderAdapter::SetParameter(const AVTransTag &tag, const std::str
     }
     int32_t ret = senderEngine_->SetParameter(tag, param);
     if (ret != DH_AVT_SUCCESS) {
-        DHLOGE("set av transport sender parameter failed, ret:%" PRId32, ret);
+        DHLOGE("set av transport sender parameter failed, ret:%{public}" PRId32, ret);
         return ERR_DH_AV_TRANS_SETUP_FAILED;
     }
     return DH_SUCCESS;
@@ -173,7 +173,7 @@ int32_t AVTransSenderAdapter::PushData(const VideoData &video)
     int32_t ret = senderEngine_->PushData(transBuffer);
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_AVT_SUCCESS) {
-        DHLOGE("feed data to av transport sender failed, ret:%" PRId32, ret);
+        DHLOGE("feed data to av transport sender failed, ret:%{public}" PRId32, ret);
         return ERR_DH_AV_TRANS_FEED_DATA_FAILED;
     }
     return DH_SUCCESS;
@@ -188,7 +188,7 @@ int32_t AVTransSenderAdapter::SendMessageToRemote(const std::shared_ptr<AVTransM
     }
     int32_t ret = senderEngine_->SendMessage(message);
     if (ret != DH_AVT_SUCCESS) {
-        DHLOGE("send meassage to remote receiver engine failed, ret:%" PRId32, ret);
+        DHLOGE("send meassage to remote receiver engine failed, ret:%{public}" PRId32, ret);
         return ERR_DH_AV_TRANS_SEND_MSG_FAILED;
     }
     return DH_SUCCESS;
@@ -237,7 +237,7 @@ int32_t AVTransSenderAdapter::WaitForAVTransStarted()
 
 int32_t AVTransSenderAdapter::OnSenderEvent(const AVTransEvent& event)
 {
-    DHLOGI("OnSenderEvent enter. event type:%" PRId32, event.type);
+    DHLOGI("OnSenderEvent enter. event type:%{public}" PRId32, event.type);
     switch (event.type) {
         case EventType::EVENT_CHANNEL_OPEN_FAIL:
         case EventType::EVENT_CHANNEL_OPENED: {

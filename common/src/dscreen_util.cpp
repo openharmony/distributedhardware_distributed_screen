@@ -47,7 +47,7 @@ int32_t GetLocalDeviceNetworkId(std::string &networkId)
     NodeBasicInfo basicInfo = { { 0 } };
     int32_t ret = GetLocalNodeDeviceInfo(PKG_NAME.c_str(), &basicInfo);
     if (ret != DH_SUCCESS) {
-        DHLOGE("GetLocalDeviceNetworkId failed ret: %" PRId32, ret);
+        DHLOGE("GetLocalDeviceNetworkId failed ret: %{public}" PRId32, ret);
         return ret;
     }
 
@@ -128,10 +128,10 @@ bool IsPartialRefreshEnabled()
     char tempValue[SYSTEM_PARAM_VALUE_SIZE] = {0};
     auto ret = GetParameter(PARTIAL_REFRESH_PARAM, "-1", tempValue, sizeof(tempValue));
     if (ret <= 0) {
-        DHLOGE("get system parameter (dscreen.partial.refresh.enable) failed, ret=%" PRId32, ret);
+        DHLOGE("get system parameter (dscreen.partial.refresh.enable) failed, ret=%{public}" PRId32, ret);
         return false;
     }
-    DHLOGI("get system parameter (dscreen.partial.refresh.enable) success, param value = %s", tempValue);
+    DHLOGI("get system parameter (dscreen.partial.refresh.enable) success, param value = %{public}s", tempValue);
     return (std::atoi(tempValue) == PARTIAL_REFRESH_ENABLED_VALUE);
 }
 
