@@ -24,6 +24,7 @@ bool IsString(const nlohmann::json &jsonObj, const std::string &key);
 bool IsUInt8(const nlohmann::json &jsonObj, const std::string &key);
 bool IsInt32(const nlohmann::json &jsonObj, const std::string &key);
 bool IsUInt32(const nlohmann::json &jsonObj, const std::string &key);
+bool IsFloat(const nlohmann::json &jsonObj, const std::string &key);
 bool IsInt64(const nlohmann::json &jsonObj, const std::string &key);
 bool IsUInt64(const nlohmann::json &jsonObj, const std::string &key);
 bool IsArray(const nlohmann::json &jsonObj, const std::string &key);

@@ -76,6 +76,15 @@ bool IsUInt64(const nlohmann::json &jsonObj, const std::string &key)
     return res;
 }
 
+bool IsFloat(const nlohmann::json &jsonObj, const std::string &key)
+{
+    bool res = jsonObj.contains(key) && jsonObj[key].is_number_float();
+    if (!res) {
+        DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
+    }
+    return res;
+}
+
 bool IsArray(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_array();

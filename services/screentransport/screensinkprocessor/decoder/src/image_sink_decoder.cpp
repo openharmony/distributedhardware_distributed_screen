@@ -350,7 +350,7 @@ int32_t ImageSinkDecoder::SetDecoderFormat(const VideoParam &configParam)
     imageFormat_.PutLongValue("max_input_size", MAX_YUV420_BUFFER_SIZE);
     imageFormat_.PutIntValue("width", configParam.GetVideoWidth());
     imageFormat_.PutIntValue("height", configParam.GetVideoHeight());
-    imageFormat_.PutIntValue("frame_rate", configParam.GetFps());
+    imageFormat_.PutDoubleValue("frame_rate", configParam.GetFps());
 
     int32_t ret = videoDecoder_->Configure(imageFormat_);
     if (ret != MediaAVCodec::AVCS_ERR_OK) {

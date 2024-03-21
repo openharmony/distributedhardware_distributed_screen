@@ -32,7 +32,7 @@ constexpr int32_t VIDEO_CODEC_TYPE_INVALID = -1;
 constexpr int32_t VIDEO_DATA_FORMAT_INVALID = -1;
 constexpr int32_t WIDTH_INVALID = 9999;
 constexpr int32_t HEIGHT_INVALID = 9999;
-constexpr int32_t FPS = 30;
+constexpr double FPS = 30.0;
 constexpr size_t DATA_LEN = 128;
 
 class MockIScreenSinkTransCallback : public IScreenSinkTransCallback {

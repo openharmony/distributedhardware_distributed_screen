@@ -239,7 +239,6 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
         int32_t ret = ScreenMgrAdapter::GetInstance().RegisterScreenGroupListener(dScreenGroupListener_);
         if (ret != DH_SUCCESS) {
             DHLOGE("DScreenManager2.0 EnableDistributedScreen failed, err: %" PRId32, ret);
-            delete dScreenGroupListener_;
             dScreenGroupListener_ = nullptr;
             return ERR_DH_SCREEN_SA_ENABLE_FAILED;
         }

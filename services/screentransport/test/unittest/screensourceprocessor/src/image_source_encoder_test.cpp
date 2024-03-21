@@ -97,7 +97,8 @@ HWTEST_F(ImageSourceEncoderTest, ReleaseEncoder_001, TestSize.Level1)
  */
 HWTEST_F(ImageSourceEncoderTest, ReleaseEncoder_002, TestSize.Level1)
 {
-    encoder->videoEncoder_ = MediaAVCodec::VideoEncoderFactory::CreateByMime("video/avc");
+    encoder->videoEncoder_ = MediaAVCodec::VideoEncoderFactory::CreateByMime(
+        std::string(MediaAVCodec::CodecMimeType::VIDEO_AVC));
 
     int32_t actual = encoder->ReleaseEncoder();
     EXPECT_EQ(DH_SUCCESS, actual);
@@ -149,7 +150,8 @@ HWTEST_F(ImageSourceEncoderTest, StopEncoder_001, TestSize.Level1)
  */
 HWTEST_F(ImageSourceEncoderTest, StopEncoder_002, TestSize.Level1)
 {
-    encoder->videoEncoder_ = MediaAVCodec::VideoEncoderFactory::CreateByMime("video/avc");
+    encoder->videoEncoder_ = MediaAVCodec::VideoEncoderFactory::CreateByMime(
+        std::string(MediaAVCodec::CodecMimeType::VIDEO_AVC));
 
     int32_t actual = encoder->StopEncoder();
     EXPECT_EQ(ERR_DH_SCREEN_CODEC_STOP_FAILED, actual);

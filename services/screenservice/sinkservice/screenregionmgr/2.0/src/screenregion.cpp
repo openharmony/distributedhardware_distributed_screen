@@ -107,7 +107,8 @@ int32_t ScreenRegion::StartReceiverEngine(const std::string &content)
     }
     ret = receiverAdapter_->Start();
     if (ret != DH_SUCCESS) {
-        DHLOGE("start av receiver engine failed.");
+        DHLOGE("start av receiver engine failed, remove window.");
+        (void)ScreenClient::GetInstance().RemoveWindow(windowId_);
         return ERR_DH_AV_TRANS_START_FAILED;
     }
     isRunning = true;
