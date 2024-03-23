@@ -45,7 +45,7 @@ private:
         uint32_t inputDataSize, std::shared_ptr<DataBuffer> &data);
     void DecompressJpegToNV12(size_t jpegSize, uint8_t *inputData, uint8_t *outputData);
 
-    static const constexpr char *LOG_TAG = "JpegImageProcessor";
+    static const constexpr char *DSCREEN_LOG_TAG = "JpegImageProcessor";
     sptr<Surface> imageSurface_;
     VideoParam configParam_;
     std::weak_ptr<IImageSourceProcessorListener> imageProcessorListener_;

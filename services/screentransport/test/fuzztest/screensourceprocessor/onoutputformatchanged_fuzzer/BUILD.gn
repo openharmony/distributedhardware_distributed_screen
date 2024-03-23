@@ -58,6 +58,7 @@ ohos_fuzztest("OnOutputFormatChangedFuzzTest") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_surface:surface",
     "graphic_surface:sync_fence",
+    "hilog:libhilog",
     "ipc:ipc_core",
     "media_foundation:media_foundation",
   ]

@@ -67,6 +67,7 @@ ohos_unittest("SinkProcessorTest") {
     "av_codec:av_codec_client",
     "c_utils:utils",
     "graphic_surface:surface",
+    "hilog:libhilog",
     "media_foundation:media_foundation",
   ]
 

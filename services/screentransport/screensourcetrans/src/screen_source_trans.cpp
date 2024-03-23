@@ -33,15 +33,15 @@ constexpr const char* FDATA_THREAD = "FeedDataThread";
 int32_t ScreenSourceTrans::SetUp(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::string &peerDevId)
 {
-    DHLOGI("%s: SetUp.", LOG_TAG);
+    DHLOGI("%{public}s: SetUp.", DSCREEN_LOG_TAG);
     int32_t ret = CheckTransParam(localParam, remoteParam, peerDevId);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: SetUp failed param error ret: %" PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: SetUp failed param error ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         return ret;
     }
     ret = InitScreenTrans(localParam, remoteParam, peerDevId);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: SetUp failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: SetUp failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         return ret;
     }
     ret = SetConsumerSurface();
@@ -54,16 +54,16 @@ int32_t ScreenSourceTrans::SetUp(const VideoParam &localParam, const VideoParam 
         DHLOGE("screenDecisionCenter set jpeg surface failed.");
         return ret;
     }
-    DHLOGI("%s: SetUp success.", LOG_TAG);
+    DHLOGI("%{public}s: SetUp success.", DSCREEN_LOG_TAG);
     return DH_SUCCESS;
 }
 
 int32_t ScreenSourceTrans::SetConsumerSurface()
 {
-    DHLOGI("%s: SetConsumerSurface.", LOG_TAG);
+    DHLOGI("%{public}s: SetConsumerSurface.", DSCREEN_LOG_TAG);
     consumerSurface_ = imageProcessor_->GetConsumerSurface();
     if (consumerSurface_ == nullptr) {
-        DHLOGE("%s: consumerSurface is nullptr", LOG_TAG);
+        DHLOGE("%{public}s: consumerSurface is nullptr", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_SURFACE_INVALIED;
     }
     return DH_SUCCESS;
@@ -71,15 +71,15 @@ int32_t ScreenSourceTrans::SetConsumerSurface()
 
 int32_t ScreenSourceTrans::Release()
 {
-    DHLOGI("%s: Release.", LOG_TAG);
+    DHLOGI("%{public}s: Release.", DSCREEN_LOG_TAG);
     if (imageProcessor_ == nullptr || screenChannel_ == nullptr) {
-        DHLOGE("%s: Processor or channel is null, Setup first.", LOG_TAG);
+        DHLOGE("%{public}s: Processor or channel is null, Setup first.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
     int32_t ret = imageProcessor_->ReleaseImageProcessor();
     if (ret != DH_SUCCESS) {
-        DHLOGD("%s: Release image processor failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGD("%{public}s: Release image processor failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
     }
     imageProcessor_ = nullptr;
 
@@ -87,7 +87,7 @@ int32_t ScreenSourceTrans::Release()
     ret = screenChannel_->ReleaseSession();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGD("%s: Release channel session failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGD("%{public}s: Release channel session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
     }
     screenChannel_ = nullptr;
 
@@ -96,78 +96,79 @@ int32_t ScreenSourceTrans::Release()
         dataQueue_.pop();
     }
 
-    DHLOGI("%s: Release success.", LOG_TAG);
+    DHLOGI("%{public}s: Release success.", DSCREEN_LOG_TAG);
     return DH_SUCCESS;
 }
 
 int32_t ScreenSourceTrans::Start()
 {
-    DHLOGI("%s: Start.", LOG_TAG);
+    DHLOGI("%{public}s: Start.", DSCREEN_LOG_TAG);
     if (screenChannel_ == nullptr) {
-        DHLOGE("%s: channel is null, Setup first.", LOG_TAG);
+        DHLOGE("%{public}s: channel is null, Setup first.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
     StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_OPEN_SESSION_START);
     std::shared_ptr<IScreenChannelListener> listener = shared_from_this();
     if (listener == nullptr) {
-        DHLOGE("%s: Channel listener is null", LOG_TAG);
+        DHLOGE("%{public}s: Channel listener is null", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     if (screenChannel_ == nullptr) {
-        DHLOGE("%s: Channel is null", LOG_TAG);
+        DHLOGE("%{public}s: Channel is null", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     int32_t ret = screenChannel_->OpenSession(listener);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Open channel session failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: Open channel session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         return ret;
     }
 
-    DHLOGI("%s: Wait for channel session opened.", LOG_TAG);
+    DHLOGI("%{public}s: Wait for channel session opened.", DSCREEN_LOG_TAG);
     std::unique_lock<std::mutex> lck(sessionMtx_);
     auto status =
         sessionCond_.wait_for(lck, std::chrono::seconds(SESSION_WAIT_SECONDS), [this]() { return isChannelReady_; });
     if (!status) {
-        DHLOGE("%s: Open channel session timeout(%" PRId32"s).", LOG_TAG, SESSION_WAIT_SECONDS);
+        DHLOGE("%{public}s: Open channel session timeout(%{public}" PRId32 "s).", DSCREEN_LOG_TAG,
+            SESSION_WAIT_SECONDS);
         return ERR_DH_SCREEN_TRANS_TIMEOUT;
     }
 
-    DHLOGI("%s: Source start enable low latency.", LOG_TAG);
+    DHLOGI("%{public}s: Source start enable low latency.", DSCREEN_LOG_TAG);
     std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DScreenFwkKit::GetInstance().GetDHFwkKit();
     if (dhFwkKit != nullptr) {
         ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, ENABLE_LOW_LATENCY.dump());
         if (ret != DH_FWK_SUCCESS) {
-            DHLOGE("%s: Source start enable low latency failed ret: %." PRId32, LOG_TAG, ret);
+            DHLOGE("%{public}s: Source start enable low latency failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         }
     }
 
-    DHLOGI("%s: Start success.", LOG_TAG);
+    DHLOGI("%{public}s: Start success.", DSCREEN_LOG_TAG);
     FinishTrace(DSCREEN_HITRACE_LABEL);
     return DH_SUCCESS;
 }
 
 int32_t ScreenSourceTrans::Stop()
 {
-    DHLOGI("%s: Stop.", LOG_TAG);
+    DHLOGI("%{public}s: Stop.", DSCREEN_LOG_TAG);
     if (imageProcessor_ == nullptr || screenChannel_ == nullptr) {
-        DHLOGE("%s: Processor or channel is null, Setup first.", LOG_TAG);
+        DHLOGE("%{public}s: Processor or channel is null, Setup first.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
     bool stopStatus = true;
     int32_t ret = imageProcessor_->StopImageProcessor();
     if (ret != DH_SUCCESS) {
-        DHLOGD("%s: Stop image processor failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGD("%{public}s: Stop image processor failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         stopStatus = false;
     }
 
-    DHLOGI("%s: Source stop enable low latency.", LOG_TAG);
+    DHLOGI("%{public}s: Source stop enable low latency.", DSCREEN_LOG_TAG);
     std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DScreenFwkKit::GetInstance().GetDHFwkKit();
     if (dhFwkKit != nullptr) {
         ret = dhFwkKit->PublishMessage(DHTopic::TOPIC_LOW_LATENCY, DISABLE_LOW_LATENCY.dump());
         if (ret != DH_FWK_SUCCESS) {
-            DHLOGE("%s: Source stop enable low latency failed ret: %." PRId32, LOG_TAG, ret);
+            DHLOGE("%{public}s: Source stop enable low latency failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         }
     }
 
@@ -176,23 +177,23 @@ int32_t ScreenSourceTrans::Stop()
     ret = screenChannel_->CloseSession();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGD("%s: Close Session failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGD("%{public}s: Close Session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         stopStatus = false;
     }
 
     if (!stopStatus) {
-        DHLOGE("%s: Stop source trans failed.", LOG_TAG);
+        DHLOGE("%{public}s: Stop source trans failed.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
-    DHLOGI("%s: Stop success.", LOG_TAG);
+    DHLOGI("%{public}s: Stop success.", DSCREEN_LOG_TAG);
     return DH_SUCCESS;
 }
 
 int32_t ScreenSourceTrans::RegisterStateCallback(const std::shared_ptr<IScreenSourceTransCallback> &callback)
 {
-    DHLOGI("%s:RegisterStateCallback.", LOG_TAG);
+    DHLOGI("%{public}s:RegisterStateCallback.", DSCREEN_LOG_TAG);
     if (callback == nullptr) {
-        DHLOGE("%s: Trans callback is null.", LOG_TAG);
+        DHLOGE("%{public}s: Trans callback is null.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     transCallback_ = callback;
@@ -202,7 +203,7 @@ int32_t ScreenSourceTrans::RegisterStateCallback(const std::shared_ptr<IScreenSo
 
 sptr<Surface> ScreenSourceTrans::GetImageSurface()
 {
-    DHLOGI("%s:GetImageSurface.", LOG_TAG);
+    DHLOGI("%{public}s:GetImageSurface.", DSCREEN_LOG_TAG);
     return imageProcessor_->GetImageSurface();
 }
 
@@ -216,7 +217,7 @@ int32_t ScreenSourceTrans::CheckVideoParam(const VideoParam &param)
     if ((param.GetCodecType() != VIDEO_CODEC_TYPE_VIDEO_H264) &&
         (param.GetCodecType() != VIDEO_CODEC_TYPE_VIDEO_H265) &&
         (param.GetCodecType() != VIDEO_CODEC_TYPE_VIDEO_MPEG4)) {
-        DHLOGE("%s: Invalid codec type.", LOG_TAG);
+        DHLOGE("%{public}s: Invalid codec type.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM;
     }
 
@@ -224,19 +225,19 @@ int32_t ScreenSourceTrans::CheckVideoParam(const VideoParam &param)
         (param.GetVideoFormat() != VIDEO_DATA_FORMAT_NV12) &&
         (param.GetVideoFormat() != VIDEO_DATA_FORMAT_NV21) &&
         (param.GetVideoFormat() != VIDEO_DATA_FORMAT_RGBA8888)) {
-        DHLOGE("%s: Invalid video data format.", LOG_TAG);
+        DHLOGE("%{public}s: Invalid video data format.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM;
     }
 
     if ((param.GetVideoWidth() > DSCREEN_MAX_VIDEO_DATA_WIDTH) ||
         (param.GetVideoHeight() > DSCREEN_MAX_VIDEO_DATA_HEIGHT)) {
-        DHLOGE("%s: Invalid video data size.", LOG_TAG);
+        DHLOGE("%{public}s: Invalid video data size.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM;
     }
 
     if ((param.GetScreenWidth() > DSCREEN_MAX_SCREEN_DATA_WIDTH) ||
         (param.GetScreenHeight() > DSCREEN_MAX_SCREEN_DATA_HEIGHT)) {
-        DHLOGE("%s: Invalid screen data size.", LOG_TAG);
+        DHLOGE("%{public}s: Invalid screen data size.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM;
     }
 
@@ -246,21 +247,21 @@ int32_t ScreenSourceTrans::CheckVideoParam(const VideoParam &param)
 int32_t ScreenSourceTrans::CheckTransParam(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::string &peerDevId)
 {
-    DHLOGI("%s:CheckTransParam.", LOG_TAG);
+    DHLOGI("%{public}s:CheckTransParam.", DSCREEN_LOG_TAG);
     if (peerDevId.empty()) {
-        DHLOGE("%s: Remote device id is null.", LOG_TAG);
+        DHLOGE("%{public}s: Remote device id is null.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
     int32_t ret = CheckVideoParam(localParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: check localParam param failed.", LOG_TAG);
+        DHLOGE("%{public}s: check localParam param failed.", DSCREEN_LOG_TAG);
         return ret;
     }
 
     ret = CheckVideoParam(remoteParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: check remoteParam param failed.", LOG_TAG);
+        DHLOGE("%{public}s: check remoteParam param failed.", DSCREEN_LOG_TAG);
         return ret;
     }
     return DH_SUCCESS;
@@ -269,14 +270,14 @@ int32_t ScreenSourceTrans::CheckTransParam(const VideoParam &localParam, const V
 int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::string &peerDevId)
 {
-    DHLOGI("%s:InitScreenTrans.", LOG_TAG);
+    DHLOGI("%{public}s:InitScreenTrans.", DSCREEN_LOG_TAG);
     screenChannel_ = std::make_shared<ScreenDataChannelImpl>(peerDevId);
     if (std::atoi(version_.c_str()) > DSCREEN_MIN_VERSION) {
         screenChannel_->SetJpegSessionFlag(true);
     }
     int32_t ret = RegisterChannelListener();
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Register channel listener failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: Register channel listener failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         screenChannel_ = nullptr;
         return ret;
     }
@@ -284,7 +285,7 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
     imageProcessor_ = std::make_shared<ImageSourceProcessor>();
     ret = RegisterProcessorListener(localParam, remoteParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Register data processor listener failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: Register data processor listener failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         screenChannel_ = nullptr;
         imageProcessor_ = nullptr;
         return ret;
@@ -295,32 +296,32 @@ int32_t ScreenSourceTrans::InitScreenTrans(const VideoParam &localParam, const V
 
 int32_t ScreenSourceTrans::RegisterChannelListener()
 {
-    DHLOGI("%s: RegisterChannelListener.", LOG_TAG);
+    DHLOGI("%{public}s: RegisterChannelListener.", DSCREEN_LOG_TAG);
     return DH_SUCCESS;
 }
 
 int32_t ScreenSourceTrans::RegisterProcessorListener(const VideoParam &localParam, const VideoParam &remoteParam)
 {
-    DHLOGI("%s: RegisterProcessorListener.", LOG_TAG);
+    DHLOGI("%{public}s: RegisterProcessorListener.", DSCREEN_LOG_TAG);
     std::shared_ptr<IImageSourceProcessorListener> listener = shared_from_this();
     if (listener == nullptr) {
-        DHLOGE("%s: Processor listener is null", LOG_TAG);
+        DHLOGE("%{public}s: Processor listener is null", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
 
     if (imageProcessor_ == nullptr) {
-        DHLOGE("%s: imageProcessor is null", LOG_TAG);
+        DHLOGE("%{public}s: imageProcessor is null", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     int32_t ret = imageProcessor_->ConfigureImageProcessor(localParam, remoteParam, listener);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Config image processor failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: Config image processor failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "Config image processor failed.");
         return ret;
     }
     ret = screenDecisionCenter_->ConfigureDecisionCenter(listener, imageProcessor_);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Config decision center failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: Config decision center failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         return ret;
     }
     return DH_SUCCESS;
@@ -328,19 +329,19 @@ int32_t ScreenSourceTrans::RegisterProcessorListener(const VideoParam &localPara
 
 void ScreenSourceTrans::OnSessionOpened()
 {
-    DHLOGI("%s: OnChannelSessionOpened.", LOG_TAG);
+    DHLOGI("%{public}s: OnChannelSessionOpened.", DSCREEN_LOG_TAG);
     if (imageProcessor_ == nullptr) {
-        DHLOGE("%s: imageProcessor is null", LOG_TAG);
+        DHLOGE("%{public}s: imageProcessor is null", DSCREEN_LOG_TAG);
         return;
     }
     int32_t ret = imageProcessor_->StartImageProcessor();
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Start image processor failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: Start image processor failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         return;
     }
 
     isChannelReady_ = true;
-    DHLOGI("%s: Start thread.", LOG_TAG);
+    DHLOGI("%{public}s: Start thread.", DSCREEN_LOG_TAG);
     std::thread(&ScreenSourceTrans::FeedChannelData, this).detach();
     std::unique_lock<std::mutex> lck(sessionMtx_);
     sessionCond_.notify_all();
@@ -348,12 +349,12 @@ void ScreenSourceTrans::OnSessionOpened()
 
 void ScreenSourceTrans::OnSessionClosed()
 {
-    DHLOGI("%s: OnChannelSessionClosed.", LOG_TAG);
+    DHLOGI("%{public}s: OnChannelSessionClosed.", DSCREEN_LOG_TAG);
     isChannelReady_ = false;
 
     std::shared_ptr<IScreenSourceTransCallback> callback = transCallback_.lock();
     if (callback == nullptr) {
-        DHLOGE("%s: Trans callback is null.", LOG_TAG);
+        DHLOGE("%{public}s: Trans callback is null.", DSCREEN_LOG_TAG);
         return;
     }
     callback->OnError(ERR_DH_SCREEN_TRANS_SESSION_CLOSED, "OnChannelSessionClosed");
@@ -362,31 +363,31 @@ void ScreenSourceTrans::OnSessionClosed()
 void ScreenSourceTrans::OnDataReceived(const std::shared_ptr<DataBuffer> &data)
 {
     (void) data;
-    DHLOGI("%s: OnChannelDataReceived source trans not support.", LOG_TAG);
+    DHLOGI("%{public}s: OnChannelDataReceived source trans not support.", DSCREEN_LOG_TAG);
 }
 
 void ScreenSourceTrans::OnDamageProcessDone(sptr<SurfaceBuffer> &surfaceBuffer, const std::vector<OHOS::Rect> &damages)
 {
-    DHLOGI("%s: OnDamageProcessDone.", LOG_TAG);
+    DHLOGI("%{public}s: OnDamageProcessDone.", DSCREEN_LOG_TAG);
     if (surfaceBuffer == nullptr) {
-        DHLOGE("%s: Trans surfaceBuffer is null.", LOG_TAG);
+        DHLOGE("%{public}s: Trans surfaceBuffer is null.", DSCREEN_LOG_TAG);
         return;
     }
     if (std::atoi(version_.c_str()) == DSCREEN_MIN_VERSION) {
-        DHLOGI("%s: not support partial refresh, run full full image process.", LOG_TAG);
+        DHLOGI("%{public}s: not support partial refresh, run full full image process.", DSCREEN_LOG_TAG);
         imageProcessor_->ProcessFullImage(surfaceBuffer);
     } else {
-        DHLOGI("%s: run partial refresh image process.", LOG_TAG);
+        DHLOGI("%{public}s: run partial refresh image process.", DSCREEN_LOG_TAG);
         screenDecisionCenter_->InputBufferImage(surfaceBuffer, damages);
     }
 }
 
 void ScreenSourceTrans::OnImageProcessDone(const std::shared_ptr<DataBuffer> &data)
 {
-    DHLOGD("%s: OnImageProcessDone.", LOG_TAG);
+    DHLOGD("%{public}s: OnImageProcessDone.", DSCREEN_LOG_TAG);
     std::lock_guard<std::mutex> lck(dataQueueMtx_);
     while (dataQueue_.size() >= DATA_QUEUE_MAX_SIZE) {
-        DHLOGE("%s: Data queue overflow.", LOG_TAG);
+        DHLOGE("%{public}s: Data queue overflow.", DSCREEN_LOG_TAG);
         dataQueue_.pop();
     }
     dataQueue_.push(data);
@@ -395,10 +396,10 @@ void ScreenSourceTrans::OnImageProcessDone(const std::shared_ptr<DataBuffer> &da
 
 void ScreenSourceTrans::OnProcessorStateNotify(int32_t state)
 {
-    DHLOGI("%s:OnProcessorStateNotify.", LOG_TAG);
+    DHLOGI("%{public}s:OnProcessorStateNotify.", DSCREEN_LOG_TAG);
     std::shared_ptr<IScreenSourceTransCallback> callback = transCallback_.lock();
     if (callback == nullptr) {
-        DHLOGE("%s: Trans callback is null.", LOG_TAG);
+        DHLOGE("%{public}s: Trans callback is null.", DSCREEN_LOG_TAG);
         return;
     }
     callback->OnError(state, "OnProcessorStateNotify");
@@ -408,7 +409,7 @@ void ScreenSourceTrans::FeedChannelData()
 {
     int32_t ret = pthread_setname_np(pthread_self(), FDATA_THREAD);
     if (ret != DH_SUCCESS) {
-        DHLOGE("ScreenSourceTrans set thread name failed, ret %" PRId32, ret);
+        DHLOGE("ScreenSourceTrans set thread name failed, ret %{public}" PRId32, ret);
     }
     while (isChannelReady_) {
         std::shared_ptr<DataBuffer> screenData;
@@ -416,7 +417,7 @@ void ScreenSourceTrans::FeedChannelData()
             std::unique_lock<std::mutex> lock(dataQueueMtx_);
             dataCond_.wait_for(lock, std::chrono::seconds(DATA_WAIT_SECONDS), [this]() { return !dataQueue_.empty(); });
             if (dataQueue_.empty()) {
-                DHLOGD("%s:Data queue is empty.", LOG_TAG);
+                DHLOGD("%{public}s:Data queue is empty.", DSCREEN_LOG_TAG);
                 continue;
             }
             screenData = dataQueue_.front();
@@ -424,18 +425,18 @@ void ScreenSourceTrans::FeedChannelData()
         }
 
         if (screenChannel_ == nullptr) {
-            DHLOGE("%s: Channel is null", LOG_TAG);
+            DHLOGE("%{public}s: Channel is null", DSCREEN_LOG_TAG);
             return;
         }
         if (screenData == nullptr) {
-            DHLOGE("%s: Screen data is null", LOG_TAG);
+            DHLOGE("%{public}s: Screen data is null", DSCREEN_LOG_TAG);
             continue;
         }
 
-        DHLOGD("%s: FeedChannelData.", LOG_TAG);
+        DHLOGD("%{public}s: FeedChannelData.", DSCREEN_LOG_TAG);
         ret = screenChannel_->SendData(screenData);
         if (ret != DH_SUCCESS) {
-            DHLOGD("%s:Send data failed.", LOG_TAG);
+            DHLOGD("%{public}s:Send data failed.", DSCREEN_LOG_TAG);
         }
     }
 }

@@ -46,7 +46,7 @@ static const std::map<std::pair<std::string, std::string>, std::string> CODECS_M
 DScreen::DScreen(const std::string &devId, const std::string &dhId,
     std::shared_ptr<IDScreenCallback> dscreenCallback)
 {
-    DHLOGD("DScreen construct, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
+    DHLOGD("DScreen construct, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId).c_str(),
         GetAnonyString(dhId).c_str());
     devId_ = devId;
     dhId_ = dhId;
@@ -69,7 +69,7 @@ DScreen::DScreen(const std::string &devId, const std::string &dhId,
 
 DScreen::~DScreen()
 {
-    DHLOGD("DScreen deconstruct, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
+    DHLOGD("DScreen deconstruct, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
     taskThreadRunning_ = false;
     taskQueueCond_.notify_all();
@@ -86,12 +86,13 @@ DScreen::~DScreen()
 
 int32_t DScreen::AddTask(const std::shared_ptr<Task> &task)
 {
-    DHLOGI("DScreen::AddTask, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    DHLOGI("DScreen::AddTask, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+        GetAnonyString(dhId_).c_str());
     if (task == nullptr) {
         DHLOGE("AddTask, task is invalid.");
         return ERR_DH_SCREEN_SA_DSCREEN_TASK_NOT_VALID;
     }
-    DHLOGI("AddTask, task type: %" PRId32, task->GetTaskType());
+    DHLOGI("AddTask, task type: %{public}" PRId32, task->GetTaskType());
     {
         std::lock_guard<std::mutex> lock(taskQueueMtx_);
         taskQueue_.push(task);
@@ -103,8 +104,8 @@ int32_t DScreen::AddTask(const std::shared_ptr<Task> &task)
 void DScreen::HandleTask(const std::shared_ptr<Task> &task)
 {
     int32_t taskType = task->GetTaskType();
-    DHLOGI("HandleTask, devId: %s, dhId: %s, task type: %" PRId32, GetAnonyString(devId_).c_str(),
-        GetAnonyString(dhId_).c_str(), taskType);
+    DHLOGI("HandleTask, devId: %{public}s, dhId: %{public}s, task type: %{public}" PRId32,
+        GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(), taskType);
     switch (taskType) {
         case TaskType::TASK_ENABLE:
             HandleEnable(task->GetTaskParam(), task->GetTaskId());
@@ -125,7 +126,8 @@ void DScreen::HandleTask(const std::shared_ptr<Task> &task)
 
 void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
 {
-    DHLOGI("HandleEnable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    DHLOGI("HandleEnable, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+        GetAnonyString(dhId_).c_str());
     if (dscreenCallback_ == nullptr) {
         DHLOGE("DScreen::HandleEnable, dscreenCallback_ is nullptr");
         return;
@@ -189,7 +191,8 @@ void DScreen::ParseInputScreenParam(const std::string &param, const std::string 
 
 void DScreen::HandleDisable(const std::string &taskId)
 {
-    DHLOGI("HandleDisable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    DHLOGI("HandleDisable, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+        GetAnonyString(dhId_).c_str());
     if (dscreenCallback_ == nullptr) {
         DHLOGE("DScreen::HandleDisable, dscreenCallback_ is nullptr");
         return;
@@ -212,7 +215,8 @@ void DScreen::HandleDisable(const std::string &taskId)
 
 void DScreen::HandleConnect()
 {
-    DHLOGI("HandleConnect, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    DHLOGI("HandleConnect, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+        GetAnonyString(dhId_).c_str());
     if (GetState() != ENABLED) {
         DHLOGE("GetState is not ENABLED, HandleConnect failed.");
         return;
@@ -239,7 +243,8 @@ void DScreen::HandleConnect()
 
 void DScreen::HandleDisconnect()
 {
-    DHLOGD("HandleDisconnect, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    DHLOGD("HandleDisconnect, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+        GetAnonyString(dhId_).c_str());
     if (curState_ != CONNECTED) {
         DHLOGE("dscreen is not connected, cannot disconnect");
         return;
@@ -260,7 +265,8 @@ void DScreen::HandleDisconnect()
 
 int32_t DScreen::ConfigSurface()
 {
-    DHLOGD("ConfigSurface, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    DHLOGD("ConfigSurface, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+        GetAnonyString(dhId_).c_str());
     consumerSurface_ = Surface::CreateSurfaceAsConsumer();
     if (consumerSurface_ == nullptr) {
         DHLOGE("Create consumer surface failed.");
@@ -329,13 +335,13 @@ void DScreen::ConsumeSurface()
     OHOS::Rect damage = {0, 0, 0, 0};
     SurfaceError surfaceErr = consumerSurface_->AcquireBuffer(surfaceBuffer, syncFence_, timestamp, damage);
     if (surfaceErr != SURFACE_ERROR_OK) {
-        DHLOGE("consumerSurface_ acquire buffer failed, errcode: %d", surfaceErr);
+        DHLOGE("consumerSurface_ acquire buffer failed, errcode: %{public}d", surfaceErr);
         consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
         return;
     }
     int32_t retcode = syncFence_->Wait(SURFACE_SYNC_FENCE_TIMEOUT);
     if (retcode == -ETIME) {
-        DHLOGE("Sync fence wait timeout, retcode is %" PRId32, retcode);
+        DHLOGE("Sync fence wait timeout, retcode is %{public}" PRId32, retcode);
         consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
         return;
     }
@@ -355,7 +361,7 @@ void DScreen::ConsumeSurface()
         DHLOGE("feed buffer to av transport sender failed.");
     }
     consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
-    DHLOGI("ConsumeSurface success. timestamp=%lld", (long long)timestamp);
+    DHLOGI("ConsumeSurface success. timestamp=%{public}" PRId64, timestamp);
 }
 
 int32_t DScreen::InitSenderEngine(IAVEngineProvider *providerPtr, const std::string &peerDevId)
@@ -374,7 +380,8 @@ int32_t DScreen::InitSenderEngine(IAVEngineProvider *providerPtr, const std::str
 
 int32_t DScreen::StartSenderEngine()
 {
-    DHLOGI("StartSenderEngine, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    DHLOGI("StartSenderEngine, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+        GetAnonyString(dhId_).c_str());
     if (senderAdapter_ == nullptr) {
         DHLOGE("av transport sender adapter is null.");
         return ERR_DH_AV_TRANS_NULL_VALUE;
@@ -399,7 +406,8 @@ int32_t DScreen::StartSenderEngine()
 
 int32_t DScreen::StopSenderEngine()
 {
-    DHLOGI("StopSenderEngine, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    DHLOGI("StopSenderEngine, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+        GetAnonyString(dhId_).c_str());
     if (senderAdapter_ == nullptr) {
         DHLOGE("av transport sender adapter is null.");
         return ERR_DH_AV_TRANS_NULL_VALUE;
@@ -453,7 +461,7 @@ void DScreen::ChooseParameter(std::string &codecType, std::string &pixelFormat)
 
 int32_t DScreen::SetUp()
 {
-    DHLOGI("SetUp, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
+    DHLOGI("SetUp, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
     if (senderAdapter_ == nullptr) {
         DHLOGE("av transport sender adapter is null.");
         return ERR_DH_AV_TRANS_NULL_VALUE;
@@ -514,7 +522,7 @@ int32_t DScreen::WaitForSinkStarted()
 
 int32_t DScreen::NegotiateCodecType(const std::string &rmtDecoderStr)
 {
-    DHLOGI("Start NegotiateCodecType, remote decoder: %s", rmtDecoderStr.c_str());
+    DHLOGI("Start NegotiateCodecType, remote decoder: %{public}s", rmtDecoderStr.c_str());
     json rmtDecoderJson = json::parse(rmtDecoderStr, nullptr, false);
     if (rmtDecoderJson.is_discarded()) {
         DHLOGE("remote Decoder Json is invalid.");
@@ -535,7 +543,7 @@ int32_t DScreen::NegotiateCodecType(const std::string &rmtDecoderStr)
         DHLOGE("Query local Codec info failed");
         return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
     }
-    DHLOGI("DScreen Negotiate QueryVideoEncoderAbility info: %s", localVideoEncodersJsonStr.c_str());
+    DHLOGI("DScreen Negotiate QueryVideoEncoderAbility info: %{public}s", localVideoEncodersJsonStr.c_str());
 
     json localVideoEncodersJson = json::parse(localVideoEncodersJsonStr, nullptr, false);
     if (localVideoEncodersJson.is_discarded()) {
@@ -558,7 +566,7 @@ int32_t DScreen::ChooseCodecType(const std::vector<VideoEncoder> &localVideoEnco
             std::pair<std::string, std::string> comb = {locEnc.name, rmtDec.name};
             if (CODECS_MAP.find(comb) != CODECS_MAP.end()) {
                 std::string codec = CODECS_MAP.at(comb);
-                DHLOGI("Find match comb, local encoder: %s, remote decoder: %s, codec: %s",
+                DHLOGI("Find match comb, local encoder: %{public}s, remote decoder: %{public}s, codec: %{public}s",
                     locEnc.name.c_str(), rmtDec.name.c_str(), codec.c_str());
                 codecTypeCandidates.push_back(codec);
             }
@@ -581,7 +589,7 @@ int32_t DScreen::ChooseCodecType(const std::vector<VideoEncoder> &localVideoEnco
 
 void DScreen::TaskThreadLoop()
 {
-    DHLOGI("DScreen taskThread start. devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
+    DHLOGI("DScreen taskThread start. devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
     while (taskThreadRunning_) {
         watchdogFlag_ = true;
@@ -600,7 +608,7 @@ void DScreen::TaskThreadLoop()
             DHLOGD("task is null.");
             continue;
         }
-        DHLOGD("run task, task queue size: %zu", taskQueue_.size());
+        DHLOGD("run task, task queue size: %{public}zu", taskQueue_.size());
         HandleTask(task);
     }
 }
@@ -635,7 +643,7 @@ void DScreen::OnEngineMessage(const std::shared_ptr<AVTransMessage> &message)
         DHLOGE("received engine message is null.");
         return;
     }
-    DHLOGI("On sink device engine message received, message type =%d.", message->type_);
+    DHLOGI("On sink device engine message received, message type =%{public}d.", message->type_);
     if ((message->type_ == DScreenMsgType::START_MIRROR_SUCCESS) ||
         (message->type_ == DScreenMsgType::START_MIRROR_FAIL)) {
         sinkStartSuccess_ = (message->type_ == DScreenMsgType::START_MIRROR_SUCCESS);

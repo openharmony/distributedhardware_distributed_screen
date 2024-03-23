@@ -38,7 +38,7 @@ public:
     void OnOutputFormatChanged(const Media::Format &format) override;
 
 private:
-    static const constexpr char *LOG_TAG = "ImageEncoderCallback";
+    static const constexpr char *DSCREEN_LOG_TAG = "ImageEncoderCallback";
 
     std::weak_ptr<ImageSourceEncoder> videoEncoder_;
 };

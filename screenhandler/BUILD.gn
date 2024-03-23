@@ -51,6 +51,7 @@ ohos_shared_library("distributed_screen_handler") {
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
     "graphic_surface:surface",
+    "hilog:libhilog",
     "ipc:ipc_core",
     "media_foundation:media_foundation",
     "window_manager:libdm",

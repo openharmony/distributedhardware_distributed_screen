@@ -66,7 +66,7 @@ private:
     std::shared_ptr<ISoftbusListener> &GetSoftbusListenerById(int32_t sessionId);
 
 private:
-    static const constexpr char *LOG_TAG = "SoftbusAdapter";
+    static const constexpr char *DSCREEN_LOG_TAG = "SoftbusAdapter";
     std::mutex listenerMtx_;
     std::mutex idMapMutex_;
     std::mutex serverIdMapMutex_;

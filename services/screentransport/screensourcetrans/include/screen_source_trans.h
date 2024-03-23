@@ -64,7 +64,7 @@ private:
     void FeedChannelData();
 
 private:
-    static const constexpr char *LOG_TAG = "ScreenSourceTrans";
+    static const constexpr char *DSCREEN_LOG_TAG = "ScreenSourceTrans";
 
     std::mutex sessionMtx_;
     std::mutex dataMtx_;

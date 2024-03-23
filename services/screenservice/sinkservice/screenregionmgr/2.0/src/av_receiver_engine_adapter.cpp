@@ -96,7 +96,7 @@ int32_t AVTransReceiverAdapter::Stop()
     }
     int32_t ret = receiverEngine_->Stop();
     if (ret != DH_AVT_SUCCESS) {
-        DHLOGE("stop av transport receiver engine failed, ret:%" PRId32, ret);
+        DHLOGE("stop av transport receiver engine failed, ret:%{public}" PRId32, ret);
         return ERR_DH_AV_TRANS_STOP_FAILED;
     }
     DHLOGI("Stop Success");
@@ -112,7 +112,7 @@ int32_t AVTransReceiverAdapter::SetParameter(const AVTransTag &tag, const std::s
     }
     int32_t ret = receiverEngine_->SetParameter(tag, param);
     if (ret != DH_AVT_SUCCESS) {
-        DHLOGE("set av transport receiver parameter failed, ret:%" PRId32, ret);
+        DHLOGE("set av transport receiver parameter failed, ret:%{public}" PRId32, ret);
         return ERR_DH_AV_TRANS_SETUP_FAILED;
     }
     return DH_SUCCESS;
@@ -127,7 +127,7 @@ int32_t AVTransReceiverAdapter::SendMessageToRemote(const std::shared_ptr<AVTran
     }
     int32_t ret = receiverEngine_->SendMessage(message);
     if (ret != DH_AVT_SUCCESS) {
-        DHLOGE("send meassage to remote sender engine failed, ret:%" PRId32, ret);
+        DHLOGE("send meassage to remote sender engine failed, ret:%{public}" PRId32, ret);
         return ERR_DH_AV_TRANS_SEND_MSG_FAILED;
     }
     return DH_SUCCESS;
@@ -144,7 +144,7 @@ int32_t AVTransReceiverAdapter::RegisterAdapterCallback(const std::shared_ptr<AV
 
 int32_t AVTransReceiverAdapter::OnReceiverEvent(const AVTransEvent& event)
 {
-    DHLOGI("OnReceiverEvent enter. event type:%" PRId32, event.type);
+    DHLOGI("OnReceiverEvent enter. event type:%{public}" PRId32, event.type);
 
     if (adapterCallback_ == nullptr) {
         DHLOGE("adapter callback is null.");
