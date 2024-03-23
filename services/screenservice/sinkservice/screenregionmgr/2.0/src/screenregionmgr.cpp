@@ -85,7 +85,7 @@ int32_t ScreenRegionManager::Release()
         }
         int32_t ret = screenRegion->Release();
         if (ret != DH_SUCCESS) {
-            DHLOGE("Release region failed, remoteDevId: %{public}s, err: %{public}" PRId32,
+            DHLOGE("Release region failed, remoteDevId: %s, err: %" PRId32,
                 GetAnonyString(screenRegion->GetRemoteDevId()).c_str(), ret);
         }
     }
@@ -96,7 +96,7 @@ int32_t ScreenRegionManager::Release()
 
 int32_t ScreenRegionManager::CreateDScreenRegion(const std::string &peerDevId)
 {
-    DHLOGI("CreateDScreenRegion for peerDevId: %{public}s", GetAnonyString(peerDevId).c_str());
+    DHLOGI("CreateDScreenRegion for peerDevId: %s", GetAnonyString(peerDevId).c_str());
     auto screenRegion = std::make_shared<ScreenRegion>(peerDevId);
     screenRegion->InitReceiverEngine(providerPtr_);
     screenRegions_.push_back(screenRegion);
@@ -105,7 +105,7 @@ int32_t ScreenRegionManager::CreateDScreenRegion(const std::string &peerDevId)
 
 int32_t ScreenRegionManager::DestoryDScreenRegion(const std::string &peerDevId)
 {
-    DHLOGI("DestoryDScreenRegion for peerDevId: %{public}s", GetAnonyString(peerDevId).c_str());
+    DHLOGI("DestoryDScreenRegion for peerDevId: %s", GetAnonyString(peerDevId).c_str());
     std::lock_guard<std::mutex> lock(screenRegionsMtx_);
     for (const auto &region : screenRegions_) {
         if (region != nullptr) {
@@ -169,12 +169,12 @@ int32_t ScreenRegionManager::LoadAVReceiverEngineProvider()
     }
     void *pHandler = dlopen(path, RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
-        DHLOGE("%{public}s handler load failed, failed reason : %{public}s", path, dlerror());
+        DHLOGE("%s handler load failed, failed reason : %s", path, dlerror());
         return ERR_DH_AV_TRANS_NULL_VALUE;
     }
     AVTransProviderClass getEngineFactoryFunc = (AVTransProviderClass)dlsym(pHandler, GET_PROVIDER_FUNC.c_str());
     if (getEngineFactoryFunc == nullptr) {
-        DHLOGE("av transport engine factory function handler is null, failed reason : %{public}s", dlerror());
+        DHLOGE("av transport engine factory function handler is null, failed reason : %s", dlerror());
         dlclose(pHandler);
         pHandler = nullptr;
         return ERR_DH_AV_TRANS_NULL_VALUE;
@@ -202,7 +202,7 @@ int32_t ScreenRegionManager::UnloadAVReceiverEngineProvider()
 
 int32_t EngineProviderListener::OnProviderEvent(const AVTransEvent& event)
 {
-    DHLOGI("OnProviderEvent enter. event type:%{public}" PRId32, event.type);
+    DHLOGI("OnProviderEvent enter. event type:%" PRId32, event.type);
     if (event.type == EventType::EVENT_CHANNEL_OPENED) {
         ScreenRegionManager::GetInstance().CreateDScreenRegion(event.peerDevId);
     } else if (event.type == EventType::EVENT_CHANNEL_CLOSED) {

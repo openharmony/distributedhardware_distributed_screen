@@ -52,7 +52,6 @@ ohos_shared_library("distributed_screen_source_sdk") {
 
   external_deps = [
     "c_utils:utils",
-    "hilog:libhilog",
     "hitrace:hitrace_meter",
     "ipc:ipc_core",
     "samgr:samgr_proxy",

@@ -56,7 +56,7 @@ private:
         const std::string &peerDevId);
 
 private:
-    static const constexpr char *DSCREEN_LOG_TAG = "ScreenSinkTrans";
+    static const constexpr char *LOG_TAG = "ScreenSinkTrans";
 
     std::string version_ = "1.0";
     sptr<Surface> decoderSurface_;

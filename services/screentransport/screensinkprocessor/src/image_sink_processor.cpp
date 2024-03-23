@@ -26,7 +26,7 @@ int32_t ImageSinkProcessor::ConfigureImageProcessor(
     const VideoParam &localParam, const VideoParam &remoteParam,
     const std::shared_ptr<IImageSinkProcessorListener> &imageListener)
 {
-    DHLOGI("%{public}s: ConfigureImageProcessor.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ConfigureImageProcessor.", LOG_TAG);
     localParam_ = localParam;
     remoteParam_ = remoteParam;
 
@@ -34,7 +34,7 @@ int32_t ImageSinkProcessor::ConfigureImageProcessor(
     imageJpeg_ = std::make_shared<JpegImageProcessor>(remoteParam);
     int32_t ret = imageDecoder_->ConfigureDecoder(localParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: ConfigureDecoder failed ret:%{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: ConfigureDecoder failed ret:%" PRId32, LOG_TAG, ret);
         return ret;
     }
 
@@ -43,9 +43,9 @@ int32_t ImageSinkProcessor::ConfigureImageProcessor(
 
 int32_t ImageSinkProcessor::ReleaseImageProcessor()
 {
-    DHLOGI("%{public}s: ReleaseImageProcessor.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ReleaseImageProcessor.", LOG_TAG);
     if (imageDecoder_ == nullptr) {
-        DHLOGE("%{public}s: Decoder is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Decoder is null.", LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "ReleaseImageProcessor Decoder is null.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -54,7 +54,7 @@ int32_t ImageSinkProcessor::ReleaseImageProcessor()
     int32_t ret = imageDecoder_->ReleaseDecoder();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: ReleaseDecoder failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: ReleaseDecoder failed.", LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "ReleaseDecoder failed.");
         return ret;
     }
@@ -64,9 +64,9 @@ int32_t ImageSinkProcessor::ReleaseImageProcessor()
 
 int32_t ImageSinkProcessor::StartImageProcessor()
 {
-    DHLOGI("%{public}s: StartImageProcessor.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: StartImageProcessor.", LOG_TAG);
     if (imageDecoder_ == nullptr) {
-        DHLOGE("%{public}s: Decoder is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Decoder is null.", LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "StartImageProcessor Decoder is null.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -75,7 +75,7 @@ int32_t ImageSinkProcessor::StartImageProcessor()
     int32_t ret = imageDecoder_->StartDecoder();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: StartDecoder failed ret:%{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: StartDecoder failed ret:%" PRId32, LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "StartDecoder failed.");
         return ret;
     }
@@ -85,9 +85,9 @@ int32_t ImageSinkProcessor::StartImageProcessor()
 
 int32_t ImageSinkProcessor::StopImageProcessor()
 {
-    DHLOGI("%{public}s: StopImageProcessor.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: StopImageProcessor.", LOG_TAG);
     if (imageDecoder_ == nullptr) {
-        DHLOGE("%{public}s: Decoder is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Decoder is null.", LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "StopImageProcessor Decoder is null.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -96,7 +96,7 @@ int32_t ImageSinkProcessor::StopImageProcessor()
     int32_t ret = imageDecoder_->StopDecoder();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: StopDecoder failed ret:%{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: StopDecoder failed ret:%" PRId32, LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "StopDecoder failed.");
         return ret;
     }
@@ -106,23 +106,23 @@ int32_t ImageSinkProcessor::StopImageProcessor()
 
 int32_t ImageSinkProcessor::SetImageSurface(sptr<Surface> &surface)
 {
-    DHLOGI("%{public}s: SetImageSurface.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: SetImageSurface.", LOG_TAG);
     if (imageDecoder_ == nullptr || surface == nullptr) {
-        DHLOGE("%{public}s: Decoder or surface is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Decoder or surface is null.", LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "SetImageSurface Decoder is null.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
     int32_t ret = imageDecoder_->SetOutputSurface(surface);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: SetOutputSurface failed ret:%{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: SetOutputSurface failed ret:%" PRId32, LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "SetOutputSurface failed.");
         return ret;
     }
 
     ret = imageJpeg_->SetOutputSurface(surface);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: imageJpeg SetImageSurface failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: imageJpeg SetImageSurface failed ret: %" PRId32, LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "imageJpeg SetOutputSurface failed.");
         return ret;
     }
@@ -131,9 +131,9 @@ int32_t ImageSinkProcessor::SetImageSurface(sptr<Surface> &surface)
 
 int32_t ImageSinkProcessor::ProcessImage(const std::shared_ptr<DataBuffer> &data)
 {
-    DHLOGI("%{public}s: ProcessImage.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ProcessImage.", LOG_TAG);
     if (imageDecoder_ == nullptr || data == nullptr) {
-        DHLOGE("%{public}s: Decoder or data is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Decoder or data is null.", LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "processImage Decoder is null.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -141,19 +141,19 @@ int32_t ImageSinkProcessor::ProcessImage(const std::shared_ptr<DataBuffer> &data
     if (data->DataType() == VIDEO_FULL_SCREEN_DATA) {
         int32_t ret = imageDecoder_->InputScreenData(data);
         if (ret != DH_SUCCESS) {
-            DHLOGE("%{public}s: InputScreenData failed ret:%{public}" PRId32, DSCREEN_LOG_TAG, ret);
+            DHLOGE("%s: InputScreenData failed ret:%" PRId32, LOG_TAG, ret);
             ReportOptFail(DSCREEN_OPT_FAIL, ret, "InputScreenData failed.");
             return ret;
         }
     } else if (data->DataType() == VIDEO_PART_SCREEN_DATA) {
         int32_t ret = imageJpeg_->FillDirtyImages2Surface(data, imageDecoder_->GetLastFrame());
         if (ret != DH_SUCCESS) {
-            DHLOGE("%{public}s: FillDirtyImages2Surface failed ret:%{public}" PRId32, DSCREEN_LOG_TAG, ret);
+            DHLOGE("%s: FillDirtyImages2Surface failed ret:%" PRId32, LOG_TAG, ret);
             ReportOptFail(DSCREEN_OPT_FAIL, ret, "FillDirtyImages2Surface failed.");
             return ret;
         }
     } else {
-        DHLOGE("%{public}s: data type is invalid.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: data type is invalid.", LOG_TAG);
         return ERR_DH_SCREEN_DATA_TYPE_INVALID;
     }
     return DH_SUCCESS;

@@ -38,7 +38,7 @@ public:
     int32_t ProcessFullImage(sptr<SurfaceBuffer> &surfaceBuffer) override;
 
 private:
-    static const constexpr char *DSCREEN_LOG_TAG = "ImageSourceProcessor";
+    static const constexpr char *LOG_TAG = "ImageSourceProcessor";
     VideoParam localParam_;
     VideoParam remoteParam_;
     std::shared_ptr<ImageSourceEncoder> imageEncoder_ = nullptr;

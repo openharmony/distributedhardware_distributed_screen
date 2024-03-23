@@ -19,6 +19,9 @@
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 
+#undef DH_LOG_TAG
+#define DH_LOG_TAG "DscreenHidumper"
+
 namespace OHOS {
 namespace DistributedHardware {
 IMPLEMENT_SINGLE_INSTANCE(DscreenHidumper);
@@ -49,11 +52,11 @@ DscreenHidumper::~DscreenHidumper()
 
 bool DscreenHidumper::Dump(const std::vector<std::string> &args, std::string &result)
 {
-    DHLOGI("Distributed screen hidumper dump args.size():%{public}zu.", args.size());
+    DHLOGI("Distributed screen hidumper dump args.size():%d.", args.size());
     result.clear();
     int32_t argsSize = static_cast<int32_t>(args.size());
     for (int32_t i = 0; i < argsSize; i++) {
-        DHLOGI("Distributed screen hidumper dump args[%{public}d]: %{public}s.", i, args.at(i).c_str());
+        DHLOGI("Distributed screen hidumper dump args[%d]: %s.", i, args.at(i).c_str());
     }
 
     if (args.empty()) {
@@ -107,7 +110,7 @@ int32_t DscreenHidumper::DumpScreenData(std::string &result)
     if (access(DUMP_FILE_PATH.c_str(), 0) < 0) {
         if (mkdir(DUMP_FILE_PATH.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)) {
             DHLOGI("Create dir err.");
-            DHLOGI("dir path : %{public}s", DUMP_FILE_PATH.c_str());
+            DHLOGI("dir path : %s", DUMP_FILE_PATH.c_str());
             return DSCREEN_BAD_VALUE;
         }
     }
@@ -128,7 +131,7 @@ int32_t DscreenHidumper::ReDumpScreenData(std::string &result)
     if (access(DUMP_FILE_PATH.c_str(), 0) < 0) {
         if (mkdir(DUMP_FILE_PATH.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)) {
             DHLOGI("Create dir err.");
-            DHLOGI("dir path : %{public}s", DUMP_FILE_PATH.c_str());
+            DHLOGI("dir path : %s", DUMP_FILE_PATH.c_str());
             return DSCREEN_BAD_VALUE;
         }
     }
@@ -222,7 +225,7 @@ void DscreenHidumper::SaveFile(std::string file, const VideoData &video)
     DHLOGE("Saving File.");
     std::string fileName = DUMP_FILE_PATH + "/" + file + std::to_string(video.width) + ")_height(" +
          std::to_string(video.height) + ")_" + video.format + ".jpg";
-    DHLOGE("fileName = %{public}s", fileName.c_str());
+    DHLOGE("fileName = %s", fileName.c_str());
     if (GetReDumpFlag() == true) {
         std::remove(fileName.c_str());
         SetReDumpFlagFalse();

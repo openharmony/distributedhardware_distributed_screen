@@ -58,7 +58,7 @@ int32_t ScreenRegionManager::ReleaseAllRegions()
         }
         int32_t ret = screenRegion->Stop();
         if (ret != DH_SUCCESS) {
-            DHLOGE("Release region failed, remoteDevId: %{public}s, err: %{public}" PRId32,
+            DHLOGE("Release region failed, remoteDevId: %s, err: %" PRId32,
                 GetAnonyString(screenRegion->GetRemoteDevId()).c_str(), ret);
         }
     }
@@ -69,8 +69,7 @@ int32_t ScreenRegionManager::ReleaseAllRegions()
 void ScreenRegionManager::HandleDScreenNotify(const std::string &remoteDevId, int32_t eventCode,
     const std::string &eventContent)
 {
-    DHLOGI("HandleDScreenNotify, remoteDevId: %{public}s, eventCode: %{public}" PRId32,
-        GetAnonyString(remoteDevId).c_str(), eventCode);
+    DHLOGI("HandleDScreenNotify, remoteDevId: %s, eventCode: %" PRId32, GetAnonyString(remoteDevId).c_str(), eventCode);
     if (eventCode == NOTIFY_SINK_SETUP) {
         HandleNotifySetUp(remoteDevId, eventContent);
         return;
@@ -131,7 +130,7 @@ bool ScreenRegionManager::CheckContentJson(json &eventContentJson)
 
 void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, const std::string &eventContent)
 {
-    DHLOGI("HandleNotifySetUp, remoteDevId: %{public}s", GetAnonyString(remoteDevId).c_str());
+    DHLOGI("HandleNotifySetUp, remoteDevId: %s", GetAnonyString(remoteDevId).c_str());
     json eventContentJson = json::parse(eventContent, nullptr, false);
     if (eventContentJson.is_discarded()||!CheckContentJson(eventContentJson) ||
         !eventContentJson.contains(KEY_VIDEO_PARAM) || !eventContentJson.contains(KEY_MAPRELATION)) {
@@ -163,7 +162,7 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
         }
 
         if (ret != DH_SUCCESS) {
-            DHLOGE("screenRegion stop failed, remoteDevId: %{public}s, err: %{public}" PRId32,
+            DHLOGE("screenRegion stop failed, remoteDevId: %s, err: %" PRId32,
                 GetAnonyString(screenRegions_[remoteDevId]->GetRemoteDevId()).c_str(), ret);
             NotifyRemoteSourceSetUpResult(remoteDevId, dhId, ERR_DH_SCREEN_SA_SCREENREGION_SETUP_FAIL, "");
             return;
@@ -190,7 +189,7 @@ void ScreenRegionManager::HandleNotifySetUp(const std::string &remoteDevId, cons
 void ScreenRegionManager::NotifyRemoteSourceSetUpResult(const std::string &remoteDevId, const std::string &dhId,
     int32_t errCode, const std::string &errContent)
 {
-    DHLOGI("NotifyRemoteSourceSetUpResult, sourceDevId: %{public}s, dhId: %{public}s, errCode: %{public}" PRId32,
+    DHLOGI("NotifyRemoteSourceSetUpResult, sourceDevId: %s, dhId: %s, errCode: %" PRId32,
         GetAnonyString(remoteDevId).c_str(), GetAnonyString(dhId).c_str(), errCode);
     int32_t eventCode = NOTIFY_SOURCE_SETUP_RESULT;
 
@@ -207,7 +206,7 @@ void ScreenRegionManager::NotifyRemoteSourceSetUpResult(const std::string &remot
 int32_t ScreenRegionManager::NotifyRemoteScreenService(const std::string &remoteDevId, const std::string &dhId,
     int32_t eventCode, const std::string &eventContent)
 {
-    DHLOGI("Notify remote source screen service, remote devId: %{public}s, eventCode: %{public}" PRId32,
+    DHLOGI("Notify remote source screen service, remote devId: %s, eventCode: %" PRId32,
         GetAnonyString(remoteDevId).c_str(), eventCode);
     sptr<IDScreenSource> remoteSourceSA = GetDScreenSourceSA(remoteDevId);
     if (remoteSourceSA == nullptr) {
@@ -227,7 +226,7 @@ int32_t ScreenRegionManager::NotifyRemoteScreenService(const std::string &remote
 
 sptr<IDScreenSource> ScreenRegionManager::GetDScreenSourceSA(const std::string &devId)
 {
-    DHLOGI("GetDScreenSourceSA, devId: %{public}s", GetAnonyString(devId).c_str());
+    DHLOGI("GetDScreenSourceSA, devId: %s", GetAnonyString(devId).c_str());
     sptr<ISystemAbilityManager> samgr =
         SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (samgr == nullptr) {

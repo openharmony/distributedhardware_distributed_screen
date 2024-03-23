@@ -29,9 +29,9 @@ namespace OHOS {
 namespace DistributedHardware {
 int32_t JpegImageProcessor::SetOutputSurface(sptr<Surface> surface)
 {
-    DHLOGI("%{public}s: SetOutputSurface.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: SetOutputSurface.", LOG_TAG);
     if (surface == nullptr) {
-        DHLOGE("%{public}s: SetOutputSurface surface is nullptr.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: SetOutputSurface surface is nullptr.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     imageSurface_ = surface;
@@ -40,15 +40,15 @@ int32_t JpegImageProcessor::SetOutputSurface(sptr<Surface> surface)
 
 int32_t JpegImageProcessor::FillDirtyImages2Surface(const std::shared_ptr<DataBuffer> &data, uint8_t *lastFrame)
 {
-    DHLOGI("%{public}s: FillDirtyImages2Surface.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: FillDirtyImages2Surface.", LOG_TAG);
     if (imageSurface_ == nullptr) {
-        DHLOGE("%{public}s: imageSurface_ is nullptr.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: imageSurface_ is nullptr.", LOG_TAG);
         return ERR_DH_SCREEN_SURFACE_INVALIED;
     }
     uint32_t lastFrameSize = configParam_.GetScreenWidth() * configParam_.GetScreenHeight() * RGB_CHROMA / TWO;
     int32_t ret = DecodeDamageData(data, lastFrame);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: Merge dirty failed, ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: Merge dirty failed, ret: %." PRId32, LOG_TAG, ret);
         return ret;
     }
     sptr<OHOS::SurfaceBuffer> windowSurfaceBuffer = nullptr;
@@ -62,8 +62,7 @@ int32_t JpegImageProcessor::FillDirtyImages2Surface(const std::shared_ptr<DataBu
     };
     SurfaceError surfaceErr = imageSurface_->RequestBuffer(windowSurfaceBuffer, releaseFence, requestConfig);
     if (surfaceErr != SURFACE_ERROR_OK || windowSurfaceBuffer == nullptr) {
-        DHLOGE("%{public}s: imageSurface request buffer failed, surfaceErr: %{public}" PRId32,
-            DSCREEN_LOG_TAG, surfaceErr);
+        DHLOGE("%s: imageSurface request buffer failed, surfaceErr: %." PRId32, LOG_TAG, surfaceErr);
         imageSurface_->CancelBuffer(windowSurfaceBuffer);
         return surfaceErr;
     }
@@ -71,26 +70,25 @@ int32_t JpegImageProcessor::FillDirtyImages2Surface(const std::shared_ptr<DataBu
     auto windowSurfaceAddr = static_cast<uint8_t*>(windowSurfaceBuffer->GetVirAddr());
     ret = memcpy_s(windowSurfaceAddr, surfaceBuffeSize, lastFrame, lastFrameSize);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: memcpy lastFrame failed,ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: memcpy lastFrame failed,ret: %." PRId32, LOG_TAG, ret);
         imageSurface_->CancelBuffer(windowSurfaceBuffer);
         return ret;
     }
     BufferFlushConfig flushConfig = { {0, 0, windowSurfaceBuffer->GetWidth(), windowSurfaceBuffer-> GetHeight()}, 0};
     surfaceErr = imageSurface_->FlushBuffer(windowSurfaceBuffer, -1, flushConfig);
     if (surfaceErr != SURFACE_ERROR_OK) {
-        DHLOGE("%{public}s: imageSurface flush buffer failed, surfaceErr: %{public}" PRId32,
-            DSCREEN_LOG_TAG, surfaceErr);
+        DHLOGE("%s: imageSurface flush buffer failed, surfaceErr: %." PRId32, LOG_TAG, surfaceErr);
         imageSurface_->CancelBuffer(windowSurfaceBuffer);
         return surfaceErr;
     }
-    DHLOGI("%{public}s: FillDirtyImages2Surface success.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: FillDirtyImages2Surface success.", LOG_TAG);
     return DH_SUCCESS;
 }
 
 int32_t JpegImageProcessor::ProcessDamageSurface(sptr<SurfaceBuffer> &surfaceBuffer,
     const std::vector<OHOS::Rect> &damages)
 {
-    DHLOGI("%{public}s: ProcessDamageSurface.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ProcessDamageSurface.", LOG_TAG);
     std::shared_ptr<DataBuffer> dataBuf = std::make_shared<DataBuffer>(configParam_.GetScreenWidth() *
         configParam_.GetScreenHeight() * RGBA_CHROMA);
     dataBuf->SetSize(0);
@@ -99,7 +97,7 @@ int32_t JpegImageProcessor::ProcessDamageSurface(sptr<SurfaceBuffer> &surfaceBuf
     }
     std::shared_ptr<IImageSourceProcessorListener> listener = imageProcessorListener_.lock();
     if (listener == nullptr) {
-        DHLOGE("%{public}s: Processor listener is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Processor listener is null.", LOG_TAG);
         imageSurface_->ReleaseBuffer(surfaceBuffer, -1);
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
@@ -110,7 +108,7 @@ int32_t JpegImageProcessor::ProcessDamageSurface(sptr<SurfaceBuffer> &surfaceBuf
 
 int32_t JpegImageProcessor::SetImageProcessListener(std::shared_ptr<IImageSourceProcessorListener> &listener)
 {
-    DHLOGI("%{public}s: SetImageProcessorListener.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: SetImageProcessorListener.", LOG_TAG);
     imageProcessorListener_ = listener;
     return DH_SUCCESS;
 }
@@ -118,7 +116,7 @@ int32_t JpegImageProcessor::SetImageProcessListener(std::shared_ptr<IImageSource
 void JpegImageProcessor::EncodeDamageData(sptr<SurfaceBuffer> &surfaceBuffer,
     const OHOS::Rect &damage, std::shared_ptr<DataBuffer> &data)
 {
-    DHLOGI("%{public}s: EncodeDamageData.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: EncodeDamageData.", LOG_TAG);
     uint32_t partialSize = damage.w * damage.h * RGBA_CHROMA;
     unsigned char *partialBuffer = new unsigned char[partialSize];
     unsigned char *partialBufferIdx = partialBuffer;
@@ -127,7 +125,7 @@ void JpegImageProcessor::EncodeDamageData(sptr<SurfaceBuffer> &surfaceBuffer,
     for (int32_t row = 0 ; row < damage.h ; row++) {
         int32_t ret = memcpy_s(partialBufferIdx, damage.w * RGBA_CHROMA, surfaceAddrIdx, damage.w * RGBA_CHROMA);
         if (ret != DH_SUCCESS) {
-            DHLOGE("%{public}s: get partail data failed.", DSCREEN_LOG_TAG);
+            DHLOGE("%s: get partail data failed.", LOG_TAG);
             imageSurface_->ReleaseBuffer(surfaceBuffer, -1);
             delete [] partialBuffer;
             return;
@@ -136,13 +134,13 @@ void JpegImageProcessor::EncodeDamageData(sptr<SurfaceBuffer> &surfaceBuffer,
         surfaceAddrIdx += configParam_.GetScreenWidth() * RGBA_CHROMA;
     }
     uint32_t jpegSize = CompressRgbaToJpeg(damage, partialBuffer, partialSize, data);
-    DHLOGI("CompressRgbaToJpeg end, jpegSize %{public}" PRId32, jpegSize);
+    DHLOGI("CompressRgbaToJpeg end, jpegSize %." PRId32, jpegSize);
     delete [] partialBuffer;
 }
 
 int32_t JpegImageProcessor::DecodeDamageData(const std::shared_ptr<DataBuffer> &data, uint8_t *lastFrame)
 {
-    DHLOGI("%{public}s: DecodeDamageData.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: DecodeDamageData.", LOG_TAG);
     std::vector<DirtyRect> dirtyRectVec = data->GetDirtyRectVec();
     int32_t offset = 0;
     int32_t screenWidth = static_cast<int32_t>(configParam_.GetScreenWidth());
@@ -150,7 +148,7 @@ int32_t JpegImageProcessor::DecodeDamageData(const std::shared_ptr<DataBuffer> &
     for (auto item : dirtyRectVec) {
         if (item.xPos > screenWidth || item.yPos > screenHeight ||
             item.width > screenWidth - item.xPos || item.height > screenHeight - item.yPos) {
-            DHLOGE("%{public}s: Dirty rect invalid.", DSCREEN_LOG_TAG);
+            DHLOGE("%s: Dirty rect invalid.", LOG_TAG);
             return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
         }
         uint8_t *jpegData = new uint8_t[item.dirtySize] {0};
@@ -161,12 +159,12 @@ int32_t JpegImageProcessor::DecodeDamageData(const std::shared_ptr<DataBuffer> &
         }
         offset += item.dirtySize;
         uint8_t *dirtyImageData = new uint8_t[item.width * item.height * RGB_CHROMA] {0};
-        DHLOGI("%{public}s: DecompressJpegToNV12.", DSCREEN_LOG_TAG);
+        DHLOGI("%s: DecompressJpegToNV12.", LOG_TAG);
         DecompressJpegToNV12(item.dirtySize, jpegData, dirtyImageData);
-        DHLOGI("%{public}s: DecompressJpegToNV12 success.", DSCREEN_LOG_TAG);
+        DHLOGI("%s: DecompressJpegToNV12 success.", LOG_TAG);
         ret = ReplaceDamage2LastFrame(lastFrame, dirtyImageData, item);
         if (ret != DH_SUCCESS) {
-            DHLOGE("ReplaceDamage2LastFrame failed, ret: %{public}" PRId32, ret);
+            DHLOGE("ReplaceDamage2LastFrame failed, ret: %." PRId32, ret);
             delete [] jpegData;
             delete [] dirtyImageData;
             return ret;
@@ -174,13 +172,13 @@ int32_t JpegImageProcessor::DecodeDamageData(const std::shared_ptr<DataBuffer> &
         delete [] jpegData;
         delete [] dirtyImageData;
     }
-    DHLOGI("%{public}s: DecodeDamageData success.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: DecodeDamageData success.", LOG_TAG);
     return DH_SUCCESS;
 }
 
 int32_t JpegImageProcessor::ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t *dirtyImageData, const DirtyRect rect)
 {
-    DHLOGI("%{public}s: ReplaceDamage2LastFrame.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ReplaceDamage2LastFrame.", LOG_TAG);
     uint8_t *lastFrameIdx = lastFrame;
     uint8_t *yData = lastFrameIdx + static_cast<uint32_t>(configParam_.GetScreenWidth() * rect.yPos + rect.xPos);
     uint8_t *uData = lastFrameIdx + configParam_.GetScreenWidth() * configParam_.GetScreenHeight() +
@@ -193,7 +191,7 @@ int32_t JpegImageProcessor::ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t 
         yTempData = yData + static_cast<uint32_t>(i) * configParam_.GetScreenWidth();
         int32_t ret = memcpy_s(yTempData, rect.width, yDirtyData, rect.width);
         if (ret != EOK) {
-            DHLOGE("%{public}s: memcpy yData failed.", DSCREEN_LOG_TAG);
+            DHLOGE("%s: memcpy yData failed.", LOG_TAG);
             return ret;
         }
         yDirtyData += static_cast<uint32_t>(rect.width);
@@ -201,20 +199,20 @@ int32_t JpegImageProcessor::ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t 
             uTempData = uData + configParam_.GetScreenWidth() * (static_cast<uint32_t>(i) / TWO);
             ret = memcpy_s(uTempData, rect.width, uDirtyData, rect.width);
             if (ret != EOK) {
-                DHLOGE("%{public}s: memcpy uData failed.", DSCREEN_LOG_TAG);
+                DHLOGE("%s: memcpy uData failed.", LOG_TAG);
                 return ret;
             }
             uDirtyData += static_cast<uint32_t>(rect.width);
             }
     }
-    DHLOGI("%{public}s: ReplaceDamage2LastFrame success.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ReplaceDamage2LastFrame success.", LOG_TAG);
     return DH_SUCCESS;
 }
 
 uint32_t JpegImageProcessor::CompressRgbaToJpeg(const OHOS::Rect &damage,
     uint8_t *inputData, uint32_t inputDataSize, std::shared_ptr<DataBuffer> &data)
 {
-    DHLOGI("%{public}s: CompressRgbaToJpeg.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: CompressRgbaToJpeg.", LOG_TAG);
     if (inputDataSize != damage.w * damage.h * RGBA_CHROMA) {
         return ERR_DH_SCREEN_CODEC_PARTAIL_DATA_ERROR;
     }

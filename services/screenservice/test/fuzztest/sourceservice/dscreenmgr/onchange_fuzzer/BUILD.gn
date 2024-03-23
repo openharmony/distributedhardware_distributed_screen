@@ -64,7 +64,6 @@ ohos_fuzztest("OnChangeFuzzTest") {
     "distributed_hardware_fwk:distributed_av_sender",
     "graphic_2d:librender_service_client",
     "graphic_surface:surface",
-    "hilog:libhilog",
     "window_manager:libdm",
   ]
 }

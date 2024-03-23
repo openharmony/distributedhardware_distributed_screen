@@ -72,7 +72,7 @@ int32_t DScreenSourceHandler::InitSource(const std::string &params)
         StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SOURCE_LOAD_SYSTEM_ABILITY_START);
         int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, loadCallback);
         if (ret != ERR_OK) {
-            DHLOGE("Failed to Load systemAbility, systemAbilityId:%{public}" PRId32 ", ret code:%{public}" PRId32,
+            DHLOGE("Failed to Load systemAbility, systemAbilityId:%" PRId32 ", ret code:%" PRId32,
                 DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, ret);
             ReportSaFail(DSCREEN_INIT_FAIL, ret, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
                 "dscreen source LoadSystemAbility call failed.");
@@ -148,7 +148,7 @@ int32_t DScreenSourceHandler::RegisterDistributedHardware(const std::string &dev
         DHLOGE("callback is nullptr.");
         return ERR_DH_SCREEN_REGISTER_CALLBACK_NOT_INIT;
     }
-    DHLOGI("RegisterDistributedHardware, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId).c_str(),
+    DHLOGI("RegisterDistributedHardware, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
         GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(proxyMutex_);
     if (dScreenSourceProxy_ == nullptr) {
@@ -176,7 +176,7 @@ int32_t DScreenSourceHandler::UnregisterDistributedHardware(const std::string &d
         DHLOGE("callback is nullptr.");
         return ERR_DH_SCREEN_REGISTER_CALLBACK_NOT_INIT;
     }
-    DHLOGI("UnregisterDistributedHardware, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId).c_str(),
+    DHLOGI("UnregisterDistributedHardware, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
         GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(proxyMutex_);
     if (dScreenSourceProxy_ == nullptr) {

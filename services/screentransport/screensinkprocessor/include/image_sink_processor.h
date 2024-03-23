@@ -38,7 +38,7 @@ public:
     int32_t ProcessImage(const std::shared_ptr<DataBuffer> &data) override;
 
 private:
-    static const constexpr char *DSCREEN_LOG_TAG = "ImageSinkProcessor";
+    static const constexpr char *LOG_TAG = "ImageSinkProcessor";
     VideoParam localParam_;
     VideoParam remoteParam_;
     std::shared_ptr<ImageSinkDecoder> imageDecoder_ = nullptr;

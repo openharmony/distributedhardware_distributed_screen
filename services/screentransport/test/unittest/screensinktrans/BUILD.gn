@@ -65,7 +65,6 @@ ohos_unittest("SinkTransTest") {
     "c_utils:utils",
     "dsoftbus:softbus_client",
     "graphic_surface:surface",
-    "hilog:libhilog",
     "media_foundation:media_foundation",
   ]
 

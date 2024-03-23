@@ -68,7 +68,6 @@ private:
     int32_t ReDumpScreenData(std::string &result);
 
 private:
-    static const constexpr char *DSCREEN_LOG_TAG = "DscreenHidumper";
     bool hidumperFlag_ = false;
     bool fileFullFlag_ = false;
     bool reDumpFlag_ = false;

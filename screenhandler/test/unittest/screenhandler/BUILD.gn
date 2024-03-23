@@ -52,7 +52,6 @@ ohos_unittest("DscreenHandlerTest") {
     "c_utils:utils",
     "graphic_2d:libgraphic_utils",
     "graphic_surface:surface",
-    "hilog:libhilog",
     "ipc:ipc_core",
     "media_foundation:media_foundation",
     "window_manager:libdm",

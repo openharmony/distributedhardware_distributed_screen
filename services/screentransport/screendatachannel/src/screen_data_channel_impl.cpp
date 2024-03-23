@@ -28,39 +28,39 @@ namespace OHOS {
 namespace DistributedHardware {
 int32_t ScreenDataChannelImpl::CreateSession(const std::shared_ptr<IScreenChannelListener> &listener)
 {
-    DHLOGI("%{public}s: CreateSession, peerDevId(%{public}s)", DSCREEN_LOG_TAG, GetAnonyString(peerDevId_).c_str());
+    DHLOGI("%s: CreateSession, peerDevId(%s)", LOG_TAG, GetAnonyString(peerDevId_).c_str());
     if (listener == nullptr) {
-        DHLOGE("%{public}s: Channel listener is null", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Channel listener is null", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     int32_t ret =
         SoftbusAdapter::GetInstance().CreateSoftbusSessionServer(PKG_NAME, DATA_SESSION_NAME, peerDevId_);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: Create data session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: Create data session failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
     std::shared_ptr<ISoftbusListener> softbusListener = shared_from_this();
     ret = SoftbusAdapter::GetInstance().RegisterSoftbusListener(softbusListener, DATA_SESSION_NAME, peerDevId_);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: Register data adapter listener failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: Register data adapter listener failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
     if (jpegSessionFlag_ == true) {
         ret =
             SoftbusAdapter::GetInstance().CreateSoftbusSessionServer(PKG_NAME, JPEG_SESSION_NAME, peerDevId_);
         if (ret != DH_SUCCESS) {
-            DHLOGE("%{public}s: Create jpeg session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+            DHLOGE("%s: Create jpeg session failed ret: %" PRId32, LOG_TAG, ret);
             return ret;
         }
         ret =
             SoftbusAdapter::GetInstance().RegisterSoftbusListener(softbusListener, JPEG_SESSION_NAME, peerDevId_);
         if (ret != DH_SUCCESS) {
-            DHLOGE("%{public}s: Register jpeg adapter listener failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+            DHLOGE("%s: Register jpeg adapter listener failed ret: %" PRId32, LOG_TAG, ret);
             return ret;
         }
     }
     channelListener_ = listener;
-    DHLOGI("%{public}s: Create session success", DSCREEN_LOG_TAG);
+    DHLOGI("%s: Create session success", LOG_TAG);
     return DH_SUCCESS;
 }
 
@@ -71,53 +71,53 @@ void ScreenDataChannelImpl::SetJpegSessionFlag(bool flag)
 
 int32_t ScreenDataChannelImpl::ReleaseSession()
 {
-    DHLOGI("%{public}s: ReleaseSession, peerDevId(%{public}s)", DSCREEN_LOG_TAG, GetAnonyString(peerDevId_).c_str());
+    DHLOGI("%s: ReleaseSession, peerDevId(%s)", LOG_TAG, GetAnonyString(peerDevId_).c_str());
     int32_t ret = SoftbusAdapter::GetInstance().RemoveSoftbusSessionServer(PKG_NAME, DATA_SESSION_NAME, peerDevId_);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: Release data session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: Release data session failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
     ret = SoftbusAdapter::GetInstance().UnRegisterSoftbusListener(DATA_SESSION_NAME, peerDevId_);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: UnRegister data adapter listener failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: UnRegister data adapter listener failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
 
     if (jpegSessionFlag_ == true) {
         ret = SoftbusAdapter::GetInstance().RemoveSoftbusSessionServer(PKG_NAME, JPEG_SESSION_NAME, peerDevId_);
         if (ret != DH_SUCCESS) {
-            DHLOGE("%{public}s: Release jpeg session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+            DHLOGE("%s: Release jpeg session failed ret: %" PRId32, LOG_TAG, ret);
             return ret;
         }
         ret = SoftbusAdapter::GetInstance().UnRegisterSoftbusListener(JPEG_SESSION_NAME, peerDevId_);
         if (ret != DH_SUCCESS) {
-            DHLOGE("%{public}s: UnRegister jpeg adapter listener failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+            DHLOGE("%s: UnRegister jpeg adapter listener failed ret: %" PRId32, LOG_TAG, ret);
             return ret;
         }
         jpegSessionFlag_ = false;
     }
-    DHLOGI("%{public}s: Release session success", DSCREEN_LOG_TAG);
+    DHLOGI("%s: Release session success", LOG_TAG);
     return DH_SUCCESS;
 }
 
 int32_t ScreenDataChannelImpl::OpenSession(const std::shared_ptr<IScreenChannelListener> &listener)
 {
-    DHLOGI("%{public}s: OpenSession, peerDevId(%{public}s)", DSCREEN_LOG_TAG, GetAnonyString(peerDevId_).c_str());
+    DHLOGI("%s: OpenSession, peerDevId(%s)", LOG_TAG, GetAnonyString(peerDevId_).c_str());
     if (listener == nullptr) {
-        DHLOGE("%{public}s: Channel listener is null", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Channel listener is null", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     channelListener_ = listener;
     std::shared_ptr<ISoftbusListener> softbusListener = shared_from_this();
     int32_t ret = SoftbusAdapter::GetInstance().RegisterSoftbusListener(softbusListener, DATA_SESSION_NAME, peerDevId_);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: Register data adapter listener failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: Register data adapter listener failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
     int32_t sessionId =
         SoftbusAdapter::GetInstance().OpenSoftbusSession(DATA_SESSION_NAME, DATA_SESSION_NAME, peerDevId_);
     if (sessionId < 0) {
-        DHLOGE("%{public}s: Open data session failed, ret: %{public}" PRId32, DSCREEN_LOG_TAG, sessionId);
+        DHLOGE("%s: Open data session failed, ret: %" PRId32, LOG_TAG, sessionId);
         ReportOptFail(DSCREEN_OPT_FAIL, sessionId, "Open data session failed");
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
@@ -126,65 +126,65 @@ int32_t ScreenDataChannelImpl::OpenSession(const std::shared_ptr<IScreenChannelL
         ret =
             SoftbusAdapter::GetInstance().RegisterSoftbusListener(softbusListener, JPEG_SESSION_NAME, peerDevId_);
         if (ret != DH_SUCCESS) {
-            DHLOGE("%{public}s: Register jpeg adapter listener failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+            DHLOGE("%s: Register jpeg adapter listener failed ret: %" PRId32, LOG_TAG, ret);
             return ret;
         }
         sessionId =
             SoftbusAdapter::GetInstance().OpenSoftbusSession(JPEG_SESSION_NAME, JPEG_SESSION_NAME, peerDevId_);
         if (sessionId < 0) {
-            DHLOGE("%{public}s: Open jpeg session failed, ret: %{public}" PRId32, DSCREEN_LOG_TAG, sessionId);
+            DHLOGE("%s: Open jpeg session failed, ret: %" PRId32, LOG_TAG, sessionId);
             ReportOptFail(DSCREEN_OPT_FAIL, sessionId, "Open jpeg session failed");
             return ERR_DH_SCREEN_TRANS_ERROR;
         }
         jpegSessionId_ = sessionId;
     }
-    DHLOGI("%{public}s: Open screen session success, sessionId %{public}" PRId32, DSCREEN_LOG_TAG, sessionId_);
+    DHLOGI("%s: Open screen session success, sessionId %" PRId32, LOG_TAG, sessionId_);
     return DH_SUCCESS;
 }
 
 int32_t ScreenDataChannelImpl::CloseSession()
 {
-    DHLOGI("%{public}s: CloseSession, sessionId %{public}" PRId32, DSCREEN_LOG_TAG, sessionId_);
+    DHLOGI("%s: CloseSession, sessionId %" PRId32, LOG_TAG, sessionId_);
     if (sessionId_ == 0) {
-        DHLOGD("%{public}s: Session is not opened.", DSCREEN_LOG_TAG);
+        DHLOGD("%s: Session is not opened.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_SESSION_NOT_OPEN;
     }
     int32_t ret = SoftbusAdapter::GetInstance().CloseSoftbusSession(sessionId_);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: Close screen session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: Close screen session failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
     sessionId_ = 0;
     if (jpegSessionFlag_ == true && jpegSessionId_ != 0) {
         ret = SoftbusAdapter::GetInstance().CloseSoftbusSession(jpegSessionId_);
         if (ret != DH_SUCCESS) {
-            DHLOGE("%{public}s: Close jpeg session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+            DHLOGE("%s: Close jpeg session failed ret: %" PRId32, LOG_TAG, ret);
             return ret;
         }
     jpegSessionId_ = 0;
     }
-    DHLOGI("%{public}s: Close session success", DSCREEN_LOG_TAG);
+    DHLOGI("%s: Close session success", LOG_TAG);
     return DH_SUCCESS;
 }
 
 int32_t ScreenDataChannelImpl::SendData(const std::shared_ptr<DataBuffer> &screenData)
 {
-    DHLOGI("%{public}s: SendData.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: SendData.", LOG_TAG);
     if (screenData == nullptr || screenData->Data() == nullptr) {
-        DHLOGE("%{public}s: Screen data is null", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Screen data is null", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     uint8_t dataType = screenData->DataType();
     if (dataType == VIDEO_PART_SCREEN_DATA) {
         int32_t ret = SendDirtyData(screenData);
         if (ret != DH_SUCCESS) {
-            DHLOGE("%{public}s: send dirty data failed, ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+            DHLOGE("%s: send dirty data failed, ret: %." PRId32, LOG_TAG, ret);
             return ret;
         }
     } else if (dataType == VIDEO_FULL_SCREEN_DATA) {
         int32_t ret = SendFullData(screenData);
         if (ret != DH_SUCCESS) {
-            DHLOGE("%{public}s: send full data failed, ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+            DHLOGE("%s: send full data failed, ret: %." PRId32, LOG_TAG, ret);
             return ret;
         }
     }
@@ -193,9 +193,9 @@ int32_t ScreenDataChannelImpl::SendData(const std::shared_ptr<DataBuffer> &scree
 
 int32_t ScreenDataChannelImpl::SendFullData(const std::shared_ptr<DataBuffer> &screenData)
 {
-    DHLOGI("%{public}s: SendFullData sessionId: %{public}" PRId32, DSCREEN_LOG_TAG, sessionId_);
+    DHLOGI("%s: SendFullData sessionId: %." PRId32, LOG_TAG, sessionId_);
     if (screenData == nullptr) {
-        DHLOGE("%{public}s: Screen data is null", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Screen data is null", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     StreamData data = {reinterpret_cast<char *>(screenData->Data()), screenData->Capacity()};
@@ -203,18 +203,18 @@ int32_t ScreenDataChannelImpl::SendFullData(const std::shared_ptr<DataBuffer> &s
     StreamFrameInfo frameInfo = {0};
     int32_t ret = SoftbusAdapter::GetInstance().SendSoftbusStream(sessionId_, &data, &ext, &frameInfo);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: Send full data failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: Send full data failed ret: %" PRId32, LOG_TAG, ret);
         return ret;
     }
-    DHLOGI("%{public}s: SendFullData success.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: SendFullData success.", LOG_TAG);
     return DH_SUCCESS;
 }
 
 int32_t ScreenDataChannelImpl::SendDirtyData(const std::shared_ptr<DataBuffer> &screenData)
 {
-    DHLOGI("%{public}s: SendDirtyData sessionId: %{public}" PRId32, DSCREEN_LOG_TAG, jpegSessionId_);
+    DHLOGI("%s: SendDirtyData sessionId: %." PRId32, LOG_TAG, jpegSessionId_);
     if (screenData == nullptr) {
-        DHLOGE("%{public}s: Screen data is null", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Screen data is null", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     nlohmann::json rectJson;
@@ -232,12 +232,12 @@ int32_t ScreenDataChannelImpl::SendDirtyData(const std::shared_ptr<DataBuffer> &
     StreamFrameInfo frameInfo = {0};
     ret = SoftbusAdapter::GetInstance().SendSoftbusStream(jpegSessionId_, &data, &ext, &frameInfo);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: Send dirty data failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: Send dirty data failed ret: %" PRId32, LOG_TAG, ret);
         delete [] dirtyInfo;
         return ret;
     }
     delete [] dirtyInfo;
-    DHLOGI("%{public}s: SendDirtyData success.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: SendDirtyData success.", LOG_TAG);
     return DH_SUCCESS;
 }
 
@@ -245,7 +245,7 @@ int32_t ScreenDataChannelImpl::SendDirtyData(const std::shared_ptr<DataBuffer> &
 void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, PeerSocketInfo info)
 {
     (void)info;
-    DHLOGI("%{public}s: OnScreenSessionOpened, sessionId: %{public}" PRId32, DSCREEN_LOG_TAG, sessionId);
+    DHLOGI("%s: OnScreenSessionOpened, sessionId: %" PRId32, LOG_TAG, sessionId);
     if (jpegSessionFlag_ == false) {
         dataSessionOpened = true;
         sessionId_ = sessionId;
@@ -260,7 +260,7 @@ void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, PeerSocketInfo in
     }
     std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
     if (listener == nullptr) {
-        DHLOGE("%{public}s: Channel listener is null", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Channel listener is null", LOG_TAG);
         return;
     }
     listener->OnSessionOpened();
@@ -269,10 +269,10 @@ void ScreenDataChannelImpl::OnSessionOpened(int32_t sessionId, PeerSocketInfo in
 void ScreenDataChannelImpl::OnSessionClosed(int32_t sessionId, ShutdownReason reason)
 {
     (void)reason;
-    DHLOGI("%{public}s: OnScreenSessionClosed, sessionId %{public}" PRId32, DSCREEN_LOG_TAG, sessionId);
+    DHLOGI("%s: OnScreenSessionClosed, sessionId %" PRId32, LOG_TAG, sessionId);
     std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
     if (listener == nullptr) {
-        DHLOGE("%{public}s: Channel listener is null", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Channel listener is null", LOG_TAG);
         return;
     }
     listener->OnSessionClosed();
@@ -284,15 +284,15 @@ void ScreenDataChannelImpl::OnBytesReceived(int32_t sessionId, const void *data,
     (void) data;
     (void) dataLen;
 
-    DHLOGD("%{public}s: OnScreenBytesReceived data channel not support yet", DSCREEN_LOG_TAG);
+    DHLOGD("%s: OnScreenBytesReceived data channel not support yet", LOG_TAG);
 }
 
 void ScreenDataChannelImpl::OnStreamReceived(int32_t sessionId, const StreamData *data,
     const StreamData *ext, const StreamFrameInfo *param)
 {
-    DHLOGI("%{public}s: OnStreamReceived, receiv data from softbus.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: OnStreamReceived, receiv data from softbus.", LOG_TAG);
     if (data == nullptr) {
-        DHLOGE("%{public}s: Stream data is null", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Stream data is null", LOG_TAG);
         return;
     }
     auto dataBuffer = std::make_shared<DataBuffer>(data->bufLen);
@@ -308,16 +308,16 @@ void ScreenDataChannelImpl::OnStreamReceived(int32_t sessionId, const StreamData
 
 void ScreenDataChannelImpl::ProcessDullData(const StreamData *data, std::shared_ptr<DataBuffer> dataBuffer)
 {
-    DHLOGI("%{public}s: ProcessDullData.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ProcessDullData.", LOG_TAG);
     std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
     if (listener == nullptr) {
-        DHLOGE("%{public}s: Channel listener is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Channel listener is null.", LOG_TAG);
         return;
     }
     int32_t ret = memcpy_s(dataBuffer->Data(), dataBuffer->Capacity(),
         reinterpret_cast<uint8_t*>(data->buf), data->bufLen);
     if (ret != EOK) {
-        DHLOGE("%{public}s: Full data memcpy failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Full data memcpy failed.", LOG_TAG);
         return;
     }
     dataBuffer->SetDataType(VIDEO_FULL_SCREEN_DATA);
@@ -327,21 +327,21 @@ void ScreenDataChannelImpl::ProcessDullData(const StreamData *data, std::shared_
 void ScreenDataChannelImpl::ProcessDirtyData(const StreamData *data,
     std::shared_ptr<DataBuffer> dataBuffer, const StreamData *ext)
 {
-    DHLOGI("%{public}s: ProcessDirtyData.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ProcessDirtyData.", LOG_TAG);
     std::shared_ptr<IScreenChannelListener> listener = channelListener_.lock();
     if (listener == nullptr) {
-        DHLOGE("%{public}s: Channel listener is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Channel listener is null.", LOG_TAG);
         return;
     }
     int32_t ret = memcpy_s(dataBuffer->Data(), dataBuffer->Capacity(),
         reinterpret_cast<uint8_t*>(data->buf), data->bufLen);
     if (ret != EOK) {
-        DHLOGE("%{public}s: Dirty data memcpy_s failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Dirty data memcpy_s failed.", LOG_TAG);
         return;
     }
     nlohmann::json rectJson = nlohmann::json::parse(ext->buf, nullptr, false);
     if (rectJson.is_discarded()) {
-        DHLOGE("%{public}s: OnStreamReceived rectJson invalid", DSCREEN_LOG_TAG);
+        DHLOGE("%s: OnStreamReceived rectJson invalid", LOG_TAG);
         return;
     }
     JsonToDirtyJson(rectJson, dataBuffer);
@@ -386,7 +386,7 @@ void ScreenDataChannelImpl::JsonToDirtyJson(nlohmann::json &rectJson, std::share
         if (!IsInt32(rectJson[item], KEY_POINT_DIRTY_X) || !IsInt32(rectJson[item], KEY_POINT_DIRTY_Y) ||
             !IsInt32(rectJson[item], KEY_POINT_DIRTY_W) || !IsInt32(rectJson[item], KEY_POINT_DIRTY_H) ||
             !IsInt32(rectJson[item], KEY_POINT_DIRTY_SIZE)) {
-            DHLOGE("%{public}s: JsonToDirtyJson rectJson not contain int32", DSCREEN_LOG_TAG);
+            DHLOGE("%s: JsonToDirtyJson rectJson not contain int32", LOG_TAG);
             return;
         }
         int32_t X = rectJson[item][KEY_POINT_DIRTY_X].get<int32_t>();

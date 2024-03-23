@@ -50,7 +50,7 @@ public:
     void DirtyVecToJson(nlohmann::json &rectJson, const std::shared_ptr<DataBuffer> &screenData);
     void JsonToDirtyJson(nlohmann::json &rectJson, std::shared_ptr<DataBuffer> &screenData);
 private:
-    static const constexpr char *DSCREEN_LOG_TAG = "ScreenDataChannel";
+    static const constexpr char *LOG_TAG = "ScreenDataChannel";
     bool jpegSessionFlag_ = false;
     const std::string peerDevId_;
     int32_t sessionId_ = 0;

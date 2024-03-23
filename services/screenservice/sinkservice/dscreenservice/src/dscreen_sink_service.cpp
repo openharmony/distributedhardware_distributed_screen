@@ -69,10 +69,10 @@ bool DScreenSinkService::Init()
 
 int32_t DScreenSinkService::InitSink(const std::string &params)
 {
-    DHLOGI("Init sink dscreen region manager, params: %{public}s", params.c_str());
+    DHLOGI("Init sink dscreen region manager, params: %s", params.c_str());
     int32_t ret = V2_0::ScreenRegionManager::GetInstance().Initialize();
     if (ret != DH_SUCCESS) {
-        DHLOGE("Initialize V2_0::ScreenRegionManage failed. err: %{public}d", ret);
+        DHLOGE("Initialize V2_0::ScreenRegionManage failed. err: %d", ret);
     }
     return DH_SUCCESS;
 }
@@ -91,7 +91,7 @@ int32_t DScreenSinkService::ReleaseSink()
     }
     int32_t ret = systemAbilityMgr->UnloadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID);
     if (ret != DH_SUCCESS) {
-        DHLOGE("sink systemAbilityMgr UnLoadSystemAbility failed, ret: %{public}" PRId32, ret);
+        DHLOGE("sink systemAbilityMgr UnLoadSystemAbility failed, ret: %" PRId32, ret);
         return DSCREEN_BAD_VALUE;
     }
     DHLOGI("sink systemAbilityMgr UnLoadSystemAbility success");
@@ -115,8 +115,8 @@ int32_t DScreenSinkService::UnsubscribeLocalHardware(const std::string &dhId)
 
 void DScreenSinkService::DScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent)
 {
-    DHLOGI("DScreenNotify, devId:%{public}s, eventCode: %{public}" PRId32 ", eventContent:%{public}s",
-        GetAnonyString(devId).c_str(), eventCode, eventContent.c_str());
+    DHLOGI("DScreenNotify, devId:%s, eventCode: %" PRId32 ", eventContent:%s", GetAnonyString(devId).c_str(),
+        eventCode, eventContent.c_str());
     V1_0::ScreenRegionManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
 }
 
