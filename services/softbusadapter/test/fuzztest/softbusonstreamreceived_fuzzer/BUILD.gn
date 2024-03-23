@@ -48,6 +48,7 @@ ohos_fuzztest("SoftbusOnStreamReceivedFuzzTest") {
     "distributed_hardware_fwk:distributed_av_receiver",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
+    "hilog:libhilog",
   ]
 
   defines = [

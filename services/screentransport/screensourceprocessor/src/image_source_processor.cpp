@@ -25,11 +25,11 @@ namespace DistributedHardware {
 int32_t ImageSourceProcessor::ConfigureImageProcessor(const VideoParam &localParam, const VideoParam &remoteParam,
     const std::shared_ptr<IImageSourceProcessorListener> &listener)
 {
-    DHLOGI("%s: ConfigureImageProcessor.", LOG_TAG);
+    DHLOGI("%{public}s: ConfigureImageProcessor.", DSCREEN_LOG_TAG);
     imageEncoder_ = std::make_shared<ImageSourceEncoder>(listener);
     int32_t ret = imageEncoder_->ConfigureEncoder(localParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Configure screen encoder failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: Configure screen encoder failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         return ret;
     }
 
@@ -40,9 +40,9 @@ int32_t ImageSourceProcessor::ConfigureImageProcessor(const VideoParam &localPar
 
 int32_t ImageSourceProcessor::ReleaseImageProcessor()
 {
-    DHLOGI("%s: ReleaseImageProcessor.", LOG_TAG);
+    DHLOGI("%{public}s: ReleaseImageProcessor.", DSCREEN_LOG_TAG);
     if (imageEncoder_ == nullptr) {
-        DHLOGE("%s: Create screen encoder failed.", LOG_TAG);
+        DHLOGE("%{public}s: Create screen encoder failed.", DSCREEN_LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "ReleaseImageProcessor encoder is nullptr.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -51,7 +51,7 @@ int32_t ImageSourceProcessor::ReleaseImageProcessor()
     int32_t ret = imageEncoder_->ReleaseEncoder();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Release screen encoder failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: Release screen encoder failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "Release screen encoder failed.");
         return ret;
     }
@@ -61,9 +61,9 @@ int32_t ImageSourceProcessor::ReleaseImageProcessor()
 
 int32_t ImageSourceProcessor::StartImageProcessor()
 {
-    DHLOGI("%s: StartImageProcessor.", LOG_TAG);
+    DHLOGI("%{public}s: StartImageProcessor.", DSCREEN_LOG_TAG);
     if (imageEncoder_ == nullptr) {
-        DHLOGE("%s: Create screen encoder failed.", LOG_TAG);
+        DHLOGE("%{public}s: Create screen encoder failed.", DSCREEN_LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "StartImageProcessor encoder is nullptr.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -72,7 +72,7 @@ int32_t ImageSourceProcessor::StartImageProcessor()
     int32_t ret = imageEncoder_->StartEncoder();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Start screen encoder failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: Start screen encoder failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "Start screen encoder failed.");
         return ret;
     }
@@ -82,9 +82,9 @@ int32_t ImageSourceProcessor::StartImageProcessor()
 
 int32_t ImageSourceProcessor::StopImageProcessor()
 {
-    DHLOGI("%s: StopImageProcessor.", LOG_TAG);
+    DHLOGI("%{public}s: StopImageProcessor.", DSCREEN_LOG_TAG);
     if (imageEncoder_ == nullptr) {
-        DHLOGE("%s: Create screen encoder failed.", LOG_TAG);
+        DHLOGE("%{public}s: Create screen encoder failed.", DSCREEN_LOG_TAG);
         ReportOptFail(DSCREEN_OPT_FAIL, ERR_DH_SCREEN_TRANS_NULL_VALUE, "StopImageProcessor encoder is nullptr.");
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
@@ -93,7 +93,7 @@ int32_t ImageSourceProcessor::StopImageProcessor()
     int32_t ret = imageEncoder_->StopEncoder();
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: Stop screen encoder failed ret: %" PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: Stop screen encoder failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         ReportOptFail(DSCREEN_OPT_FAIL, ret, "Stop screen encoder failed.");
         return ret;
     }
@@ -103,26 +103,26 @@ int32_t ImageSourceProcessor::StopImageProcessor()
 
 sptr<Surface> ImageSourceProcessor::GetImageSurface()
 {
-    DHLOGI("%s: GetImageSurface.", LOG_TAG);
+    DHLOGI("%{public}s: GetImageSurface.", DSCREEN_LOG_TAG);
     return imageEncoder_->GetInputSurface();
 }
 
 sptr<Surface> ImageSourceProcessor::GetConsumerSurface()
 {
-    DHLOGI("%s: GetConsumerSurface.", LOG_TAG);
+    DHLOGI("%{public}s: GetConsumerSurface.", DSCREEN_LOG_TAG);
     return imageEncoder_->GetConsumerSurface();
 }
 
 int32_t ImageSourceProcessor::ProcessFullImage(sptr<SurfaceBuffer> &surfaceBuffer)
 {
-    DHLOGI("%s: ProcessFullImage.", LOG_TAG);
+    DHLOGI("%{public}s: ProcessFullImage.", DSCREEN_LOG_TAG);
     if (surfaceBuffer == nullptr) {
-        DHLOGE("%s: Process surfaceBuffer is null.", LOG_TAG);
+        DHLOGE("%{public}s: Process surfaceBuffer is null.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_SURFACE_BUFFER_INVALIED;
     }
     int32_t ret = imageEncoder_->FeedEncoderData(surfaceBuffer);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: FeedEncoderData failed.", LOG_TAG);
+        DHLOGE("%{public}s: FeedEncoderData failed.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
     return DH_SUCCESS;

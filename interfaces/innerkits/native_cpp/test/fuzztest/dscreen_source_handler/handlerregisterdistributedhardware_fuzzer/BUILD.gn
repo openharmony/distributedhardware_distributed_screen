@@ -57,6 +57,7 @@ ohos_fuzztest("HandlerRegisterDistributedHardwareFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "hilog:libhilog",
     "ipc:ipc_core",
   ]
 }

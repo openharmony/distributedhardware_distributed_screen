@@ -97,11 +97,11 @@ int32_t DScreenManager::Release()
 
 void DScreenGroupListener::OnChange(const std::vector<uint64_t> &screenIds, Rosen::ScreenGroupChangeEvent event)
 {
-    DHLOGI("On Screen change, screenIds size: %" PRId32, screenIds.size());
+    DHLOGI("On Screen change, screenIds size: %{public}zu", screenIds.size());
     for (uint64_t screenId : screenIds) {
         std::shared_ptr<DScreen> changedScreen = DScreenManager::GetInstance().FindDScreenById(screenId);
         if (changedScreen == nullptr) {
-            DHLOGD("screen change not about remote screen, screenId: %" PRIu64, screenId);
+            DHLOGD("screen change not about remote screen, screenId: %{public}" PRIu64, screenId);
             continue;
         }
         DScreenManager::GetInstance().HandleScreenChange(changedScreen, event);
@@ -115,7 +115,7 @@ void DScreenManager::HandleScreenChange(const std::shared_ptr<DScreen> &changedS
         DHLOGE("DScreenManager::HandleScreenChange, dScreen is null.");
         return;
     }
-    DHLOGI("DScreenManager::HandleScreenChange, screenId: %" PRIu64" changeEvent: %" PRIu64,
+    DHLOGI("DScreenManager::HandleScreenChange, screenId: %{public}" PRIu64 " changeEvent: %{public}" PRIu32,
         changedScreen->GetScreenId(), event);
     if (event == Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP) {
         if (StartDScreenMirror(changedScreen) != DH_SUCCESS) {
@@ -142,7 +142,7 @@ int32_t DScreenManager::StartDScreenMirror(const std::shared_ptr<DScreen> &dScre
         return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
     }
     uint64_t screenId = dScreen->GetScreenId();
-    DHLOGI("DScreenManager::StartDScreenMirror, screenId: %" PRIu64, screenId);
+    DHLOGI("DScreenManager::StartDScreenMirror, screenId: %{public}" PRIu64, screenId);
     if (dScreen->GetState() == CONNECTING) {
         DHLOGD("screen is connecting, no need handle change");
         return DH_SUCCESS;
@@ -153,7 +153,7 @@ int32_t DScreenManager::StartDScreenMirror(const std::shared_ptr<DScreen> &dScre
         return ret;
     }
     dScreen->AddTask(std::make_shared<Task>(TaskType::TASK_CONNECT, ""));
-    DHLOGI("StartDScreenMirror success, screenId:%", PRIu64" peerDeviceId:%s", screenId,
+    DHLOGI("StartDScreenMirror success, screenId:%{public}" PRIu64 ", peerDeviceId:%{public}s", screenId,
         GetAnonyString(dScreen->GetDevId()).c_str());
     return DH_SUCCESS;
 }
@@ -164,7 +164,7 @@ int32_t DScreenManager::StopDScreenMirror(const std::shared_ptr<DScreen> &dScree
         DHLOGE("DScreenManager::StopDScreenMirror, dScreen is null.");
         return ERR_DH_SCREEN_SA_VALUE_NOT_INIT;
     }
-    DHLOGI("DScreenManager::StopDScreenMirror, screenId: %" PRIu64, dScreen->GetScreenId());
+    DHLOGI("DScreenManager::StopDScreenMirror, screenId: %{public}" PRIu64, dScreen->GetScreenId());
     if (dScreen->GetState() == DISCONNECTING) {
         DHLOGD("screen is disconnecting, no need handle change");
         return DH_SUCCESS;
@@ -180,7 +180,7 @@ void DScreenCallback::OnRegResult(const std::shared_ptr<DScreen> &dScreen,
         DHLOGE("DScreenCallback::OnRegResult, dScreen id nullptr");
         return;
     }
-    DHLOGI("DScreenCallback::OnRegResult, devId: %s, dhId: %s, reqId: %s",
+    DHLOGI("DScreenCallback::OnRegResult, devId: %{public}s, dhId: %{public}s, reqId: %{public}s",
         GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(),
         GetAnonyString(reqId).c_str());
     DScreenManager::GetInstance().OnRegResult(dScreen, reqId, status, data);
@@ -193,7 +193,7 @@ void DScreenCallback::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
         DHLOGE("DScreenCallback::OnUnregResult, dScreen id nullptr");
         return;
     }
-    DHLOGI("DScreenCallback::OnUnregResult, devId: %s, dhId: %s, reqId: %s",
+    DHLOGI("DScreenCallback::OnUnregResult, devId: %{public}s, dhId: %{public}s, reqId: %{public}s",
         GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(),
         GetAnonyString(reqId).c_str());
     DScreenManager::GetInstance().OnUnregResult(dScreen, reqId, status, data);
@@ -202,7 +202,7 @@ void DScreenCallback::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
 void DScreenManager::OnRegResult(const std::shared_ptr<DScreen> &dScreen,
     const std::string &reqId, int32_t status, const std::string &data)
 {
-    DHLOGI("DScreenManager::OnRegResult, devId: %s, dhId: %s, reqId: %s",
+    DHLOGI("DScreenManager::OnRegResult, devId: %{public}s, dhId: %{public}s, reqId: %{public}s",
         GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(),
         GetAnonyString(reqId).c_str());
     if (dScreenSourceCallbackProxy_ == nullptr) {
@@ -215,7 +215,7 @@ void DScreenManager::OnRegResult(const std::shared_ptr<DScreen> &dScreen,
 void DScreenManager::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
     const std::string &reqId, int32_t status, const std::string &data)
 {
-    DHLOGI("DScreenManager::OnUnregResult, devId: %s, dhId: %s, reqId: %s",
+    DHLOGI("DScreenManager::OnUnregResult, devId: %{public}s, dhId: %{public}s, reqId: %{public}s",
         GetAnonyString(dScreen->GetDevId()).c_str(), GetAnonyString(dScreen->GetDHId()).c_str(),
         GetAnonyString(reqId).c_str());
     if (dScreenSourceCallbackProxy_ == nullptr) {
@@ -228,7 +228,7 @@ void DScreenManager::OnUnregResult(const std::shared_ptr<DScreen> &dScreen,
 int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const std::string &dhId,
     const EnableParam &param, const std::string &reqId)
 {
-    DHLOGI("EnableDistributedScreen2.0, devId: %s, dhId:%s", GetAnonyString(devId).c_str(),
+    DHLOGI("EnableDistributedScreen2.0, devId: %{public}s, dhId:%{public}s", GetAnonyString(devId).c_str(),
         GetAnonyString(dhId).c_str());
     if (devId.empty() || dhId.empty() || param.sinkVersion.empty() || param.sinkAttrs.empty() || reqId.empty()) {
         DHLOGE("EnableDistributedScreen2.0 CheckRegParams is inlvalid.");
@@ -238,7 +238,7 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
         dScreenGroupListener_ = new (std::nothrow) DScreenGroupListener();
         int32_t ret = ScreenMgrAdapter::GetInstance().RegisterScreenGroupListener(dScreenGroupListener_);
         if (ret != DH_SUCCESS) {
-            DHLOGE("DScreenManager2.0 EnableDistributedScreen failed, err: %" PRId32, ret);
+            DHLOGE("DScreenManager2.0 EnableDistributedScreen failed, err: %{public}" PRId32, ret);
             dScreenGroupListener_ = nullptr;
             return ERR_DH_SCREEN_SA_ENABLE_FAILED;
         }
@@ -260,7 +260,7 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
     dScreens_[dScreenIdx] = dScreen;
     int32_t ret = dScreen->AddTask(std::make_shared<Task>(TaskType::TASK_ENABLE, reqId, param.sinkAttrs));
     if (ret != DH_SUCCESS) {
-        DHLOGE("EnableDistributedScreen, add task failed. devId: %s, dhId:%s",
+        DHLOGE("EnableDistributedScreen, add task failed. devId: %{public}s, dhId:%{public}s",
             GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
     }
     return ret;
@@ -269,11 +269,12 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
 int32_t DScreenManager::DisableDistributedScreen(const std::string &devId, const std::string &dhId,
     const std::string &reqId)
 {
-    DHLOGI("DisableDistributedScreen, devId: %s, dhId:%s", GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str());
+    DHLOGI("DisableDistributedScreen, devId: %{public}s, dhId:%{public}s", GetAnonyString(devId).c_str(),
+        GetAnonyString(dhId).c_str());
     std::string dScreenIdx = devId + SEPERATOR + dhId;
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     if (dScreens_.count(dScreenIdx) == 0) {
-        DHLOGE("dscreen has already disabled, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
+        DHLOGE("dscreen has already disabled, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId).c_str(),
             GetAnonyString(dhId).c_str());
         return DH_SUCCESS;
     }
@@ -312,7 +313,7 @@ void DScreenManager::RegisterDScreenCallback(const sptr<IDScreenSourceCallback> 
 
 std::shared_ptr<DScreen> DScreenManager::FindDScreenById(uint64_t screenId)
 {
-    DHLOGD("FindDScreenById, screenId: %" PRIu64, screenId);
+    DHLOGD("FindDScreenById, screenId: %{public}" PRIu64, screenId);
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     for (const auto &iter : dScreens_) {
         std::shared_ptr<DScreen> dScreen = iter.second;
@@ -323,7 +324,7 @@ std::shared_ptr<DScreen> DScreenManager::FindDScreenById(uint64_t screenId)
             return dScreen;
         }
     }
-    DHLOGD("DScreen not found, screenId: %" PRIu64, screenId);
+    DHLOGD("DScreen not found, screenId: %{public}" PRIu64, screenId);
     return nullptr;
 }
 
@@ -405,12 +406,12 @@ int32_t DScreenManager::LoadAVSenderEngineProvider()
     }
     void *pHandler = dlopen(path, RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
-        DHLOGE("%s handler load failed, failed reason : %s", path, dlerror());
+        DHLOGE("%{public}s handler load failed, failed reason : %{public}s", path, dlerror());
         return ERR_DH_AV_TRANS_NULL_VALUE;
     }
     AVTransProviderClass getEngineFactoryFunc = (AVTransProviderClass)dlsym(pHandler, GET_PROVIDER_FUNC.c_str());
     if (getEngineFactoryFunc == nullptr) {
-        DHLOGE("av transport engine factory function handler is null, failed reason : %s", dlerror());
+        DHLOGE("av transport engine factory function handler is null, failed reason : %{public}s", dlerror());
         dlclose(pHandler);
         pHandler = nullptr;
         return ERR_DH_AV_TRANS_NULL_VALUE;
