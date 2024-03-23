@@ -98,7 +98,6 @@ ohos_shared_library("distributed_screen_source") {
     "graphic_2d:librender_service_client",
     "graphic_surface:surface",
     "hicollie:libhicollie",
-    "hilog:libhilog",
     "hisysevent:libhisysevent",
     "hitrace:hitrace_meter",
     "ipc:ipc_core",

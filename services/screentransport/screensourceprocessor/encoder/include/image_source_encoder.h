@@ -41,7 +41,7 @@ public:
     ~ConsumerBufferListener() = default;
     void OnBufferAvailable() override;
 private:
-    static const constexpr char *DSCREEN_LOG_TAG = "ConsumerBufferListener";
+    static const constexpr char *LOG_TAG = "ConsumerBufferListener";
     std::shared_ptr<ImageSourceEncoder> encoder_;
 };
 class ImageSourceEncoder : public std::enable_shared_from_this<ImageSourceEncoder> {
@@ -72,7 +72,7 @@ private:
     int32_t SetEncoderFormat(const VideoParam &configParam);
 
 private:
-    static const constexpr char *DSCREEN_LOG_TAG = "ImageSourceEncoder";
+    static const constexpr char *LOG_TAG = "ImageSourceEncoder";
 
     Media::Format imageFormat_;
     MediaAVCodec::AVCodecBufferInfo encoderBufferInfo_;

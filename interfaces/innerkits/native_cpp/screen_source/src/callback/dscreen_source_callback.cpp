@@ -24,7 +24,7 @@ namespace DistributedHardware {
 int32_t DScreenSourceCallback::OnNotifyRegResult(const std::string &devId, const std::string &dhId,
     const std::string &reqId, int32_t status, const std::string &data)
 {
-    DHLOGI("DScreenSourceCallback OnNotifyRegResult devId: %{public}s dhId: %{public}s status: %{public}" PRId32,
+    DHLOGI("DScreenSourceCallback OnNotifyRegResult devId: %s dhId: %s status: %" PRId32,
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), status);
     std::lock_guard<std::mutex> lock(registerMutex_);
     const auto iter = registerCallbackMap_.find(reqId);
@@ -44,7 +44,7 @@ int32_t DScreenSourceCallback::OnNotifyRegResult(const std::string &devId, const
 int32_t DScreenSourceCallback::OnNotifyUnregResult(const std::string &devId, const std::string &dhId,
     const std::string &reqId, int32_t status, const std::string &data)
 {
-    DHLOGI("DScreenSourceCallback OnNotifyUnregResult devId: %{public}s dhId: %{public}s status: %{public}" PRId32,
+    DHLOGI("DScreenSourceCallback OnNotifyUnregResult devId: %s dhId: %s status: %" PRId32,
         GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), status);
     std::lock_guard<std::mutex> lock(unregisterMutex_);
     const auto iter = unregisterCallbackMap_.find(reqId);

@@ -35,7 +35,7 @@ constexpr const char* TASK_THREAD = "TaskThread";
 DScreen::DScreen(const std::string &devId, const std::string &dhId,
     std::shared_ptr<IDScreenCallback> dscreenCallback)
 {
-    DHLOGD("DScreen construct, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId).c_str(),
+    DHLOGD("DScreen construct, devId: %s, dhId: %s", GetAnonyString(devId).c_str(),
         GetAnonyString(dhId).c_str());
     devId_ = devId;
     dhId_ = dhId;
@@ -47,7 +47,7 @@ DScreen::DScreen(const std::string &devId, const std::string &dhId,
 
 DScreen::~DScreen()
 {
-    DHLOGD("DScreen deconstruct, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+    DHLOGD("DScreen deconstruct, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
     taskThreadRunning_ = false;
     taskQueueCond_.notify_all();
@@ -59,7 +59,7 @@ DScreen::~DScreen()
         ret = sourceTrans_->Release();
     }
     if (ret != DH_SUCCESS) {
-        DHLOGE("source trans release failed. ret: %{public}" PRId32, ret);
+        DHLOGE("source trans release failed. ret: %" PRId32, ret);
     }
 
     if (screenId_ != SCREEN_ID_INVALID) {
@@ -76,7 +76,7 @@ DScreen::~DScreen()
 
 void DScreen::OnTransError(int32_t err, const std::string &content)
 {
-    DHLOGW("OnTransError, err: %{public}" PRId32, err);
+    DHLOGW("OnTransError, err: %" PRId32, err);
     AddTask(std::make_shared<Task>(TaskType::TASK_DISCONNECT, ""));
     ScreenMgrAdapter::GetInstance().RemoveScreenFromGroup(screenId_);
 }
@@ -129,13 +129,13 @@ std::string DScreen::GetDevId() const
 
 int32_t DScreen::AddTask(const std::shared_ptr<Task> &task)
 {
-    DHLOGI("DScreen::AddTask, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+    DHLOGI("DScreen::AddTask, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
     if (task == nullptr) {
         DHLOGE("AddTask, task is invalid.");
         return ERR_DH_SCREEN_SA_DSCREEN_TASK_NOT_VALID;
     }
-    DHLOGI("AddTask, task type: %{public}" PRId32, task->GetTaskType());
+    DHLOGI("AddTask, task type: %" PRId32, task->GetTaskType());
     {
         std::lock_guard<std::mutex> lock(taskQueueMtx_);
         taskQueue_.push(task);
@@ -146,11 +146,11 @@ int32_t DScreen::AddTask(const std::shared_ptr<Task> &task)
 
 void DScreen::TaskThreadLoop()
 {
-    DHLOGI("DScreen taskThread start. devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+    DHLOGI("DScreen taskThread start. devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
     int32_t ret = pthread_setname_np(pthread_self(), TASK_THREAD);
     if (ret != DH_SUCCESS) {
-        DHLOGE("Dscreen set thread name failed, ret %{public}" PRId32, ret);
+        DHLOGE("Dscreen set thread name failed, ret %" PRId32, ret);
     }
     while (taskThreadRunning_) {
         std::shared_ptr<Task> task;
@@ -170,7 +170,7 @@ void DScreen::TaskThreadLoop()
             continue;
         }
 
-        DHLOGD("run task, task queue size: %{public}zu", taskQueue_.size());
+        DHLOGD("run task, task queue size: %zu", taskQueue_.size());
         HandleTask(task);
     }
 }
@@ -178,8 +178,7 @@ void DScreen::TaskThreadLoop()
 void DScreen::HandleTask(const std::shared_ptr<Task> &task)
 {
     int32_t taskType = task->GetTaskType();
-    DHLOGI("HandleTask, devId: %{public}s, dhId: %{public}s, task type: %{public}" PRId32,
-        GetAnonyString(devId_).c_str(),
+    DHLOGI("HandleTask, devId: %s, dhId: %s, task type: %" PRId32, GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str(), taskType);
     switch (taskType) {
         case TaskType::TASK_ENABLE:
@@ -210,8 +209,7 @@ void DScreen::HandleEnable(const std::string &param, const std::string &taskId)
         DHLOGE("DScreen::HandleEnable, dscreenCallback_ is nullptr");
         return;
     }
-    DHLOGI("HandleEnable, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
-        GetAnonyString(dhId_).c_str());
+    DHLOGI("HandleEnable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
     if (curState_ == ENABLED || curState_ == ENABLING || curState_ == CONNECTING || curState_ == CONNECTED) {
         dscreenCallback_->OnRegResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen enable success.");
         return;
@@ -328,8 +326,7 @@ void DScreen::HandleDisable(const std::string &taskId)
         DHLOGE("DScreen::HandleDisable, dscreenCallback_ is nullptr");
         return;
     }
-    DHLOGI("HandleDisable, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
-        GetAnonyString(dhId_).c_str());
+    DHLOGI("HandleDisable, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str());
     SetState(DISABLING);
     int32_t ret = ScreenMgrAdapter::GetInstance().RemoveVirtualScreen(screenId_);
     if (ret != DH_SUCCESS) {
@@ -348,7 +345,7 @@ void DScreen::HandleDisable(const std::string &taskId)
 
 void DScreen::HandleConnect()
 {
-    DHLOGI("HandleConnect, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+    DHLOGI("HandleConnect, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
 
     int32_t ret = SetUp();
@@ -373,7 +370,7 @@ void DScreen::HandleConnect()
 
 void DScreen::HandleDisconnect()
 {
-    DHLOGD("HandleDisconnect, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+    DHLOGD("HandleDisconnect, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
     if (curState_ != CONNECTED) {
         DHLOGE("dscreen is not connected, cannot disconnect");
@@ -394,7 +391,7 @@ void DScreen::HandleDisconnect()
 
 int32_t DScreen::SetUp()
 {
-    DHLOGD("SetUp, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+    DHLOGD("SetUp, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
 
     if (sourceTrans_ == nullptr) {
@@ -413,7 +410,7 @@ int32_t DScreen::SetUp()
 
 int32_t DScreen::Start()
 {
-    DHLOGD("Start, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+    DHLOGD("Start, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
     if (sourceTrans_ == nullptr) {
         DHLOGE("source trans not init.");
@@ -435,7 +432,7 @@ int32_t DScreen::Start()
 
 int32_t DScreen::Stop()
 {
-    DHLOGD("Stop, devId: %{public}s, dhId: %{public}s", GetAnonyString(devId_).c_str(),
+    DHLOGD("Stop, devId: %s, dhId: %s", GetAnonyString(devId_).c_str(),
         GetAnonyString(dhId_).c_str());
     if (sourceTrans_ == nullptr) {
         DHLOGE("source trans not init.");

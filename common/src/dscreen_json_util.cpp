@@ -24,7 +24,7 @@ bool IsString(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_string() && jsonObj[key].size() <= MAX_MESSAGES_LEN;
     if (!res) {
-        DHLOGE("the key %{public}s in jsonObj is invalid.", key.c_str());
+        DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
     }
     return res;
 }
@@ -33,7 +33,7 @@ bool IsUInt8(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_number_unsigned() && jsonObj[key] <= UINT8_MAX;
     if (!res) {
-        DHLOGE("the key %{public}s in jsonObj is invalid.", key.c_str());
+        DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
     }
     return res;
 }
@@ -43,7 +43,7 @@ bool IsInt32(const nlohmann::json &jsonObj, const std::string &key)
     bool res = jsonObj.contains(key) && jsonObj[key].is_number_integer() && jsonObj[key] >= INT32_MIN &&
         jsonObj[key] <= INT32_MAX;
     if (!res) {
-        DHLOGE("the key %{public}s in jsonObj is invalid.", key.c_str());
+        DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
     }
     return res;
 }
@@ -52,7 +52,7 @@ bool IsUInt32(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_number_unsigned() && jsonObj[key] <= UINT32_MAX;
     if (!res) {
-        DHLOGE("the key %{public}s in jsonObj is invalid.", key.c_str());
+        DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
     }
     return res;
 }
@@ -62,7 +62,7 @@ bool IsInt64(const nlohmann::json &jsonObj, const std::string &key)
     bool res = jsonObj.contains(key) && jsonObj[key].is_number_integer() && jsonObj[key] >= INT64_MIN &&
         jsonObj[key] <= INT64_MAX;
     if (!res) {
-        DHLOGE("the key %{public}s in jsonObj is invalid.", key.c_str());
+        DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
     }
     return res;
 }
@@ -71,7 +71,7 @@ bool IsUInt64(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_number_unsigned() && jsonObj[key] <= UINT64_MAX;
     if (!res) {
-        DHLOGE("the key %{public}s in jsonObj is invalid.", key.c_str());
+        DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
     }
     return res;
 }
@@ -80,7 +80,7 @@ bool IsFloat(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_number_float();
     if (!res) {
-        DHLOGE("the key %{public}s in jsonObj is invalid.", key.c_str());
+        DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
     }
     return res;
 }
@@ -89,7 +89,7 @@ bool IsArray(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_array();
     if (!res) {
-        DHLOGE("the key %{public}s in jsonObj is invalid.", key.c_str());
+        DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
     }
     return res;
 }
@@ -98,7 +98,7 @@ bool IsBool(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_boolean();
     if (!res) {
-        DHLOGE("the key %{public}s in jsonObj is invalid.", key.c_str());
+        DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
     }
     return res;
 }

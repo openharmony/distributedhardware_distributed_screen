@@ -200,7 +200,7 @@ void VDecDemo::CheckCodecType()
             MediaAVCodec::AVCodecCategory::AVCODEC_HARDWARE);
         std::string mimeType = capData->mimeType;
         localCodecArray.push_back(mimeType);
-    }
+}
 
     if (std::find(localCodecArray.begin(), localCodecArray.end(),
         CODEC_NAME_H264) != localCodecArray.end()) {

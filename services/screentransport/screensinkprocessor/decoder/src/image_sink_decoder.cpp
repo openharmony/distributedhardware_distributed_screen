@@ -29,22 +29,22 @@ namespace DistributedHardware {
 constexpr const char* DECODE_THREAD = "DecodeThread";
 int32_t ImageSinkDecoder::ConfigureDecoder(const VideoParam &configParam)
 {
-    DHLOGI("%{public}s: ConfigureDecoder.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ConfigureDecoder.", LOG_TAG);
     int32_t ret = InitVideoDecoder(configParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: InitVideoDecoder failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: InitVideoDecoder failed.", LOG_TAG);
         return ret;
     }
 
     ret = SetDecoderFormat(configParam);
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: SetDecoderFormat failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: SetDecoderFormat failed.", LOG_TAG);
         return ret;
     }
     configParam_ = configParam;
     ret = AddSurface();
     if (ret != DH_SUCCESS) {
-        DHLOGE("%{public}s: Add surface failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        DHLOGE("%s: Add surface failed ret: %." PRId32, LOG_TAG, ret);
         consumerSurface_ = nullptr;
         producerSurface_ = nullptr;
         return ret;
@@ -58,10 +58,10 @@ int32_t ImageSinkDecoder::ConfigureDecoder(const VideoParam &configParam)
 
 int32_t ImageSinkDecoder::AddSurface()
 {
-    DHLOGI("%{public}s: AddSurface.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: AddSurface.", LOG_TAG);
     consumerSurface_ = IConsumerSurface::Create();
     if (consumerSurface_ == nullptr) {
-        DHLOGE("%{public}s: Create consumer surface failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Create consumer surface failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
 
@@ -69,13 +69,13 @@ int32_t ImageSinkDecoder::AddSurface()
 
     sptr<IBufferProducer> producer = consumerSurface_->GetProducer();
     if (producer == nullptr) {
-        DHLOGE("%{public}s: Get preducer surface failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Get preducer surface failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
 
     producerSurface_ = Surface::CreateSurfaceAsProducer(producer);
     if (producerSurface_ == nullptr) {
-        DHLOGE("%{public}s: Create preducer surface failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Create preducer surface failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
 
@@ -96,7 +96,7 @@ uint8_t *ImageSinkDecoder::GetLastFrame()
 
 sptr<SurfaceBuffer> ImageSinkDecoder::GetWinSurfaceBuffer()
 {
-    DHLOGI("%{public}s: GetWinSurfaceBuffer.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: GetWinSurfaceBuffer.", LOG_TAG);
     sptr<SurfaceBuffer> windowSurfaceBuffer = nullptr;
     int32_t releaseFence = -1;
     OHOS::BufferRequestConfig requestConfig = {
@@ -108,7 +108,7 @@ sptr<SurfaceBuffer> ImageSinkDecoder::GetWinSurfaceBuffer()
     };
     SurfaceError surfaceErr = windowSurface_->RequestBuffer(windowSurfaceBuffer, releaseFence, requestConfig);
     if (surfaceErr != SURFACE_ERROR_OK || windowSurfaceBuffer == nullptr) {
-        DHLOGE("%{public}s: windowSurface_ request buffer failed, buffer is nullptr.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: windowSurface_ request buffer failed, buffer is nullptr.", LOG_TAG);
         windowSurface_->CancelBuffer(windowSurfaceBuffer);
     }
     return windowSurfaceBuffer;
@@ -116,21 +116,21 @@ sptr<SurfaceBuffer> ImageSinkDecoder::GetWinSurfaceBuffer()
 
 void ImageSinkDecoder::NormalProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<SurfaceBuffer> windowSurfaceBuffer)
 {
-    DHLOGI("%{public}s: NormalProcess.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: NormalProcess.", LOG_TAG);
     auto surfaceAddr = static_cast<uint8_t*>(surfaceBuffer->GetVirAddr());
     auto windowSurfaceAddr = static_cast<uint8_t*>(windowSurfaceBuffer->GetVirAddr());
     int32_t sizeData = lastFrameSize_;
     uint32_t size = windowSurfaceBuffer->GetSize();
     int32_t ret = memcpy_s(windowSurfaceAddr, size, surfaceAddr, sizeData);
     if (ret != EOK) {
-        DHLOGE("%{public}s: surfaceBuffer memcpy run failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: surfaceBuffer memcpy run failed.", LOG_TAG);
         windowSurface_->CancelBuffer(windowSurfaceBuffer);
     }
 }
 
 void ImageSinkDecoder::OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<SurfaceBuffer> windowSurfaceBuffer)
 {
-    DHLOGI("%{public}s: OffsetProcess.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: OffsetProcess.", LOG_TAG);
     auto surfaceAddr = static_cast<uint8_t*>(surfaceBuffer->GetVirAddr());
     auto windowSurfaceAddr = static_cast<uint8_t*>(windowSurfaceBuffer->GetVirAddr());
     uint32_t size = windowSurfaceBuffer->GetSize();
@@ -142,7 +142,7 @@ void ImageSinkDecoder::OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<Sur
         int32_t ret = memcpy_s(windowSurfaceAddr + dstDataOffset, chromaOffset - dstDataOffset,
             surfaceAddr + srcDataOffset, alignedWidth);
         if (ret != EOK) {
-            DHLOGE("%{public}s: surfaceBuffer memcpy_s run failed.", DSCREEN_LOG_TAG);
+            DHLOGE("%s: surfaceBuffer memcpy_s run failed.", LOG_TAG);
             windowSurface_->CancelBuffer(windowSurfaceBuffer);
             return;
         }
@@ -155,7 +155,7 @@ void ImageSinkDecoder::OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<Sur
         int32_t ret = memcpy_s(windowSurfaceAddr + dstDataOffset, size - dstDataOffset,
             surfaceAddr + srcDataOffset, alignedWidth);
         if (ret != EOK) {
-            DHLOGE("%{public}s: surfaceBuffer memcpy_s run failed.", DSCREEN_LOG_TAG);
+            DHLOGE("%s: surfaceBuffer memcpy_s run failed.", LOG_TAG);
             windowSurface_->CancelBuffer(windowSurfaceBuffer);
             return;
         }
@@ -166,10 +166,10 @@ void ImageSinkDecoder::OffsetProcess(sptr<SurfaceBuffer> surfaceBuffer, sptr<Sur
 
 void ImageSinkDecoder::ConsumeSurface()
 {
-    DHLOGI("%{public}s: ConsumeSurface.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ConsumeSurface.", LOG_TAG);
     std::unique_lock<std::mutex> bufLock(decodeMutex_);
     if (consumerSurface_ == nullptr) {
-        DHLOGE("%{public}s: consumerSurface_ is nullptr.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: consumerSurface_ is nullptr.", LOG_TAG);
         return;
     }
     sptr<SurfaceBuffer> surfaceBuffer = nullptr;
@@ -203,15 +203,15 @@ void ImageSinkDecoder::ConsumeSurface()
     BufferFlushConfig flushConfig = { {0, 0, windowSurfaceBuffer->GetWidth(), windowSurfaceBuffer->GetHeight()}, 0};
     int32_t ret = memcpy_s(lastFrame_, lastFrameSize_, windowSurfaceAddr, lastFrameSize_);
     if (ret != EOK) {
-        DHLOGE("%{public}s: surfaceBuffer memcpy_s run failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: surfaceBuffer memcpy_s run failed.", LOG_TAG);
         consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
         windowSurface_->CancelBuffer(windowSurfaceBuffer);
         return;
     }
-    DHLOGI("%{public}s: ConsumeSurface success, send NV12 to window.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ConsumeSurface success, send NV12 to window.", LOG_TAG);
     surfaceErr = windowSurface_->FlushBuffer(windowSurfaceBuffer, -1, flushConfig);
     if (surfaceErr != SURFACE_ERROR_OK) {
-        DHLOGE("%{public}s: windowSurface_ flush buffer failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: windowSurface_ flush buffer failed.", LOG_TAG);
         consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
         windowSurface_->CancelBuffer(windowSurfaceBuffer);
         return;
@@ -221,15 +221,15 @@ void ImageSinkDecoder::ConsumeSurface()
 
 void ConsumBufferListener::OnBufferAvailable()
 {
-    DHLOGI("%{public}s: OnBufferAvailable, receive NV12 data from decoder.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: OnBufferAvailable, receive NV12 data from decoder.", LOG_TAG);
     decoder_->ConsumeSurface();
 }
 
 int32_t ImageSinkDecoder::ReleaseDecoder()
 {
-    DHLOGI("%{public}s: ReleaseDecoder.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ReleaseDecoder.", LOG_TAG);
     if (videoDecoder_ == nullptr) {
-        DHLOGE("%{public}s: Decoder is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Decoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     if (lastFrame_ != nullptr) {
@@ -237,7 +237,7 @@ int32_t ImageSinkDecoder::ReleaseDecoder()
     }
     int32_t ret = videoDecoder_->Release();
     if (ret != MediaAVCodec::AVCS_ERR_OK) {
-        DHLOGE("%{public}s: ReleaseDecoder failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: ReleaseDecoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_RELEASE_FAILED;
     }
     decodeVideoCallback_ = nullptr;
@@ -248,21 +248,21 @@ int32_t ImageSinkDecoder::ReleaseDecoder()
 
 int32_t ImageSinkDecoder::StartDecoder()
 {
-    DHLOGI("%{public}s: StartDecoder.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: StartDecoder.", LOG_TAG);
     if (videoDecoder_ == nullptr) {
-        DHLOGE("%{public}s: Decoder is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Decoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
     int32_t ret = videoDecoder_->Prepare();
     if (ret != MediaAVCodec::AVCS_ERR_OK) {
-        DHLOGE("%{public}s: Prepare decoder failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Prepare decoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_PREPARE_FAILED;
     }
 
     ret = videoDecoder_->Start();
     if (ret != MediaAVCodec::AVCS_ERR_OK) {
-        DHLOGE("%{public}s: Start decoder failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Start decoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_START_FAILED;
     }
     StartInputThread();
@@ -272,21 +272,21 @@ int32_t ImageSinkDecoder::StartDecoder()
 
 int32_t ImageSinkDecoder::StopDecoder()
 {
-    DHLOGI("%{public}s: StopDecoder.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: StopDecoder.", LOG_TAG);
     if (videoDecoder_ == nullptr) {
-        DHLOGE("%{public}s: Decoder is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Decoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
     int32_t ret = videoDecoder_->Flush();
     if (ret != MediaAVCodec::AVCS_ERR_OK) {
-        DHLOGE("%{public}s: Flush decoder failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Flush decoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_FLUSH_FAILED;
     }
 
     ret = videoDecoder_->Stop();
     if (ret != MediaAVCodec::AVCS_ERR_OK) {
-        DHLOGE("%{public}s: Stop decoder failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Stop decoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_STOP_FAILED;
     }
     StopInputThread();
@@ -296,7 +296,7 @@ int32_t ImageSinkDecoder::StopDecoder()
 
 int32_t ImageSinkDecoder::InitVideoDecoder(const VideoParam &configParam)
 {
-    DHLOGI("%{public}s: InitVideoDecoder.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: InitVideoDecoder.", LOG_TAG);
     switch (configParam.GetCodecType()) {
         case VIDEO_CODEC_TYPE_VIDEO_H264:
             videoDecoder_ = MediaAVCodec::VideoDecoderFactory::CreateByMime(
@@ -307,19 +307,19 @@ int32_t ImageSinkDecoder::InitVideoDecoder(const VideoParam &configParam)
                 std::string(MediaAVCodec::CodecMimeType::VIDEO_HEVC));
             break;
         default:
-            DHLOGE("%{public}s: codecType is invalid!", DSCREEN_LOG_TAG);
+            DHLOGE("%s: codecType is invalid!", LOG_TAG);
             videoDecoder_ = nullptr;
     }
 
     if (videoDecoder_ == nullptr) {
-        DHLOGE("%{public}s: Create videoEncoder failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Create videoEncoder failed.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
     decodeVideoCallback_ = std::make_shared<ImageDecoderCallback>(shared_from_this());
     int32_t ret = videoDecoder_->SetCallback(decodeVideoCallback_);
     if (ret != MediaAVCodec::AVCS_ERR_OK) {
-        DHLOGE("%{public}s: Set decoder callback failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Set decoder callback failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_SET_CALLBACK_FAILED;
     }
 
@@ -328,9 +328,9 @@ int32_t ImageSinkDecoder::InitVideoDecoder(const VideoParam &configParam)
 
 int32_t ImageSinkDecoder::SetDecoderFormat(const VideoParam &configParam)
 {
-    DHLOGI("%{public}s: SetDecoderFormat.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: SetDecoderFormat.", LOG_TAG);
     if (videoDecoder_ == nullptr) {
-        DHLOGE("%{public}s: Decoder is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Decoder is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
@@ -354,7 +354,7 @@ int32_t ImageSinkDecoder::SetDecoderFormat(const VideoParam &configParam)
 
     int32_t ret = videoDecoder_->Configure(imageFormat_);
     if (ret != MediaAVCodec::AVCS_ERR_OK) {
-        DHLOGE("%{public}s: configure decoder format param failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: configure decoder format param failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_CONFIGURE_FAILED;
     }
 
@@ -363,22 +363,22 @@ int32_t ImageSinkDecoder::SetDecoderFormat(const VideoParam &configParam)
 
 int32_t ImageSinkDecoder::SetOutputSurface(sptr<Surface> &surface)
 {
-    DHLOGI("%{public}s: SetOutputSurface.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: SetOutputSurface.", LOG_TAG);
     if (videoDecoder_ == nullptr || surface == nullptr) {
-        DHLOGE("%{public}s: Decoder or surface is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Decoder or surface is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
     windowSurface_ = surface;
     if (consumerSurface_ == nullptr || producerSurface_ == nullptr || !configParam_.GetPartialRefreshFlag()) {
         int32_t ret = videoDecoder_->SetOutputSurface(surface);
         if (ret != MediaAVCodec::AVCS_ERR_OK) {
-            DHLOGE("%{public}s: SetOutputSurface failed.", DSCREEN_LOG_TAG);
+            DHLOGE("%s: SetOutputSurface failed.", LOG_TAG);
             return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
         }
     } else {
         int32_t ret = videoDecoder_->SetOutputSurface(producerSurface_);
         if (ret != MediaAVCodec::AVCS_ERR_OK) {
-            DHLOGE("%{public}s: SetOutputSurface failed.", DSCREEN_LOG_TAG);
+            DHLOGE("%s: SetOutputSurface failed.", LOG_TAG);
             return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
         }
     }
@@ -388,13 +388,13 @@ int32_t ImageSinkDecoder::SetOutputSurface(sptr<Surface> &surface)
 int32_t ImageSinkDecoder::InputScreenData(const std::shared_ptr<DataBuffer> &data)
 {
     if (data == nullptr) {
-        DHLOGE("%{public}s: InputScreenData failed, data is nullptr.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: InputScreenData failed, data is nullptr.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
-    DHLOGD("%{public}s: InputScreenData.", DSCREEN_LOG_TAG);
+    DHLOGD("%s: InputScreenData.", LOG_TAG);
     std::lock_guard<std::mutex> dataLock(dataMutex_);
     while (videoDataQueue_.size() >= DATA_QUEUE_MAX_SIZE) {
-        DHLOGE("%{public}s: videoData queue overflow.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: videoData queue overflow.", LOG_TAG);
         videoDataQueue_.pop();
     }
     videoDataQueue_.push(data);
@@ -405,11 +405,10 @@ int32_t ImageSinkDecoder::InputScreenData(const std::shared_ptr<DataBuffer> &dat
 
 void ImageSinkDecoder::OnError(MediaAVCodec::AVCodecErrorType errorType, int32_t errorCode)
 {
-    DHLOGI("%{public}s: OnImageDecodeError, errorType:%{public}" PRId32 ", errorCode:%{public}" PRId32,
-        DSCREEN_LOG_TAG, errorType, errorCode);
+    DHLOGI("%s: OnImageDecodeError, errorType:%" PRId32", errorCode:%" PRId32, LOG_TAG, errorType, errorCode);
     std::shared_ptr<IImageSinkProcessorListener> listener = imageProcessorListener_.lock();
     if (listener == nullptr) {
-        DHLOGE("%{public}s: Listener is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Listener is null.", LOG_TAG);
         return;
     }
     listener->OnProcessorStateNotify(errorCode);
@@ -417,7 +416,7 @@ void ImageSinkDecoder::OnError(MediaAVCodec::AVCodecErrorType errorType, int32_t
 
 void ImageSinkDecoder::OnInputBufferAvailable(uint32_t index, std::shared_ptr<Media::AVSharedMemory> buffer)
 {
-    DHLOGI("%{public}s: OnDecodeInputBufferAvailable: %{public}" PRIu32, DSCREEN_LOG_TAG, index);
+    DHLOGI("%s: OnDecodeInputBufferAvailable: %u.", LOG_TAG, index);
     std::lock_guard<std::mutex> dataLock(dataMutex_);
     availableInputIndexsQueue_.push(index);
     availableInputBufferQueue_.push(buffer);
@@ -426,16 +425,16 @@ void ImageSinkDecoder::OnInputBufferAvailable(uint32_t index, std::shared_ptr<Me
 void ImageSinkDecoder::OnOutputBufferAvailable(uint32_t index, MediaAVCodec::AVCodecBufferInfo info,
     MediaAVCodec::AVCodecBufferFlag flag, std::shared_ptr<Media::AVSharedMemory> buffer)
 {
-    DHLOGI("%{public}s: OnDecodeOutputBufferAvailable.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: OnDecodeOutputBufferAvailable.", LOG_TAG);
     if (videoDecoder_ == nullptr) {
-        DHLOGE("%{public}s: Decoder is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Decoder is null.", LOG_TAG);
         return;
     }
 
     decoderBufferInfo_ = info;
     int32_t ret = videoDecoder_->ReleaseOutputBuffer(index, true);
     if (ret != MediaAVCodec::AVCS_ERR_OK) {
-        DHLOGD("%{public}s: ReleaseOutputBuffer failed.", DSCREEN_LOG_TAG);
+        DHLOGD("%s: ReleaseOutputBuffer failed.", LOG_TAG);
     }
 }
 
@@ -446,7 +445,7 @@ void ImageSinkDecoder::OnOutputFormatChanged(const Media::Format &format)
 
 int32_t ImageSinkDecoder::StartInputThread()
 {
-    DHLOGI("%{public}s: StartInputThread.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: StartInputThread.", LOG_TAG);
     isDecoderReady_ = true;
     decodeThread_ = std::thread(&ImageSinkDecoder::DecodeScreenData, this);
     return DH_SUCCESS;
@@ -454,7 +453,7 @@ int32_t ImageSinkDecoder::StartInputThread()
 
 int32_t ImageSinkDecoder::StopInputThread()
 {
-    DHLOGI("%{public}s: StopInputThread.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: StopInputThread.", LOG_TAG);
     isDecoderReady_ = false;
     if (decodeThread_.joinable()) {
         decodeThread_.join();
@@ -469,10 +468,10 @@ int32_t ImageSinkDecoder::StopInputThread()
 
 void ImageSinkDecoder::DecodeScreenData()
 {
-    DHLOGI("%{public}s: DecodeScreenData.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: DecodeScreenData.", LOG_TAG);
     int32_t ret = pthread_setname_np(pthread_self(), DECODE_THREAD);
     if (ret != DH_SUCCESS) {
-        DHLOGE("ImageSinkDecoder set thread name failed, ret %{public}" PRId32, ret);
+        DHLOGE("ImageSinkDecoder set thread name failed, ret %" PRId32, ret);
     }
     while (isDecoderReady_) {
         std::shared_ptr<DataBuffer> screenData;
@@ -484,7 +483,7 @@ void ImageSinkDecoder::DecodeScreenData()
                 && !availableInputBufferQueue_.empty()); });
 
             if (videoDataQueue_.empty() || availableInputIndexsQueue_.empty() || availableInputBufferQueue_.empty()) {
-                DHLOGD("%{public}s: Index queue or data queue or buffer queue is empty.", DSCREEN_LOG_TAG);
+                DHLOGD("%s: Index queue or data queue or buffer queue is empty.", LOG_TAG);
                 continue;
             }
             bufferIndex = availableInputIndexsQueue_.front();
@@ -504,38 +503,37 @@ void ImageSinkDecoder::DecodeScreenData()
 
 int32_t ImageSinkDecoder::ProcessData(const std::shared_ptr<DataBuffer> &screenData, const int32_t bufferIndex)
 {
-    DHLOGI("%{public}s: ProcessData.", DSCREEN_LOG_TAG);
+    DHLOGI("%s: ProcessData.", LOG_TAG);
     if (videoDecoder_ == nullptr || screenData == nullptr) {
-        DHLOGE("%{public}s: Decoder or screenData is null.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Decoder or screenData is null.", LOG_TAG);
         return ERR_DH_SCREEN_TRANS_NULL_VALUE;
     }
 
     if (availableInputBufferQueue_.empty()) {
-        DHLOGD("%{public}s: input buffer queue is empty.", DSCREEN_LOG_TAG);
+        DHLOGD("%s: input buffer queue is empty.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
 
     std::shared_ptr<Media::AVSharedMemory> inputBuffer = availableInputBufferQueue_.front();
     if (inputBuffer == nullptr) {
-        DHLOGE("%{public}s: Failed to obtain the input shared memory corresponding to the [%{public}d] index.",
-            DSCREEN_LOG_TAG, bufferIndex);
+        DHLOGE("%s: Failed to obtain the input shared memory corresponding to the [%d] index.", LOG_TAG, bufferIndex);
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
 
     int32_t ret = memcpy_s(inputBuffer->GetBase(), inputBuffer->GetSize(), screenData->Data(), screenData->Capacity());
     if (ret != EOK) {
-        DHLOGE("%{public}s: Copy data failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: Copy data failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
 
-    DHLOGD("%{public}s: Decode screen data. send data to H264 decoder", DSCREEN_LOG_TAG);
+    DHLOGD("%s: Decode screen data. send data to H264 decoder", LOG_TAG);
     MediaAVCodec::AVCodecBufferInfo bufferInfo;
     bufferInfo.presentationTimeUs = 0;
     bufferInfo.size = static_cast<int32_t>(screenData->Capacity());
     bufferInfo.offset = 0;
     ret = videoDecoder_->QueueInputBuffer(bufferIndex, bufferInfo, MediaAVCodec::AVCODEC_BUFFER_FLAG_NONE);
     if (ret != MediaAVCodec::AVCS_ERR_OK) {
-        DHLOGE("%{public}s: QueueInputBuffer failed.", DSCREEN_LOG_TAG);
+        DHLOGE("%s: QueueInputBuffer failed.", LOG_TAG);
         return ERR_DH_SCREEN_CODEC_SURFACE_ERROR;
     }
     availableInputBufferQueue_.pop();

@@ -22,7 +22,7 @@ namespace OHOS {
 namespace DistributedHardware {
 void ImageDecoderCallback::OnError(MediaAVCodec::AVCodecErrorType errorType, int32_t errorCode)
 {
-    DHLOGD("%{public}s: OnError.", DSCREEN_LOG_TAG);
+    DHLOGD("%s: OnError.", LOG_TAG);
     std::shared_ptr<ImageSinkDecoder> decoder = videoDecoder_.lock();
     if (decoder == nullptr) {
         DHLOGE("decoder is nullptr.");
@@ -34,7 +34,7 @@ void ImageDecoderCallback::OnError(MediaAVCodec::AVCodecErrorType errorType, int
 void ImageDecoderCallback::OnOutputBufferAvailable(uint32_t index, MediaAVCodec::AVCodecBufferInfo info,
     MediaAVCodec::AVCodecBufferFlag flag, std::shared_ptr<Media::AVSharedMemory> buffer)
 {
-    DHLOGD("%{public}s: OnOutputBufferAvailable.", DSCREEN_LOG_TAG);
+    DHLOGD("%s: OnOutputBufferAvailable.", LOG_TAG);
     std::shared_ptr<ImageSinkDecoder> decoder = videoDecoder_.lock();
     if (decoder == nullptr) {
         DHLOGE("decoder is nullptr.");
@@ -45,7 +45,7 @@ void ImageDecoderCallback::OnOutputBufferAvailable(uint32_t index, MediaAVCodec:
 
 void ImageDecoderCallback::OnInputBufferAvailable(uint32_t index, std::shared_ptr<Media::AVSharedMemory> buffer)
 {
-    DHLOGD("%{public}s: OnInputBufferAvailable.", DSCREEN_LOG_TAG);
+    DHLOGD("%s: OnInputBufferAvailable.", LOG_TAG);
     std::shared_ptr<ImageSinkDecoder> decoder = videoDecoder_.lock();
     if (decoder == nullptr) {
         DHLOGE("decoder is nullptr.");
@@ -56,7 +56,7 @@ void ImageDecoderCallback::OnInputBufferAvailable(uint32_t index, std::shared_pt
 
 void ImageDecoderCallback::OnOutputFormatChanged(const Media::Format &format)
 {
-    DHLOGD("%{public}s: OnOutputFormatChanged.", DSCREEN_LOG_TAG);
+    DHLOGD("%s: OnOutputFormatChanged.", LOG_TAG);
     std::shared_ptr<ImageSinkDecoder> decoder = videoDecoder_.lock();
     if (decoder == nullptr) {
         DHLOGE("decoder is nullptr.");

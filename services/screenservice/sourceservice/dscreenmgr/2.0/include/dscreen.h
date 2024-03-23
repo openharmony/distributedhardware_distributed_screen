@@ -81,7 +81,7 @@ public:
     ~ConsumBufferListener() = default;
     void OnBufferAvailable() override;
 private:
-    static const constexpr char *DSCREEN_LOG_TAG = "ConsumBufferListener";
+    static const constexpr char *LOG_TAG = "ConsumBufferListener";
     std::shared_ptr<DScreen> dScreen_;
 };
 

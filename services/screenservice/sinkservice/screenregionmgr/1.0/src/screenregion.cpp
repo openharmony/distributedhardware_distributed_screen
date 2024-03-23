@@ -46,7 +46,7 @@ ScreenRegion::~ScreenRegion()
 
 void ScreenRegion::OnTransError(int32_t err, const std::string &content)
 {
-    DHLOGW("OnTransError, err: %{public}" PRId32, err);
+    DHLOGW("OnTransError, err: %" PRId32, err);
     Stop();
 }
 
@@ -132,7 +132,7 @@ int32_t ScreenRegion::SetUpWindow()
 
 int32_t ScreenRegion::SetUp(const std::string &version)
 {
-    DHLOGI("ScreenRegion::SetUp, remoteDevId: %{public}s", GetAnonyString(remoteDevId_).c_str());
+    DHLOGI("ScreenRegion::SetUp, remoteDevId: %s", GetAnonyString(remoteDevId_).c_str());
     int32_t ret = SetUpWindow();
     if (ret != DH_SUCCESS) {
         DHLOGE("SetUpWindow failed.");
@@ -156,7 +156,7 @@ int32_t ScreenRegion::SetUp(const std::string &version)
 
 int32_t ScreenRegion::Start()
 {
-    DHLOGI("ScreenRegion::Start remoteDevId: %{public}s", GetAnonyString(remoteDevId_).c_str());
+    DHLOGI("ScreenRegion::Start remoteDevId: %s", GetAnonyString(remoteDevId_).c_str());
     if (sinkTrans_ == nullptr) {
         DHLOGE("sink trans not init.");
         return ERR_DH_SCREEN_SA_SINKTRANS_NOT_INIT;
@@ -173,7 +173,7 @@ int32_t ScreenRegion::Start()
 
 int32_t ScreenRegion::Stop()
 {
-    DHLOGI("ScreenRegion::Stop remoteDevId: %{public}s", GetAnonyString(remoteDevId_).c_str());
+    DHLOGI("ScreenRegion::Stop remoteDevId: %s", GetAnonyString(remoteDevId_).c_str());
     if (!isRunning) {
         DHLOGI("ScreenRegion not running, no need stop");
         return DH_SUCCESS;
