@@ -67,7 +67,7 @@ int32_t ScreenRegion::InitReceiverEngine(IAVEngineProvider *providerPtr)
 
 int32_t ScreenRegion::Release()
 {
-    DHLOGI("ScreenRegion::Release remoteDevId: %s", GetAnonyString(remoteDevId_).c_str());
+    DHLOGI("ScreenRegion::Release remoteDevId: %{public}s", GetAnonyString(remoteDevId_).c_str());
     if (!isRunning) {
         DHLOGI("ScreenRegion not running, no need release");
         return DH_SUCCESS;
@@ -118,7 +118,7 @@ int32_t ScreenRegion::StartReceiverEngine(const std::string &content)
 
 int32_t ScreenRegion::StopReceiverEngine()
 {
-    DHLOGI("StopReceiverEngine, remoteDevId: %s, screenId is: %" PRIu64,
+    DHLOGI("StopReceiverEngine, remoteDevId: %{public}s, screenId is: %{public}" PRIu64,
         GetAnonyString(remoteDevId_).c_str(), screenId_);
     int32_t ret = ScreenClient::GetInstance().RemoveWindow(windowId_);
     if (ret != DH_SUCCESS) {
@@ -259,7 +259,7 @@ void ScreenRegion::OnEngineMessage(const std::shared_ptr<AVTransMessage> &messag
         return;
     }
 
-    DHLOGI("On source device engine message received, message type =%d.", message->type_);
+    DHLOGI("On source device engine message received, message type =%{public}d.", message->type_);
     if (message->type_ == DScreenMsgType::START_MIRROR) {
         int32_t ret = StartReceiverEngine(message->content_);
         DScreenMsgType msgType = (ret == DH_SUCCESS) ? DScreenMsgType::START_MIRROR_SUCCESS :
@@ -289,7 +289,7 @@ void ScreenRegion::GetWSBuffer(sptr<OHOS::SurfaceBuffer> &wsBuffer, const std::s
         int32_t ret = memcpy_s(wsBufAddr + dstOffset, chromaOffset - dstOffset,
             bufferAddr + srcOffset, videoParam_->GetVideoWidth());
         if (ret != EOK) {
-            DHLOGE("memcpy video buffer y data failed,ret: %d.", ret);
+            DHLOGE("memcpy video buffer y data failed,ret: %{public}d.", ret);
             windowSurface_->CancelBuffer(wsBuffer);
             return;
         }
@@ -304,7 +304,7 @@ void ScreenRegion::GetWSBuffer(sptr<OHOS::SurfaceBuffer> &wsBuffer, const std::s
         int32_t ret = memcpy_s(wsBufAddr + dstOffset, wsBufSize - dstOffset,
             bufferAddr + srcOffset, videoParam_->GetVideoWidth());
         if (ret != EOK) {
-            DHLOGE("memcpy video buffer uv data failed,ret: %d.", ret);
+            DHLOGE("memcpy video buffer uv data failed,ret: %{public}d.", ret);
             windowSurface_->CancelBuffer(wsBuffer);
             return;
         }
@@ -336,7 +336,7 @@ void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer
     };
     SurfaceError surfaceErr = windowSurface_->RequestBuffer(wsBuffer, releaseFence, requestConfig);
     if (surfaceErr != SURFACE_ERROR_OK || wsBuffer == nullptr) {
-        DHLOGE("surface request buffer failed, surfaceErr: %d.", surfaceErr);
+        DHLOGE("surface request buffer failed, surfaceErr: %{public}d.", surfaceErr);
         windowSurface_->CancelBuffer(wsBuffer);
         return;
     }
@@ -356,11 +356,11 @@ void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer
     surfaceErr = windowSurface_->FlushBuffer(wsBuffer, -1, flushConfig);
     FinishTrace(DSCREEN_HITRACE_LABEL);
     if (surfaceErr != SURFACE_ERROR_OK) {
-        DHLOGE("surface flush buffer failed, surfaceErr: %d.", surfaceErr);
+        DHLOGE("surface flush buffer failed, surfaceErr: %{public}d.", surfaceErr);
         windowSurface_->CancelBuffer(wsBuffer);
         return;
     }
-    DHLOGI("Fill video buffer data to window surface success. frameNumber: %zu", frameNumber_.load());
+    DHLOGI("Fill video buffer data to window surface success. frameNumber: %{public}" PRIu32, frameNumber_.load());
 }
 
 uint64_t ScreenRegion::GetScreenId()

@@ -43,7 +43,7 @@ public:
     ~ConsumBufferListener() = default;
     void OnBufferAvailable() override;
 private:
-    static const constexpr char *LOG_TAG = "ConsumBufferListener";
+    static const constexpr char *DSCREEN_LOG_TAG = "ConsumBufferListener";
     std::shared_ptr<ImageSinkDecoder> decoder_;
 };
 class ImageSinkDecoder : public std::enable_shared_from_this<ImageSinkDecoder> {
@@ -79,7 +79,7 @@ private:
     int32_t ProcessData(const std::shared_ptr<DataBuffer> &screenData, const int32_t bufferIndex);
 
 private:
-    static const constexpr char *LOG_TAG = "ImageSinkDecoder";
+    static const constexpr char *DSCREEN_LOG_TAG = "ImageSinkDecoder";
     VideoParam configParam_;
     std::mutex dataMutex_;
     std::mutex decodeMutex_;

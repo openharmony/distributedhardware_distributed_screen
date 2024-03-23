@@ -36,7 +36,6 @@ ohos_unittest("ScreenCommonTest") {
 
   sources = [
     "${common_path}/src/dscreen_hisysevent.cpp",
-    "${common_path}/src/dscreen_log.cpp",
     "${common_path}/src/dscreen_util.cpp",
     "${common_path}/test/unittest/src/screen_common_test.cpp",
   ]

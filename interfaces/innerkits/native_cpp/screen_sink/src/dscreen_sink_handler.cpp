@@ -77,7 +77,7 @@ int32_t DScreenSinkHandler::InitSink(const std::string &params)
         StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SINK_LOAD_SYSTEM_ABILITY_START);
         int32_t ret = samgr->LoadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, loadCallback);
         if (ret != ERR_OK) {
-            DHLOGE("Failed to Load systemAbility, systemAbilityId:%" PRId32 ", ret code:%" PRId32,
+            DHLOGE("Failed to Load systemAbility, systemAbilityId:%{public}" PRId32 ", ret code:%{public}" PRId32,
                 DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID, ret);
             ReportSaFail(DSCREEN_INIT_FAIL, ret, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
                 "dscreen sink LoadSystemAbility call failed.");
@@ -139,7 +139,7 @@ int32_t DScreenSinkHandler::ReleaseSink()
 
 int32_t DScreenSinkHandler::SubscribeLocalHardware(const std::string &dhId, const std::string &param)
 {
-    DHLOGI("DScreenSinkHandler SubscribeLocalHardware dhId: %s", GetAnonyString(dhId).c_str());
+    DHLOGI("DScreenSinkHandler SubscribeLocalHardware dhId: %{public}s", GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(proxyMutex_);
     if (dScreenSinkProxy_ == nullptr) {
         DHLOGE("screen sink proxy not init.");
@@ -151,7 +151,7 @@ int32_t DScreenSinkHandler::SubscribeLocalHardware(const std::string &dhId, cons
 
 int32_t DScreenSinkHandler::UnsubscribeLocalHardware(const std::string &dhId)
 {
-    DHLOGI("DScreenSinkHandler UnsubscribeLocalHardware dhId: %s", GetAnonyString(dhId).c_str());
+    DHLOGI("DScreenSinkHandler UnsubscribeLocalHardware dhId: %{public}s", GetAnonyString(dhId).c_str());
     std::lock_guard<std::mutex> lock(proxyMutex_);
     if (dScreenSinkProxy_ == nullptr) {
         DHLOGE("screen sink proxy not init.");

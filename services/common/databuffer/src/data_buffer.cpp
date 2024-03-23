@@ -82,7 +82,7 @@ size_t DataBuffer::DataNumber()
 
 void DataBuffer::ResetCapcity(size_t capacity)
 {
-    DHLOGI("%s: ResetCapcity.", LOG_TAG);
+    DHLOGI("%{public}s: ResetCapcity.", DSCREEN_LOG_TAG);
     if (capacity < capacity_) {
         return;
     }
@@ -102,7 +102,7 @@ void DataBuffer::AddData(size_t dataSize, unsigned char* &inputData)
     }
     int32_t ret = memcpy_s(data_ + capacity_, dataSize, inputData, dataSize);
     if (ret != EOK) {
-        DHLOGE("%s: in AddData memcpy data failed, ret: %." PRId32, LOG_TAG, ret);
+        DHLOGE("%{public}s: in AddData memcpy data failed, ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
         return;
     }
     capacity_ += dataSize;
@@ -126,7 +126,7 @@ int32_t DataBuffer::GetData(int32_t offset, int32_t datasize, uint8_t* &output)
     }
     int32_t ret = memcpy_s(output, datasize, data_ + offset, datasize);
     if (ret != EOK) {
-        DHLOGE("GetData memcpy data failed, ret: %." PRId32, ret);
+        DHLOGE("GetData memcpy data failed, ret: %{public}" PRId32, ret);
         return ret;
     }
     return DH_SUCCESS;

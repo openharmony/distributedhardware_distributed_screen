@@ -49,7 +49,7 @@ public:
     std::vector<DirtyRect> GetDirtyRectVec();
     int32_t GetData(int32_t offset, int32_t datasize, uint8_t* &output);
 private:
-    static const constexpr char *LOG_TAG = "DataBuffer";
+    static const constexpr char *DSCREEN_LOG_TAG = "DataBuffer";
     std::vector<DirtyRect> dirtyRectVec_;
     size_t capacity_ = 0;
     uint8_t *data_ = nullptr;

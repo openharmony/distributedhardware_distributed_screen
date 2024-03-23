@@ -49,19 +49,19 @@ void DScreenSourceService::DeleteExistDScreens()
 {
     std::vector<sptr<Rosen::Screen>> screens;
     Rosen::ScreenManager::GetInstance().GetAllScreens(screens);
-    DHLOGI("screens size is: %" PRId32, screens.size());
+    DHLOGI("screens size is: %{public}zu", screens.size());
     for (const auto &screen : screens) {
         if (screen == nullptr) {
             DHLOGE("screen is nullptr.");
             continue;
         }
         std::string screenName = screen->GetName();
-        DHLOGI("DeleteExistDScreens, screenName:%s", screenName.c_str());
+        DHLOGI("DeleteExistDScreens, screenName:%{public}s", screenName.c_str());
         if (screenName.find(DSCREEN_PREFIX) != std::string::npos) {
             DHLOGI("DestroyVirtualScreen");
             Rosen::DMError err = Rosen::ScreenManager::GetInstance().DestroyVirtualScreen(screen->GetId());
             if (err != Rosen::DMError::DM_OK) {
-                DHLOGE("remove virtual screen failed, screenId:%" PRIu64, screen->GetId());
+                DHLOGE("remove virtual screen failed, screenId:%{public}" PRIu64, screen->GetId());
             }
         }
     }
@@ -72,11 +72,11 @@ void DScreenSourceService::OnStop()
     DHLOGI("dscreen source service stop.");
     int32_t ret = V2_0::DScreenManager::GetInstance().Release();
     if (ret != DH_SUCCESS) {
-        DHLOGE("Release V2_0::DScreenManager failed. err: %" PRId32, ret);
+        DHLOGE("Release V2_0::DScreenManager failed. err: %{public}" PRId32, ret);
     }
     ret = V1_0::DScreenManager::GetInstance().UnInit();
     if (ret != DH_SUCCESS) {
-        DHLOGE("UnInit V1_0::DScreenManager failed. err: %" PRId32, ret);
+        DHLOGE("UnInit V1_0::DScreenManager failed. err: %{public}" PRId32, ret);
     }
     registerToService_ = false;
 }
@@ -98,7 +98,7 @@ bool DScreenSourceService::Init()
 
 int32_t DScreenSourceService::InitSource(const std::string &params, const sptr<IDScreenSourceCallback> &callback)
 {
-    DHLOGI("Init source dscreen manager, params: %s", params.c_str());
+    DHLOGI("Init source dscreen manager, params: %{public}s", params.c_str());
     if (callback == nullptr) {
         DHLOGE("DScreenSourceService::InitSource, callback is nullptr.");
         return ERR_DH_SCREEN_SA_INIT_SOURCE_FAIL;
@@ -106,13 +106,13 @@ int32_t DScreenSourceService::InitSource(const std::string &params, const sptr<I
 
     int32_t ret = V2_0::DScreenManager::GetInstance().Initialize();
     if (ret != DH_SUCCESS) {
-        DHLOGE("Initialize V2_0::DScreenManager failed. err: %" PRId32, ret);
+        DHLOGE("Initialize V2_0::DScreenManager failed. err: %{public}" PRId32, ret);
         return ERR_DH_SCREEN_SA_INIT_SOURCE_FAIL;
     }
     V2_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
     ret = V1_0::DScreenManager::GetInstance().Init();
     if (ret != DH_SUCCESS) {
-        DHLOGE("Init V1_0::DScreenManager failed. err: %" PRId32, ret);
+        DHLOGE("Init V1_0::DScreenManager failed. err: %{public}" PRId32, ret);
         return ERR_DH_SCREEN_SA_INIT_SOURCE_FAIL;
     }
     V1_0::DScreenManager::GetInstance().RegisterDScreenCallback(callback);
@@ -124,11 +124,11 @@ int32_t DScreenSourceService::ReleaseSource()
     DHLOGI("Release source dscreen manager.");
     int32_t ret = V1_0::DScreenManager::GetInstance().UnInit();
     if (ret != DH_SUCCESS) {
-        DHLOGE("UnInit V1_0::DScreenManager failed. err: %" PRId32, ret);
+        DHLOGE("UnInit V1_0::DScreenManager failed. err: %{public}" PRId32, ret);
     }
     ret = V2_0::DScreenManager::GetInstance().Release();
     if (ret != DH_SUCCESS) {
-        DHLOGE("Release V2_0::DScreenManager failed. err: %" PRId32, ret);
+        DHLOGE("Release V2_0::DScreenManager failed. err: %{public}" PRId32, ret);
     }
     DHLOGI("exit source sa process");
     auto systemAbilityMgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
@@ -138,7 +138,7 @@ int32_t DScreenSourceService::ReleaseSource()
     }
     ret = systemAbilityMgr->UnloadSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
     if (ret != DH_SUCCESS) {
-        DHLOGE("source systemAbilityMgr UnLoadSystemAbility failed, ret: %" PRId32, ret);
+        DHLOGE("source systemAbilityMgr UnLoadSystemAbility failed, ret: %{public}" PRId32, ret);
         return DSCREEN_BAD_VALUE;
     }
     DHLOGI("source systemAbilityMgr UnLoadSystemAbility success");
@@ -148,7 +148,7 @@ int32_t DScreenSourceService::ReleaseSource()
 int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
     const EnableParam &param, const std::string &reqId)
 {
-    DHLOGI("Register source distributed screen, peer dscreen version: %s", param.sinkVersion.c_str());
+    DHLOGI("Register source distributed screen, peer dscreen version: %{public}s", param.sinkVersion.c_str());
     int32_t ret = DH_SUCCESS;
     if (IsSupportAVTransEngine(param.sinkVersion)) {
         ret = V2_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
@@ -156,9 +156,9 @@ int32_t DScreenSourceService::RegisterDistributedHardware(const std::string &dev
         ret = V1_0::DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
     }
     if (ret != DH_SUCCESS) {
-        DHLOGE("enable distributedScreen failed. devId: %s, dhId: %s, reqId: %s, param attrs: %s",
-            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), GetAnonyString(reqId).c_str(),
-            param.sinkAttrs.c_str());
+        DHLOGE("enable distributedScreen failed. devId: %{public}s, dhId: %{public}s, reqId: %{public}s, "
+            "param attrs: %{public}s", GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(),
+            GetAnonyString(reqId).c_str(), param.sinkAttrs.c_str());
         ReportRegisterFail(DSCREEN_REGISTER_FAIL, ret, GetAnonyString(devId).c_str(),
             GetAnonyString(dhId).c_str(), "enable distributedScreen failed.");
         return ERR_DH_SCREEN_SA_ENABLE_FAILED;
@@ -171,8 +171,9 @@ int32_t DScreenSourceService::UnregisterDistributedHardware(const std::string &d
 {
     int ret = V1_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
     if (ret != DH_SUCCESS) {
-        DHLOGE("V1_0::DScreenManager disable distributedScreen failed. devId: %s, dhId: %s, reqId: %s",
-            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), GetAnonyString(reqId).c_str());
+        DHLOGE("V1_0::DScreenManager disable distributedScreen failed. devId: %{public}s, dhId: %{public}s, "
+            "reqId: %{public}s", GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(),
+            GetAnonyString(reqId).c_str());
         ReportUnRegisterFail(DSCREEN_REGISTER_FAIL, ret, GetAnonyString(devId).c_str(),
             GetAnonyString(dhId).c_str(), "disable distributedScreen failed.");
         return ERR_DH_SCREEN_SA_DISABLE_FAILED;
@@ -180,8 +181,9 @@ int32_t DScreenSourceService::UnregisterDistributedHardware(const std::string &d
 
     ret = V2_0::DScreenManager::GetInstance().DisableDistributedScreen(devId, dhId, reqId);
     if (ret != DH_SUCCESS) {
-        DHLOGE("V2_0::DScreenManager disable distributedScreen failed. devId: %s, dhId: %s, reqId: %s",
-            GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(), GetAnonyString(reqId).c_str());
+        DHLOGE("V2_0::DScreenManager disable distributedScreen failed. devId: %{public}s, dhId: %{public}s, "
+            "reqId: %{public}s", GetAnonyString(devId).c_str(), GetAnonyString(dhId).c_str(),
+            GetAnonyString(reqId).c_str());
         ReportUnRegisterFail(DSCREEN_REGISTER_FAIL, ret, GetAnonyString(devId).c_str(),
             GetAnonyString(dhId).c_str(), "disable distributedScreen failed.");
         return ERR_DH_SCREEN_SA_DISABLE_FAILED;
@@ -202,7 +204,7 @@ int32_t DScreenSourceService::ConfigDistributedHardware(const std::string &devId
 void DScreenSourceService::DScreenNotify(const std::string &devId, const int32_t eventCode,
     const std::string &eventContent)
 {
-    DHLOGI("DScreenNotify, devId: %s, eventCode: %" PRId32, GetAnonyString(devId).c_str(), eventCode);
+    DHLOGI("DScreenNotify, devId: %{public}s, eventCode: %{public}" PRId32, GetAnonyString(devId).c_str(), eventCode);
     V1_0::DScreenManager::GetInstance().HandleDScreenNotify(devId, eventCode, eventContent);
 }
 

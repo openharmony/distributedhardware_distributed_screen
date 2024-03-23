@@ -30,7 +30,7 @@ DScreenSinkLoadCallback::DScreenSinkLoadCallback(
 void DScreenSinkLoadCallback::OnLoadSystemAbilitySuccess(
     int32_t systemAbilityId, const sptr<IRemoteObject> &remoteObject)
 {
-    DHLOGI("load screen SA success, systemAbilityId:%" PRId32 ", remoteObject result:%s",
+    DHLOGI("load screen SA success, systemAbilityId:%{public}" PRId32 ", remoteObject result:%{public}s",
         systemAbilityId, (remoteObject != nullptr) ? "true" : "false");
     if (systemAbilityId != DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID) {
         DHLOGE("start systemabilityId is not sinkSAId!");
@@ -46,7 +46,7 @@ void DScreenSinkLoadCallback::OnLoadSystemAbilitySuccess(
 
 void DScreenSinkLoadCallback::OnLoadSystemAbilityFail(int32_t systemAbilityId)
 {
-    DHLOGE("load screen SA failed, systemAbilityId: %" PRId32, systemAbilityId);
+    DHLOGE("load screen SA failed, systemAbilityId: %{public}" PRId32, systemAbilityId);
     ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, systemAbilityId,
         "dscreen sink OnLoadSystemAbilityFail.");
 }
