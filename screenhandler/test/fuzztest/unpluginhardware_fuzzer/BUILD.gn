@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2024 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -23,14 +23,10 @@ ohos_fuzztest("UnPluginHardwareFuzzTest") {
 
   fuzz_config_file = "${distributedscreen_path}/screenhandler/test/fuzztest/unpluginhardware_fuzzer"
 
-  include_dirs = [ "${fwk_common_path}/utils/include" ]
-
-  include_dirs += [
+  include_dirs = [
     "include",
     "${common_path}/include",
     "${distributedscreen_path}/screenhandler/include",
-    "${fwk_services_path}/distributedhardwarefwkservice/include/localhardwaremanager",
-    "${fwk_common_path}/utils/include",
   ]
 
   cflags = [
@@ -42,10 +38,8 @@ ohos_fuzztest("UnPluginHardwareFuzzTest") {
 
   sources = [ "unpluginhardware_fuzzer.cpp" ]
 
-  deps = [
-    "${distributedscreen_path}/screenhandler:distributed_screen_handler",
-    "${fwk_services_path}/distributedhardwarefwkservice:distributedhardwarefwksvr",
-  ]
+  deps =
+      [ "${distributedscreen_path}/screenhandler:distributed_screen_handler" ]
 
   defines = [
     "HI_LOG_ENABLE",
@@ -55,6 +49,7 @@ ohos_fuzztest("UnPluginHardwareFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "graphic_2d:libgraphic_utils",
     "graphic_surface:surface",
     "hilog:libhilog",
@@ -66,7 +61,6 @@ ohos_fuzztest("UnPluginHardwareFuzzTest") {
 ###############################################################################
 group("fuzztest") {
   testonly = true
-  deps = []
-  deps += [ ":UnPluginHardwareFuzzTest" ]
+  deps = [ ":UnPluginHardwareFuzzTest" ]
 }
 ###############################################################################

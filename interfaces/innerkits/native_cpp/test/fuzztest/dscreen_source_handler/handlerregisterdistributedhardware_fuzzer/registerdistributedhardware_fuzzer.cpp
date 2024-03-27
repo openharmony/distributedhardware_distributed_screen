@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +18,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "component_enable.h"
+#include "mock_component_enable.h"
 #include "dscreen_source_handler.h"
 
 namespace OHOS {
@@ -36,7 +36,7 @@ void RegisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
     EnableParam param;
     param.sinkVersion = version;
     param.sinkAttrs = attrs;
-    std::shared_ptr<RegisterCallback> callback = std::make_shared<ComponentEnable>();
+    std::shared_ptr<RegisterCallback> callback = std::make_shared<MockComponentEnable>();
 
     DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
 }

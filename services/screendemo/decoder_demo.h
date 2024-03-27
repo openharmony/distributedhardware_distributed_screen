@@ -92,6 +92,6 @@ private:
     uint32_t frameCount_ = 0;
     uint32_t defaultFrameCount_ = 0;
 };
-} // namespace Media
+} // namespace MediaAVCodec
 } // namespace OHOS
 #endif // AVCODEC_VDEC_DEMO_H

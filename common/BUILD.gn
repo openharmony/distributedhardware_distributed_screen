@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2024 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -29,7 +29,6 @@ ohos_shared_library("distributed_screen_utils") {
   include_dirs = [
     "${services_path}/common/utils/include",
     "${common_path}/include",
-    "${fwk_common_path}/utils/include",
   ]
 
   sources = [
@@ -40,6 +39,7 @@ ohos_shared_library("distributed_screen_utils") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
     "hilog:libhilog",

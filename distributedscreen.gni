@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2024 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,18 +12,8 @@
 # limitations under the License.
 
 distributedscreen_path = "//foundation/distributedhardware/distributed_screen"
-distributedhardwarefwk_path =
-    "//foundation/distributedhardware/distributed_hardware_fwk"
 fuzz_test_path = "distributed_screen/distributed_screen"
-windowmanager_path = "//foundation/window/window_manager"
-driver_path = "//drivers/peripheral/display"
-ipc_path = "//foundation/communication/ipc"
 common_path = "${distributedscreen_path}/common"
 services_path = "${distributedscreen_path}/services"
 interfaces_path = "${distributedscreen_path}/interfaces"
-fwk_utils_path = "${distributedhardwarefwk_path}/utils"
-fwk_common_path = "${distributedhardwarefwk_path}/common"
-fwk_services_path = "${distributedhardwarefwk_path}/services"
-fwk_interfaces_path = "${distributedhardwarefwk_path}/interfaces"
-ipc_interfaces_path = "${ipc_path}/interfaces"
 build_flags = [ "-Werror" ]

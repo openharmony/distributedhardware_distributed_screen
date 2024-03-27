@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2024 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -23,16 +23,13 @@ ohos_fuzztest("CallBackOnNotifyUnregResultFuzzTest") {
 
   fuzz_config_file = "${interfaces_path}/innerkits/native_cpp/test/fuzztest/dscreen_source_callback/callbackonnotifyunregresult_fuzzer"
 
-  include_dirs = [ "${fwk_common_path}/utils/include" ]
-
-  include_dirs += [
+  include_dirs = [
     "include",
     "include/callback",
     "${common_path}/include",
+    "${interfaces_path}/innerkits/native_cpp/test/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
-    "${fwk_services_path}/distributedhardwarefwkservice/include",
-    "${fwk_services_path}/distributedhardwarefwkservice/include/componentmanager",
   ]
 
   cflags = [
@@ -44,10 +41,7 @@ ohos_fuzztest("CallBackOnNotifyUnregResultFuzzTest") {
 
   sources = [ "callbackonnotifyunregresult_fuzzer.cpp" ]
 
-  deps = [
-    "${fwk_services_path}/distributedhardwarefwkservice:distributedhardwarefwksvr",
-    "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
-  ]
+  deps = [ "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk" ]
 
   defines = [
     "HI_LOG_ENABLE",
@@ -57,6 +51,7 @@ ohos_fuzztest("CallBackOnNotifyUnregResultFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "hilog:libhilog",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
