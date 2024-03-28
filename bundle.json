@@ -44,11 +44,10 @@
                 "hitrace",
                 "c_utils",
                 "window_manager",
-                "distributed_hardware_fwk"
-            ],
-            "third_party": [
+                "distributed_hardware_fwk",
                 "libjpeg-turbo"
-            ]
+            ],
+            "third_party": []
         },
         "build": {
             "sub_component": [

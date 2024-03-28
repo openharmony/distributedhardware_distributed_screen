@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2024 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,11 +19,6 @@ module_out_path = "distributed_screen/screen_client_test"
 
 config("module_private_config") {
   include_dirs = [
-    "${windowmanager_path}/interfaces/innerkits/wm",
-    "${fwk_common_path}/utils/include",
-  ]
-
-  include_dirs += [
     "include",
     "${common_path}/include",
     "${services_path}/screenclient/include",
@@ -56,6 +51,7 @@ ohos_unittest("ScreenClientTest") {
 
   external_deps = [
     "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
     "graphic_2d:librender_service_client",
     "graphic_surface:surface",
     "input:libmmi-client",
