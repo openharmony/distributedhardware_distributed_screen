@@ -36,6 +36,7 @@ public:
     VideoParam param_;
     std::shared_ptr<ImageSinkProcessor> processor_;
     std::shared_ptr<IImageSinkProcessorListener> imageListener_;
+    std::shared_ptr<MediaAVCodec::AVCodecVideoDecoder> videoDecoder_ = nullptr;
 };
 } // namespace DistributedHardware
 } // namespace OHOS

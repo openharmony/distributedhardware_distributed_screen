@@ -23,6 +23,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr static uint32_t videoDataNum = 480;
 void ScreenSourceTransTest::SetUpTestCase(void) {}
 
 void ScreenSourceTransTest::TearDownTestCase(void) {}
@@ -117,17 +118,17 @@ HWTEST_F(ScreenSourceTransTest, SetUp_002, TestSize.Level1)
     VideoParam localParam;
     localParam.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
     localParam.SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
-    localParam.SetVideoHeight(100);
-    localParam.SetVideoWidth(100);
-    localParam.SetScreenHeight(100);
-    localParam.SetScreenWidth(100);
+    localParam.SetVideoHeight(videoDataNum);
+    localParam.SetVideoWidth(videoDataNum);
+    localParam.SetScreenHeight(videoDataNum);
+    localParam.SetScreenWidth(videoDataNum);
     VideoParam remoteParam;
     remoteParam.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
     remoteParam.SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
-    remoteParam.SetVideoHeight(100);
-    remoteParam.SetVideoWidth(100);
-    remoteParam.SetScreenHeight(100);
-    remoteParam.SetScreenWidth(100);
+    remoteParam.SetVideoHeight(videoDataNum);
+    remoteParam.SetVideoWidth(videoDataNum);
+    remoteParam.SetScreenHeight(videoDataNum);
+    remoteParam.SetScreenWidth(videoDataNum);
 
     int32_t actual = trans->SetUp(localParam, remoteParam, "peerDevId");
     DisablePermissionAccess(tokenId_);

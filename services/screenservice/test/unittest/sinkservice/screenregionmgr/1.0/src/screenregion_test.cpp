@@ -176,7 +176,7 @@ HWTEST_F(ScreenRegionTestV1, SetUp_001, TestSize.Level1)
     videoParam->videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
     videoParam->codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
     videoParam->videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
-    videoParam->fps_ = 30;
+    videoParam->fps_ = 30.0;
     screenRegion_->SetVideoParam(videoParam);
     std::string version = "1.0";
     int32_t ret = screenRegion_->SetUp(version);

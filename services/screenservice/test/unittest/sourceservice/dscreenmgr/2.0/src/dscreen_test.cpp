@@ -32,7 +32,7 @@ using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
 namespace V2_0 {
-constexpr static int32_t videoDataNum = 100;
+constexpr static uint32_t videoDataNum = 480;
 void DScreenTestV2::SetUpTestCase(void) {}
 
 void DScreenTestV2::TearDownTestCase(void) {}

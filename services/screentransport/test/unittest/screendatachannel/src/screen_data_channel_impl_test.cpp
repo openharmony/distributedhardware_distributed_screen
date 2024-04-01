@@ -27,7 +27,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
-    namespace {
+namespace {
     const std::string PEER_SESSION_NAME = "ohos.dhardware.dscreen.session8647073e02e7a78f09473aa122";
     const std::string REMOTE_DEV_ID = "f6d4c0864707aefte7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
     const std::string DSCREEN_PKG_NAME_TEST = "ohos.dhardware.dscreen";
@@ -44,7 +44,11 @@ void ScreenDataChannelImplTest::SetUp(void)
 
 void ScreenDataChannelImplTest::TearDown(void)
 {
-    dataChannelImpl_ = nullptr;
+    if (dataChannelImpl_ != nullptr) {
+        dataChannelImpl_->CloseSession();
+        dataChannelImpl_->ReleaseSession();
+        dataChannelImpl_ = nullptr;
+    }
 }
 
 void EnablePermissionAccess(const char* perms[], size_t permsNum, uint64_t &tokenId)
@@ -114,7 +118,19 @@ HWTEST_F(ScreenDataChannelImplTest, OpenSession_001, TestSize.Level1)
 {
     std::shared_ptr<IScreenChannelListener> listener = std::make_shared<MockIScreenChannelListener>();
     int32_t ret = dataChannelImpl_->OpenSession(listener);
-    EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_REGISTER_SOFTBUS_LISTENER_FAIL, ret);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, ret);
+}
+
+/**
+ * @tc.name: OpenSession_002
+ * @tc.desc: Verify the OpenSession function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenDataChannelImplTest, OpenSession_002, TestSize.Level1)
+{
+    int32_t ret = dataChannelImpl_->OpenSession(nullptr);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
 }
 
 /**

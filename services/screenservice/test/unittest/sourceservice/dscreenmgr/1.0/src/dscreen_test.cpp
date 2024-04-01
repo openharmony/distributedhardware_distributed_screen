@@ -34,7 +34,7 @@ using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
 namespace V1_0 {
-constexpr static int32_t videoDataNum = 100;
+constexpr static uint32_t videoDataNum = 480;
 void DScreenTestV1::SetUpTestCase(void) {}
 
 void DScreenTestV1::TearDownTestCase(void) {}
@@ -248,13 +248,6 @@ HWTEST_F(DScreenTestV1, CheckJsonData_001, TestSize.Level1)
 
     std::string taskId = "taskId";
     dScreen_->dscreenCallback_ = nullptr;
-    dScreen_->videoParam_ = std::make_shared<VideoParam>();
-    dScreen_->videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
-    dScreen_->videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
-    dScreen_->videoParam_->SetVideoHeight(100);
-    dScreen_->videoParam_->SetVideoWidth(100);
-    dScreen_->videoParam_->SetScreenHeight(100);
-    dScreen_->videoParam_->SetScreenWidth(100);
     dScreen_->HandleDisable(taskId);
     dScreen_->HandleConnect();
     dScreen_->curState_ = CONNECTED;
@@ -353,13 +346,6 @@ HWTEST_F(DScreenTestV1, SetUp_001, TestSize.Level1)
     };
     EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
     dScreen_->sourceTrans_ = nullptr;
-    dScreen_->videoParam_ = std::make_shared<VideoParam>();
-    dScreen_->videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
-    dScreen_->videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
-    dScreen_->videoParam_->SetVideoHeight(100);
-    dScreen_->videoParam_->SetVideoWidth(100);
-    dScreen_->videoParam_->SetScreenHeight(100);
-    dScreen_->videoParam_->SetScreenWidth(100);
     dScreen_->version_ = "1.0";
     int32_t ret = dScreen_->SetUp();
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -380,13 +366,6 @@ HWTEST_F(DScreenTestV1, SetUp_002, TestSize.Level1)
     };
     EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
     dScreen_->sourceTrans_ = std::make_shared<ScreenSourceTrans>();
-    dScreen_->videoParam_ = std::make_shared<VideoParam>();
-    dScreen_->videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
-    dScreen_->videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
-    dScreen_->videoParam_->SetVideoHeight(100);
-    dScreen_->videoParam_->SetVideoWidth(100);
-    dScreen_->videoParam_->SetScreenHeight(100);
-    dScreen_->videoParam_->SetScreenWidth(100);
     dScreen_->version_ = "1.0";
     int32_t ret = dScreen_->SetUp();
     EXPECT_EQ(DH_SUCCESS, ret);
