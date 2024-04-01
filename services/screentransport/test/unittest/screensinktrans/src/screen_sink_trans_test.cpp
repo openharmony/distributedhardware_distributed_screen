@@ -26,6 +26,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr static uint32_t videoDataNum = 480;
 void ScreenSinkTransTest::SetUpTestCase(void) {}
 
 void ScreenSinkTransTest::TearDownTestCase(void) {}
@@ -42,16 +43,22 @@ void ScreenSinkTransTest::SetUp(void)
     trans_->decoderSurface_ = pSurface;
     trans_->transCallback_ = std::make_shared<MockIScreenSinkTransCallback>();
 
-    param_.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
-    param_.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
-    param_.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
-    param_.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    param_.screenWidth_ = videoDataNum;
+    param_.screenHeight_ = videoDataNum;
+    param_.videoWidth_ = videoDataNum;
+    param_.videoHeight_ = videoDataNum;
     param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
     param_.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
     param_.fps_ = FPS;
 }
 
-void ScreenSinkTransTest::TearDown(void) {}
+void ScreenSinkTransTest::TearDown(void)
+{
+    if (trans_ != nullptr) {
+        trans_->Stop();
+        trans_->Release();
+    }
+}
 
 /**
  * @tc.name: setup_test_001

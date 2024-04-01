@@ -23,6 +23,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr static uint32_t videoDataNum = 480;
 void VideoParamTest::SetUpTestCase(void) {}
 
 void VideoParamTest::TearDownTestCase(void) {}
@@ -141,19 +142,15 @@ HWTEST_F(VideoParamTest, GetVideoFormat_001, TestSize.Level1)
 HWTEST_F(VideoParamTest, to_json_001, TestSize.Level1)
 {
     json j;
-    uint32_t screenWidth = 100;
-    uint32_t screenHeight = 100;
-    uint32_t videoWidth = 100;
-    uint32_t videoHeight = 100;
     double fps = 30.0;
     uint8_t videoFormat = DEFAULT_VIDEO_FORMAT;
     uint8_t codecType = DEFAULT_CODECTYPE;
 
     VideoParam videoParam;
-    videoParam.SetScreenWidth(screenWidth);
-    videoParam.SetScreenHeight(screenHeight);
-    videoParam.SetVideoWidth(videoWidth);
-    videoParam.SetVideoHeight(videoHeight);
+    videoParam.SetScreenWidth(videoDataNum);
+    videoParam.SetScreenHeight(videoDataNum);
+    videoParam.SetVideoWidth(videoDataNum);
+    videoParam.SetVideoHeight(videoDataNum);
     videoParam.SetFps(fps);
     videoParam.SetVideoFormat(videoFormat);
     videoParam.SetCodecType(codecType);
@@ -161,7 +158,7 @@ HWTEST_F(VideoParamTest, to_json_001, TestSize.Level1)
 
     uint32_t jsonVideoWidth = 0;
     j.at(KEY_VIDEO_WIDTH).get_to(jsonVideoWidth);
-    EXPECT_EQ(videoWidth, jsonVideoWidth);
+    EXPECT_EQ(videoDataNum, jsonVideoWidth);
 }
 
 /**

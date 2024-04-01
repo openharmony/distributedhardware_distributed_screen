@@ -29,7 +29,13 @@ void ImageSourceEncoderTest::SetUp(void)
     encoder = std::make_shared<ImageSourceEncoder>(imageListener);
 }
 
-void ImageSourceEncoderTest::TearDown(void) {}
+void ImageSourceEncoderTest::TearDown(void)
+{
+    if (encoder != nullptr) {
+        encoder->StopEncoder();
+        encoder->ReleaseEncoder();
+    }
+}
 
 /**
  * @tc.name: ConfigureEncoder_001

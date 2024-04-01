@@ -31,6 +31,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr static uint32_t videoDataNum = 480;
 void DScreenManagerAdapterTest::SetUpTestCase(void) {}
 
 void DScreenManagerAdapterTest::TearDownTestCase(void) {}
@@ -255,10 +256,14 @@ HWTEST_F(DScreenManagerAdapterTest, GetMapRelation_002, TestSize.Level1)
     std::string dhId = "dhId";
     ScreenMgrAdapter::GetInstance().screenIdMap_.clear();
     std::shared_ptr<VideoParam> videoParam = std::make_shared<VideoParam>();
+    videoParam->SetScreenWidth(videoDataNum);
+    videoParam->SetScreenHeight(videoDataNum);
     uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId, dhId, videoParam);
     std::shared_ptr<DScreenMapRelation> ret = ScreenMgrAdapter::GetInstance().GetMapRelation(screenId);
     DisablePermissionAccess(tokenId_);
     EXPECT_NE(nullptr, ret);
+    ScreenMgrAdapter::GetInstance().RemoveVirtualScreen(screenId);
+    ScreenMgrAdapter::GetInstance().screenIdMap_.clear();
 }
 }
 }

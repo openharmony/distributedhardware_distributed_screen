@@ -27,27 +27,36 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr static uint32_t videoDataNum = 480;
 void ImageSinkDecoderTest::SetUpTestCase(void) {}
 
 void ImageSinkDecoderTest::TearDownTestCase(void) {}
 
 void ImageSinkDecoderTest::SetUp(void)
 {
-    param_.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
-    param_.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
-    param_.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
-    param_.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    param_.screenWidth_ = videoDataNum;
+    param_.screenHeight_ = videoDataNum;
+    param_.videoWidth_ = videoDataNum;
+    param_.videoHeight_ = videoDataNum;
     param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
     param_.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
     param_.fps_ = FPS;
 
     imageListener_ = std::make_shared<MockIImageSinkProcessorListener>();
     imageDecoder_ = std::make_shared<ImageSinkDecoder>(imageListener_);
-    imageDecoder_->videoDecoder_ = MediaAVCodec::VideoDecoderFactory::CreateByMime(
+    videoDecoder_ = MediaAVCodec::VideoDecoderFactory::CreateByMime(
         std::string(MediaAVCodec::CodecMimeType::VIDEO_AVC));
+    imageDecoder_->videoDecoder_ = videoDecoder_;
 }
 
-void ImageSinkDecoderTest::TearDown(void) {}
+void ImageSinkDecoderTest::TearDown(void)
+{
+    if (videoDecoder_ != nullptr) {
+        videoDecoder_->Stop();
+        videoDecoder_->Release();
+        videoDecoder_ = nullptr;
+    }
+}
 
 /**
  * @tc.name: configure_decoder_test_001

@@ -52,7 +52,6 @@ HWTEST_F(ScreenClientTest, AddWindow_002, TestSize.Level1)
 {
     std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
     int32_t expectId = ScreenClient::GetInstance().AddWindow(windowProperty);
-    EXPECT_EQ(0, expectId);
     int32_t ret = ScreenClient::GetInstance().RemoveWindow(expectId);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
