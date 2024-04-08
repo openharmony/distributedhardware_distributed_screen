@@ -74,6 +74,7 @@ ohos_unittest("DscreenMgrTest") {
     "access_token:libnativetoken",
     "access_token:libtoken_setproc",
     "av_codec:av_codec_client",
+    "cJSON:cjson",
     "c_utils:utils",
     "distributed_hardware_fwk:distributed_av_sender",
     "distributed_hardware_fwk:distributedhardwareutils",

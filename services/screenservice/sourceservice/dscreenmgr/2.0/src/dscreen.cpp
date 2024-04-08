@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -31,6 +31,7 @@
 #include "dscreen_util.h"
 #include "xcollie/watchdog.h"
 #include "common/include/screen_manager_adapter.h"
+#include "cJSON.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -523,8 +524,8 @@ int32_t DScreen::WaitForSinkStarted()
 int32_t DScreen::NegotiateCodecType(const std::string &rmtDecoderStr)
 {
     DHLOGI("Start NegotiateCodecType, remote decoder: %{public}s", rmtDecoderStr.c_str());
-    json rmtDecoderJson = json::parse(rmtDecoderStr, nullptr, false);
-    if (rmtDecoderJson.is_discarded()) {
+    cJSON *rmtDecoderJson = cJSON_Parse(rmtDecoderStr.c_str());
+    if (rmtDecoderJson == nullptr) {
         DHLOGE("remote Decoder Json is invalid.");
         return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
     }
@@ -545,8 +546,8 @@ int32_t DScreen::NegotiateCodecType(const std::string &rmtDecoderStr)
     }
     DHLOGI("DScreen Negotiate QueryVideoEncoderAbility info: %{public}s", localVideoEncodersJsonStr.c_str());
 
-    json localVideoEncodersJson = json::parse(localVideoEncodersJsonStr, nullptr, false);
-    if (localVideoEncodersJson.is_discarded()) {
+    cJSON *localVideoEncodersJson = cJSON_Parse(localVideoEncodersJsonStr.c_str());
+    if (localVideoEncodersJson == nullptr) {
         DHLOGE("localVideoEncodersJson is invalid.");
         return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
     }
