@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -479,9 +479,10 @@ void ImageSinkDecoder::DecodeScreenData()
         int32_t bufferIndex = 0;
         {
             std::unique_lock<std::mutex> lock(dataMutex_);
-            decodeCond_.wait_for(lock, std::chrono::milliseconds(DECODE_WAIT_MILLISECONDS),
-                [this]() { return (!videoDataQueue_.empty() && !availableInputIndexsQueue_.empty()
-                && !availableInputBufferQueue_.empty()); });
+            decodeCond_.wait_for(lock, std::chrono::milliseconds(DECODE_WAIT_MILLISECONDS), [this]() {
+                return (!videoDataQueue_.empty() && !availableInputIndexsQueue_.empty() &&
+                        !availableInputBufferQueue_.empty());
+            });
 
             if (videoDataQueue_.empty() || availableInputIndexsQueue_.empty() || availableInputBufferQueue_.empty()) {
                 DHLOGD("%{public}s: Index queue or data queue or buffer queue is empty.", DSCREEN_LOG_TAG);

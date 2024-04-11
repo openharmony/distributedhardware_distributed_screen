@@ -21,12 +21,9 @@ ohos_fuzztest("OnOutputFormatChangedFuzzTest") {
   module_out_path = "${fuzz_test_path}/imageencodercallback"
   fuzz_config_file = "${services_path}/screentransport/test/fuzztest/screensourceprocessor/onoutputformatchanged_fuzzer"
 
-  cflags = [
-    "-g",
-    "-O0",
-    "-Wno-unused-variable",
-    "-fno-omit-frame-pointer",
-  ]
+  configs =
+      [ "${common_path}/test/unittest/resource:dscreen_unittest_public_config" ]
+
   sources = [ "onoutputformatchanged_fuzzer.cpp" ]
 
   include_dirs = [

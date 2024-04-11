@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,9 +13,7 @@
  * limitations under the License.
  */
 
-#define private public
 #include "video_param_test.h"
-#undef private
 
 using json = nlohmann::json;
 
@@ -23,7 +21,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
-constexpr static uint32_t videoDataNum = 480;
+constexpr static uint32_t VIDEO_DATA_NUM = 480;
 void VideoParamTest::SetUpTestCase(void) {}
 
 void VideoParamTest::TearDownTestCase(void) {}
@@ -147,10 +145,10 @@ HWTEST_F(VideoParamTest, to_json_001, TestSize.Level1)
     uint8_t codecType = DEFAULT_CODECTYPE;
 
     VideoParam videoParam;
-    videoParam.SetScreenWidth(videoDataNum);
-    videoParam.SetScreenHeight(videoDataNum);
-    videoParam.SetVideoWidth(videoDataNum);
-    videoParam.SetVideoHeight(videoDataNum);
+    videoParam.SetScreenWidth(VIDEO_DATA_NUM);
+    videoParam.SetScreenHeight(VIDEO_DATA_NUM);
+    videoParam.SetVideoWidth(VIDEO_DATA_NUM);
+    videoParam.SetVideoHeight(VIDEO_DATA_NUM);
     videoParam.SetFps(fps);
     videoParam.SetVideoFormat(videoFormat);
     videoParam.SetCodecType(codecType);
@@ -158,7 +156,7 @@ HWTEST_F(VideoParamTest, to_json_001, TestSize.Level1)
 
     uint32_t jsonVideoWidth = 0;
     j.at(KEY_VIDEO_WIDTH).get_to(jsonVideoWidth);
-    EXPECT_EQ(videoDataNum, jsonVideoWidth);
+    EXPECT_EQ(VIDEO_DATA_NUM, jsonVideoWidth);
 }
 
 /**

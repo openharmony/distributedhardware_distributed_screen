@@ -47,7 +47,10 @@ ohos_unittest("DataChannelTest") {
 
   sources = [ "${services_path}/screentransport/test/unittest/screendatachannel/src/screen_data_channel_impl_test.cpp" ]
 
-  configs = [ ":module_private_config" ]
+  configs = [
+    ":module_private_config",
+    "${common_path}/test/unittest/resource:dscreen_unittest_public_config",
+  ]
 
   deps = [
     "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
@@ -70,12 +73,6 @@ ohos_unittest("DataChannelTest") {
     "DH_LOG_TAG=\"datachanneltest\"",
     "LOG_DOMAIN=0xD004140",
   ]
-
-  cflags = [
-    "-frtti",
-    "-fexceptions",
-  ]
-  cflags_cc = cflags
 }
 
 group("data_channel_test") {

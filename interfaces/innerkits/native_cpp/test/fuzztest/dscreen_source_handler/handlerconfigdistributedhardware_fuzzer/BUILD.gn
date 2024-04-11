@@ -31,12 +31,8 @@ ohos_fuzztest("HandlerConfigDistributedHardwareFuzzTest") {
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
   ]
 
-  cflags = [
-    "-g",
-    "-O0",
-    "-Wno-unused-variable",
-    "-fno-omit-frame-pointer",
-  ]
+  configs =
+      [ "${common_path}/test/unittest/resource:dscreen_unittest_public_config" ]
 
   sources = [ "configdistributedhardware_fuzzer.cpp" ]
 

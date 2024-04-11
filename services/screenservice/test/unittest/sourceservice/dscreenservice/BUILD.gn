@@ -44,7 +44,10 @@ ohos_unittest("DScreenSourceStubTest") {
     "${services_path}/screenservice/test/unittest/sourceservice/dscreenservice/src/dscreen_source_stub_test.cpp",
   ]
 
-  configs = [ ":module_private_config" ]
+  configs = [
+    ":module_private_config",
+    "${common_path}/test/unittest/resource:dscreen_unittest_public_config",
+  ]
 
   deps = [
     "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",

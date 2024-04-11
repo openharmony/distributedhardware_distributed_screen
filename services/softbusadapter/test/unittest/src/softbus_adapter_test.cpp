@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,8 +23,8 @@ using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
     namespace {
-    const std::string PEER_SESSION_NAME = "ohos.dhardware.dscreen.session8647073e02e7a78f09473aa122";
-    const std::string REMOTE_DEV_ID = "f6d4c0864707aefte7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
+    const std::string PEER_SESSION_NAME = "ohos.dhardware.dscreen.session8647073e02e7a78f09473aa125";
+    const std::string REMOTE_DEV_ID = "f6d4c0864707aefte7a78f09473aa122ff57fc81c00981fcf5be989e7d112125";
     const std::string DSCREEN_PKG_NAME_TEST = "ohos.dhardware.dscreen";
 }
 void SoftbusAdapterTest::SetUpTestCase(void) {}
@@ -132,6 +132,40 @@ HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_002, TestSize.Level1)
     int32_t actual = softbusAdapter.CreateSoftbusSessionServer(pkgname, sessionName, peerDevId);
     EXPECT_EQ(DH_SUCCESS, actual);
     softbusAdapter.RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
+}
+
+/**
+ * @tc.name: CreateSoftbusSessionServer_003
+ * @tc.desc: Verify the CreateSoftbusSessionServer function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_003, TestSize.Level1)
+{
+    std::string pkgName = "ohos.dhardware.dscreentest";
+    std::string sessionName = DATA_SESSION_NAME;
+    std::string peerDevId = "peerDevId";
+    softbusAdapter.serverIdMap_.clear();
+    softbusAdapter.serverIdMap_.insert(std::make_pair(100000, sessionName + "_" + peerDevId));
+    int32_t actual = softbusAdapter.CreateSoftbusSessionServer(pkgName, sessionName, peerDevId);
+    EXPECT_EQ(DH_SUCCESS, actual);
+}
+
+/**
+ * @tc.name: CreateSoftbusSessionServer_004
+ * @tc.desc: Verify the CreateSoftbusSessionServer function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_004, TestSize.Level1)
+{
+    std::string pkgName = "ohos.dhardware.dscreentest";
+    std::string sessionName = DATA_SESSION_NAME;
+    std::string peerDevId = "peerDevId";
+    softbusAdapter.serverIdMap_.clear();
+    softbusAdapter.serverIdMap_.insert(std::make_pair(100000, sessionName + "__" + peerDevId));
+    int32_t actual = softbusAdapter.CreateSoftbusSessionServer(pkgName, sessionName, peerDevId);
+    EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_BAD_VALUE, actual);
 }
 
 /**

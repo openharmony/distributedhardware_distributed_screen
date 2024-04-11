@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -85,24 +85,24 @@ std::string GetRandomID()
 
 std::string GetAnonyString(const std::string &value)
 {
-    constexpr size_t INT32_SHORT_ID_LENGTH = 20;
-    constexpr size_t INT32_MIN_ID_LENGTH = 3;
+    constexpr size_t int32ShortIdLength = 20;
+    constexpr size_t int32MinIdLength = 3;
     std::string result;
     std::string tmpStr("******");
     size_t strLen = value.length();
-    if (strLen < INT32_MIN_ID_LENGTH) {
+    if (strLen < int32MinIdLength) {
         return tmpStr;
     }
 
-    if (strLen <= INT32_SHORT_ID_LENGTH) {
+    if (strLen <= int32ShortIdLength) {
         result += value[0];
         result += tmpStr;
         result += value[strLen - 1];
     } else {
-        constexpr size_t INT32_PLAINTEXT_LENGTH = 4;
-        result.append(value, 0, INT32_PLAINTEXT_LENGTH);
+        constexpr size_t int32PlainTextLength = 4;
+        result.append(value, 0, int32PlainTextLength);
         result += tmpStr;
-        result.append(value, strLen - INT32_PLAINTEXT_LENGTH, INT32_PLAINTEXT_LENGTH);
+        result.append(value, strLen - int32PlainTextLength, int32PlainTextLength);
     }
 
     return result;
@@ -110,14 +110,14 @@ std::string GetAnonyString(const std::string &value)
 
 std::string GetInterruptString(const std::string &value)
 {
-    constexpr size_t INT32_MIN_ID_LENGTH = 3;
-    constexpr size_t STRING_HALF_LENGTH = 2;
+    constexpr size_t int32MinIdLength = 3;
+    constexpr size_t stringHalfLength = 2;
     std::string res;
     size_t strlen = value.length();
-    if (strlen <= INT32_MIN_ID_LENGTH) {
+    if (strlen <= int32MinIdLength) {
         res = value;
     } else  {
-        res = value.substr(0, strlen / STRING_HALF_LENGTH);
+        res = value.substr(0, strlen / stringHalfLength);
     }
 
     return res;

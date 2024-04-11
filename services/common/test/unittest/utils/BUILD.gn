@@ -44,7 +44,10 @@ ohos_unittest("UtilsTest") {
     "${services_path}/common/test/unittest/utils/video_param_test.cpp",
   ]
 
-  configs = [ ":module_private_config" ]
+  configs = [
+    ":module_private_config",
+    "${common_path}/test/unittest/resource:dscreen_unittest_public_config",
+  ]
 
   deps = [
     "${services_path}/screenservice/sinkservice:distributed_screen_sink",

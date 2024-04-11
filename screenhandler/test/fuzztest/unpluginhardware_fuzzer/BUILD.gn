@@ -29,12 +29,8 @@ ohos_fuzztest("UnPluginHardwareFuzzTest") {
     "${distributedscreen_path}/screenhandler/include",
   ]
 
-  cflags = [
-    "-g",
-    "-O0",
-    "-Wno-unused-variable",
-    "-fno-omit-frame-pointer",
-  ]
+  configs =
+      [ "${common_path}/test/unittest/resource:dscreen_unittest_public_config" ]
 
   sources = [ "unpluginhardware_fuzzer.cpp" ]
 

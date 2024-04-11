@@ -233,8 +233,8 @@ void VDecDemo::InputFunc()
 
     while (isRunning_.load()) {
         unique_lock<mutex> lock(signal_->inMutex_);
-        signal_->inCond_.wait(lock, [this]() { return signal_->inQueue_.size() > 0
-            && signal_->availableInputBufferQueue_.size() > 0; });
+        signal_->inCond_.wait(
+            lock, [this]() { return signal_->inQueue_.size() > 0 && signal_->availableInputBufferQueue_.size() > 0; });
 
         if (!isRunning_.load()) {
             break;

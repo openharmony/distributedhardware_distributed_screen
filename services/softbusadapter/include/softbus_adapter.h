@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -73,8 +73,8 @@ private:
 
     ISocketListener sessListener_;
     /* while can not find the listener in mapListeners_, return nullListener_ point to null ptr. */
-    std::map<std::int32_t, std::string > serverIdMap_;
-    std::map<std::int32_t, std::string > devId2SessIdMap_;
+    std::map<int32_t, std::string> serverIdMap_;
+    std::map<int32_t, std::string> devId2SessIdMap_;
     std::shared_ptr<ISoftbusListener> nullListener_;
     std::map<std::string, std::shared_ptr<ISoftbusListener>> mapListeners_;
     std::map<int32_t, std::shared_ptr<ISoftbusListener>> mapSessListeners_;

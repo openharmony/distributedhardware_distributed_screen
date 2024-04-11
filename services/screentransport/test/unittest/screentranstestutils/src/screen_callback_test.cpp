@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +18,6 @@
 #include "avcodec_common.h"
 #include "meta/format.h"
 
-#define private public
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "screen_callback_test.h"
@@ -29,7 +28,6 @@
 #include "screen_data_channel_impl.h"
 #include "image_sink_decoder.h"
 #include "image_decoder_callback.h"
-#undef private
 using namespace testing::ext;
 
 namespace OHOS {
@@ -148,7 +146,7 @@ HWTEST_F(ScreenCallbackTest, RegisterStateCallback_006, TestSize.Level1)
 {
     std::shared_ptr<IScreenSinkTransCallback> callback = std::make_shared<MockIScreenSinkTransCallback>();
     int32_t actual = sinkTrans->RegisterStateCallback(callback);
-    
+
     std::string peerDevId = "peerDevId";
     std::shared_ptr<ScreenDataChannelImpl> screenChannel = std::make_shared<ScreenDataChannelImpl>(peerDevId);
     std::shared_ptr<IScreenChannelListener> listener = std::make_shared<ScreenSinkTrans>();
@@ -162,6 +160,56 @@ HWTEST_F(ScreenCallbackTest, RegisterStateCallback_006, TestSize.Level1)
     const StreamFrameInfo *param = nullptr;
     screenChannel->OnStreamReceived(sessionId, streamData, ext, param);
 
+    EXPECT_EQ(DH_SUCCESS, actual);
+}
+
+/**
+ * @tc.name: RegisterStateCallback_007
+ * @tc.desc: Verify the RegisterStateCallback function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenCallbackTest, RegisterStateCallback_007, TestSize.Level1)
+{
+    std::shared_ptr<IScreenSinkTransCallback> callback = std::make_shared<MockIScreenSinkTransCallback>();
+    int32_t actual = sinkTrans->RegisterStateCallback(callback);
+    std::shared_ptr<ImageEncoderCallback> encoderCallback = std::make_shared<ImageEncoderCallback>(nullptr);
+    MediaAVCodec::AVCodecErrorType errorType = MediaAVCodec::AVCODEC_ERROR_INTERNAL;
+    int32_t errorCode = 0;
+    encoderCallback->OnError(errorType, errorCode);
+    uint32_t index = 0;
+    MediaAVCodec::AVCodecBufferInfo info;
+    MediaAVCodec::AVCodecBufferFlag flag = MediaAVCodec::AVCODEC_BUFFER_FLAG_NONE;
+    std::shared_ptr<Media::AVSharedMemory> buffer = nullptr;
+    encoderCallback->OnOutputBufferAvailable(index, info, flag, buffer);
+    encoderCallback->OnInputBufferAvailable(index, buffer);
+    Media::Format format;
+    encoderCallback->OnOutputFormatChanged(format);
+    EXPECT_EQ(DH_SUCCESS, actual);
+}
+
+/**
+ * @tc.name: RegisterStateCallback_008
+ * @tc.desc: Verify the RegisterStateCallback function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenCallbackTest, RegisterStateCallback_008, TestSize.Level1)
+{
+    std::shared_ptr<IScreenSinkTransCallback> callback = std::make_shared<MockIScreenSinkTransCallback>();
+    int32_t actual = sinkTrans->RegisterStateCallback(callback);
+    std::shared_ptr<ImageDecoderCallback> decoderCallback = std::make_shared<ImageDecoderCallback>(nullptr);
+    MediaAVCodec::AVCodecErrorType errorType = MediaAVCodec::AVCODEC_ERROR_INTERNAL;
+    int32_t errorCode = 0;
+    decoderCallback->OnError(errorType, errorCode);
+    uint32_t index = 0;
+    MediaAVCodec::AVCodecBufferInfo info;
+    MediaAVCodec::AVCodecBufferFlag flag = MediaAVCodec::AVCODEC_BUFFER_FLAG_NONE;
+    std::shared_ptr<Media::AVSharedMemory> buffer = nullptr;
+    decoderCallback->OnOutputBufferAvailable(index, info, flag, buffer);
+    decoderCallback->OnInputBufferAvailable(index, buffer);
+    Media::Format format;
+    decoderCallback->OnOutputFormatChanged(format);
     EXPECT_EQ(DH_SUCCESS, actual);
 }
 } // namespace DistributedHardware

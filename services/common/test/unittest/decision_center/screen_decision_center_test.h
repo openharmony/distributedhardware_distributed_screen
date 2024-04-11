@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,6 +29,27 @@ public:
     void TearDown();
     VideoParam param_;
     std::shared_ptr<ScreenDecisionCenter> decision = nullptr;
+};
+
+class ImageSourceProcessorStub : public ImageSourceProcessor {
+public:
+    ImageSourceProcessorStub() = default;
+    ~ImageSourceProcessorStub() = default;
+    int32_t ProcessFullImage(sptr<SurfaceBuffer> &surfaceBuffer)
+    {
+        return 0;
+    }
+};
+
+class JpegImageProcessorStub : public JpegImageProcessor {
+public:
+    explicit JpegImageProcessorStub(const VideoParam &configParam) : JpegImageProcessor(configParam) {};
+    ~JpegImageProcessorStub() = default;
+
+    int32_t ProcessDamageSurface(sptr<SurfaceBuffer> &surfaceBuffer, const std::vector<OHOS::Rect> &damages)
+    {
+        return 0;
+    }
 };
 } // namespace DistributedHardware
 } // namespace OHOS
