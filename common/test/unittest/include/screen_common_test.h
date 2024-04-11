@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,6 +27,7 @@ public:
     void SetUp();
     void TearDown();
     const std::string eventName = "eventName";
+    const std::string longEventName = "1234567890123456789012345678901234567890";
     int32_t errCode = -100;
     int32_t saId = 4808;
     const std::string errMsg = "errMsg";

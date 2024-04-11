@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +18,6 @@
 #include "nativetoken_kit.h"
 #include "token_setproc.h"
 
-#define private public
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "1.0/include/dscreen_manager.h"
@@ -26,7 +25,6 @@
 #include "dscreen_util.h"
 #include "video_param.h"
 #include "screen_source_trans.h"
-#undef private
 
 using namespace testing;
 using namespace testing::ext;
@@ -34,7 +32,7 @@ using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
 namespace V1_0 {
-constexpr static uint32_t videoDataNum = 480;
+constexpr static uint32_t VIDEO_DATA_NUM = 480;
 void DScreenTestV1::SetUpTestCase(void) {}
 
 void DScreenTestV1::TearDownTestCase(void) {}
@@ -48,10 +46,10 @@ void DScreenTestV1::SetUp(void)
     dScreen_->videoParam_ = std::make_shared<VideoParam>();
     dScreen_->videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
     dScreen_->videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
-    dScreen_->videoParam_->SetVideoHeight(videoDataNum);
-    dScreen_->videoParam_->SetVideoWidth(videoDataNum);
-    dScreen_->videoParam_->SetScreenHeight(videoDataNum);
-    dScreen_->videoParam_->SetScreenWidth(videoDataNum);
+    dScreen_->videoParam_->SetVideoHeight(VIDEO_DATA_NUM);
+    dScreen_->videoParam_->SetVideoWidth(VIDEO_DATA_NUM);
+    dScreen_->videoParam_->SetScreenHeight(VIDEO_DATA_NUM);
+    dScreen_->videoParam_->SetScreenWidth(VIDEO_DATA_NUM);
     dScreen_->videoParam_->SetFps(DEFAULT_FPS);
     dScreen_->devId_ = "peerDevId";
 }

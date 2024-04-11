@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,7 +23,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
-constexpr static uint32_t videoDataNum = 480;
+constexpr static uint32_t VIDEO_DATA_NUM = 480;
 void ScreenSourceTransTest::SetUpTestCase(void) {}
 
 void ScreenSourceTransTest::TearDownTestCase(void) {}
@@ -118,17 +118,17 @@ HWTEST_F(ScreenSourceTransTest, SetUp_002, TestSize.Level1)
     VideoParam localParam;
     localParam.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
     localParam.SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
-    localParam.SetVideoHeight(videoDataNum);
-    localParam.SetVideoWidth(videoDataNum);
-    localParam.SetScreenHeight(videoDataNum);
-    localParam.SetScreenWidth(videoDataNum);
+    localParam.SetVideoHeight(VIDEO_DATA_NUM);
+    localParam.SetVideoWidth(VIDEO_DATA_NUM);
+    localParam.SetScreenHeight(VIDEO_DATA_NUM);
+    localParam.SetScreenWidth(VIDEO_DATA_NUM);
     VideoParam remoteParam;
     remoteParam.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
     remoteParam.SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
-    remoteParam.SetVideoHeight(videoDataNum);
-    remoteParam.SetVideoWidth(videoDataNum);
-    remoteParam.SetScreenHeight(videoDataNum);
-    remoteParam.SetScreenWidth(videoDataNum);
+    remoteParam.SetVideoHeight(VIDEO_DATA_NUM);
+    remoteParam.SetVideoWidth(VIDEO_DATA_NUM);
+    remoteParam.SetScreenHeight(VIDEO_DATA_NUM);
+    remoteParam.SetScreenWidth(VIDEO_DATA_NUM);
 
     int32_t actual = trans->SetUp(localParam, remoteParam, "peerDevId");
     DisablePermissionAccess(tokenId_);

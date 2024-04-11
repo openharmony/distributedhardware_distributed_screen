@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,17 +26,17 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
-constexpr static uint32_t videoDataNum = 480;
+constexpr static uint32_t VIDEO_DATA_NUM = 480;
 void ImageSinkProcessorTest::SetUpTestCase(void) {}
 
 void ImageSinkProcessorTest::TearDownTestCase(void) {}
 
 void ImageSinkProcessorTest::SetUp(void)
 {
-    param_.screenWidth_ = videoDataNum;
-    param_.screenHeight_ = videoDataNum;
-    param_.videoWidth_ = videoDataNum;
-    param_.videoHeight_ = videoDataNum;
+    param_.screenWidth_ = VIDEO_DATA_NUM;
+    param_.screenHeight_ = VIDEO_DATA_NUM;
+    param_.videoWidth_ = VIDEO_DATA_NUM;
+    param_.videoHeight_ = VIDEO_DATA_NUM;
     param_.fps_ = FPS;
     param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
     param_.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;

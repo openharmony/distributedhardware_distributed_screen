@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,15 +23,13 @@
 #include "isoftbus_listener.h"
 #include "softbus_bus_center.h"
 #include "softbus_common.h"
-#define private public
 #include "softbus_adapter.h"
-#undef private
 
 namespace OHOS {
 namespace DistributedHardware {
     namespace {
-    const std::string PEER_SESSION_NAME = "ohos.dhardware.dscreen.session8647073e02e7a78f09473aa122";
-    const std::string REMOTE_DEV_ID = "f6d4c0864707aefte7a78f09473aa122ff57fc81c00981fcf5be989e7d112591";
+    const std::string PEER_SESSION_NAME = "ohos.dhardware.dscreen.session8647073e02e7a78f09473aa124";
+    const std::string REMOTE_DEV_ID = "f6d4c0864707aefte7a78f09473aa122ff57fc81c00981fcf5be989e7d112124";
     const std::string DSCREEN_PKG_NAME_TEST = "ohos.dhardware.dscreen";
 }
 void SoftbusOnSessionOpenedFuzzTest(const uint8_t* data, size_t size)

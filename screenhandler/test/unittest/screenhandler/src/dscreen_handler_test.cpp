@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,10 +13,8 @@
  * limitations under the License.
  */
 
-#define private public
-#include "dscreen_constants.h"
 #include "dscreen_handler_test.h"
-#undef private
+#include "dscreen_constants.h"
 
 using namespace testing;
 using namespace testing::ext;
@@ -42,9 +40,11 @@ HWTEST_F(DScreenHandlerTest, Initialize_001, TestSize.Level1)
     int32_t ret = DScreenHandler::GetInstance().Initialize();
     uint64_t screenId = SCREEN_ID_DEFAULT;
     DScreenHandler::GetInstance().screenListener_->OnConnect(screenId);
+    screenId = 9999999;
+    DScreenHandler::GetInstance().screenListener_->OnConnect(screenId);
+    DScreenHandler::GetInstance().screenListener_->OnDisconnect(screenId);
     screenId = 1;
     DScreenHandler::GetInstance().screenListener_->OnConnect(screenId);
-
     const std::string dhId = "dhId";
     const std::string attr = "attr";
     const std::string subtype = "screen";
@@ -58,6 +58,31 @@ HWTEST_F(DScreenHandlerTest, Initialize_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: ByteCalculate_001
+ * @tc.desc: Verify the ByteCalculate function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenHandlerTest, ByteCalculate_001, TestSize.Level1)
+{
+    uint32_t ret = DScreenHandler::GetInstance().screenListener_->ByteCalculate(320);
+    EXPECT_EQ(320, ret);
+    ret = DScreenHandler::GetInstance().screenListener_->ByteCalculate(312);
+    EXPECT_EQ(320, ret);
+}
+
+/**
+ * @tc.name: Query_001
+ * @tc.desc: Verify the Query function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenHandlerTest, Query_001, TestSize.Level1)
+{
+    EXPECT_EQ(DScreenHandler::GetInstance().Query().empty(), false);
+}
+
+/**
  * @tc.name: RegisterPluginListener_001
  * @tc.desc: Verify the RegisterPluginListener function.
  * @tc.type: FUNC
@@ -67,8 +92,9 @@ HWTEST_F(DScreenHandlerTest, RegisterPluginListener_001, TestSize.Level1)
 {
     std::shared_ptr<PluginListener> listener = std::make_shared<MockPluginListener>();
     DScreenHandler::GetInstance().RegisterPluginListener(listener);
-
     EXPECT_EQ(listener, DScreenHandler::GetInstance().listener_);
+    DScreenHandler::GetInstance().UnRegisterPluginListener();
+    EXPECT_EQ(nullptr, DScreenHandler::GetInstance().listener_);
 }
 
 /**

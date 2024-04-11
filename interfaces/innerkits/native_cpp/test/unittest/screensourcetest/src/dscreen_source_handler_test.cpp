@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,13 +13,11 @@
  * limitations under the License.
  */
 
-#define private public
 #include "dscreen_source_handler_test.h"
 #include "if_system_ability_manager.h"
 #include "dscreen_source_load_callback.h"
 #include "iservice_registry.h"
 #include "dscreen_constants.h"
-#undef private
 
 using namespace testing;
 using namespace testing::ext;

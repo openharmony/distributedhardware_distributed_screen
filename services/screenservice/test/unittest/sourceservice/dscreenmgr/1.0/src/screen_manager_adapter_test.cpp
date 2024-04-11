@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,9 +15,7 @@
 
 #include "1.0/include/screen_manager_adapter_test.h"
 
-#define private public
 #include "common/include/screen_manager_adapter.h"
-#undef private
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_util.h"
@@ -31,7 +29,7 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
-constexpr static uint32_t videoDataNum = 480;
+constexpr static uint32_t VIDEO_DATA_NUM = 480;
 void DScreenManagerAdapterTest::SetUpTestCase(void) {}
 
 void DScreenManagerAdapterTest::TearDownTestCase(void) {}
@@ -256,14 +254,14 @@ HWTEST_F(DScreenManagerAdapterTest, GetMapRelation_002, TestSize.Level1)
     std::string dhId = "dhId";
     ScreenMgrAdapter::GetInstance().screenIdMap_.clear();
     std::shared_ptr<VideoParam> videoParam = std::make_shared<VideoParam>();
-    videoParam->SetScreenWidth(videoDataNum);
-    videoParam->SetScreenHeight(videoDataNum);
+    videoParam->SetScreenWidth(VIDEO_DATA_NUM);
+    videoParam->SetScreenHeight(VIDEO_DATA_NUM);
     uint64_t screenId = ScreenMgrAdapter::GetInstance().CreateVirtualScreen(devId, dhId, videoParam);
     std::shared_ptr<DScreenMapRelation> ret = ScreenMgrAdapter::GetInstance().GetMapRelation(screenId);
-    DisablePermissionAccess(tokenId_);
-    EXPECT_NE(nullptr, ret);
     ScreenMgrAdapter::GetInstance().RemoveVirtualScreen(screenId);
     ScreenMgrAdapter::GetInstance().screenIdMap_.clear();
+    DisablePermissionAccess(tokenId_);
+    EXPECT_NE(nullptr, ret);
 }
 }
 }

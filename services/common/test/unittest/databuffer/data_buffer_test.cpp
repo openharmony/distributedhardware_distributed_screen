@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,10 +13,8 @@
  * limitations under the License.
  */
 
-#define private public
 #include "data_buffer_test.h"
 #include "dscreen_errcode.h"
-#undef private
 
 using namespace testing::ext;
 
@@ -31,7 +29,12 @@ void DataBufferTest::SetUp()
     dataBuffer_ = std::make_shared<DataBuffer>(capacity);
 }
 
-void DataBufferTest::TearDown() {}
+void DataBufferTest::TearDown()
+{
+    if (dataBuffer_ != nullptr) {
+        dataBuffer_ = nullptr;
+    }
+}
 
 /**
  * @tc.name: Capacity_001
@@ -55,6 +58,30 @@ HWTEST_F(DataBufferTest, Data_001, TestSize.Level1)
 {
     uint8_t *actual = dataBuffer_->Data();
     EXPECT_NE(nullptr, actual);
+}
+
+/**
+ * @tc.name: SetDataNumber_001
+ * @tc.desc: Verify the SetDataNumber function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DataBufferTest, SetDataNumber_001, TestSize.Level1)
+{
+    dataBuffer_->SetDataNumber(10);
+    EXPECT_EQ(10, dataBuffer_->DataNumber());
+}
+
+/**
+ * @tc.name: SetDataType_001
+ * @tc.desc: Verify the SetDataType function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DataBufferTest, SetDataType_001, TestSize.Level1)
+{
+    dataBuffer_->SetDataType(VIDEO_PART_SCREEN_DATA);
+    EXPECT_EQ(VIDEO_PART_SCREEN_DATA, dataBuffer_->DataType());
 }
 
 /**
@@ -111,6 +138,22 @@ HWTEST_F(DataBufferTest, AddData_002, TestSize.Level1)
 }
 
 /**
+ * @tc.name: AddData_003
+ * @tc.desc: Verify the AddData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DataBufferTest, AddData_003, TestSize.Level1)
+{
+    unsigned char *inputData = new unsigned char[10] {0};
+    dataBuffer_->~DataBuffer();
+    EXPECT_EQ(nullptr, dataBuffer_->data_);
+    dataBuffer_->AddData(10, inputData);
+    EXPECT_NE(10, dataBuffer_->Capacity());
+    delete [] inputData;
+}
+
+/**
  * @tc.name: GetData_001
  * @tc.desc: Verify the GetData function.
  * @tc.type: FUNC
@@ -121,6 +164,46 @@ HWTEST_F(DataBufferTest, GetData_001, TestSize.Level1)
     uint8_t *outputData = new uint8_t[10] {0};
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, dataBuffer_->GetData(10, 10, outputData));
     delete [] outputData;
+}
+
+/**
+ * @tc.name: GetData_002
+ * @tc.desc: Verify the GetData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DataBufferTest, GetData_002, TestSize.Level1)
+{
+    uint8_t *outputData = nullptr;
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, dataBuffer_->GetData(0, 0, outputData));
+}
+
+/**
+ * @tc.name: GetData_003
+ * @tc.desc: Verify the GetData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DataBufferTest, GetData_003, TestSize.Level1)
+{
+    uint8_t *outputData = new uint8_t[1] {0};
+    dataBuffer_->~DataBuffer();
+    EXPECT_EQ(nullptr, dataBuffer_->data_);
+    EXPECT_NE(DH_SUCCESS, dataBuffer_->GetData(0, 0, outputData));
+    delete [] outputData;
+}
+
+/**
+ * @tc.name: AddDirtyRect_001
+ * @tc.desc: Verify the AddDirtyRect function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DataBufferTest, AddDirtyRect_001, TestSize.Level1)
+{
+    DirtyRect rect = {1, 1, 1, 1, 1};
+    dataBuffer_->AddDirtyRect(rect);
+    EXPECT_NE(0, dataBuffer_->GetDirtyRectVec().size());
 }
 } // namespace DistributedHardware
 } // namespace OHOS

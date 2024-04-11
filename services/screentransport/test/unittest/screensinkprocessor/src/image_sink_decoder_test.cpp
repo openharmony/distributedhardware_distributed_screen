@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,22 +22,23 @@
 #include "dscreen_errcode.h"
 #include "dscreen_log.h"
 #include "iconsumer_surface.h"
+#include "buffer/avsharedmemorybase.h"
 
 using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
-constexpr static uint32_t videoDataNum = 480;
+constexpr static uint32_t VIDEO_DATA_NUM = 480;
 void ImageSinkDecoderTest::SetUpTestCase(void) {}
 
 void ImageSinkDecoderTest::TearDownTestCase(void) {}
 
 void ImageSinkDecoderTest::SetUp(void)
 {
-    param_.screenWidth_ = videoDataNum;
-    param_.screenHeight_ = videoDataNum;
-    param_.videoWidth_ = videoDataNum;
-    param_.videoHeight_ = videoDataNum;
+    param_.screenWidth_ = VIDEO_DATA_NUM;
+    param_.screenHeight_ = VIDEO_DATA_NUM;
+    param_.videoWidth_ = VIDEO_DATA_NUM;
+    param_.videoHeight_ = VIDEO_DATA_NUM;
     param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
     param_.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
     param_.fps_ = FPS;
@@ -149,6 +150,17 @@ HWTEST_F(ImageSinkDecoderTest, stop_decoder_test_001, TestSize.Level1)
 {
     imageDecoder_->videoDecoder_ = nullptr;
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->StopDecoder());
+}
+
+/**
+ * @tc.name: stop_decoder_test_002
+ * @tc.desc: Verify the StopDecoder function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, stop_decoder_test_002, TestSize.Level1)
+{
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_FLUSH_FAILED, imageDecoder_->StopDecoder());
 }
 
 /**
@@ -275,6 +287,33 @@ HWTEST_F(ImageSinkDecoderTest, set_output_surface_test_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: InputScreenData_test_001
+ * @tc.desc: Verify the InputScreenData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, InputScreenData_test_001, TestSize.Level1)
+{
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->InputScreenData(nullptr));
+}
+
+/**
+ * @tc.name: InputScreenData_test_002
+ * @tc.desc: Verify the InputScreenData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, InputScreenData_test_002, TestSize.Level1)
+{
+    std::shared_ptr<DataBuffer> data = std::make_shared<DataBuffer>(10);
+    for (uint32_t i = 0; i < DATA_QUEUE_MAX_SIZE + 1; i++) {
+        imageDecoder_->videoDataQueue_.push(data);
+    }
+    EXPECT_EQ(DH_SUCCESS, imageDecoder_->InputScreenData(data));
+    std::queue<std::shared_ptr<DataBuffer>>().swap(imageDecoder_->videoDataQueue_);
+}
+
+/**
  * @tc.name: on_input_buffer_available_test_001
  * @tc.desc: Verify the OnInputBufferAvailable function.
  * @tc.type: FUNC
@@ -351,6 +390,80 @@ HWTEST_F(ImageSinkDecoderTest, on_output_format_changed_test_001, TestSize.Level
 HWTEST_F(ImageSinkDecoderTest, ProcessData_001, TestSize.Level1)
 {
     std::shared_ptr<DataBuffer> screenData = std::make_shared<DataBuffer>(100);
+    int32_t ret = imageDecoder_->ProcessData(screenData, 0);
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, ret);
+}
+
+/**
+ * @tc.name: ProcessData_002
+ * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, ProcessData_002, TestSize.Level1)
+{
+    imageDecoder_->videoDecoder_ = nullptr;
+    std::shared_ptr<DataBuffer> screenData = std::make_shared<DataBuffer>(100);
+    int32_t ret = imageDecoder_->ProcessData(screenData, 0);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
+}
+
+/**
+ * @tc.name: ProcessData_003
+ * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, ProcessData_003, TestSize.Level1)
+{
+    std::shared_ptr<DataBuffer> screenData = nullptr;
+    int32_t ret = imageDecoder_->ProcessData(screenData, 0);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
+}
+
+/**
+ * @tc.name: ProcessData_004
+ * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, ProcessData_004, TestSize.Level1)
+{
+    std::shared_ptr<Media::AVSharedMemory> buffer = nullptr;
+    imageDecoder_->availableInputBufferQueue_.push(buffer);
+    std::shared_ptr<DataBuffer> screenData = std::make_shared<DataBuffer>(100);
+    int32_t ret = imageDecoder_->ProcessData(screenData, 0);
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, ret);
+}
+
+/**
+ * @tc.name: ProcessData_005
+ * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, ProcessData_005, TestSize.Level1)
+{
+    std::shared_ptr<Media::AVSharedMemory> buffer = Media::AVSharedMemoryBase::CreateFromLocal(100,
+        Media::AVSharedMemory::FLAGS_READ_WRITE, "userBuffer");;
+    imageDecoder_->availableInputBufferQueue_.push(buffer);
+    std::shared_ptr<DataBuffer> screenData = std::make_shared<DataBuffer>(100);
+    int32_t ret = imageDecoder_->ProcessData(screenData, 0);
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, ret);
+}
+
+/**
+ * @tc.name: ProcessData_006
+ * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, ProcessData_006, TestSize.Level1)
+{
+    std::shared_ptr<Media::AVSharedMemory> buffer = Media::AVSharedMemoryBase::CreateFromLocal(100,
+        Media::AVSharedMemory::FLAGS_READ_WRITE, "userBuffer");;
+    imageDecoder_->availableInputBufferQueue_.push(buffer);
+    std::shared_ptr<DataBuffer> screenData = std::make_shared<DataBuffer>(110);
     int32_t ret = imageDecoder_->ProcessData(screenData, 0);
     EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, ret);
 }

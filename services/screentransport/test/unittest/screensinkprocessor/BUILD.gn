@@ -53,7 +53,10 @@ ohos_unittest("SinkProcessorTest") {
     "${services_path}/screentransport/test/unittest/screensinkprocessor/src/image_sink_processor_test.cpp",
   ]
 
-  configs = [ ":module_private_config" ]
+  configs = [
+    ":module_private_config",
+    "${common_path}/test/unittest/resource:dscreen_unittest_public_config",
+  ]
 
   deps = [
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
@@ -75,9 +78,6 @@ ohos_unittest("SinkProcessorTest") {
     "DH_LOG_TAG=\"sinkprocessorest\"",
     "LOG_DOMAIN=0xD004140",
   ]
-
-  cflags = [ "-frtti" ]
-  cflags_cc = cflags
 }
 
 group("sink_processor_test") {

@@ -46,14 +46,14 @@ using namespace OHOS::MediaAVCodec;
 using namespace OHOS::Security::AccessToken;
 
 namespace {
-    static char const *g_pkgName = "ohos.dsoftbus.tool";
+    static char const *DSOFTBUS_TOOL_PKG_NAME = "ohos.dsoftbus.tool";
     const uint32_t MAX_WINDOW_WIDTH = 2560;
     const uint32_t MAX_WINDOW_HEIGHT = 2772;
     const uint32_t DCODE_WIDTH = 1920;
     const uint32_t DCODE_HEIGHT = 1080;
 }
 
-vector<sptr<Screen>> QueryRemoteScreenInfo()
+static vector<sptr<Screen>> QueryRemoteScreenInfo()
 {
     vector<sptr<Screen>> allScreens;
     ScreenManager::GetInstance().GetAllScreens(allScreens);
@@ -235,14 +235,14 @@ static void PrintNodeProperty(NodeBasicInfo *nodeInfo)
     printf("NetworkId = %s\n", GetAnonyString(nodeInfo->networkId).c_str());
     NodeDeviceInfoKey key = NODE_KEY_UDID;
     unsigned char udid[UDID_BUF_LEN] = {0};
-    if (GetNodeKeyInfo(g_pkgName, nodeInfo->networkId, key, udid, UDID_BUF_LEN) != 0) {
+    if (GetNodeKeyInfo(DSOFTBUS_TOOL_PKG_NAME, nodeInfo->networkId, key, udid, UDID_BUF_LEN) != 0) {
         printf("GetNodeKeyInfo Fail!\n");
     } else {
         printf("Udid = %s\n", GetAnonyString(reinterpret_cast<char *>(udid)).c_str());
     }
     key = NODE_KEY_UUID;
     unsigned char uuid[UUID_BUF_LEN] = {0};
-    if (GetNodeKeyInfo(g_pkgName, nodeInfo->networkId, key, uuid, UUID_BUF_LEN) != 0) {
+    if (GetNodeKeyInfo(DSOFTBUS_TOOL_PKG_NAME, nodeInfo->networkId, key, uuid, UUID_BUF_LEN) != 0) {
         printf("GetNodeKeyInfo Fail!\n");
     } else {
         printf("Uuid = %s\n", GetAnonyString(reinterpret_cast<char *>(udid)).c_str());
@@ -273,13 +273,13 @@ static void QueryRemoteDeviceInfo()
     NodeBasicInfo *remoteNodeInfo = nullptr;
     int32_t infoNum = 0;
     printf("-----------Local Device Info------\n");
-    if (GetLocalNodeDeviceInfo(g_pkgName, &localNodeinfo) != 0) {
+    if (GetLocalNodeDeviceInfo(DSOFTBUS_TOOL_PKG_NAME, &localNodeinfo) != 0) {
         printf("LnnGetLocalNodeInfo Fail!\n");
         return;
     }
     PrintNodeProperty(&localNodeinfo);
     printf("-------Remote Device info---------\n");
-    if (GetAllNodeDeviceInfo(g_pkgName, &remoteNodeInfo, &infoNum) != 0) {
+    if (GetAllNodeDeviceInfo(DSOFTBUS_TOOL_PKG_NAME, &remoteNodeInfo, &infoNum) != 0) {
         printf("GetAllNodeDeviceInfo Fail!\n");
         return;
     }

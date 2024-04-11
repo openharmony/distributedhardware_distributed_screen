@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -62,6 +62,15 @@ HWTEST_F(ScreenCommonTest, common_002, TestSize.Level1)
     ReportRegisterScreenEvent(eventName, devId, dhId, errMsg);
     ReportUnRegisterScreenEvent(eventName, devId, dhId, errMsg);
     ReportScreenMirrorEvent(eventName, devId, dhId, errMsg);
+    ReportSaFail(longEventName, errCode, saId, errMsg);
+    ReportSaFail(longEventName, errCode, saId, errMsg);
+    ReportRegisterFail(longEventName, errCode, devId, dhId, errMsg);
+    ReportUnRegisterFail(longEventName, errCode, devId, dhId, errMsg);
+    ReportOptFail(longEventName, errCode, errMsg);
+    ReportSaEvent(longEventName, saId, errMsg);
+    ReportRegisterScreenEvent(longEventName, devId, dhId, errMsg);
+    ReportUnRegisterScreenEvent(longEventName, devId, dhId, errMsg);
+    ReportScreenMirrorEvent(longEventName, devId, dhId, errMsg);
     std::string value = "Id";
     std::string ret = GetAnonyString(value);
     EXPECT_EQ("******", ret);

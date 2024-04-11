@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,10 +13,8 @@
  * limitations under the License.
  */
 
-#define private public
 #include "2.0/include/dscreen_manager_test.h"
 #include "common/include/screen_manager_adapter.h"
-#undef private
 #include "xcollie/watchdog.h"
 
 using namespace testing;
