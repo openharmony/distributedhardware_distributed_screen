@@ -1,0 +1,61 @@
+# Copyright (c) 2024 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#####################hydra-fuzz###################
+import("//build/config/features.gni")
+import("//build/test.gni")
+import("../../../../../../../distributedscreen.gni")
+
+##############################fuzztest##########################################
+ohos_fuzztest("DscreenSourceCallbackProxyFuzzTest") {
+  module_out_path = "${fuzz_test_path}/sourceservice"
+  fuzz_config_file = "${services_path}/screenservice/test/fuzztest/sourceservice/dscreenservice/dscreensourcecallbackproxy_fuzzer"
+
+  configs =
+      [ "${common_path}/test/unittest/resource:dscreen_unittest_public_config" ]
+
+  sources = [ "dscreensourcecallbackproxy_fuzzer.cpp" ]
+
+  include_dirs = [
+    "${services_path}/screenservice/sourceservice/dscreenservice/include",
+    "${distributedscreen_path}/interfaces/innerkits/native_cpp/screen_source/include",
+    "${services_path}/screenservice/sourceservice/dscreenservice/include/callback",
+    "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
+  ]
+
+  deps = [
+    "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
+    "${services_path}/screenservice/sourceservice:distributed_screen_source",
+  ]
+
+  external_deps = [
+    "c_utils:utils",
+    "distributed_hardware_fwk:distributedhardwareutils",
+    "hilog:libhilog",
+    "ipc:ipc_core",
+    "samgr:samgr_proxy",
+  ]
+
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"DscreenSourceCallbackProxyFuzzTest\"",
+    "LOG_DOMAIN=0xD004140",
+  ]
+}
+
+###############################################################################
+group("fuzztest") {
+  testonly = true
+  deps = [ ":DscreenSourceCallbackProxyFuzzTest" ]
+}
+###############################################################################

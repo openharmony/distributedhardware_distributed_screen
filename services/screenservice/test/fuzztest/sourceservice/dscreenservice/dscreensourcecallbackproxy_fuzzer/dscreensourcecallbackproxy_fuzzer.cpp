@@ -13,8 +13,10 @@
  * limitations under the License.
  */
 
-#include "dscreensourcestub_fuzzer.h"
+#include "dscreensourcecallbackproxy_fuzzer.h"
 
+#include "idscreen_source.h"
+#include "dscreen_source_callback_proxy.h"
 #include "idscreen_source.h"
 #include "dscreen_source_stub.h"
 
@@ -37,6 +39,8 @@ public:
     {
         return 0;
     };
+    void DScreenNotify(const std::string &devId, int32_t eventCode,
+        const std::string &eventContent) override {};
     int32_t UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
         const std::string &reqId) override
     {
@@ -47,44 +51,25 @@ public:
     {
         return 0;
     };
-    void DScreenNotify(const std::string &devId, int32_t eventCode,
-        const std::string &eventContent) override {};
 };
 
 
-void DscreenSourceStubFuzzTest(const uint8_t* data, size_t size)
+void DscreenSourceCallbackProxyFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(int32_t))) {
         return;
     }
-
-    MessageParcel pdata;
-    MessageParcel reply;
-    MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data)) % 2;
-    uint32_t status = *(reinterpret_cast<const int32_t*>(data));
+    int32_t status = *(reinterpret_cast<const int32_t*>(data));
     std::string dhId(reinterpret_cast<const char*>(data), size);
     std::string devId(reinterpret_cast<const char*>(data), size);
     std::string reqId(reinterpret_cast<const char*>(data), size);
-    std::string dataStr(reinterpret_cast<const char*>(data), size);
-    std::string version(reinterpret_cast<const char*>(data), size);
-    std::string attrs(reinterpret_cast<const char*>(data), size);
-    pdata.WriteInt32(status);
-    pdata.WriteString(devId);
-    pdata.WriteString(dhId);
-    pdata.WriteString(reqId);
-    pdata.WriteString(dataStr);
+    std::string resultData(reinterpret_cast<const char*>(data), size);
 
-    std::shared_ptr<DScreenSourceStub> sourceStubPtr = std::make_shared<DScreenSourceStubFuzzTest>();
-    sourceStubPtr->OnRemoteRequest(code, pdata, reply, option);
-    sourceStubPtr->InitSourceInner(pdata, reply, option);
-    sourceStubPtr->ReleaseSourceInner(pdata, reply, option);
-    sourceStubPtr->RegisterDistributedHardwareInner(pdata, reply, option);
-    sourceStubPtr->UnregisterDistributedHardwareInner(pdata, reply, option);
-    sourceStubPtr->ConfigDistributedHardwareInner(pdata, reply, option);
-    sourceStubPtr->DScreenNotifyInner(pdata, reply, option);
-    sourceStubPtr->CheckRegParams(devId, dhId, version, attrs, reqId);
-    sourceStubPtr->CheckUnregParams(devId, dhId, reqId);
+    sptr<IRemoteObject> dscreenSourceStubPtr(new DScreenSourceStubFuzzTest());
+    sptr<DScreenSourceCallbackProxy> sourceCbkProxy(new DScreenSourceCallbackProxy(dscreenSourceStubPtr));
+    sourceCbkProxy->OnNotifyRegResult(devId, dhId, reqId, status, resultData);
+    sourceCbkProxy->OnNotifyUnregResult(devId, dhId, reqId, status, resultData);
+    sourceCbkProxy->CheckParams(devId, dhId, reqId, resultData);
 }
 }
 }
@@ -93,6 +78,6 @@ void DscreenSourceStubFuzzTest(const uint8_t* data, size_t size)
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     /* Run your code on data */
-    OHOS::DistributedHardware::DscreenSourceStubFuzzTest(data, size);
+    OHOS::DistributedHardware::DscreenSourceCallbackProxyFuzzTest(data, size);
     return 0;
 }
