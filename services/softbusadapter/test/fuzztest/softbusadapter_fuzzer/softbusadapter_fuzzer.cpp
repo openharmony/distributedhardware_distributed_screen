@@ -58,6 +58,9 @@ void SoftbusAdapterFuzzTest(const uint8_t* data, size_t size)
     adapter->sessListener_.OnBytes(sessionId, adapterData, dataLen);
     adapter->sessListener_.OnStream(sessionId, stream, ext, info);
     adapter->sessListener_.OnMessage(sessionId, adapterData, dataLen1);
+    adapter->SendSoftbusStream(sessionId, stream, ext, info);
+    adapter->SendSoftbusBytes(sessionId, adapterData, dataLen1);
+    adapter->CloseSoftbusSession(sessionId);
 }
 }
 }

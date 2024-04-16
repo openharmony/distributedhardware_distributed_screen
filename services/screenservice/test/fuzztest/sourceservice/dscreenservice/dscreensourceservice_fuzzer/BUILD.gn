@@ -1,0 +1,74 @@
+# Copyright (c) 2024 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#####################hydra-fuzz###################
+import("//build/config/features.gni")
+import("//build/test.gni")
+import("../../../../../../../distributedscreen.gni")
+
+##############################fuzztest##########################################
+ohos_fuzztest("DscreenSourceServiceFuzzTest") {
+  module_out_path = "${fuzz_test_path}/sourceservice"
+  fuzz_config_file = "${services_path}/screenservice/test/fuzztest/sourceservice/dscreenservice/dscreensourceservice_fuzzer"
+
+  configs =
+      [ "${common_path}/test/unittest/resource:dscreen_unittest_public_config" ]
+
+  sources = [ "dscreensourceservice_fuzzer.cpp" ]
+
+  include_dirs = [
+    "${common_path}/include",
+    "${distributedscreen_path}/interfaces/innerkits/native_cpp/screen_source/include",
+    "${distributedscreen_path}/interfaces/innerkits/native_cpp/screen_sink/include",
+    "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
+    "${services_path}/common/utils/include",
+    "${services_path}/screenservice/sourceservice/dscreenmgr",
+    "${services_path}/screenservice/sourceservice/dscreenservice/include",
+    "${services_path}/screentransport/screensourcetrans/include",
+  ]
+
+  deps = [
+    "${common_path}:distributed_screen_utils",
+    "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
+    "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
+    "${services_path}/screenservice/sourceservice:distributed_screen_source",
+    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
+  ]
+
+  external_deps = [
+    "cJSON:cjson",
+    "c_utils:utils",
+    "distributed_hardware_fwk:distributed_av_receiver",
+    "distributed_hardware_fwk:distributedhardwareutils",
+    "distributed_hardware_fwk:libdhfwk_sdk",
+    "graphic_2d:librender_service_client",
+    "graphic_surface:surface",
+    "hilog:libhilog",
+    "ipc:ipc_core",
+    "samgr:samgr_proxy",
+    "window_manager:libdm",
+  ]
+
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"DscreenSourceServiceFuzzTest\"",
+    "LOG_DOMAIN=0xD004140",
+  ]
+}
+
+###############################################################################
+group("fuzztest") {
+  testonly = true
+  deps = [ ":DscreenSourceServiceFuzzTest" ]
+}
+###############################################################################
