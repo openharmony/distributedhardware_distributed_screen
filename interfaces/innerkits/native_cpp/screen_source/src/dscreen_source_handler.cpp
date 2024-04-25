@@ -200,6 +200,25 @@ int32_t DScreenSourceHandler::ConfigDistributedHardware(const std::string &devId
     return DH_SUCCESS;
 }
 
+void DScreenSourceHandler::RegisterDistributedHardwareStateListener(
+    std::shared_ptr<DistributedHardwareStateListener> listener)
+{
+    (void)listener;
+}
+
+void DScreenSourceHandler::UnregisterDistributedHardwareStateListener()
+{
+}
+
+void DScreenSourceHandler::RegisterDataSyncTriggerListener(std::shared_ptr<DataSyncTriggerListener> listener)
+{
+    (void)listener;
+}
+
+void DScreenSourceHandler::UnregisterDataSyncTriggerListener()
+{
+}
+
 void DScreenSourceHandler::DScreenSourceSvrRecipient::OnRemoteDied(const wptr<IRemoteObject> &remote)
 {
     if (remote == nullptr) {

@@ -35,6 +35,7 @@ class DScreenHandler : public IHardwareHandler {
 DECLARE_SINGLE_INSTANCE_BASE(DScreenHandler);
 public:
     int32_t Initialize() override;
+    std::vector<DHItem> QueryMeta() override;
     std::vector<DHItem> Query() override;
     std::map<std::string, std::string> QueryExtraInfo() override;
     bool IsSupportPlugin() override;

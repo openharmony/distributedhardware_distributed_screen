@@ -125,6 +125,11 @@ void DScreenHandler::UnPluginHardware(const std::string &dhId)
     }
 }
 
+std::vector<DHItem> DScreenHandler::QueryMeta()
+{
+    return {};
+}
+
 std::vector<DHItem> DScreenHandler::Query()
 {
     DHLOGI("DScreenHandler query hardware info");
