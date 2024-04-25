@@ -200,7 +200,8 @@ int32_t DScreenSourceHandler::ConfigDistributedHardware(const std::string &devId
     return DH_SUCCESS;
 }
 
-void DScreenSourceHandler::RegisterDistributedHardwareStateListener(std::shared_ptr<BusinessStateListener> listener)
+void DScreenSourceHandler::RegisterDistributedHardwareStateListener(
+    std::shared_ptr<DistributedHardwareStateListener> listener)
 {
     (void)listener;
 }
