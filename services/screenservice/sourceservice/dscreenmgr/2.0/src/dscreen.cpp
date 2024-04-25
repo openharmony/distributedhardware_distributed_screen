@@ -532,6 +532,7 @@ int32_t DScreen::NegotiateCodecType(const std::string &rmtDecoderStr)
 
     std::vector<VideoDecoder> rmtVideoDecoders;
     FromJson<VideoDecoder>(VIDEO_DECODERS, rmtDecoderJson, rmtVideoDecoders);
+    cJSON_Delete(rmtDecoderJson);
 
     std::shared_ptr<DistributedHardwareFwkKit> dhFwkKit = DScreenFwkKit::GetInstance().GetDHFwkKit();
     if (dhFwkKit == nullptr) {
@@ -554,6 +555,7 @@ int32_t DScreen::NegotiateCodecType(const std::string &rmtDecoderStr)
 
     std::vector<VideoEncoder> localVideoEncoders;
     FromJson<VideoEncoder>(VIDEO_ENCODERS, localVideoEncodersJson, localVideoEncoders);
+    cJSON_Delete(localVideoEncodersJson);
 
     return ChooseCodecType(localVideoEncoders, rmtVideoDecoders);
 }
