@@ -30,11 +30,9 @@ void DscreenSourceServiceFuzzTest(const uint8_t* data, size_t size)
     }
 
     std::string version(reinterpret_cast<const char*>(data), size);
-    std::string attrs(reinterpret_cast<const char*>(data), size);
     EnableParam param;
     param.sinkVersion = version;
     param.sinkAttrs = "";
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data)) % 2;
     uint32_t eventCode = 1;
     std::string dhId(reinterpret_cast<const char*>(data), size);
     std::string devId(reinterpret_cast<const char*>(data), size);
