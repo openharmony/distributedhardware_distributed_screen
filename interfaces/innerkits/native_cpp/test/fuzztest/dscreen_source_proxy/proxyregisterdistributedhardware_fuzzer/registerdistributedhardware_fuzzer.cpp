@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,11 +21,43 @@
 #include "dscreen_constants.h"
 #include "dscreen_source_callback.h"
 #include "dscreen_source_proxy.h"
+#include "dscreen_source_stub.h"
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
 
 namespace OHOS {
 namespace DistributedHardware {
+class DScreenSourceStubFuzzTest : public OHOS::DistributedHardware::DScreenSourceStub {
+public:
+    DScreenSourceStubFuzzTest() = default;
+    ~DScreenSourceStubFuzzTest() = default;
+    int32_t InitSource(const std::string &params, const sptr<IDScreenSourceCallback> &callback) override
+    {
+        return 0;
+    };
+    int32_t ReleaseSource() override
+    {
+        return 0;
+    };
+    int32_t RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
+        const EnableParam &param, const std::string &reqId) override
+    {
+        return 0;
+    };
+    void DScreenNotify(const std::string &devId, int32_t eventCode,
+        const std::string &eventContent) override {};
+    int32_t UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
+        const std::string &reqId) override
+    {
+        return 0;
+    };
+    int32_t ConfigDistributedHardware(const std::string &devId, const std::string &dhId,
+        const std::string &key, const std::string &value) override
+    {
+        return 0;
+    };
+};
+
 void RegisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(int32_t))) {
@@ -41,19 +73,8 @@ void RegisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
     param.sinkVersion = version;
     param.sinkAttrs = attrs;
 
-    sptr<ISystemAbilityManager> samgr =
-            SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    if (samgr == nullptr) {
-        return;
-    }
-    int32_t saId = *(reinterpret_cast<const int32_t*>(data));
-    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(saId);
-    if (remoteObject == nullptr) {
-        return;
-    }
-
+    sptr<IRemoteObject> remoteObject(new DScreenSourceStubFuzzTest());
     std::shared_ptr<IDScreenSource> dscreenSourceProxy = std::make_shared<DScreenSourceProxy>(remoteObject);
-
     dscreenSourceProxy->RegisterDistributedHardware(devId, dhId, param, reqId);
 }
 }

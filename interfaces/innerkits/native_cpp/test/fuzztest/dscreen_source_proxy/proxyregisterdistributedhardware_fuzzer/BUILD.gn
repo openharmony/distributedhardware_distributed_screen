@@ -27,6 +27,7 @@ ohos_fuzztest("ProxyRegisterDistributedHardwareFuzzTest") {
     "include",
     "include/callback",
     "${common_path}/include",
+    "${services_path}/screenservice/sourceservice/dscreenservice/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include",
     "${interfaces_path}/innerkits/native_cpp/screen_source/include/callback",
   ]
@@ -36,7 +37,10 @@ ohos_fuzztest("ProxyRegisterDistributedHardwareFuzzTest") {
 
   sources = [ "registerdistributedhardware_fuzzer.cpp" ]
 
-  deps = [ "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk" ]
+  deps = [
+    "${interfaces_path}/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
+    "${services_path}/screenservice/sourceservice:distributed_screen_source",
+  ]
 
   defines = [
     "HI_LOG_ENABLE",
