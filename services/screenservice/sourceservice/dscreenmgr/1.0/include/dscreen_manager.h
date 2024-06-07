@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -71,6 +71,7 @@ private:
     DScreenManager();
     std::mutex dScreenMapMtx_;
     std::mutex dScreenMapRelationMtx_;
+    std::mutex dScreenCallbackMtx_;
     std::map<uint64_t, std::shared_ptr<DScreenMapRelation>> mapRelations_;
     std::map<std::string, std::shared_ptr<DScreen>> dScreens_;
     sptr<IDScreenSourceCallback> dScreenSourceCallbackProxy_ = nullptr;

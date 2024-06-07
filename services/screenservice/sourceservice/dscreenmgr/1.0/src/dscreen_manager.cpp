@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -75,7 +75,10 @@ int32_t DScreenManager::UnInit()
         std::lock_guard<std::mutex> lock(dScreenMapRelationMtx_);
         mapRelations_.clear();
     }
-    dScreenCallback_ = nullptr;
+    {
+        std::lock_guard<std::mutex> lock(dScreenCallbackMtx_);
+        dScreenCallback_ = nullptr;
+    }
     DHLOGI("DScreenManager::UnInit success");
     return DH_SUCCESS;
 }
@@ -249,13 +252,15 @@ int32_t DScreenManager::EnableDistributedScreen(const std::string &devId, const 
             return ERR_DH_SCREEN_SA_ENABLE_FAILED;
         }
     }
-    if (dScreenCallback_ == nullptr) {
-        dScreenCallback_ = std::make_shared<DScreenCallback>();
-    }
+
     std::string dScreenIdx = devId + SEPERATOR + dhId;
     std::lock_guard<std::mutex> lock(dScreenMapMtx_);
     std::shared_ptr<DScreen> dScreen = dScreens_[dScreenIdx];
     if (dScreen == nullptr) {
+        std::lock_guard<std::mutex> lock(dScreenCallbackMtx_);
+        if (dScreenCallback_ == nullptr) {
+            dScreenCallback_ = std::make_shared<DScreenCallback>();
+        }
         dScreen = std::make_shared<DScreen>(devId, dhId, dScreenCallback_);
     }
 
