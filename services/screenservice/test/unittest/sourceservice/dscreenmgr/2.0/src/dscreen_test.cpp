@@ -112,7 +112,7 @@ HWTEST_F(DScreenTestV2, HandleEnable_001, TestSize.Level1)
     std::string param = "param";
     std::string taskId = "taskId";
     dScreen_->HandleEnable(param, taskId);
-    dScreen_-> dscreenCallback_ = std::make_shared<DScreenCallback>();
+    dScreen_->dscreenCallback_ = std::make_shared<DScreenCallback>();
     DScreenState state = ENABLING;
     dScreen_->SetState(state);
     dScreen_->HandleEnable(param, taskId);
@@ -438,6 +438,83 @@ HWTEST_F(DScreenTestV2, OnEngineEvent_001, TestSize.Level1)
     event = TRANS_CHANNEL_CLOSED;
     dScreen_->OnEngineEvent(event, content);
     EXPECT_EQ(SCREEN_ID_INVALID, dScreen_->screenId_);
+}
+
+/**
+ * @tc.name: ChooseCodecType_001
+ * @tc.desc: Verify the ChooseCodecType function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV2, ChooseCodecType_001, TestSize.Level1)
+{
+    std::vector<VideoEncoder> localVideoEncoders;
+    std::vector<VideoDecoder> rmtVideoDecoders;
+    int32_t ret = dScreen_->ChooseCodecType(localVideoEncoders, rmtVideoDecoders);
+    EXPECT_EQ(ret, ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL);
+}
+
+/**
+ * @tc.name: ChooseCodecType_002
+ * @tc.desc: Verify the ChooseCodecType function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV2, ChooseCodecType_002, TestSize.Level1)
+{
+    std::vector<VideoEncoder> localVideoEncoders;
+    std::vector<VideoDecoder> rmtVideoDecoders;
+    VideoEncoder videoEncoder;
+    videoEncoder.name = "ChooseCodecType_002";
+    VideoDecoder videoDecoder;
+    videoDecoder.name = "ChooseCodecType_002";
+    localVideoEncoders.push_back(videoEncoder);
+    rmtVideoDecoders.push_back(videoDecoder);
+    dScreen_->videoParam_ = std::make_shared<VideoParam>();
+    int32_t ret = dScreen_->ChooseCodecType(localVideoEncoders, rmtVideoDecoders);
+    EXPECT_EQ(ret, ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL);
+}
+
+/**
+ * @tc.name: ChooseCodecType_003
+ * @tc.desc: Verify the ChooseCodecType function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV2, ChooseCodecType_003, TestSize.Level1)
+{
+    std::vector<VideoEncoder> localVideoEncoders;
+    std::vector<VideoDecoder> rmtVideoDecoders;
+    VideoEncoder videoEncoder;
+    videoEncoder.name = "HdiCodecAdapter.OMX.rk.video_encoder.hevc";
+    VideoDecoder videoDecoder;
+    videoDecoder.name = "HdiCodecAdapter.OMX.rk.video_decoder.hevc";
+    localVideoEncoders.push_back(videoEncoder);
+    rmtVideoDecoders.push_back(videoDecoder);
+    dScreen_->videoParam_ = std::make_shared<VideoParam>();
+    int32_t ret = dScreen_->ChooseCodecType(localVideoEncoders, rmtVideoDecoders);
+    EXPECT_EQ(ret, DH_SUCCESS);
+}
+
+/**
+ * @tc.name: ChooseCodecType_004
+ * @tc.desc: Verify the ChooseCodecType function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV2, ChooseCodecType_004, TestSize.Level1)
+{
+    std::vector<VideoEncoder> localVideoEncoders;
+    std::vector<VideoDecoder> rmtVideoDecoders;
+    VideoEncoder videoEncoder;
+    videoEncoder.name = "HdiCodecAdapter.OMX.rk.video_encoder.avc";
+    VideoDecoder videoDecoder;
+    videoDecoder.name = "HdiCodecAdapter.OMX.rk.video_decoder.avc";
+    localVideoEncoders.push_back(videoEncoder);
+    rmtVideoDecoders.push_back(videoDecoder);
+    dScreen_->videoParam_ = std::make_shared<VideoParam>();
+    int32_t ret = dScreen_->ChooseCodecType(localVideoEncoders, rmtVideoDecoders);
+    EXPECT_EQ(ret, DH_SUCCESS);
 }
 }
 }
