@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -65,7 +65,7 @@ ScreenRegionManager::~ScreenRegionManager()
 
 int32_t ScreenRegionManager::Initialize()
 {
-    DHLOGI("Inter ScreenRegionManager::Initialize 2.0");
+    DHLOGI("Enter ScreenRegionManager::Initialize 2.0");
     int32_t ret = LoadAVReceiverEngineProvider();
     if ((ret != DH_SUCCESS) || (providerPtr_ == nullptr)) {
         DHLOGE("Load av transport receiver engine provider failed.");
