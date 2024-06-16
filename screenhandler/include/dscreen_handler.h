@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -37,6 +37,7 @@ public:
     int32_t Initialize() override;
     std::vector<DHItem> QueryMeta() override;
     std::vector<DHItem> Query() override;
+    std::vector<DHItem> RealQuery();
     std::map<std::string, std::string> QueryExtraInfo() override;
     bool IsSupportPlugin() override;
     void RegisterPluginListener(std::shared_ptr<PluginListener> listener) override;
