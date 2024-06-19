@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,9 +14,9 @@
  */
 #include <memory>
 
-#include "media_errors.h"
+#include "avcodec_errors.h"
 #include "avcodec_common.h"
-#include "format.h"
+#include "meta/format.h"
 
 #define private public
 #include "dscreen_constants.h"
@@ -90,17 +90,18 @@ HWTEST_F(ScreenCallbackTest, RegisterStateCallback_004, TestSize.Level1)
     std::shared_ptr<IImageSourceProcessorListener> listener = std::make_shared<ScreenSourceTrans>();
     std::shared_ptr<ImageSourceEncoder> encoder = std::make_shared<ImageSourceEncoder>(listener);
     std::shared_ptr<ImageEncoderCallback> encoderCallback = std::make_shared<ImageEncoderCallback>(encoder);
-    Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_INTERNAL;
+    MediaAVCodec::AVCodecErrorType errorType = MediaAVCodec::AVCODEC_ERROR_INTERNAL;
     int32_t errorCode = 0;
     encoderCallback->OnError(errorType, errorCode);
     uint32_t index = 0;
-    Media::AVCodecBufferInfo info;
+    MediaAVCodec::AVCodecBufferInfo info;
     info.presentationTimeUs = 0;
     info.size = 0;
     info.offset = 0;
-    Media::AVCodecBufferFlag flag = Media::AVCODEC_BUFFER_FLAG_NONE;
-    encoderCallback->OnOutputBufferAvailable(index, info, flag);
-    encoderCallback->OnInputBufferAvailable(index);
+    MediaAVCodec::AVCodecBufferFlag flag = MediaAVCodec::AVCODEC_BUFFER_FLAG_NONE;
+    std::shared_ptr<Media::AVSharedMemory> buffer = nullptr;
+    encoderCallback->OnOutputBufferAvailable(index, info, flag, buffer);
+    encoderCallback->OnInputBufferAvailable(index, buffer);
     Media::Format format;
     encoderCallback->OnOutputFormatChanged(format);
 
@@ -122,17 +123,18 @@ HWTEST_F(ScreenCallbackTest, RegisterStateCallback_005, TestSize.Level1)
     std::shared_ptr<ImageSinkDecoder> decoder = std::make_shared<ImageSinkDecoder>(listener);
     std::shared_ptr<ImageDecoderCallback> decoderCallback = std::make_shared<ImageDecoderCallback>(decoder);
 
-    Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_INTERNAL;
+    MediaAVCodec::AVCodecErrorType errorType = MediaAVCodec::AVCODEC_ERROR_INTERNAL;
     int32_t errorCode = 0;
     decoderCallback->OnError(errorType, errorCode);
     uint32_t index = 0;
-    Media::AVCodecBufferInfo info;
+    MediaAVCodec::AVCodecBufferInfo info;
     info.presentationTimeUs = 0;
     info.size = 0;
     info.offset = 0;
-    Media::AVCodecBufferFlag flag = Media::AVCODEC_BUFFER_FLAG_NONE;
-    decoderCallback->OnOutputBufferAvailable(index, info, flag);
-    decoderCallback->OnInputBufferAvailable(index);
+    MediaAVCodec::AVCodecBufferFlag flag = MediaAVCodec::AVCODEC_BUFFER_FLAG_NONE;
+    std::shared_ptr<Media::AVSharedMemory> buffer = nullptr;
+    decoderCallback->OnOutputBufferAvailable(index, info, flag, buffer);
+    decoderCallback->OnInputBufferAvailable(index, buffer);
     Media::Format format;
     decoderCallback->OnOutputFormatChanged(format);
 

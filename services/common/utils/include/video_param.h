@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -34,8 +34,8 @@ public:
     uint32_t GetVideoWidth() const;
     void SetVideoHeight(uint32_t videoHeight);
     uint32_t GetVideoHeight() const;
-    void SetFps(uint32_t fps);
-    uint32_t GetFps() const;
+    void SetFps(double fps);
+    double GetFps() const;
     void SetCodecType(uint8_t codecType);
     uint8_t GetCodecType() const;
     void SetVideoFormat(uint8_t videoFormat);
@@ -50,7 +50,7 @@ private:
     uint32_t screenHeight_;
     uint32_t videoWidth_;
     uint32_t videoHeight_;
-    uint32_t fps_ = DEFAULT_FPS;
+    double fps_ = DEFAULT_FPS;
     uint8_t codecType_ = DEFAULT_CODECTYPE;
     uint8_t videoFormat_ = DEFAULT_VIDEO_FORMAT;
     bool isPartialRefresh_ = false;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -32,7 +32,7 @@ constexpr int32_t VIDEO_CODEC_TYPE_INVALID = -1;
 constexpr int32_t VIDEO_DATA_FORMAT_INVALID = -1;
 constexpr int32_t WIDTH_INVALID = 9999;
 constexpr int32_t HEIGHT_INVALID = 9999;
-constexpr int32_t FPS = 30;
+constexpr double FPS = 30.0;
 constexpr size_t DATA_LEN = 128;
 
 class MockIScreenSinkTransCallback : public IScreenSinkTransCallback {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +18,7 @@
 #include <iostream>
 
 #include "avcodec_common.h"
-#include "format.h"
+#include "meta/format.h"
 #include "image_encoder_callback.h"
 #include "screen_source_trans.h"
 
@@ -33,7 +33,8 @@ void OnInputBufferAvailableFuzzTest(const uint8_t* data, size_t size)
     std::shared_ptr<ImageSourceEncoder> encoder = std::make_shared<ImageSourceEncoder>(listener);
     std::shared_ptr<ImageEncoderCallback> encoderCallback = std::make_shared<ImageEncoderCallback>(encoder);
     uint32_t index = *(reinterpret_cast<const uint32_t*>(data));
-    encoderCallback->OnInputBufferAvailable(index);
+    std::shared_ptr<Media::AVSharedMemory> buffer = nullptr;
+    encoderCallback->OnInputBufferAvailable(index, buffer);
 }
 }
 }

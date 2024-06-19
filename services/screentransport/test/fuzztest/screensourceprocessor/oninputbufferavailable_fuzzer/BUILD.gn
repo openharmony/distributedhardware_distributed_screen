@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Copyright (c) 2023-2024 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -53,12 +53,13 @@ ohos_fuzztest("OnInputBufferAvailableFuzzTest") {
   ]
 
   external_deps = [
+    "av_codec:av_codec_client",
     "c_utils:utils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "graphic_surface:surface",
     "graphic_surface:sync_fence",
     "ipc:ipc_core",
-    "player_framework:media_client",
+    "media_foundation:media_foundation",
   ]
 
   defines = [

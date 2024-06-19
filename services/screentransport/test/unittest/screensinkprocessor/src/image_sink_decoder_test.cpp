@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -43,10 +43,19 @@ void ImageSinkDecoderTest::SetUp(void)
 
     imageListener_ = std::make_shared<MockIImageSinkProcessorListener>();
     imageDecoder_ = std::make_shared<ImageSinkDecoder>(imageListener_);
-    imageDecoder_->videoDecoder_ = Media::VideoDecoderFactory::CreateByMime("video/avc");
+    videoDecoder_ = MediaAVCodec::VideoDecoderFactory::CreateByMime(
+        std::string(MediaAVCodec::CodecMimeType::VIDEO_AVC));
+    imageDecoder_->videoDecoder_ = videoDecoder_;
 }
 
-void ImageSinkDecoderTest::TearDown(void) {}
+void ImageSinkDecoderTest::TearDown(void)
+{
+    if (videoDecoder_ != nullptr) {
+        videoDecoder_->Stop();
+        videoDecoder_->Release();
+        videoDecoder_ = nullptr;
+    }
+}
 
 /**
  * @tc.name: configure_decoder_test_001
@@ -79,8 +88,8 @@ HWTEST_F(ImageSinkDecoderTest, configure_decoder_test_002, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, configure_decoder_test_003, TestSize.Level1)
 {
-    param_.videoFormat_ = VIDEO_CODEC_TYPE_INVALID;
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_OPERATION, imageDecoder_->ConfigureDecoder(param_));
+    param_.SetVideoWidth(0);
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_CONFIGURE_FAILED, imageDecoder_->ConfigureDecoder(param_));
 }
 
 /**
@@ -114,7 +123,7 @@ HWTEST_F(ImageSinkDecoderTest, release_decoder_test_002, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, start_decoder_test_001, TestSize.Level1)
 {
-    EXPECT_EQ(ERR_DH_SCREEN_CODEC_PREPARE_FAILED, imageDecoder_->StartDecoder());
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_START_FAILED, imageDecoder_->StartDecoder());
 }
 
 /**
@@ -177,18 +186,6 @@ HWTEST_F(ImageSinkDecoderTest, init_video_decoder_test_003, TestSize.Level1)
 }
 
 /**
- * @tc.name: init_video_decoder_test_004
- * @tc.desc: Verify the InitVideoDecoder function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ImageSinkDecoderTest, init_video_decoder_test_004, TestSize.Level1)
-{
-    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
-    EXPECT_EQ(DH_SUCCESS, imageDecoder_->InitVideoDecoder(param_));
-}
-
-/**
  * @tc.name: set_decoder_format_test_001
  * @tc.desc: Verify the SetDecoderFormat function.
  * @tc.type: FUNC
@@ -208,7 +205,6 @@ HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_001, TestSize.Level1)
 HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_002, TestSize.Level1)
 {
     param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H265;
-    param_.videoFormat_ = VIDEO_DATA_FORMAT_NV12;
     EXPECT_EQ(DH_SUCCESS, imageDecoder_->SetDecoderFormat(param_));
 }
 
@@ -244,9 +240,8 @@ HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_004, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_005, TestSize.Level1)
 {
-    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H265;
-    param_.videoFormat_ = VIDEO_CODEC_TYPE_INVALID;
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_OPERATION, imageDecoder_->SetDecoderFormat(param_));
+    param_.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
+    EXPECT_EQ(DH_SUCCESS, imageDecoder_->SetDecoderFormat(param_));
 }
 
 /**
@@ -257,22 +252,8 @@ HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_005, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_006, TestSize.Level1)
 {
-    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
-    param_.videoFormat_ = VIDEO_DATA_FORMAT_NV21;
-    EXPECT_EQ(DH_SUCCESS, imageDecoder_->SetDecoderFormat(param_));
-}
-
-/**
- * @tc.name: set_decoder_format_test_007
- * @tc.desc: Verify the SetDecoderFormat function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_007, TestSize.Level1)
-{
-    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
-    param_.videoFormat_ = VIDEO_DATA_FORMAT_RGBA8888;
-    EXPECT_EQ(DH_SUCCESS, imageDecoder_->SetDecoderFormat(param_));
+    param_.SetVideoWidth(0);
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_CONFIGURE_FAILED, imageDecoder_->SetDecoderFormat(param_));
 }
 
 /**
@@ -283,7 +264,7 @@ HWTEST_F(ImageSinkDecoderTest, set_decoder_format_test_007, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, set_output_surface_test_001, TestSize.Level1)
 {
-    Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_EXTEND_START;
+    MediaAVCodec::AVCodecErrorType errorType = MediaAVCodec::AVCODEC_ERROR_EXTEND_START;
     imageDecoder_->OnError(errorType, DH_SUCCESS);
     sptr<IConsumerSurface> surface = IConsumerSurface::Create("test");
     sptr<IBufferProducer> bp = surface->GetProducer();
@@ -300,14 +281,15 @@ HWTEST_F(ImageSinkDecoderTest, set_output_surface_test_001, TestSize.Level1)
  */
 HWTEST_F(ImageSinkDecoderTest, on_input_buffer_available_test_001, TestSize.Level1)
 {
-    Media::AVCodecErrorType errorType = Media::AVCODEC_ERROR_EXTEND_START;
+    MediaAVCodec::AVCodecErrorType errorType = MediaAVCodec::AVCODEC_ERROR_EXTEND_START;
     int32_t errorCode = DH_SUCCESS;
     std::shared_ptr<IImageSinkProcessorListener> listener= nullptr;
     imageDecoder_->imageProcessorListener_ = listener;
     imageDecoder_->OnError(errorType, errorCode);
     unsigned int len = 1;
-    imageDecoder_->OnInputBufferAvailable(0);
-    EXPECT_EQ(len, imageDecoder_->bufferIndexQueue_.size());
+    std::shared_ptr<Media::AVSharedMemory> buffer = nullptr;
+    imageDecoder_->OnInputBufferAvailable(0, buffer);
+    EXPECT_EQ(len, imageDecoder_->availableInputIndexsQueue_.size());
 }
 
 /**
@@ -319,10 +301,11 @@ HWTEST_F(ImageSinkDecoderTest, on_input_buffer_available_test_001, TestSize.Leve
 HWTEST_F(ImageSinkDecoderTest, on_output_buffer_available_test_001, TestSize.Level1)
 {
     uint32_t index = 0;
-    Media::AVCodecBufferFlag flag = Media::AVCODEC_BUFFER_FLAG_CODEC_DATA;
-    Media::AVCodecBufferInfo info;
+    MediaAVCodec::AVCodecBufferFlag flag = MediaAVCodec::AVCODEC_BUFFER_FLAG_CODEC_DATA;
+    MediaAVCodec::AVCodecBufferInfo info;
     info.presentationTimeUs = 1;
-    imageDecoder_->OnOutputBufferAvailable(index, info, flag);
+    std::shared_ptr<Media::AVSharedMemory> buffer = nullptr;
+    imageDecoder_->OnOutputBufferAvailable(index, info, flag, buffer);
     EXPECT_EQ(info.presentationTimeUs, imageDecoder_->decoderBufferInfo_.presentationTimeUs);
 }
 
@@ -335,12 +318,13 @@ HWTEST_F(ImageSinkDecoderTest, on_output_buffer_available_test_001, TestSize.Lev
 HWTEST_F(ImageSinkDecoderTest, on_output_buffer_available_test_002, TestSize.Level1)
 {
     uint32_t index = 0;
-    Media::AVCodecBufferFlag flag = Media::AVCODEC_BUFFER_FLAG_CODEC_DATA;
-    Media::AVCodecBufferInfo info;
+    MediaAVCodec::AVCodecBufferFlag flag = MediaAVCodec::AVCODEC_BUFFER_FLAG_CODEC_DATA;
+    MediaAVCodec::AVCodecBufferInfo info;
     info.presentationTimeUs = 1;
     imageDecoder_->decoderBufferInfo_.presentationTimeUs = 0;
     imageDecoder_->videoDecoder_ = nullptr;
-    imageDecoder_->OnOutputBufferAvailable(index, info, flag);
+    std::shared_ptr<Media::AVSharedMemory> buffer = nullptr;
+    imageDecoder_->OnOutputBufferAvailable(index, info, flag, buffer);
     EXPECT_NE(info.presentationTimeUs, imageDecoder_->decoderBufferInfo_.presentationTimeUs);
 }
 
@@ -397,7 +381,7 @@ HWTEST_F(ImageSinkDecoderTest, process_data_test_001, TestSize.Level1)
     imageDecoder_->videoDataQueue_.push(data);
 
     uint32_t index = 0;
-    imageDecoder_->bufferIndexQueue_.push(index);
+    imageDecoder_->availableInputIndexsQueue_.push(index);
 
     imageDecoder_->StartInputThread();
     EXPECT_EQ(true, imageDecoder_->isDecoderReady_);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -226,9 +226,9 @@ std::shared_ptr<ISoftbusListener> &SoftbusAdapter::GetSoftbusListenerByName(int3
 {
     char sessionName[DSCREEN_MAX_SESSION_NAME_LEN] = "";
     char peerDevId[DSCREEN_MAX_DEVICE_ID_LEN] = "";
-    int32_t ret = GetPeerSessionName(sessionId, sessionName, sizeof(sessionName));
+    int32_t ret = GetMySessionName(sessionId, sessionName, sizeof(sessionName));
     if (ret != DH_SUCCESS) {
-        DHLOGE("%s: GetPeerSessionName failed ret:%" PRId32, LOG_TAG, ret);
+        DHLOGE("%s: GetMySessionName failed ret:%" PRId32, LOG_TAG, ret);
         return nullListener_;
     }
     ret = GetPeerDeviceId(sessionId, peerDevId, sizeof(peerDevId));

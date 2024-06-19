@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -76,7 +76,7 @@ DScreen::~DScreen()
 
 void DScreen::OnTransError(int32_t err, const std::string &content)
 {
-    DHLOGD("OnTransError, err: %" PRId32, err);
+    DHLOGW("OnTransError, err: %" PRId32, err);
     AddTask(std::make_shared<Task>(TaskType::TASK_DISCONNECT, ""));
     ScreenMgrAdapter::GetInstance().RemoveScreenFromGroup(screenId_);
 }
@@ -280,22 +280,23 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
 
     std::vector<std::string> localCodecArray;
     // query local support encoder type
-    std::shared_ptr<Media::AVCodecList> codecList = Media::AVCodecListFactory::CreateAVCodecList();
+    std::shared_ptr<MediaAVCodec::AVCodecList> codecList = MediaAVCodec::AVCodecListFactory::CreateAVCodecList();
     if (codecList == nullptr) {
-        DHLOGE("codecList is nullptr.");
+        DHLOGE("Create avCodecList failed.");
         return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
     }
-    std::vector<std::shared_ptr<Media::VideoCaps>> caps = codecList->GetVideoEncoderCaps();
-    for (const auto &cap : caps) {
-        if (cap == nullptr) {
-            continue;
-        }
-        std::shared_ptr<Media::AVCodecInfo> codecInfo = cap->GetCodecInfo();
-        if (codecInfo == nullptr) {
-            continue;
-        }
-        localCodecArray.push_back(codecInfo->GetName());
+    const std::vector<std::string> encoderName = {std::string(MediaAVCodec::CodecMimeType::VIDEO_AVC),
+                                                  std::string(MediaAVCodec::CodecMimeType::VIDEO_HEVC)};
+    for (const auto &coder : encoderName) {
+        MediaAVCodec::CapabilityData *capData = codecList->GetCapability(coder, true,
+            MediaAVCodec::AVCodecCategory::AVCODEC_HARDWARE);
+            if (capData == nullptr) {
+                continue;
+            }
+        std::string mimeType = capData->mimeType;
+        localCodecArray.push_back(mimeType);
     }
+
     std::vector<std::string> codecTypeCandidates;
     for (const auto &remoteCodecType : remoteCodecArray) {
         if (std::find(localCodecArray.begin(), localCodecArray.end(),
@@ -305,23 +306,17 @@ int32_t DScreen::NegotiateCodecType(const std::string &remoteCodecInfoStr)
     }
 
     if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
-        CODEC_NAME_H264) != codecTypeCandidates.end()) {
+        std::string(MediaAVCodec::CodecMimeType::VIDEO_AVC)) != codecTypeCandidates.end()) {
         videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
-        videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
-        videoParam_->SetPartialRefreshFlag(true);
     } else if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
-        CODEC_NAME_MPEG4) != codecTypeCandidates.end()) {
-        videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_MPEG4);
-        videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_RGBA8888);
-    } else if (std::find(codecTypeCandidates.begin(), codecTypeCandidates.end(),
-        CODEC_NAME_H265) != codecTypeCandidates.end()) {
+        std::string(MediaAVCodec::CodecMimeType::VIDEO_HEVC)) != codecTypeCandidates.end()) {
         videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H265);
-        videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
-        videoParam_->SetPartialRefreshFlag(true);
     } else {
         DHLOGI("codec type not support.");
         return ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL;
     }
+    videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_RGBA8888);
+    videoParam_->SetPartialRefreshFlag(true);
     return DH_SUCCESS;
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -71,12 +71,12 @@ uint32_t VideoParam::GetVideoHeight() const
     return videoHeight_;
 }
 
-void VideoParam::SetFps(uint32_t fps)
+void VideoParam::SetFps(double fps)
 {
     fps_ = fps;
 }
 
-uint32_t VideoParam::GetFps() const
+double VideoParam::GetFps() const
 {
     return fps_;
 }
@@ -119,7 +119,7 @@ void from_json(const json &j, DistributedHardware::VideoParam &videoParam)
 {
     if (!IsUInt32(j, KEY_SCREEN_WIDTH) || !IsUInt32(j, KEY_SCREEN_HEIGHT) ||
         !IsUInt32(j, KEY_VIDEO_WIDTH) || !IsUInt32(j, KEY_VIDEO_HEIGHT) ||
-        !IsUInt32(j, KEY_FPS) || !IsUInt8(j, KEY_CODECTYPE) ||
+        !IsFloat(j, KEY_FPS) || !IsUInt8(j, KEY_CODECTYPE) ||
         !IsUInt8(j, KEY_COLOR_FORMAT)) {
         return;
     }
@@ -128,7 +128,7 @@ void from_json(const json &j, DistributedHardware::VideoParam &videoParam)
     videoParam.screenHeight_ = j[KEY_SCREEN_HEIGHT].get<uint32_t>();
     videoParam.videoWidth_ = j[KEY_VIDEO_WIDTH].get<uint32_t>();
     videoParam.videoHeight_ = j[KEY_VIDEO_HEIGHT].get<uint32_t>();
-    videoParam.fps_ = j[KEY_FPS].get<uint32_t>();
+    videoParam.fps_ = j[KEY_FPS].get<double>();
     videoParam.codecType_ = j[KEY_CODECTYPE].get<uint8_t>();
     videoParam.videoFormat_ = j[KEY_COLOR_FORMAT].get<uint8_t>();
     videoParam.isPartialRefresh_ = false;
