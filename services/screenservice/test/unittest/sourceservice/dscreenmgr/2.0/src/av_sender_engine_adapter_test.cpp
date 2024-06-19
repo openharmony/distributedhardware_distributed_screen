@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -200,6 +200,39 @@ HWTEST_F(AVSenderEngineAdapterTest, OnSenderEvent_001, TestSize.Level1)
     senderAdapter_->adapterCallback_ = std::make_shared<MockAVSenderAdapterCallback>();
     EXPECT_EQ(DH_AVT_SUCCESS, senderAdapter_->OnSenderEvent(event));
     EXPECT_EQ(DH_AVT_SUCCESS, senderAdapter_->OnMessageReceived(message));
+}
+
+/**
+ * @tc.name: OnSenderEvent_002
+ * @tc.desc: Verify the OnSenderEvent function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(AVSenderEngineAdapterTest, OnSenderEvent_002, TestSize.Level1)
+{
+    AVTransEvent event;
+    event.type = EventType::EVENT_CHANNEL_CLOSED;
+    senderAdapter_->adapterCallback_ = std::make_shared<MockAVSenderAdapterCallback>();
+    EXPECT_EQ(DH_AVT_SUCCESS, senderAdapter_->OnSenderEvent(event));
+
+    event.type = EventType::EVENT_START_SUCCESS;
+    EXPECT_EQ(DH_AVT_SUCCESS, senderAdapter_->OnSenderEvent(event));
+
+    event.type = EventType::EVENT_REMOTE_ERROR;
+    EXPECT_EQ(DH_AVT_SUCCESS, senderAdapter_->OnSenderEvent(event));
+
+    event.type = EventType::EVENT_REMOVE_STREAM;
+    EXPECT_EQ(DH_AVT_SUCCESS, senderAdapter_->OnSenderEvent(event));
+
+    senderAdapter_->adapterCallback_ = nullptr;
+    event.type = EventType::EVENT_CHANNEL_CLOSED;
+    EXPECT_EQ(DH_AVT_SUCCESS, senderAdapter_->OnSenderEvent(event));
+
+    event.type = EventType::EVENT_START_SUCCESS;
+    EXPECT_EQ(DH_AVT_SUCCESS, senderAdapter_->OnSenderEvent(event));
+
+    event.type = EventType::EVENT_REMOTE_ERROR;
+    EXPECT_EQ(DH_AVT_SUCCESS, senderAdapter_->OnSenderEvent(event));
 }
 } // namespace DistributedHardware
 } // namespace OHOS

@@ -16,8 +16,10 @@
 
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
+#include "dscreen_json_util.h"
 #include "dscreen_log.h"
 #include "dscreen_util.h"
+
 using namespace testing::ext;
 
 namespace OHOS {
@@ -102,6 +104,44 @@ HWTEST_F(ScreenCommonTest, common_004, TestSize.Level1)
     std::string value = "Idvalues";
     std::string ret = GetInterruptString(value);
     EXPECT_EQ("Idva", ret);
+}
+
+/**
+ * @tc.name: IsInt64_001
+ * @tc.desc: Verify the IsInt64 function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenCommonTest, IsInt64_001, TestSize.Level1)
+{
+    nlohmann::json testJson;
+    std::string key = "test";
+    EXPECT_FALSE(IsInt64(testJson, key));
+
+    testJson[key] = "test";
+    EXPECT_FALSE(IsInt64(testJson, key));
+
+    testJson[key] = 1;
+    EXPECT_TRUE(IsInt64(testJson, key));
+}
+
+/**
+ * @tc.name: IsArray_001
+ * @tc.desc: Verify the IsArray function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenCommonTest, IsArray_001, TestSize.Level1)
+{
+    nlohmann::json testJson;
+    std::string key = "test";
+    EXPECT_FALSE(IsArray(testJson, key));
+
+    testJson[key] = "test";
+    EXPECT_FALSE(IsArray(testJson, key));
+
+    testJson[key] = {1, 2, 3};
+    EXPECT_TRUE(IsArray(testJson, key));
 }
 } // namespace DistributedHardware
 } // namespace OHOS

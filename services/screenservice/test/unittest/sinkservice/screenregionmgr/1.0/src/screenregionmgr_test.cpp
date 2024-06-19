@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -186,6 +186,26 @@ HWTEST_F(ScreenRegionManagerTestV1, HandleNotifySetUp_003, TestSize.Level1)
     EXPECT_EQ(0, ScreenRegionManager::GetInstance().screenRegions_.size());
 }
 
+/**
+ * @tc.name: HandleNotifySetUp_004
+ * @tc.desc: Verify the HandleNotifySetUp function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionManagerTestV1, HandleNotifySetUp_004, TestSize.Level1)
+{
+    ScreenRegionManager::GetInstance().screenRegions_.clear();
+    const std::string remoteDevId = "sourceDevId";
+    const std::string eventContent = "{\"dhId\":\"SCREEN#0\", \"mapRelation\":{\"displayId\":0, \
+        \"displayRect\":{\"height\":1280, \"startX\":0, \"startY\":0, \"width\":720}, \"screenId\":2, \
+        \"screenRect\":{\"height\":1280, \"startX\":0, \"startY\":0, \"width\":720}}, \"screenId\":2, \
+        \"videoParam\":{\"codecType\":2, \"colorFormat\":3, \"fps\":30, \"screenHeight\":1280, \
+        \"screenWidths\":720, \"videoHeights\":1280, \"videoWidths\":720}, \"screenVersion\":\"1.0\"}";
+    ScreenRegionManager::GetInstance().HandleNotifySetUp(remoteDevId, eventContent);
+
+    EXPECT_NE(0, ScreenRegionManager::GetInstance().screenRegions_.size());
+    ScreenRegionManager::GetInstance().screenRegions_.clear();
+}
 
 /**
  * @tc.name: GetDScreenSourceSA_001
@@ -199,6 +219,68 @@ HWTEST_F(ScreenRegionManagerTestV1, GetDScreenSourceSA_001, TestSize.Level1)
     sptr<IDScreenSource> ret = ScreenRegionManager::GetInstance().GetDScreenSourceSA(remoteDevId);
 
     EXPECT_EQ(nullptr, ret);
+}
+
+/**
+ * @tc.name: CheckContentJson_001
+ * @tc.desc: Verify the CheckContentJson function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionManagerTestV1, CheckContentJson_001, TestSize.Level1)
+{
+    nlohmann::json testJson;
+    testJson[KEY_SCREEN_ID] = "test";
+    EXPECT_FALSE(ScreenRegionManager::GetInstance().CheckContentJson(testJson));
+}
+
+/**
+ * @tc.name: CheckContentJson_002
+ * @tc.desc: Verify the CheckContentJson function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionManagerTestV1, CheckContentJson_002, TestSize.Level1)
+{
+    nlohmann::json testJson;
+    uint64_t screenId = 0;
+    testJson[KEY_SCREEN_ID] = screenId;
+    testJson[KEY_DH_ID] = screenId;
+    EXPECT_FALSE(ScreenRegionManager::GetInstance().CheckContentJson(testJson));
+}
+
+/**
+ * @tc.name: CheckContentJson_003
+ * @tc.desc: Verify the CheckContentJson function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionManagerTestV1, CheckContentJson_003, TestSize.Level1)
+{
+    nlohmann::json testJson;
+    uint64_t screenId = 0;
+    testJson[KEY_SCREEN_ID] = screenId;
+    testJson[KEY_DH_ID] = "test";
+    EXPECT_TRUE(ScreenRegionManager::GetInstance().CheckContentJson(testJson));
+
+    testJson[KEY_VERSION] = screenId;
+    EXPECT_FALSE(ScreenRegionManager::GetInstance().CheckContentJson(testJson));
+}
+
+/**
+ * @tc.name: CheckContentJson_004
+ * @tc.desc: Verify the CheckContentJson function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionManagerTestV1, CheckContentJson_004, TestSize.Level1)
+{
+    nlohmann::json testJson;
+    uint64_t screenId = 0;
+    testJson[KEY_SCREEN_ID] = screenId;
+    testJson[KEY_DH_ID] = "test";
+    testJson[KEY_VERSION] = "test";
+    EXPECT_TRUE(ScreenRegionManager::GetInstance().CheckContentJson(testJson));
 }
 }
 }

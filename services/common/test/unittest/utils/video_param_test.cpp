@@ -76,6 +76,20 @@ HWTEST_F(VideoParamTest, GetVideoWidth_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: SetPartialRefreshFlag_001
+ * @tc.desc: Verify the SetPartialRefreshFlag function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(VideoParamTest, SetPartialRefreshFlag_001, TestSize.Level1)
+{
+    std::shared_ptr<VideoParam> videoParam = std::make_shared<VideoParam>();
+    videoParam->isPartialRefresh_ = false;
+    videoParam->SetPartialRefreshFlag(true);
+    EXPECT_TRUE(videoParam->isPartialRefresh_);
+}
+
+/**
  * @tc.name: GetVideoHeight_001
  * @tc.desc: Verify the GetVideoHeight function.
  * @tc.type: FUNC
