@@ -16,6 +16,7 @@
 #include "dscreen_sink_stub_test.h"
 
 #include <memory>
+#include "dscreen_constants.h"
 
 using namespace testing;
 using namespace testing::ext;
@@ -182,6 +183,116 @@ HWTEST_F(DScreenSinkStubTest, DScreenNotify_001, TestSize.Level1)
     EXPECT_STREQ(devId.c_str(), ((sptr<TestDScreenSinkStub> &)sinkStubPtr)->devId_.c_str());
     EXPECT_EQ(eventCode, ((sptr<TestDScreenSinkStub> &)sinkStubPtr)->eventCode_);
     EXPECT_STREQ(eventContent.c_str(), ((sptr<TestDScreenSinkStub> &)sinkStubPtr)->eventContent_.c_str());
+}
+
+/**
+ * @tc.name: DScreenNotifyInner_001
+ * @tc.desc: Verify the DScreenNotifyInner function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_001, TestSize.Level1)
+{
+    sptr<DScreenSinkStub> sinkStub = new TestDScreenSinkStub();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    std::string devId = "";
+    int32_t eventCode = -1;
+    std::string eventContent = "";
+    data.WriteString(devId);
+    data.WriteInt32(eventCode);
+    data.WriteString(eventContent);
+    int32_t ret = sinkStub->DScreenNotifyInner(data, reply, option);
+    EXPECT_EQ(ret, ERR_DH_SCREEN_INPUT_PARAM_INVALID);
+}
+
+/**
+ * @tc.name: DScreenNotifyInner_002
+ * @tc.desc: Verify the DScreenNotifyInner function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_002, TestSize.Level1)
+{
+    sptr<DScreenSinkStub> sinkStub = new TestDScreenSinkStub();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    std::string exceedDidMaxSizeStr(DID_MAX_SIZE + 1, 'a');
+    int32_t eventCode = -1;
+    std::string eventContent = "";
+    data.WriteString(exceedDidMaxSizeStr);
+    data.WriteInt32(eventCode);
+    data.WriteString(eventContent);
+    int32_t ret = sinkStub->DScreenNotifyInner(data, reply, option);
+    EXPECT_EQ(ret, ERR_DH_SCREEN_INPUT_PARAM_INVALID);
+}
+
+/**
+ * @tc.name: DScreenNotifyInner_003
+ * @tc.desc: Verify the DScreenNotifyInner function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_003, TestSize.Level1)
+{
+    sptr<DScreenSinkStub> sinkStub = new TestDScreenSinkStub();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    std::string devId = "test";
+    int32_t eventCode = -1;
+    std::string eventContent = "";
+    data.WriteString(devId);
+    data.WriteInt32(eventCode);
+    data.WriteString(eventContent);
+    int32_t ret = sinkStub->DScreenNotifyInner(data, reply, option);
+    EXPECT_EQ(ret, ERR_DH_SCREEN_INPUT_PARAM_INVALID);
+}
+
+/**
+ * @tc.name: DScreenNotifyInner_004
+ * @tc.desc: Verify the DScreenNotifyInner function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_004, TestSize.Level1)
+{
+    sptr<DScreenSinkStub> sinkStub = new TestDScreenSinkStub();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    std::string devId = "test";
+    int32_t eventCode = -1;
+    std::string exceedParamMaxSizeStr(PARAM_MAX_SIZE + 1, 'a');
+    data.WriteString(devId);
+    data.WriteInt32(eventCode);
+    data.WriteString(exceedParamMaxSizeStr);
+    int32_t ret = sinkStub->DScreenNotifyInner(data, reply, option);
+    EXPECT_EQ(ret, ERR_DH_SCREEN_INPUT_PARAM_INVALID);
+}
+
+/**
+ * @tc.name: DScreenNotifyInner_005
+ * @tc.desc: Verify the DScreenNotifyInner function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_005, TestSize.Level1)
+{
+    sptr<DScreenSinkStub> sinkStub = new TestDScreenSinkStub();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    std::string devId = "test";
+    int32_t eventCode = -1;
+    std::string eventContent = "test";
+    data.WriteString(devId);
+    data.WriteInt32(eventCode);
+    data.WriteString(eventContent);
+    int32_t ret = sinkStub->DScreenNotifyInner(data, reply, option);
+    EXPECT_EQ(ret, DH_SUCCESS);
 }
 }
 }

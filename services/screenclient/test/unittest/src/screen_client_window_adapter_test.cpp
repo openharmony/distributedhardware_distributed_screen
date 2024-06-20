@@ -242,5 +242,44 @@ HWTEST_F(ScreenClientWindowAdapterTest, DestroyAllWindow_001, TestSize.Level1)
     int32_t ret = ScreenClientWindowAdapter::GetInstance().DestroyAllWindow();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
+
+/**
+ * @tc.name: ScreenClientInputEventListener_OnInputEvent_001
+ * @tc.desc: Verify the OnInputEvent function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenClientWindowAdapterTest, ScreenClientInputEventListener_OnInputEvent_001, TestSize.Level1)
+{
+    std::shared_ptr<MMI::PointerEvent> pointerEvent = nullptr;
+    std::shared_ptr<ScreenClientInputEventListener> listener = std::make_shared<ScreenClientInputEventListener>();
+    EXPECT_FALSE(listener->OnInputEvent(pointerEvent));
+}
+
+/**
+ * @tc.name: ScreenClientInputEventListener_OnInputEvent_002
+ * @tc.desc: Verify the OnInputEvent function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenClientWindowAdapterTest, ScreenClientInputEventListener_OnInputEvent_002, TestSize.Level1)
+{
+    std::shared_ptr<MMI::KeyEvent> keyEvent = nullptr;
+    std::shared_ptr<ScreenClientInputEventListener> listener = std::make_shared<ScreenClientInputEventListener>();
+    EXPECT_FALSE(listener->OnInputEvent(keyEvent));
+}
+
+/**
+ * @tc.name: ScreenClientInputEventListener_OnInputEvent_003
+ * @tc.desc: Verify the OnInputEvent function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenClientWindowAdapterTest, ScreenClientInputEventListener_OnInputEvent_003, TestSize.Level1)
+{
+    std::shared_ptr<MMI::AxisEvent> axisEvent = nullptr;
+    std::shared_ptr<ScreenClientInputEventListener> listener = std::make_shared<ScreenClientInputEventListener>();
+    EXPECT_FALSE(listener->OnInputEvent(axisEvent));
+}
 } // DistributedHardware
 } // OHOS

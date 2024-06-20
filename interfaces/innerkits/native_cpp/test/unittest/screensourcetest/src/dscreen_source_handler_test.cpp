@@ -146,6 +146,10 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_004, TestSize.Lev
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
     EXPECT_EQ(ERR_DH_SCREEN_STRING_PARAM_EMPTY, ret);
+
+    const std::string dhId1 = "test";
+    ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(dhId1, dhId, param, callback);
+    EXPECT_EQ(ERR_DH_SCREEN_STRING_PARAM_EMPTY, ret);
 }
 
 /**
@@ -220,6 +224,10 @@ HWTEST_F(DScreenSourceHandlerTest, UnregisterDistributedHardware_002, TestSize.L
     const std::string dhId = "";
     std::shared_ptr<UnregisterCallbackTest> callback = std::make_shared<UnregisterCallbackTest>();
     int32_t ret = DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, callback);
+    EXPECT_EQ(ERR_DH_SCREEN_STRING_PARAM_EMPTY, ret);
+
+    const std::string dhId1 = "test";
+    ret = DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(dhId1, dhId, callback);
     EXPECT_EQ(ERR_DH_SCREEN_STRING_PARAM_EMPTY, ret);
 }
 
@@ -339,6 +347,21 @@ HWTEST_F(DScreenSourceHandlerTest, OnRemoteDied_001, TestSize.Level1)
     wptr<IRemoteObject> remote(remoteObject);
     DScreenSourceHandler::GetInstance().sourceSvrRecipient_->OnRemoteDied(remote);
     EXPECT_EQ(nullptr, DScreenSourceHandler::GetInstance().dScreenSourceProxy_);
+}
+
+/**
+ * @tc.name: OnRemoteDied_002
+ * @tc.desc: Verify the OnRemoteDied function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceHandlerTest, OnRemoteDied_002, TestSize.Level1)
+{
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<IRemoteObject> remoteObject = nullptr;
+    wptr<IRemoteObject> remote(remoteObject);
+    DScreenSourceHandler::GetInstance().sourceSvrRecipient_->OnRemoteDied(remote);
+    EXPECT_EQ(remote, remote);
 }
 }
 }

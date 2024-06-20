@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -59,7 +59,8 @@ HWTEST_F(ScreenRegionTestV2, OnEngineEvent_001, TestSize.Level1)
  */
 HWTEST_F(ScreenRegionTestV2, OnEngineMessage_001, TestSize.Level1)
 {
-    std::shared_ptr<AVTransMessage> message  = std::make_shared<AVTransMessage>();
+    screenRegion_->OnEngineMessage(nullptr);
+    std::shared_ptr<AVTransMessage> message = std::make_shared<AVTransMessage>();
     message->type_ = DScreenMsgType::START_MIRROR;
     message->content_ = "invaild_json_string";
     screenRegion_->receiverAdapter_ = std::make_shared<AVTransReceiverAdapter>();
@@ -332,6 +333,23 @@ HWTEST_F(ScreenRegionTestV2, ConfigWindow_002, TestSize.Level1)
     std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
     ScreenClient::GetInstance().AddWindow(windowProperty);
     EXPECT_EQ(DH_SUCCESS, screenRegion_->ConfigWindow());
+}
+
+/**
+ * @tc.name: CheckContentJson_001
+ * @tc.desc: Verify the CheckContentJson function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTestV2, CheckContentJson_001, TestSize.Level1)
+{
+    nlohmann::json testJson;
+    testJson[KEY_SCREEN_ID] = "test";
+    EXPECT_FALSE(screenRegion_->CheckContentJson(testJson));
+
+    uint64_t screenId = 0;
+    testJson[KEY_SCREEN_ID] = screenId;
+    EXPECT_TRUE(screenRegion_->CheckContentJson(testJson));
 }
 } // namespace V2_0
 } // namespace DistributedHardware

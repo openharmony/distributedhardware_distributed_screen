@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -194,6 +194,36 @@ HWTEST_F(DScreenManagerTestV1, EnableDistributedScreen_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: EnableDistributedScreen_002
+ * @tc.desc: Verify the EnableDistributedScreen function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenManagerTestV1, EnableDistributedScreen_002, TestSize.Level1)
+{
+    std::string devId = "test";
+    std::string dhId = "";
+    EnableParam param;
+    param.sinkVersion = "";
+    param.sinkAttrs = "";
+    std::string reqId = "";
+    int32_t ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_FAILED, ret);
+
+    dhId = "test";
+    ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_FAILED, ret);
+
+    param.sinkVersion = "test";
+    ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_FAILED, ret);
+
+    param.sinkAttrs = "test";
+    ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_FAILED, ret);
+}
+
+/**
  * @tc.name: FindDScreenByScreenId_001
  * @tc.desc: Verify the FindDScreenByScreenId function failed.
  * @tc.type: FUNC
@@ -262,6 +292,8 @@ HWTEST_F(DScreenManagerTestV1, NotifyRemoteScreenService_001, TestSize.Level1)
 HWTEST_F(DScreenManagerTestV1, PublishMessage_001, TestSize.Level1)
 {
     std::shared_ptr<IDScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
+    dScreenCallback->OnRegResult(nullptr, "", 0, "");
+    dScreenCallback->OnUnregResult(nullptr, "", 0, "");
     std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>("devId000", "dhId000", dScreenCallback);
     DScreenManager::GetInstance().PublishMessage(DHTopic::TOPIC_START_DSCREEN, dScreen);
 

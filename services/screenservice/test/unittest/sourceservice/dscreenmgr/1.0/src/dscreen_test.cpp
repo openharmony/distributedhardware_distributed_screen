@@ -235,6 +235,41 @@ HWTEST_F(DScreenTestV1, HandleEnable_005, TestSize.Level1)
 }
 
 /**
+ * @tc.name: HandleEnable_006
+ * @tc.desc: Verify the HandleEnable function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV1, HandleEnable_006, TestSize.Level1)
+{
+    std::string reqId = "reqId";
+    std::string attrs = "attrs";
+    std::shared_ptr<Task> task = std::make_shared<Task>(TaskType::TASK_DISCONNECT, reqId, attrs);
+    dScreen_->curState_ = ENABLING;
+    dScreen_->videoParam_ = nullptr;
+    std::string param = "{\"codecType\":\"OMX_rk_video_encoder_avc\", \
+        \"screenHeight\":1280, \"screenVersion\":\"1.0\", \"screenWidth\":720}";
+    std::string taskId = "taskId";
+    dScreen_->HandleEnable(param, taskId);
+
+    dScreen_->curState_ = CONNECTING;
+    dScreen_->HandleEnable(param, taskId);
+
+    dScreen_->curState_ = CONNECTED;
+    dScreen_->HandleEnable(param, taskId);
+
+    dScreen_->curState_ = DISABLED;
+    dScreen_->videoParam_ = nullptr;
+    dScreen_->HandleEnable(param, taskId);
+
+    dScreen_->dscreenCallback_ = nullptr;
+    dScreen_->HandleEnable(param, taskId);
+
+    int32_t ret = dScreen_->AddTask(task);
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+/**
  * @tc.name: CheckJsonData_001
  * @tc.desc: Verify the CheckJsonData function failed.
  * @tc.type: FUNC
@@ -242,8 +277,6 @@ HWTEST_F(DScreenTestV1, HandleEnable_005, TestSize.Level1)
  */
 HWTEST_F(DScreenTestV1, CheckJsonData_001, TestSize.Level1)
 {
-    json attrJson;
-
     std::string taskId = "taskId";
     dScreen_->dscreenCallback_ = nullptr;
     dScreen_->HandleDisable(taskId);
@@ -251,7 +284,15 @@ HWTEST_F(DScreenTestV1, CheckJsonData_001, TestSize.Level1)
     dScreen_->curState_ = CONNECTED;
     dScreen_->HandleDisconnect();
 
+    json attrJson;
+    attrJson[KEY_SCREEN_WIDTH] = "test";
     int32_t ret = dScreen_->CheckJsonData(attrJson);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR, ret);
+
+    uint32_t data = 0;
+    attrJson[KEY_SCREEN_WIDTH] = data;
+    attrJson[KEY_SCREEN_HEIGHT] = "test";
+    ret = dScreen_->CheckJsonData(attrJson);
     EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR, ret);
 }
 
@@ -263,14 +304,16 @@ HWTEST_F(DScreenTestV1, CheckJsonData_001, TestSize.Level1)
  */
 HWTEST_F(DScreenTestV1, CheckJsonData_002, TestSize.Level1)
 {
-    json attrJson;
-    attrJson["dhid"] = "dhid";
     std::string taskId = "taskId";
     dScreen_->screenId_ = 100;
     dScreen_->HandleDisable(taskId);
     dScreen_->curState_ = DISABLED;
     dScreen_->HandleDisconnect();
 
+    json attrJson;
+    uint32_t data = 0;
+    attrJson[KEY_SCREEN_WIDTH] = data;
+    attrJson[KEY_SCREEN_HEIGHT] = data;
     int32_t ret = dScreen_->CheckJsonData(attrJson);
     EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR, ret);
 }
