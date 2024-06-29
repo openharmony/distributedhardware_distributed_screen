@@ -448,7 +448,7 @@ int32_t ImageSinkDecoder::StartInputThread()
 {
     DHLOGI("%{public}s: StartInputThread.", DSCREEN_LOG_TAG);
     isDecoderReady_ = true;
-    decodeThread_ = std::thread(&ImageSinkDecoder::DecodeScreenData, this);
+    decodeThread_ = std::thread([this] { this->DecodeScreenData(); });
     return DH_SUCCESS;
 }
 

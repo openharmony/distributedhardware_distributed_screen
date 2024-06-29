@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,11 +28,7 @@
 namespace OHOS { class MessageOption; }
 namespace OHOS {
 namespace DistributedHardware {
-DScreenSourceCallbackStub::DScreenSourceCallbackStub()
-{
-    memberFuncMap_[NOTIFY_REG_RESULT] = &DScreenSourceCallbackStub::OnNotifyRegResultInner;
-    memberFuncMap_[NOTIFY_UNREG_RESULT] = &DScreenSourceCallbackStub::OnNotifyUnregResultInner;
-}
+DScreenSourceCallbackStub::DScreenSourceCallbackStub() {}
 
 int32_t DScreenSourceCallbackStub::OnRemoteRequest(uint32_t code, MessageParcel &data,
     MessageParcel &reply, MessageOption &option)
@@ -44,13 +40,15 @@ int32_t DScreenSourceCallbackStub::OnRemoteRequest(uint32_t code, MessageParcel 
         return ERR_INVALID_DATA;
     }
 
-    std::map<int32_t, DScreenFunc>::iterator iter = memberFuncMap_.find(code);
-    if (iter == memberFuncMap_.end()) {
-        DHLOGE("invalid request code.");
-        return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
+    switch (code) {
+        case NOTIFY_REG_RESULT:
+            return OnNotifyRegResultInner(data, reply, option);
+        case NOTIFY_UNREG_RESULT:
+            return OnNotifyUnregResultInner(data, reply, option);
+        default:
+            DHLOGE("invalid request code.");
+            return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
     }
-    DScreenFunc &func = iter->second;
-    return (this->*func)(data, reply, option);
 }
 
 int32_t DScreenSourceCallbackStub::OnNotifyRegResultInner(MessageParcel &data, MessageParcel &reply,
