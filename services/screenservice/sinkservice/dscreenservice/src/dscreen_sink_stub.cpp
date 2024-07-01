@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,19 +24,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-DScreenSinkStub::DScreenSinkStub()
-{
-    memberFuncMap_[static_cast<uint32_t>(IDScreenSinkInterfaceCode::INIT_SINK)] =
-        &DScreenSinkStub::InitSinkInner;
-    memberFuncMap_[static_cast<uint32_t>(IDScreenSinkInterfaceCode::RELEASE_SINK)] =
-        &DScreenSinkStub::ReleaseSinkInner;
-    memberFuncMap_[static_cast<uint32_t>(IDScreenSinkInterfaceCode::SUBSCRIBE_DISTRIBUTED_HARDWARE)] =
-        &DScreenSinkStub::SubscribeDistributedHardwareInner;
-    memberFuncMap_[static_cast<uint32_t>(IDScreenSinkInterfaceCode::UNSUBSCRIBE_DISTRIBUTED_HARDWARE)] =
-        &DScreenSinkStub::UnsubscribeDistributedHardwareInner;
-    memberFuncMap_[static_cast<uint32_t>(IDScreenSinkInterfaceCode::DSCREEN_NOTIFY)] =
-        &DScreenSinkStub::DScreenNotifyInner;
-}
+DScreenSinkStub::DScreenSinkStub() {}
 
 bool DScreenSinkStub::HasEnableDHPermission()
 {
@@ -57,13 +45,21 @@ int32_t DScreenSinkStub::OnRemoteRequest(uint32_t code, MessageParcel &data, Mes
         return ERR_INVALID_DATA;
     }
 
-    const auto &iter = memberFuncMap_.find(code);
-    if (iter == memberFuncMap_.end()) {
-        DHLOGE("invalid request code.");
-        return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
+    switch (static_cast<IDScreenSinkInterfaceCode>(code)) {
+        case IDScreenSinkInterfaceCode::INIT_SINK:
+            return InitSinkInner(data, reply, option);
+        case IDScreenSinkInterfaceCode::RELEASE_SINK:
+            return ReleaseSinkInner(data, reply, option);
+        case IDScreenSinkInterfaceCode::SUBSCRIBE_DISTRIBUTED_HARDWARE:
+            return SubscribeDistributedHardwareInner(data, reply, option);
+        case IDScreenSinkInterfaceCode::UNSUBSCRIBE_DISTRIBUTED_HARDWARE:
+            return UnsubscribeDistributedHardwareInner(data, reply, option);
+        case IDScreenSinkInterfaceCode::DSCREEN_NOTIFY:
+            return DScreenNotifyInner(data, reply, option);
+        default:
+            DHLOGE("invalid request code.");
+            return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
     }
-    DScreenSinkFunc &func = iter->second;
-    return (this->*func)(data, reply, option);
 }
 
 int32_t DScreenSinkStub::InitSinkInner(MessageParcel &data, MessageParcel &reply,

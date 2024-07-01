@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,21 +27,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-DScreenSourceStub::DScreenSourceStub()
-{
-    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::INIT_SOURCE)] =
-        &DScreenSourceStub::InitSourceInner;
-    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::RELEASE_SOURCE)] =
-        &DScreenSourceStub::ReleaseSourceInner;
-    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::REGISTER_DISTRIBUTED_HARDWARE)] =
-        &DScreenSourceStub::RegisterDistributedHardwareInner;
-    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::UNREGISTER_DISTRIBUTED_HARDWARE)] =
-        &DScreenSourceStub::UnregisterDistributedHardwareInner;
-    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::CONFIG_DISTRIBUTED_HARDWARE)] =
-        &DScreenSourceStub::ConfigDistributedHardwareInner;
-    memberFuncMap_[static_cast<uint32_t>(IDScreenSourceInterfaceCode::DSCREEN_NOTIFY)] =
-        &DScreenSourceStub::DScreenNotifyInner;
-}
+DScreenSourceStub::DScreenSourceStub() {}
 
 bool DScreenSourceStub::HasEnableDHPermission()
 {
@@ -62,13 +48,23 @@ int32_t DScreenSourceStub::OnRemoteRequest(uint32_t code, MessageParcel &data, M
         return ERR_INVALID_DATA;
     }
 
-    std::map<int32_t, DScreenSourceFunc>::iterator iter = memberFuncMap_.find(code);
-    if (iter == memberFuncMap_.end()) {
-        DHLOGE("invalid request code.");
-        return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
+    switch (static_cast<IDScreenSourceInterfaceCode>(code)) {
+        case IDScreenSourceInterfaceCode::INIT_SOURCE:
+            return InitSourceInner(data, reply, option);
+        case IDScreenSourceInterfaceCode::RELEASE_SOURCE:
+            return ReleaseSourceInner(data, reply, option);
+        case IDScreenSourceInterfaceCode::REGISTER_DISTRIBUTED_HARDWARE:
+            return RegisterDistributedHardwareInner(data, reply, option);
+        case IDScreenSourceInterfaceCode::UNREGISTER_DISTRIBUTED_HARDWARE:
+            return UnregisterDistributedHardwareInner(data, reply, option);
+        case IDScreenSourceInterfaceCode::CONFIG_DISTRIBUTED_HARDWARE:
+            return ConfigDistributedHardwareInner(data, reply, option);
+        case IDScreenSourceInterfaceCode::DSCREEN_NOTIFY:
+            return DScreenNotifyInner(data, reply, option);
+        default:
+            DHLOGE("invalid request code.");
+            return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
     }
-    DScreenSourceFunc &func = iter->second;
-    return (this->*func)(data, reply, option);
 }
 
 int32_t DScreenSourceStub::InitSourceInner(MessageParcel &data, MessageParcel &reply,

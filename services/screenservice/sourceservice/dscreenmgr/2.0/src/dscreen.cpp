@@ -55,7 +55,7 @@ DScreen::DScreen(const std::string &devId, const std::string &dhId,
     SetState(DISABLED);
     taskThreadRunning_ = true;
     watchdogFlag_ = false;
-    taskQueueThread_ = std::thread(&DScreen::TaskThreadLoop, this);
+    taskQueueThread_ = std::thread([this] { this->TaskThreadLoop(); });
     auto taskFunc = [this]() {
         if (watchdogFlag_) {
             watchdogFlag_ = false;
