@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -58,7 +58,7 @@ void ImageSourceEncoder::InitDscreenDBG()
     }
     GetDscreenDBGItfFunc getDscreenDBGItfFunc = (GetDscreenDBGItfFunc)dlsym(pHandler_, GET_DBG_ITF_FUNC.c_str());
     GetImageDirtyFunc getImageDirtyFunc = (GetImageDirtyFunc)dlsym(pHandler_, GET_IMAGE_DIRTY_FUNC.c_str());
-    if (getDscreenDBGItfFunc == nullptr || getImageDirtyFunc ==nullptr) {
+    if (getDscreenDBGItfFunc == nullptr || getImageDirtyFunc == nullptr) {
         DHLOGE("get FUNC failed, failed reason: %{public}s.", dlerror());
         return;
     }
