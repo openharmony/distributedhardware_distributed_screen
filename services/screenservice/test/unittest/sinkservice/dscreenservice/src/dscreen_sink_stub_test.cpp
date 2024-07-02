@@ -294,5 +294,5 @@ HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_005, TestSize.Level1)
     int32_t ret = sinkStub->DScreenNotifyInner(data, reply, option);
     EXPECT_EQ(ret, DH_SUCCESS);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

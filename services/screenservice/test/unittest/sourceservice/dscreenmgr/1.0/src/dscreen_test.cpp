@@ -464,6 +464,6 @@ HWTEST_F(DScreenTestV1, Stop_002, TestSize.Level1)
     int32_t ret = dScreen_->Stop();
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
 }
-}
-}
-}
+}  // namespace V1_0
+}  // namespace DistributedHardware
+}  // namespace OHOS

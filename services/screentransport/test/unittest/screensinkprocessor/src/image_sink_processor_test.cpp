@@ -205,5 +205,5 @@ HWTEST_F(ImageSinkProcessorTest, processimage_test_002, TestSize.Level1)
     std::shared_ptr<DataBuffer> data = std::make_shared<DataBuffer>(DATA_LEN);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, processor_->ProcessImage(data));
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

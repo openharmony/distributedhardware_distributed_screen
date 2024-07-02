@@ -503,5 +503,5 @@ HWTEST_F(ImageSinkDecoderTest, process_data_test_001, TestSize.Level1)
     imageDecoder_->StopInputThread();
     EXPECT_EQ(false, imageDecoder_->isDecoderReady_);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

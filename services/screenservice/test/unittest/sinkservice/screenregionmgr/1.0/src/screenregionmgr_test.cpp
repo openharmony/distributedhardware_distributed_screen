@@ -282,6 +282,6 @@ HWTEST_F(ScreenRegionManagerTestV1, CheckContentJson_004, TestSize.Level1)
     testJson[KEY_VERSION] = "test";
     EXPECT_TRUE(ScreenRegionManager::GetInstance().CheckContentJson(testJson));
 }
-}
-}
-}
+}  // namespace V1_0
+}  // namespace DistributedHardware
+}  // namespace OHOS

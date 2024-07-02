@@ -126,5 +126,5 @@ HWTEST_F(DScreenSinkHandlerTest, OnRemoteSinkSvrDied_001, TestSize.Level1)
     DScreenSinkHandler::GetInstance().sinkSvrRecipient_->OnRemoteDied(remote);
     EXPECT_EQ(nullptr, DScreenSinkHandler::GetInstance().dScreenSinkProxy_);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

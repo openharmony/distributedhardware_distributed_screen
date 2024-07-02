@@ -124,5 +124,5 @@ HWTEST_F(DScreenHandlerTest, QueryCodecInfo_001, TestSize.Level1)
     std::string ret = DScreenHandler::GetInstance().QueryCodecInfo();
     EXPECT_EQ(DScreenHandler::GetInstance().codecInfoStr_, ret);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

@@ -363,6 +363,6 @@ HWTEST_F(DScreenManagerTestV2, PublishMessage_001, TestSize.Level1)
     int32_t ret = DScreenManager::GetInstance().Release();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
-}
-}
-}
+}  // namespace V2_0
+}  // namespace DistributedHardware
+}  // namespace OHOS
