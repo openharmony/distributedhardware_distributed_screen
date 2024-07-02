@@ -35,8 +35,8 @@ void UnregisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
 
     DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, uncallback);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS
 
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)

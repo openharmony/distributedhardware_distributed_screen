@@ -47,8 +47,8 @@ void DscreenSourceServiceFuzzTest(const uint8_t* data, size_t size)
     sourceServicePtr->RegisterDistributedHardware(devId, dhId, param, reqId);
     sourceServicePtr->DScreenNotify(devId, eventCode, eventContent);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS
 
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)

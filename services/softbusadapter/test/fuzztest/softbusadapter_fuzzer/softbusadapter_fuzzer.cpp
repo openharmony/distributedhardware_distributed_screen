@@ -62,8 +62,8 @@ void SoftbusAdapterFuzzTest(const uint8_t* data, size_t size)
     adapter->SendSoftbusBytes(sessionId, adapterData, dataLen1);
     adapter->CloseSoftbusSession(sessionId);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS
 
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)

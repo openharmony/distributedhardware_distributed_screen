@@ -38,8 +38,8 @@ void SoftbusOnMessageReceivedFuzzTest(const uint8_t* data, size_t size)
     std::shared_ptr<SoftbusAdapter> adapter = std::make_shared<SoftbusAdapter>();
     adapter->OnMessageReceived(sessionId, adapterData, dataLen);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS
 
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
