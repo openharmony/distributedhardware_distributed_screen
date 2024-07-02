@@ -445,7 +445,7 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_004, TestSize.Level1)
 HWTEST_F(ImageSinkDecoderTest, ProcessData_005, TestSize.Level1)
 {
     std::shared_ptr<Media::AVSharedMemory> buffer = Media::AVSharedMemoryBase::CreateFromLocal(100,
-        Media::AVSharedMemory::FLAGS_READ_WRITE, "userBuffer");;
+        Media::AVSharedMemory::FLAGS_READ_WRITE, "userBuffer");
     imageDecoder_->availableInputBufferQueue_.push(buffer);
     std::shared_ptr<DataBuffer> screenData = std::make_shared<DataBuffer>(100);
     int32_t ret = imageDecoder_->ProcessData(screenData, 0);
@@ -461,7 +461,7 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_005, TestSize.Level1)
 HWTEST_F(ImageSinkDecoderTest, ProcessData_006, TestSize.Level1)
 {
     std::shared_ptr<Media::AVSharedMemory> buffer = Media::AVSharedMemoryBase::CreateFromLocal(100,
-        Media::AVSharedMemory::FLAGS_READ_WRITE, "userBuffer");;
+        Media::AVSharedMemory::FLAGS_READ_WRITE, "userBuffer");
     imageDecoder_->availableInputBufferQueue_.push(buffer);
     std::shared_ptr<DataBuffer> screenData = std::make_shared<DataBuffer>(110);
     int32_t ret = imageDecoder_->ProcessData(screenData, 0);

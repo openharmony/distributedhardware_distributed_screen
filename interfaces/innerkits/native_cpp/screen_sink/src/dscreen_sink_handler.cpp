@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -110,7 +110,7 @@ void DScreenSinkHandler::FinishStartSA(const std::string &params, const sptr<IRe
     }
     remoteObject->AddDeathRecipient(sinkSvrRecipient_);
     dScreenSinkProxy_ = iface_cast<IDScreenSink>(remoteObject);
-    if ((dScreenSinkProxy_== nullptr) || (dScreenSinkProxy_->AsObject() == nullptr)) {
+    if ((dScreenSinkProxy_ == nullptr) || (dScreenSinkProxy_->AsObject() == nullptr)) {
         DHLOGE("Failed to get dscreen sink proxy.");
         ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
             "dscreen sink get proxy failed.");
