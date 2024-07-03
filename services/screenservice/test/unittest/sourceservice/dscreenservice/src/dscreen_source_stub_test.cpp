@@ -554,5 +554,5 @@ HWTEST_F(DScreenSourceStubTest, CheckConfigParams_003, TestSize.Level1)
     result = stubPtr->CheckConfigParams("devId", "dhId", "key", exceedParamMaxSizeStr);
     EXPECT_FALSE(result);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

@@ -626,5 +626,5 @@ HWTEST_F(ScreenSourceTransTest, SetConsumerSurface_002, TestSize.Level1)
     int32_t ret = trans->SetConsumerSurface();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

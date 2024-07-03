@@ -363,5 +363,5 @@ HWTEST_F(DScreenSourceHandlerTest, OnRemoteDied_002, TestSize.Level1)
     DScreenSourceHandler::GetInstance().sourceSvrRecipient_->OnRemoteDied(remote);
     EXPECT_EQ(remote, remote);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

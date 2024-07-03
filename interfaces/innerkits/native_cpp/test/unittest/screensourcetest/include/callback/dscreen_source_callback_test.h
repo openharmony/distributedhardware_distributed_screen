@@ -33,7 +33,7 @@ public:
 
     sptr<DScreenSourceCallback> dScreenSourceCallback_ = nullptr;
 };
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS
 
 #endif

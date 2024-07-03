@@ -234,5 +234,5 @@ HWTEST_F(ScreenSinkTransTest, check_trans_param_test_001, TestSize.Level1)
     param_.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
     EXPECT_EQ(DH_SUCCESS, trans_->CheckTransParam(param_, param_, peerDevId_));
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

@@ -516,6 +516,6 @@ HWTEST_F(DScreenTestV2, ChooseCodecType_004, TestSize.Level1)
     int32_t ret = dScreen_->ChooseCodecType(localVideoEncoders, rmtVideoDecoders);
     EXPECT_EQ(ret, DH_SUCCESS);
 }
-}
-}
-}
+}  // namespace V2_0
+}  // namespace DistributedHardware
+}  // namespace OHOS

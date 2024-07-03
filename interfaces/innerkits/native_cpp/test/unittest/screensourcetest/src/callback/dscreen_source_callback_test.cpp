@@ -216,5 +216,5 @@ HWTEST_F(DScreenSourceCallbackTest, PopUnregRegisterCallback_001, TestSize.Level
     int32_t sizeEnd = dScreenSourceCallback_->unregisterCallbackMap_.size();
     EXPECT_GT(sizeFront, sizeEnd);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

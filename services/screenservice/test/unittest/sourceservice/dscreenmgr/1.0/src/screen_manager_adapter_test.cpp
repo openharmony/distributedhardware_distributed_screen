@@ -263,5 +263,5 @@ HWTEST_F(DScreenManagerAdapterTest, GetMapRelation_002, TestSize.Level1)
     DisablePermissionAccess(tokenId_);
     EXPECT_NE(nullptr, ret);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

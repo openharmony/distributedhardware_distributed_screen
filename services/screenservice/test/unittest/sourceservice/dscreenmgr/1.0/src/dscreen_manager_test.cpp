@@ -364,6 +364,6 @@ HWTEST_F(DScreenManagerTestV1, DisableDistributedScreen_001, TestSize.Level1)
     ret = DScreenManager::GetInstance().UnInit();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
-}
-}
-}
+}  // namespace V1_0
+}  // namespace DistributedHardware
+}  // namespace OHOS
