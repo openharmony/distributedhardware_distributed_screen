@@ -44,8 +44,8 @@ void OnNotifyUnregResultFuzzTest(const uint8_t* data, size_t size)
     dScreenSourceCallback->PushUnregisterCallback(reqId, uncallback);
     dScreenSourceCallback->OnNotifyUnregResult(devId, dhId, reqId, status, dataStr);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS
 
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)

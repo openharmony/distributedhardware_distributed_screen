@@ -37,8 +37,8 @@ void SoftbusOnSessionClosedFuzzTest(const uint8_t* data, size_t size)
     ShutdownReason reason = SHUTDOWN_REASON_UNKNOWN;
     adapter->OnSoftbusSessionClosed(sessionId, reason);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS
 
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)

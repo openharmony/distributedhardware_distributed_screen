@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -50,8 +50,8 @@ void DScreenNotifyFuzzTest(const uint8_t* data, size_t size)
 
     dscreenSinkProxy->DScreenNotify(devId, eventCode, eventContent);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS
 
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)

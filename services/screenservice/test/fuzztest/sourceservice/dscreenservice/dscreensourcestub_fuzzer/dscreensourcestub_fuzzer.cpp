@@ -86,8 +86,8 @@ void DscreenSourceStubFuzzTest(const uint8_t* data, size_t size)
     sourceStubPtr->CheckRegParams(devId, dhId, version, attrs, reqId);
     sourceStubPtr->CheckUnregParams(devId, dhId, reqId);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS
 
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)

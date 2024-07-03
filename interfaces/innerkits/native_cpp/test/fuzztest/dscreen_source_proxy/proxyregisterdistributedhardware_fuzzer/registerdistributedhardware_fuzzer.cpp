@@ -77,8 +77,8 @@ void RegisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
     std::shared_ptr<IDScreenSource> dscreenSourceProxy = std::make_shared<DScreenSourceProxy>(remoteObject);
     dscreenSourceProxy->RegisterDistributedHardware(devId, dhId, param, reqId);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS
 
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)

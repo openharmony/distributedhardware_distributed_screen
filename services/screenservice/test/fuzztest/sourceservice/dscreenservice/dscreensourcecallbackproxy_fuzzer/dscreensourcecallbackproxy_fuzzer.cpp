@@ -71,8 +71,8 @@ void DscreenSourceCallbackProxyFuzzTest(const uint8_t* data, size_t size)
     sourceCbkProxy->OnNotifyUnregResult(devId, dhId, reqId, status, resultData);
     sourceCbkProxy->CheckParams(devId, dhId, reqId, resultData);
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS
 
 /* Fuzzer entry point */
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
