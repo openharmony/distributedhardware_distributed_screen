@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -46,5 +46,5 @@ void DScreenSourceLoadCallback::OnLoadSystemAbilityFail(int32_t systemAbilityId)
     ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, systemAbilityId,
         "dscreen source OnLoadSystemAbilityFail.");
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

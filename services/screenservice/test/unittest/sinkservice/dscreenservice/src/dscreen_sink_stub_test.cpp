@@ -193,7 +193,7 @@ HWTEST_F(DScreenSinkStubTest, DScreenNotify_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_001, TestSize.Level1)
 {
-    sptr<DScreenSinkStub> sinkStub = new TestDScreenSinkStub();
+    sptr<DScreenSinkStub> sinkStub(new TestDScreenSinkStub());
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -215,7 +215,7 @@ HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_002, TestSize.Level1)
 {
-    sptr<DScreenSinkStub> sinkStub = new TestDScreenSinkStub();
+    sptr<DScreenSinkStub> sinkStub(new TestDScreenSinkStub());
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -237,7 +237,7 @@ HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_002, TestSize.Level1)
  */
 HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_003, TestSize.Level1)
 {
-    sptr<DScreenSinkStub> sinkStub = new TestDScreenSinkStub();
+    sptr<DScreenSinkStub> sinkStub(new TestDScreenSinkStub());
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -259,7 +259,7 @@ HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_003, TestSize.Level1)
  */
 HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_004, TestSize.Level1)
 {
-    sptr<DScreenSinkStub> sinkStub = new TestDScreenSinkStub();
+    sptr<DScreenSinkStub> sinkStub(new TestDScreenSinkStub());
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
@@ -281,7 +281,7 @@ HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_004, TestSize.Level1)
  */
 HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_005, TestSize.Level1)
 {
-    sptr<DScreenSinkStub> sinkStub = new TestDScreenSinkStub();
+    sptr<DScreenSinkStub> sinkStub(new TestDScreenSinkStub());
     MessageParcel data;
     MessageParcel reply;
     MessageOption option;
