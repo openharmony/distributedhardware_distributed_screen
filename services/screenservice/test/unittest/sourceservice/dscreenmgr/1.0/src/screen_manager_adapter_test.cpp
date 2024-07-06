@@ -136,7 +136,7 @@ HWTEST_F(DScreenManagerAdapterTest, RegisterScreenGroupListener_001, TestSize.Le
  */
 HWTEST_F(DScreenManagerAdapterTest, RegisterScreenGroupListener_002, TestSize.Level1)
 {
-    sptr<Rosen::ScreenManager::IScreenGroupListener> listener = new MockScreenGroupListener();
+    sptr<Rosen::ScreenManager::IScreenGroupListener> listener(new MockScreenGroupListener());
     ScreenMgrAdapter::GetInstance().listenerRegistered_ = true;
     int32_t ret = ScreenMgrAdapter::GetInstance().RegisterScreenGroupListener(listener);
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -150,7 +150,7 @@ HWTEST_F(DScreenManagerAdapterTest, RegisterScreenGroupListener_002, TestSize.Le
  */
 HWTEST_F(DScreenManagerAdapterTest, RegisterScreenGroupListener_003, TestSize.Level1)
 {
-    sptr<Rosen::ScreenManager::IScreenGroupListener> listener = new MockScreenGroupListener();
+    sptr<Rosen::ScreenManager::IScreenGroupListener> listener(new MockScreenGroupListener());
     ScreenMgrAdapter::GetInstance().listenerRegistered_ = false;
     int32_t ret = ScreenMgrAdapter::GetInstance().RegisterScreenGroupListener(listener);
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -179,7 +179,7 @@ HWTEST_F(DScreenManagerAdapterTest, UnregisterScreenGroupListener_001, TestSize.
  */
 HWTEST_F(DScreenManagerAdapterTest, UnregisterScreenGroupListener_002, TestSize.Level1)
 {
-    sptr<Rosen::ScreenManager::IScreenGroupListener> listener = new MockScreenGroupListener();
+    sptr<Rosen::ScreenManager::IScreenGroupListener> listener(new MockScreenGroupListener());
     ScreenMgrAdapter::GetInstance().listenerRegistered_ = false;
     int32_t ret = ScreenMgrAdapter::GetInstance().UnregisterScreenGroupListener(listener);
     EXPECT_EQ(DH_SUCCESS, ret);
@@ -193,7 +193,7 @@ HWTEST_F(DScreenManagerAdapterTest, UnregisterScreenGroupListener_002, TestSize.
  */
 HWTEST_F(DScreenManagerAdapterTest, UnregisterScreenGroupListener_003, TestSize.Level1)
 {
-    sptr<Rosen::ScreenManager::IScreenGroupListener> listener = new MockScreenGroupListener();
+    sptr<Rosen::ScreenManager::IScreenGroupListener> listener(new MockScreenGroupListener());
     ScreenMgrAdapter::GetInstance().listenerRegistered_ = true;
     int32_t ret = ScreenMgrAdapter::GetInstance().UnregisterScreenGroupListener(listener);
     EXPECT_EQ(ERR_DH_SCREEN_SA_UNREGISTER_SCREENLISTENER_FAIL, ret);

@@ -100,5 +100,5 @@ bool DScreenSourceCallbackStub::CheckParams(const std::string &devId, const std:
     }
     return true;
 }
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS

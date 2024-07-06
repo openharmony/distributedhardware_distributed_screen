@@ -42,6 +42,6 @@ private:
     bool CheckParams(const std::string &devId, const std::string &dhId, const std::string &reqId,
         const std::string &resultData) const;
 };
-}
-}
+}  // namespace DistributedHardware
+}  // namespace OHOS
 #endif
