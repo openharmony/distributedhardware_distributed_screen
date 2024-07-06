@@ -89,7 +89,6 @@ void ScreenListener::OnConnect(uint64_t screenId)
     std::string dhId = DSCREEN_PREFIX + SEPERATOR + std::to_string(screenId);
     uint32_t screenWidth = screen->GetWidth();
     screenWidth = ByteCalculate(screenWidth);
-    DHLOGI("screenWidth is : %{public}" PRIu32, screenWidth);
     uint32_t screenHeight = screen->GetHeight();
 
     json attrJson;
@@ -161,7 +160,6 @@ std::vector<DHItem> DScreenHandler::RealQuery()
             screenListener_ = new (std::nothrow) ScreenListener();
         }
         screenWidth = screenListener_->ByteCalculate(screenWidth);
-        DHLOGI("screenWidth is : %{public}" PRIu32, screenWidth);
         uint32_t screenHeight = screen->GetHeight();
 
         json attrJson;
