@@ -49,6 +49,8 @@ ohos_shared_library("distributed_screen_utils") {
     "ipc:ipc_core",
   ]
 
+  public_external_deps = [ "json:nlohmann_json_static" ]
+
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"dscreenutil\"",
