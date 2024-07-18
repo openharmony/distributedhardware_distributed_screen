@@ -341,7 +341,7 @@ void DScreen::HandleDisable(const std::string &taskId)
         return;
     }
     SetState(DISABLED);
-    dscreenCallback_->OnUnregResult(shared_from_this(), taskId, DH_SUCCESS, "");
+    dscreenCallback_->OnUnregResult(shared_from_this(), taskId, DH_SUCCESS, "dscreen disable success.");
     ReportUnRegisterScreenEvent(DSCREEN_UNREGISTER, GetAnonyString(devId_).c_str(), GetAnonyString(dhId_).c_str(),
         "dscreen disable success.");
 }
