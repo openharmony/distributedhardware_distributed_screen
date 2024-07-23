@@ -45,9 +45,12 @@ ohos_shared_library("distributed_screen_handler") {
     "av_codec:av_codec_client",
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "graphic_2d:2d_graphics",
+    "graphic_2d:librender_service_base",
     "graphic_surface:surface",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "media_foundation:media_foundation",
     "window_manager:libdm",
   ]
