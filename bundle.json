@@ -35,6 +35,7 @@
                 "ipc",
                 "hilog",
                 "input",
+                "json",
                 "graphic_2d",
                 "graphic_surface",
                 "media_foundation",

@@ -47,6 +47,7 @@ ohos_shared_library("distributed_screen_utils") {
     "hitrace:hitrace_meter",
     "init:libbegetutil",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
   ]
 
   defines = [
