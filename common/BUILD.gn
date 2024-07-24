@@ -50,6 +50,8 @@ ohos_shared_library("distributed_screen_utils") {
     "json:nlohmann_json_static",
   ]
 
+  public_external_deps = [ "json:nlohmann_json_static" ]
+
   defines = [
     "HI_LOG_ENABLE",
     "DH_LOG_TAG=\"dscreenutil\"",

@@ -106,6 +106,8 @@ ohos_shared_library("distributed_screen_source") {
     "window_manager:libdm",
   ]
 
+  public_external_deps = [ "json:nlohmann_json_static" ]
+
   subsystem_name = "distributedhardware"
 
   part_name = "distributed_screen"
