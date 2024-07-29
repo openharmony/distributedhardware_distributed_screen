@@ -29,15 +29,12 @@
 #include "dscreen_hisysevent.h"
 #include "dscreen_log.h"
 #include "jpeglib.h"
-#ifdef __LP64__
-static const std::string LIB_LOAD_PATH = "/system/lib64/libdistributed_screen_dbg_itf.z.so";
-#else
-static const std::string LIB_LOAD_PATH = "/system/lib/libdistributed_screen_dbg_itf.z.so";
-#endif
+
 using GetDscreenDBGItfFunc = OHOS::DistributedHardware::IDScreenDBGItf* (*)();
 using GetImageDirtyFunc = OHOS::DistributedHardware::IImageSetDirty* (*)();
 namespace OHOS {
 namespace DistributedHardware {
+const std::string DBG_SO_NAME = "libdistributed_screen_dbg_itf.z.so";
 void ConsumerBufferListener::OnBufferAvailable()
 {
     DHLOGI("%{public}s: OnBufferAvailable, receiv data from RS.", DSCREEN_LOG_TAG);
@@ -46,14 +43,13 @@ void ConsumerBufferListener::OnBufferAvailable()
 
 void ImageSourceEncoder::InitDscreenDBG()
 {
-    char path[PATH_MAX + 1] = {0x00};
-    if (LIB_LOAD_PATH.length() > PATH_MAX || realpath(LIB_LOAD_PATH.c_str(), path) == nullptr) {
-        DHLOGE("File connicailization failed.");
+    if ((DBG_SO_NAME.length() == 0) || (DBG_SO_NAME.length() > PATH_MAX)) {
+        DHLOGE("File canonicalization failed, so name: %{public}s.", DBG_SO_NAME.c_str());
         return;
     }
-    pHandler_ = dlopen(path, RTLD_LAZY | RTLD_NODELETE | RTLD_GLOBAL);
+    pHandler_ = dlopen(DBG_SO_NAME.c_str(), RTLD_LAZY | RTLD_NODELETE | RTLD_GLOBAL);
     if (pHandler_ == nullptr) {
-        DHLOGE("%{public}s: handler load failed, fail reason: %{public}s.", path, dlerror());
+        DHLOGE("so: %{public}s load failed, fail reason: %{public}s.", DBG_SO_NAME.c_str(), dlerror());
         return;
     }
     GetDscreenDBGItfFunc getDscreenDBGItfFunc = (GetDscreenDBGItfFunc)dlsym(pHandler_, GET_DBG_ITF_FUNC.c_str());
