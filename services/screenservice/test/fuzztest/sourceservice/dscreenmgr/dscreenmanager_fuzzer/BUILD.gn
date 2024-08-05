@@ -17,10 +17,10 @@ import("//build/test.gni")
 import("../../../../../../../distributedscreen.gni")
 
 ##############################fuzztest##########################################
-ohos_fuzztest("OnChangeFuzzTest") {
+ohos_fuzztest("DScreenManagerFuzzTest") {
   module_out_path = "${fuzz_test_path}/sourceservice"
 
-  fuzz_config_file = "${services_path}/screenservice/test/fuzztest/sourceservice/dscreenmgr/onchange_fuzzer"
+  fuzz_config_file = "${services_path}/screenservice/test/fuzztest/sourceservice/dscreenmgr/dscreenmanager_fuzzer"
 
   include_dirs = [
     "./dscreenservice/include/callback",
@@ -37,7 +37,7 @@ ohos_fuzztest("OnChangeFuzzTest") {
   configs =
       [ "${common_path}/test/unittest/resource:dscreen_unittest_public_config" ]
 
-  sources = [ "onchange_fuzzer.cpp" ]
+  sources = [ "dscreenmanager_fuzzer.cpp" ]
 
   deps = [
     "${services_path}/screenservice/sourceservice:distributed_screen_source",
@@ -45,7 +45,7 @@ ohos_fuzztest("OnChangeFuzzTest") {
 
   defines = [
     "HI_LOG_ENABLE",
-    "DH_LOG_TAG=\"OnChangeFuzzTest\"",
+    "DH_LOG_TAG=\"DScreenManagerFuzzTest\"",
     "LOG_DOMAIN=0xD004140",
   ]
 
@@ -64,6 +64,6 @@ ohos_fuzztest("OnChangeFuzzTest") {
 ###############################################################################
 group("fuzztest") {
   testonly = true
-  deps = [ ":OnChangeFuzzTest" ]
+  deps = [ ":DScreenManagerFuzzTest" ]
 }
 ###############################################################################
