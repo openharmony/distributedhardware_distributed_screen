@@ -18,4 +18,20 @@
 
 #define FUZZ_PROJECT_NAME "softbusadapter_fuzzer"
 
+#include "isoftbus_listener.h"
+
+namespace OHOS {
+namespace DistributedHardware {
+class MockSoftbusListener : public ISoftbusListener {
+public:
+    MockSoftbusListener() = default;
+    ~MockSoftbusListener() = default;
+    void OnSessionOpened(int32_t sessionId, PeerSocketInfo info) override {}
+    void OnSessionClosed(int32_t sessionId, ShutdownReason reason) override {}
+    void OnBytesReceived(int32_t sessionId, const void *data, uint32_t dataLen) override {}
+    void OnStreamReceived(int32_t sessionId, const StreamData *data, const StreamData *ext,
+        const StreamFrameInfo *param) override {}
+};
+} // namespace DistributedHardware
+} // namespace OHOS
 #endif
