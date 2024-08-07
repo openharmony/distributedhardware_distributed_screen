@@ -397,10 +397,6 @@ void DScreenManager::PublishMessage(const DHTopic topic, const std::shared_ptr<D
 int32_t DScreenManager::LoadAVSenderEngineProvider()
 {
     DHLOGI("LoadAVSenderEngineProvider enter");
-    if ((SENDER_SO_NAME.length() == 0) || (SENDER_SO_NAME.length() > PATH_MAX)) {
-        DHLOGE("File canonicalization failed, so name: %{public}s.", SENDER_SO_NAME.c_str());
-        return ERR_DH_AV_TRANS_LOAD_ERROR;
-    }
     void *pHandler = dlopen(SENDER_SO_NAME.c_str(), RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
         DHLOGE("so: %{public}s load failed, failed reason : %{public}s", SENDER_SO_NAME.c_str(), dlerror());
@@ -420,10 +416,6 @@ int32_t DScreenManager::LoadAVSenderEngineProvider()
 int32_t DScreenManager::UnloadAVSenderEngineProvider()
 {
     DHLOGI("UnloadAVSenderEngineProvider enter");
-    if ((SENDER_SO_NAME.length() == 0) || (SENDER_SO_NAME.length() > PATH_MAX)) {
-        DHLOGE("File canonicalization failed, so name: %{public}s.", SENDER_SO_NAME.c_str());
-        return ERR_DH_AV_TRANS_LOAD_ERROR;
-    }
     void *pHandler = dlopen(SENDER_SO_NAME.c_str(), RTLD_LAZY | RTLD_NODELETE);
     if (pHandler != nullptr) {
         dlclose(pHandler);

@@ -102,6 +102,12 @@ void DScreenSinkHandler::FinishStartSA(const std::string &params, const sptr<IRe
 {
     DHLOGI("DScreenSinkHandler FinishStartSA");
     std::lock_guard<std::mutex> lock(proxyMutex_);
+    if (remoteObject == nullptr) {
+        DHLOGE("remoteObject is nullptr.");
+        ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,
+            "remoteObject is nullptr.");
+        return;
+    }
     if (sinkSvrRecipient_ == nullptr) {
         DHLOGE("sinkSvrRecipient is nullptr.");
         ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SINK_SA_ID,

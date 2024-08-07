@@ -156,10 +156,6 @@ void ScreenRegionManager::GetScreenDumpInfo(std::string &result)
 int32_t ScreenRegionManager::LoadAVReceiverEngineProvider()
 {
     DHLOGI("LoadAVReceiverEngineProvider enter");
-    if ((RECEIVER_SO_NAME.length() == 0) || (RECEIVER_SO_NAME.length() > PATH_MAX)) {
-        DHLOGE("File canonicalization failed, so name: %{public}s.", RECEIVER_SO_NAME.c_str());
-        return ERR_DH_AV_TRANS_LOAD_ERROR;
-    }
     void *pHandler = dlopen(RECEIVER_SO_NAME.c_str(), RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
         DHLOGE("so: %{public}s load failed, failed reason : %{public}s", RECEIVER_SO_NAME.c_str(), dlerror());
@@ -179,10 +175,6 @@ int32_t ScreenRegionManager::LoadAVReceiverEngineProvider()
 int32_t ScreenRegionManager::UnloadAVReceiverEngineProvider()
 {
     DHLOGI("UnloadAVReceiverEngineProvider enter");
-    if ((RECEIVER_SO_NAME.length() == 0) || (RECEIVER_SO_NAME.length() > PATH_MAX)) {
-        DHLOGE("File canonicalization failed, so name: %{public}s.", RECEIVER_SO_NAME.c_str());
-        return ERR_DH_AV_TRANS_LOAD_ERROR;
-    }
     void *pHandler = dlopen(RECEIVER_SO_NAME.c_str(), RTLD_LAZY | RTLD_NODELETE);
     if (pHandler != nullptr) {
         dlclose(pHandler);

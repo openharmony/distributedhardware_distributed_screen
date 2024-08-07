@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -151,35 +151,19 @@ int32_t ScreenRegion::SetUp(const std::string &content)
         DHLOGE("config dscreen region window failed.");
         return ret;
     }
-    std::string codecType;
-    if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H265) {
-        codecType = MIME_VIDEO_H265;
-    } else if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H264) {
-        codecType = MIME_VIDEO_H264;
-    } else {
-        codecType = MIME_VIDEO_RAW;
-    }
-    std::string pixelFormat;
-    if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_YUVI420) {
-        pixelFormat = VIDEO_FORMAT_YUVI420;
-    } else if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_NV12) {
-        pixelFormat = VIDEO_FORMAT_NV12;
-    } else if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_NV21) {
-        pixelFormat = VIDEO_FORMAT_NV21;
-    } else {
-        pixelFormat = VIDEO_FORMAT_RGBA8888;
-    }
-    receiverAdapter_->SetParameter(AVTransTag::VIDEO_CODEC_TYPE, codecType);
-    receiverAdapter_->SetParameter(AVTransTag::VIDEO_PIXEL_FORMAT, pixelFormat);
-    receiverAdapter_->SetParameter(AVTransTag::VIDEO_WIDTH, std::to_string(videoParam_->GetVideoWidth()));
-    receiverAdapter_->SetParameter(AVTransTag::VIDEO_HEIGHT, std::to_string(videoParam_->GetVideoHeight()));
-    receiverAdapter_->SetParameter(AVTransTag::VIDEO_FRAME_RATE, std::to_string(videoParam_->GetFps()));
-    receiverAdapter_->SetParameter(AVTransTag::ENGINE_READY, OWNER_NAME_D_SCREEN);
 
-    alignedHeight_ = videoParam_->GetVideoHeight();
-    if (alignedHeight_ % ALIGNEDBITS != 0) {
-        alignedHeight_ = ((alignedHeight_ / ALIGNEDBITS) +1) * ALIGNEDBITS;
+    ret = SetReceiverAdapterParameters();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("Failed to set receiver adapter parameters, error code: %{public}d", ret);
+        return ret;
     }
+
+    ret = SetAlignedHeight();
+    if (ret != DH_SUCCESS) {
+        DHLOGE("Failed to set aligned height, error code: %{public}d", ret);
+        return ret;
+    }
+
     return DH_SUCCESS;
 }
 
@@ -222,6 +206,61 @@ int32_t ScreenRegion::ConfigWindow()
     return DH_SUCCESS;
 }
 
+int32_t ScreenRegion::SetReceiverAdapterParameters()
+{
+    if (videoParam_ == nullptr) {
+        DHLOGE("videoParam is nullptr.");
+        return ERR_DH_AV_TRANS_NULL_VALUE;
+    }
+
+    if (receiverAdapter_ == nullptr) {
+        DHLOGE("receiverAdapter is nullptr.");
+        return ERR_DH_AV_TRANS_NULL_VALUE;
+    }
+
+    std::string codecType;
+    if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H265) {
+        codecType = MIME_VIDEO_H265;
+    } else if (videoParam_->GetCodecType() == VIDEO_CODEC_TYPE_VIDEO_H264) {
+        codecType = MIME_VIDEO_H264;
+    } else {
+        codecType = MIME_VIDEO_RAW;
+    }
+    std::string pixelFormat;
+    if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_YUVI420) {
+        pixelFormat = VIDEO_FORMAT_YUVI420;
+    } else if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_NV12) {
+        pixelFormat = VIDEO_FORMAT_NV12;
+    } else if (videoParam_->GetVideoFormat() == VIDEO_DATA_FORMAT_NV21) {
+        pixelFormat = VIDEO_FORMAT_NV21;
+    } else {
+        pixelFormat = VIDEO_FORMAT_RGBA8888;
+    }
+    receiverAdapter_->SetParameter(AVTransTag::VIDEO_CODEC_TYPE, codecType);
+    receiverAdapter_->SetParameter(AVTransTag::VIDEO_PIXEL_FORMAT, pixelFormat);
+    receiverAdapter_->SetParameter(AVTransTag::VIDEO_WIDTH, std::to_string(videoParam_->GetVideoWidth()));
+    receiverAdapter_->SetParameter(AVTransTag::VIDEO_HEIGHT, std::to_string(videoParam_->GetVideoHeight()));
+    receiverAdapter_->SetParameter(AVTransTag::VIDEO_FRAME_RATE, std::to_string(videoParam_->GetFps()));
+    receiverAdapter_->SetParameter(AVTransTag::ENGINE_READY, OWNER_NAME_D_SCREEN);
+
+    return DH_SUCCESS;
+}
+
+int32_t ScreenRegion::SetAlignedHeight()
+{
+    if (videoParam_ == nullptr) {
+        DHLOGE("video parameter is nullptr.");
+        return ERR_DH_AV_TRANS_NULL_VALUE;
+    }
+
+    alignedHeight_ = videoParam_->GetVideoHeight();
+    if (alignedHeight_ % ALIGNEDBITS != 0) {
+        alignedHeight_ = ((alignedHeight_ / ALIGNEDBITS) + 1) * ALIGNEDBITS;
+    }
+
+    return DH_SUCCESS;
+}
+
 void ScreenRegion::PublishMessage(const DHTopic topic, const uint64_t &screenId,
     const std::string &remoteDevId, const int32_t &windowId, std::shared_ptr<WindowProperty> windowProperty)
 {
@@ -230,6 +269,12 @@ void ScreenRegion::PublishMessage(const DHTopic topic, const uint64_t &screenId,
         DHLOGE("GetDHFwkKit fail.");
         return;
     }
+
+    if (windowProperty == nullptr) {
+        DHLOGE("windowProperty is nullptr.");
+        return;
+    }
+
     json messageJosn;
     std::string message;
     messageJosn[SOURCE_WIN_ID] = screenId;
@@ -268,6 +313,12 @@ void ScreenRegion::OnEngineMessage(const std::shared_ptr<AVTransMessage> &messag
         json paramJson;
         paramJson[KEY_DEV_ID] = remoteDevId_;
         auto avMessage = std::make_shared<AVTransMessage>(msgType, paramJson.dump(), remoteDevId_);
+        
+        if (receiverAdapter_ == nullptr) {
+            DHLOGE("av transport receiver adapter is nullptr.");
+            return;
+        }
+
         receiverAdapter_->SendMessageToRemote(avMessage);
     } else if (message->type_ == DScreenMsgType::STOP_MIRROR) {
         StopReceiverEngine();
@@ -276,7 +327,21 @@ void ScreenRegion::OnEngineMessage(const std::shared_ptr<AVTransMessage> &messag
 
 void ScreenRegion::GetWSBuffer(sptr<OHOS::SurfaceBuffer> &wsBuffer, const std::shared_ptr<AVTransBuffer> &buffer)
 {
+    if ((wsBuffer == nullptr) || (buffer == nullptr)) {
+        DHLOGE("wsBuffer or buffer is nullptr.");
+        return;
+    }
+
+    if ((videoParam_ == nullptr) || (windowSurface_ == nullptr)) {
+        DHLOGE("videoParam or windowSurface is nullptr.");
+        return;
+    }
+
     auto bufferData = buffer->GetBufferData(0);
+    if (bufferData == nullptr) {
+        DHLOGE("bufferData is null.");
+        return;
+    }
     auto bufferAddr = bufferData->GetAddress();
     auto wsBufAddr = static_cast<uint8_t*>(wsBuffer->GetVirAddr());
     uint32_t wsBufSize = wsBuffer->GetSize();
@@ -321,8 +386,8 @@ void ScreenRegion::OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer
         DHLOGE("received video buffer data is nullptr.");
         return;
     }
-    if (windowSurface_ == nullptr) {
-        DHLOGE("window surface is nullptr.");
+    if ((windowSurface_ == nullptr) || (videoParam_ == nullptr)) {
+        DHLOGE("windowSurface or videoParam is nullptr.");
         return;
     }
     sptr<OHOS::SurfaceBuffer> wsBuffer = nullptr;
