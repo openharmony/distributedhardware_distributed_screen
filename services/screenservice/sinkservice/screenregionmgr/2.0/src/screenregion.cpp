@@ -313,7 +313,7 @@ void ScreenRegion::OnEngineMessage(const std::shared_ptr<AVTransMessage> &messag
         json paramJson;
         paramJson[KEY_DEV_ID] = remoteDevId_;
         auto avMessage = std::make_shared<AVTransMessage>(msgType, paramJson.dump(), remoteDevId_);
-        
+
         if (receiverAdapter_ == nullptr) {
             DHLOGE("av transport receiver adapter is nullptr.");
             return;

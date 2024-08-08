@@ -156,8 +156,12 @@ void DScreen::TaskThreadLoop()
         std::shared_ptr<Task> task;
         {
             std::unique_lock<std::mutex> lock(taskQueueMtx_);
-            taskQueueCond_.wait_for(lock, std::chrono::seconds(TASK_WAIT_SECONDS),
+            auto status = taskQueueCond_.wait_for(lock, std::chrono::seconds(TASK_WAIT_SECONDS),
                 [this]() { return !taskQueue_.empty(); });
+            if (!status) {
+                DHLOGD("Task queue wait timeout after %{public}d seconds.", TASK_WAIT_SECONDS);
+                continue;
+            }
             if (taskQueue_.empty()) {
                 continue;
             }

@@ -414,7 +414,7 @@ HWTEST_F(ImageSinkDecoderTest, on_output_format_changed_test_001, TestSize.Level
 
 /**
  * @tc.name: ProcessData_001
- * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.desc: Verify the ProcessData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
@@ -427,7 +427,7 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_001, TestSize.Level1)
 
 /**
  * @tc.name: ProcessData_002
- * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.desc: Verify the ProcessData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
@@ -441,7 +441,7 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_002, TestSize.Level1)
 
 /**
  * @tc.name: ProcessData_003
- * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.desc: Verify the ProcessData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
@@ -454,7 +454,7 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_003, TestSize.Level1)
 
 /**
  * @tc.name: ProcessData_004
- * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.desc: Verify the ProcessData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
@@ -469,7 +469,7 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_004, TestSize.Level1)
 
 /**
  * @tc.name: ProcessData_005
- * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.desc: Verify the ProcessData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
@@ -485,7 +485,7 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_005, TestSize.Level1)
 
 /**
  * @tc.name: ProcessData_006
- * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.desc: Verify the ProcessData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
