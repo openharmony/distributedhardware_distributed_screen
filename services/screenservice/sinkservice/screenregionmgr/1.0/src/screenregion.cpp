@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -179,24 +179,16 @@ int32_t ScreenRegion::Stop()
         return DH_SUCCESS;
     }
 
-    if (sinkTrans_ == nullptr) {
+    if (sinkTrans_ != nullptr) {
+        (void)sinkTrans_->Stop();
+        (void)sinkTrans_->Release();
+    } else {
         DHLOGE("sink trans not init.");
+        (void)ScreenClient::GetInstance().RemoveWindow(windowId_);
         return ERR_DH_SCREEN_SA_SINKTRANS_NOT_INIT;
     }
 
-    int32_t ret = sinkTrans_->Stop();
-    if (ret != DH_SUCCESS) {
-        DHLOGE("sink trans stop failed.");
-        return ret;
-    }
-
-    ret = sinkTrans_->Release();
-    if (ret != DH_SUCCESS) {
-        DHLOGE("sink trans release failed.");
-        return ret;
-    }
-
-    ret = ScreenClient::GetInstance().RemoveWindow(windowId_);
+    int32_t ret = ScreenClient::GetInstance().RemoveWindow(windowId_);
     if (ret != DH_SUCCESS) {
         DHLOGE("remove window failed.");
         return ret;

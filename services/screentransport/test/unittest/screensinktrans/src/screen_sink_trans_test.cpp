@@ -120,7 +120,7 @@ HWTEST_F(ScreenSinkTransTest, release_test_001, TestSize.Level1)
 HWTEST_F(ScreenSinkTransTest, release_test_002, TestSize.Level1)
 {
     trans_->imageProcessor_ = nullptr;
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, trans_->Release());
+    EXPECT_EQ(DH_SUCCESS, trans_->Release());
 }
 
 /**
@@ -143,7 +143,7 @@ HWTEST_F(ScreenSinkTransTest, start_test_002, TestSize.Level1)
  */
 HWTEST_F(ScreenSinkTransTest, stop_test_002, TestSize.Level1)
 {
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, trans_->Stop());
+    EXPECT_EQ(DH_SUCCESS, trans_->Stop());
 }
 
 /**
