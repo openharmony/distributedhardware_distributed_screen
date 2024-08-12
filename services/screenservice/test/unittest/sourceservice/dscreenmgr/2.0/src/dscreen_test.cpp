@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -50,7 +50,7 @@ void DScreenTestV2::SetUp(void)
     dScreen_->videoParam_->SetVideoWidth(videoDataNum);
     dScreen_->videoParam_->SetScreenHeight(videoDataNum);
     dScreen_->videoParam_->SetScreenWidth(videoDataNum);
-    dScreen_->videoParam_->SetFps(videoDataNum);
+    dScreen_->videoParam_->SetFps(DEFAULT_FPS);
     dScreen_->devId_ = "peerDevId";
 }
 
@@ -310,7 +310,7 @@ HWTEST_F(DScreenTestV2, SetUp_002, TestSize.Level1)
 HWTEST_F(DScreenTestV2, SetUp_003, TestSize.Level1)
 {
     dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
-    dScreen_->screenId_ = 2;
+    dScreen_->screenId_ = 200000;
     int32_t ret = dScreen_->SetUp();
     EXPECT_EQ(ERR_DH_AV_TRANS_SETUP_FAILED, ret);
 }

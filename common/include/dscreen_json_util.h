@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,6 +24,7 @@ bool IsString(const nlohmann::json &jsonObj, const std::string &key);
 bool IsUInt8(const nlohmann::json &jsonObj, const std::string &key);
 bool IsInt32(const nlohmann::json &jsonObj, const std::string &key);
 bool IsUInt32(const nlohmann::json &jsonObj, const std::string &key);
+bool IsFloat(const nlohmann::json &jsonObj, const std::string &key);
 bool IsInt64(const nlohmann::json &jsonObj, const std::string &key);
 bool IsUInt64(const nlohmann::json &jsonObj, const std::string &key);
 bool IsArray(const nlohmann::json &jsonObj, const std::string &key);

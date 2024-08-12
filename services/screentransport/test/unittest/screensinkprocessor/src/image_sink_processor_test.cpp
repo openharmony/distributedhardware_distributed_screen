@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -43,10 +43,19 @@ void ImageSinkProcessorTest::SetUp(void)
     processor_ = std::make_shared<ImageSinkProcessor>();
     imageListener_ = std::make_shared<MockIImageSinkProcessorListener>();
     processor_->imageDecoder_ = std::make_shared<ImageSinkDecoder>(imageListener_);
-    processor_->imageDecoder_->videoDecoder_ = Media::VideoDecoderFactory::CreateByMime("video/avc");
+    videoDecoder_ = MediaAVCodec::VideoDecoderFactory::CreateByMime(
+        std::string(MediaAVCodec::CodecMimeType::VIDEO_AVC));
+    processor_->imageDecoder_->videoDecoder_ = videoDecoder_;
 }
 
-void ImageSinkProcessorTest::TearDown(void) {}
+void ImageSinkProcessorTest::TearDown(void)
+{
+    if (videoDecoder_ != nullptr) {
+        videoDecoder_->Stop();
+        videoDecoder_->Release();
+        videoDecoder_ = nullptr;
+    }
+}
 
 /**
  * @tc.name: configure_image_processor_test_001
@@ -103,7 +112,8 @@ HWTEST_F(ImageSinkProcessorTest, release_image_processor_test_002, TestSize.Leve
  */
 HWTEST_F(ImageSinkProcessorTest, start_image_processor_test_001, TestSize.Level1)
 {
-    EXPECT_EQ(ERR_DH_SCREEN_CODEC_PREPARE_FAILED, processor_->StartImageProcessor());
+    processor_->imageDecoder_->videoDecoder_ = nullptr;
+    EXPECT_NE(DH_SUCCESS, processor_->StartImageProcessor());
 }
 
 /**

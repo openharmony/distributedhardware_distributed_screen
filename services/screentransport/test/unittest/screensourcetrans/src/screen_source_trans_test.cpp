@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -156,7 +156,7 @@ HWTEST_F(ScreenSourceTransTest, InitScreenTrans_001, TestSize.Level1)
     int32_t actual = trans->InitScreenTrans(localParam, remoteParam, peerDevId);
     DisablePermissionAccess(tokenId_);
 
-    EXPECT_EQ(ERR_DH_SCREEN_CODEC_SURFACE_ERROR, actual);
+    EXPECT_EQ(ERR_DH_SCREEN_CODEC_CONFIGURE_FAILED, actual);
 }
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -52,7 +52,7 @@ void DScreenTestV1::SetUp(void)
     dScreen_->videoParam_->SetVideoWidth(videoDataNum);
     dScreen_->videoParam_->SetScreenHeight(videoDataNum);
     dScreen_->videoParam_->SetScreenWidth(videoDataNum);
-    dScreen_->videoParam_->SetFps(videoDataNum);
+    dScreen_->videoParam_->SetFps(DEFAULT_FPS);
     dScreen_->devId_ = "peerDevId";
 }
 

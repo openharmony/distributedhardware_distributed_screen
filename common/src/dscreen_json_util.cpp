@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -70,6 +70,15 @@ bool IsInt64(const nlohmann::json &jsonObj, const std::string &key)
 bool IsUInt64(const nlohmann::json &jsonObj, const std::string &key)
 {
     bool res = jsonObj.contains(key) && jsonObj[key].is_number_unsigned() && jsonObj[key] <= UINT64_MAX;
+    if (!res) {
+        DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
+    }
+    return res;
+}
+
+bool IsFloat(const nlohmann::json &jsonObj, const std::string &key)
+{
+    bool res = jsonObj.contains(key) && jsonObj[key].is_number_float();
     if (!res) {
         DHLOGE("the key %s in jsonObj is invalid.", key.c_str());
     }

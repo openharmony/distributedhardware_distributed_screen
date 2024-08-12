@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -234,7 +234,7 @@ HWTEST_F(DScreenManagerAdapterTest, SetImageSurface_001, TestSize.Level1)
  */
 HWTEST_F(DScreenManagerAdapterTest, GetMapRelation_001, TestSize.Level1)
 {
-    std::shared_ptr<DScreenMapRelation> ret = ScreenMgrAdapter::GetInstance().GetMapRelation(1000);
+    std::shared_ptr<DScreenMapRelation> ret = ScreenMgrAdapter::GetInstance().GetMapRelation(100000);
     EXPECT_EQ(nullptr, ret);
 }
 

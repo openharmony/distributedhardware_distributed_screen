@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,7 +20,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-void ImageDecoderCallback::OnError(Media::AVCodecErrorType errorType, int32_t errorCode)
+void ImageDecoderCallback::OnError(MediaAVCodec::AVCodecErrorType errorType, int32_t errorCode)
 {
     DHLOGD("%s: OnError.", LOG_TAG);
     std::shared_ptr<ImageSinkDecoder> decoder = videoDecoder_.lock();
@@ -31,8 +31,8 @@ void ImageDecoderCallback::OnError(Media::AVCodecErrorType errorType, int32_t er
     decoder->OnError(errorType, errorCode);
 }
 
-void ImageDecoderCallback::OnOutputBufferAvailable(uint32_t index, Media::AVCodecBufferInfo info,
-    Media::AVCodecBufferFlag flag)
+void ImageDecoderCallback::OnOutputBufferAvailable(uint32_t index, MediaAVCodec::AVCodecBufferInfo info,
+    MediaAVCodec::AVCodecBufferFlag flag, std::shared_ptr<Media::AVSharedMemory> buffer)
 {
     DHLOGD("%s: OnOutputBufferAvailable.", LOG_TAG);
     std::shared_ptr<ImageSinkDecoder> decoder = videoDecoder_.lock();
@@ -40,10 +40,10 @@ void ImageDecoderCallback::OnOutputBufferAvailable(uint32_t index, Media::AVCode
         DHLOGE("decoder is nullptr.");
         return;
     }
-    decoder->OnOutputBufferAvailable(index, info, flag);
+    decoder->OnOutputBufferAvailable(index, info, flag, buffer);
 }
 
-void ImageDecoderCallback::OnInputBufferAvailable(uint32_t index)
+void ImageDecoderCallback::OnInputBufferAvailable(uint32_t index, std::shared_ptr<Media::AVSharedMemory> buffer)
 {
     DHLOGD("%s: OnInputBufferAvailable.", LOG_TAG);
     std::shared_ptr<ImageSinkDecoder> decoder = videoDecoder_.lock();
@@ -51,7 +51,7 @@ void ImageDecoderCallback::OnInputBufferAvailable(uint32_t index)
         DHLOGE("decoder is nullptr.");
         return;
     }
-    decoder->OnInputBufferAvailable(index);
+    decoder->OnInputBufferAvailable(index, buffer);
 }
 
 void ImageDecoderCallback::OnOutputFormatChanged(const Media::Format &format)

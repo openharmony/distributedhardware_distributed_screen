@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,22 +18,23 @@
 
 #include <memory>
 
-#include "media_errors.h"
+#include "avcodec_errors.h"
 #include "avcodec_common.h"
-#include "format.h"
+#include "meta/format.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 class ImageSinkDecoder;
-class ImageDecoderCallback : public Media::AVCodecCallback {
+class ImageDecoderCallback : public MediaAVCodec::AVCodecCallback {
 public:
     explicit ImageDecoderCallback(const std::shared_ptr<ImageSinkDecoder> &decoder)
         : videoDecoder_(decoder) {};
     ~ImageDecoderCallback() override = default;
 
-    void OnError(Media::AVCodecErrorType errorType, int32_t errorCode) override;
-    void OnOutputBufferAvailable(uint32_t index, Media::AVCodecBufferInfo info, Media::AVCodecBufferFlag flag) override;
-    void OnInputBufferAvailable(uint32_t index) override;
+    void OnError(MediaAVCodec::AVCodecErrorType errorType, int32_t errorCode) override;
+    void OnOutputBufferAvailable(uint32_t index, MediaAVCodec::AVCodecBufferInfo info,
+        MediaAVCodec::AVCodecBufferFlag flag, std::shared_ptr<Media::AVSharedMemory> buffer) override;
+    void OnInputBufferAvailable(uint32_t index, std::shared_ptr<Media::AVSharedMemory> buffer) override;
     void OnOutputFormatChanged(const Media::Format &format) override;
 
 private:
