@@ -67,8 +67,6 @@ ohos_unittest("DscreenRegionMgrTest") {
     "${services_path}/screenservice/sinkservice:distributed_screen_sink",
     "${services_path}/screenservice/sourceservice:distributed_screen_source",
     "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
@@ -78,6 +76,8 @@ ohos_unittest("DscreenRegionMgrTest") {
     "distributed_hardware_fwk:distributed_av_receiver",
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
+    "googletest:gmock",
+    "googletest:gtest_main",
     "graphic_2d:libcomposer",
     "graphic_2d:libgraphic_utils",
     "graphic_2d:librender_service_client",

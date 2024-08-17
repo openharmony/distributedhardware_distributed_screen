@@ -42,16 +42,15 @@ ohos_unittest("DscreenHandlerTest") {
     "${common_path}/test/unittest/resource:dscreen_unittest_public_config",
   ]
 
-  deps = [
-    "${distributedscreen_path}/screenhandler:distributed_screen_handler",
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest_main",
-  ]
+  deps =
+      [ "${distributedscreen_path}/screenhandler:distributed_screen_handler" ]
 
   external_deps = [
     "av_codec:av_codec_client",
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "googletest:gmock",
+    "googletest:gtest_main",
     "graphic_2d:libgraphic_utils",
     "graphic_surface:surface",
     "hilog:libhilog",

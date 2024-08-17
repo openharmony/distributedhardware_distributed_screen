@@ -46,13 +46,13 @@ ohos_unittest("DataBufferTest") {
     "${common_path}/test/unittest/resource:dscreen_unittest_public_config",
   ]
 
-  deps = [
-    "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans",
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest_main",
-  ]
+  deps = [ "${services_path}/screentransport/screensinktrans:distributed_screen_sinktrans" ]
 
-  external_deps = [ "distributed_hardware_fwk:distributedhardwareutils" ]
+  external_deps = [
+    "distributed_hardware_fwk:distributedhardwareutils",
+    "googletest:gmock",
+    "googletest:gtest_main",
+  ]
 }
 
 group("data_buffer_test") {

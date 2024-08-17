@@ -44,8 +44,8 @@ void HandleScreenChangeFuzzTest(const uint8_t* data, size_t size)
 
     uint32_t eventValue = *(reinterpret_cast<const uint32_t*>(data)) % 3;
     if ((eventValue != static_cast<uint32_t>(Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP)) ||
-        (eventValue != static_cast<uint32_t>(Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP)) ||
-        (eventValue != static_cast<uint32_t>(Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP))) {
+        (eventValue != static_cast<uint32_t>(Rosen::ScreenGroupChangeEvent::REMOVE_FROM_GROUP)) ||
+        (eventValue != static_cast<uint32_t>(Rosen::ScreenGroupChangeEvent::CHANGE_GROUP))) {
         return;
     }
 
@@ -106,23 +106,6 @@ void DScreenManagerOnUnregResultFuzzTest(const uint8_t* data, size_t size)
     dscreenManager->OnUnregResult(dScreen, reqId, status, dataStr);
 }
 
-void EnableDistributedScreenFuzzTest(const uint8_t* data, size_t size)
-{
-    if ((data == nullptr) || (size == 0)) {
-        return;
-    }
-
-    std::string str(reinterpret_cast<const char*>(data), size);
-    std::string devId(reinterpret_cast<const char*>(data), size);
-    std::string dhId(reinterpret_cast<const char*>(data), size);
-    std::string reqId(reinterpret_cast<const char*>(data), size);
-    EnableParam param = {str, str, str, str};
-
-    std::shared_ptr<DScreenManager> dscreenManager = std::make_shared<DScreenManager>();
-    dscreenManager->EnableDistributedScreen(devId, dhId, param, reqId);
-    dscreenManager->DisableDistributedScreen(devId, dhId, reqId);
-}
-
 void NotifyRemoteScreenServiceFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size < sizeof(int32_t))) {
@@ -163,7 +146,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
     OHOS::DistributedHardware::V1_0::AddToGroupFuzzTest(data, size);
     OHOS::DistributedHardware::V1_0::DScreenCallbackOnRegResultFuzzTest(data, size);
     OHOS::DistributedHardware::V1_0::DScreenManagerOnUnregResultFuzzTest(data, size);
-    OHOS::DistributedHardware::V1_0::EnableDistributedScreenFuzzTest(data, size);
     OHOS::DistributedHardware::V1_0::NotifyRemoteScreenServiceFuzzTest(data, size);
     OHOS::DistributedHardware::V1_0::HandleNotifySetUpResultFuzzTest(data, size);
     return 0;
