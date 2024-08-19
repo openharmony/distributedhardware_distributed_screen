@@ -25,17 +25,21 @@ ohos_fuzztest("SoftbusAdapterFuzzTest") {
   configs =
       [ "${common_path}/test/unittest/resource:dscreen_unittest_public_config" ]
 
-  sources = [ "softbusadapter_fuzzer.cpp" ]
+  sources = [
+    "mock_socket.cpp",
+    "softbusadapter_fuzzer.cpp",
+  ]
 
   include_dirs = [
     "${common_path}/include",
+    "${interfaces_path}/innerkits/native_cpp/test/include",
     "${services_path}/common/databuffer/include",
     "${services_path}/common/screen_channel/include",
     "${services_path}/common/utils/include",
-    "${services_path}/screentransport/screensourcetrans/include",
     "${services_path}/screentransport/screendatachannel/include",
-    "${services_path}/screentransport/screensourceprocessor/include",
     "${services_path}/screentransport/screensourceprocessor/encoder/include",
+    "${services_path}/screentransport/screensourceprocessor/include",
+    "${services_path}/screentransport/screensourcetrans/include",
     "${services_path}/softbusadapter/include",
   ]
 

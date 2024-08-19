@@ -47,6 +47,7 @@ void InitSinkFuzzTest(const uint8_t* data, size_t size)
     std::shared_ptr<DScreenSinkProxy> dscreenSinkProxy = std::make_shared<DScreenSinkProxy>(remoteObject);
 
     dscreenSinkProxy->InitSink(params);
+    dscreenSinkProxy->ReleaseSink();
 }
 }  // namespace DistributedHardware
 }  // namespace OHOS

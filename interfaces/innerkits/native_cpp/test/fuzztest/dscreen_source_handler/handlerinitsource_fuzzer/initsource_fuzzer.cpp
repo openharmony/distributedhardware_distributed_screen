@@ -31,6 +31,7 @@ void InitSourceFuzzTest(const uint8_t* data, size_t size)
     std::string params(reinterpret_cast<const char*>(data), size);
 
     DScreenSourceHandler::GetInstance().InitSource(params);
+    DScreenSourceHandler::GetInstance().ReleaseSource();
 }
 }  // namespace DistributedHardware
 }  // namespace OHOS
