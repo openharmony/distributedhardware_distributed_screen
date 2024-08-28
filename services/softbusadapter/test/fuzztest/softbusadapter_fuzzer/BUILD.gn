@@ -25,10 +25,7 @@ ohos_fuzztest("SoftbusAdapterFuzzTest") {
   configs =
       [ "${common_path}/test/unittest/resource:dscreen_unittest_public_config" ]
 
-  sources = [
-    "mock_socket.cpp",
-    "softbusadapter_fuzzer.cpp",
-  ]
+  sources = [ "softbusadapter_fuzzer.cpp" ]
 
   include_dirs = [
     "${common_path}/include",

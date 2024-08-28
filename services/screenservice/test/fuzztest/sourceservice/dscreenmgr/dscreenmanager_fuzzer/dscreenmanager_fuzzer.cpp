@@ -78,7 +78,6 @@ void DScreenCallbackOnRegResultFuzzTest(const uint8_t* data, size_t size)
         return;
     }
 
-    std::string reqId(reinterpret_cast<const char*>(data), size);
     std::string screenId(reinterpret_cast<const char*>(data), size);
     int32_t status = *(reinterpret_cast<const int32_t*>(data));
     std::string dataStr(reinterpret_cast<const char*>(data), size);
