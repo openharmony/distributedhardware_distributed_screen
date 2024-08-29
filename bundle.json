@@ -49,9 +49,7 @@
                 "distributed_hardware_fwk",
                 "libjpeg-turbo"
             ],
-            "third_party": [
-                "googletest"
-            ]
+            "third_party": []
         },
         "build": {
             "sub_component": [

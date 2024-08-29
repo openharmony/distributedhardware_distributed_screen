@@ -19,6 +19,7 @@
 #include "dscreen_errcode.h"
 #include "dscreen_util.h"
 #include "isoftbus_listener.h"
+#include "socket.h"
 #include "softbus_adapter.h"
 #include "softbus_bus_center.h"
 #include "softbus_common.h"
@@ -212,5 +213,35 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
     OHOS::DistributedHardware::SoftbusCreateSoftbusSessionServerFuzzTest(data, size);
     OHOS::DistributedHardware::SoftbusRemoveSoftbusSessionServerFuzzTest(data, size);
     OHOS::DistributedHardware::SoftbusOpenSoftbusSessionFuzzTest(data, size);
+    return 0;
+}
+
+extern "C" __attribute__((constructor)) int Socket(SocketInfo info)
+{
+    return 0;
+}
+
+extern "C" __attribute__((constructor)) int Listen(int32_t socket, const QosTV qos[], uint32_t qosCount,
+    const ISocketListener *listener)
+{
+    return 0;
+}
+
+extern "C" __attribute__((constructor)) int Bind(int32_t socket, const QosTV qos[], uint32_t qosCount,
+    const ISocketListener *listener)
+{
+    return 0;
+}
+
+extern "C" __attribute__((constructor)) void Shutdown(int32_t socket) {}
+
+extern "C" __attribute__((constructor)) int SendBytes(int32_t socket, const void *data, uint32_t len)
+{
+    return 0;
+}
+
+extern "C" __attribute__((constructor)) int SendStream(int32_t socket, const StreamData *data, const StreamData *ext,
+    const StreamFrameInfo *param)
+{
     return 0;
 }
