@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -276,7 +276,21 @@ void ScreenRegion::OnEngineMessage(const std::shared_ptr<AVTransMessage> &messag
 
 void ScreenRegion::GetWSBuffer(sptr<OHOS::SurfaceBuffer> &wsBuffer, const std::shared_ptr<AVTransBuffer> &buffer)
 {
+    if ((wsBuffer == nullptr) || (buffer == nullptr)) {
+        DHLOGE("wsBuffer or buffer is nullptr.");
+        return;
+    }
+
+    if ((videoParam_ == nullptr) || (windowSurface_ == nullptr)) {
+        DHLOGE("videoParam or windowSurface is nullptr.");
+        return;
+    }
+
     auto bufferData = buffer->GetBufferData(0);
+    if (bufferData == nullptr) {
+        DHLOGE("bufferData is null.");
+        return;
+    }
     auto bufferAddr = bufferData->GetAddress();
     auto wsBufAddr = static_cast<uint8_t*>(wsBuffer->GetVirAddr());
     uint32_t wsBufSize = wsBuffer->GetSize();
