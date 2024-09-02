@@ -25,6 +25,7 @@
 #include "dscreen_hisysevent.h"
 #include "dscreen_hitrace.h"
 #include "dscreen_log.h"
+#include "ffrt_inner.h"
 #include "image_source_processor.h"
 #include "screen_data_channel_impl.h"
 namespace OHOS {
@@ -342,7 +343,7 @@ void ScreenSourceTrans::OnSessionOpened()
 
     isChannelReady_ = true;
     DHLOGI("%{public}s: Start thread.", DSCREEN_LOG_TAG);
-    std::thread([this] { this->FeedChannelData(); }).detach();
+    ffrt::submit([this] { this->FeedChannelData(); });
     std::unique_lock<std::mutex> lck(sessionMtx_);
     sessionCond_.notify_all();
 }

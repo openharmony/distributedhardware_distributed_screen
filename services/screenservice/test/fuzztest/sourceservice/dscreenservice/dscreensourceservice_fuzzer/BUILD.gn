@@ -55,6 +55,7 @@ ohos_fuzztest("DscreenSourceServiceFuzzTest") {
     "graphic_surface:surface",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "samgr:samgr_proxy",
     "window_manager:libdm",
   ]

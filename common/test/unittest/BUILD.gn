@@ -60,5 +60,6 @@ ohos_unittest("ScreenCommonTest") {
     "hisysevent:libhisysevent",
     "init:libbegetutil",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
   ]
 }

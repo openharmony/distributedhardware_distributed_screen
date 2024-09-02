@@ -127,6 +127,7 @@ int32_t ImageSourceEncoder::ConfigureEncoder(const VideoParam &configParam)
     ret = AddSurface();
     if (ret != DH_SUCCESS) {
         DHLOGE("%{public}s: Add surface failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        std::unique_lock<std::mutex> bufLock(bufferMtx_);
         consumerSurface_ = nullptr;
         producerSurface_ = nullptr;
         return ret;
@@ -137,6 +138,7 @@ int32_t ImageSourceEncoder::ConfigureEncoder(const VideoParam &configParam)
 int32_t ImageSourceEncoder::AddSurface()
 {
     DHLOGI("%{public}s: AddSurface.", DSCREEN_LOG_TAG);
+    std::unique_lock<std::mutex> bufLock(bufferMtx_);
     consumerSurface_ = IConsumerSurface::Create();
     if (consumerSurface_ == nullptr) {
         DHLOGE("%{public}s: creat consumer surface failed.", DSCREEN_LOG_TAG);
@@ -220,7 +222,6 @@ int32_t ImageSourceEncoder::FeedEncoderData(sptr<SurfaceBuffer> &surfaceBuffer)
     int32_t ret = memcpy_s(encoderSurfaceAddr, screenDataSize, surfaceAddr, screenDataSize);
     if (ret != EOK) {
         DHLOGE("%{public}s: surfaceBuffer memcpy_s run failed.", DSCREEN_LOG_TAG);
-        consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
         encoderSurface_->CancelBuffer(encoderSurfaceBuffer);
         return ret;
     }
@@ -229,11 +230,9 @@ int32_t ImageSourceEncoder::FeedEncoderData(sptr<SurfaceBuffer> &surfaceBuffer)
     SurfaceError surfaceErr = encoderSurface_->FlushBuffer(encoderSurfaceBuffer, -1, flushConfig);
     if (surfaceErr != SURFACE_ERROR_OK) {
         DHLOGE("%{public}s: encoderSurface_ flush buffer failed.", DSCREEN_LOG_TAG);
-        consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
         encoderSurface_->CancelBuffer(encoderSurfaceBuffer);
         return surfaceErr;
     }
-    consumerSurface_->ReleaseBuffer(surfaceBuffer, -1);
     return DH_SUCCESS;
 }
 
@@ -301,11 +300,14 @@ int32_t ImageSourceEncoder::StopEncoder()
         DHLOGE("%{public}s: Stop encoder failed.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_CODEC_STOP_FAILED;
     }
-    ret = consumerSurface_->UnregisterConsumerListener();
-    if (ret != SURFACE_ERROR_OK) {
-        DHLOGE("Unregister Consumer Listener failed.");
+    std::unique_lock<std::mutex> bufLock(bufferMtx_);
+    if (consumerSurface_ != nullptr) {
+        ret = consumerSurface_->UnregisterConsumerListener();
+        if (ret != SURFACE_ERROR_OK) {
+            DHLOGE("Unregister Consumer Listener failed.");
+        }
+        consumerSurface_ = nullptr;
     }
-    consumerSurface_ = nullptr;
     producerSurface_ = nullptr;
     return DH_SUCCESS;
 }

@@ -64,6 +64,7 @@ ohos_unittest("DataChannelTest") {
     "googletest:gmock",
     "googletest:gtest_main",
     "hilog:libhilog",
+    "json:nlohmann_json_static",
   ]
 
   defines = [

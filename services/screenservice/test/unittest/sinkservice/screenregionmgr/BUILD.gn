@@ -83,6 +83,7 @@ ohos_unittest("DscreenRegionMgrTest") {
     "graphic_2d:librender_service_client",
     "graphic_surface:surface",
     "hisysevent:libhisysevent",
+    "json:nlohmann_json_static",
     "media_foundation:media_foundation",
     "window_manager:libdm",
   ]

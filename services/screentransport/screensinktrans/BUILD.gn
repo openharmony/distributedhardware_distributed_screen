@@ -75,12 +75,11 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "hitrace:hitrace_meter",
+    "ipc:ipc_core",
     "json:nlohmann_json_static",
     "libjpeg-turbo:turbojpeg",
     "media_foundation:media_foundation",
   ]
-
-  public_external_deps = [ "json:nlohmann_json_static" ]
 
   subsystem_name = "distributedhardware"
 

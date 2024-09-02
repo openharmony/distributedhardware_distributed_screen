@@ -48,6 +48,7 @@ ohos_shared_library("distributed_screen_client") {
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "eventhandler:libeventhandler",
     "graphic_2d:2d_graphics",
     "graphic_2d:libcomposer",
     "graphic_2d:libgraphic_utils",
@@ -56,6 +57,7 @@ ohos_shared_library("distributed_screen_client") {
     "graphic_surface:surface",
     "hilog:libhilog",
     "input:libmmi-client",
+    "ipc:ipc_core",
     "json:nlohmann_json_static",
     "window_manager:libwm",
   ]

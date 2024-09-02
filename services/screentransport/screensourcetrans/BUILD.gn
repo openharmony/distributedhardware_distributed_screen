@@ -71,17 +71,17 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "dsoftbus:softbus_client",
+    "ffrt:libffrt",
     "graphic_surface:surface",
     "graphic_surface:sync_fence",
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "hitrace:hitrace_meter",
+    "ipc:ipc_core",
     "json:nlohmann_json_static",
     "libjpeg-turbo:turbojpeg",
     "media_foundation:media_foundation",
   ]
-
-  public_external_deps = [ "json:nlohmann_json_static" ]
 
   subsystem_name = "distributedhardware"
 

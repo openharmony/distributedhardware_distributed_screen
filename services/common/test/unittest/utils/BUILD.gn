@@ -58,6 +58,7 @@ ohos_unittest("UtilsTest") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "googletest:gmock",
     "googletest:gtest_main",
+    "json:nlohmann_json_static",
   ]
 }
 
