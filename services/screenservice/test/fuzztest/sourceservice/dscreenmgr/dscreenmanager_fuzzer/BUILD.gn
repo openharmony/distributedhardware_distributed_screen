@@ -57,6 +57,7 @@ ohos_fuzztest("DScreenManagerFuzzTest") {
     "graphic_2d:librender_service_client",
     "graphic_surface:surface",
     "hilog:libhilog",
+    "json:nlohmann_json_static",
     "window_manager:libdm",
   ]
 }

@@ -57,6 +57,7 @@ ohos_unittest("ScreenDecisionCenterTest") {
     "c_utils:utils",
     "graphic_surface:surface",
     "graphic_surface:sync_fence",
+    "json:nlohmann_json_static",
     "media_foundation:media_foundation",
   ]
 }

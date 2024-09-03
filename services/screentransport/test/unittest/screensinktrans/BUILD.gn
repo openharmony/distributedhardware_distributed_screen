@@ -66,6 +66,7 @@ ohos_unittest("SinkTransTest") {
     "googletest:gtest_main",
     "graphic_surface:surface",
     "hilog:libhilog",
+    "json:nlohmann_json_static",
     "media_foundation:media_foundation",
   ]
 

@@ -66,6 +66,7 @@ ohos_unittest("SourceProcessorTest") {
     "graphic_surface:surface",
     "graphic_surface:sync_fence",
     "ipc:ipc_core",
+    "json:nlohmann_json_static",
     "media_foundation:media_foundation",
   ]
 }
