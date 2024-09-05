@@ -357,26 +357,14 @@ HWTEST_F(DScreenSourceHandlerTest, OnRemoteDied_001, TestSize.Level1)
 {
     sptr<ISystemAbilityManager> samgr =
             SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<IRemoteObject> remoteObject1 = nullptr;
+    wptr<IRemoteObject> remote1(remoteObject1);
+    DScreenSourceHandler::GetInstance().sourceSvrRecipient_->OnRemoteDied(remote1);
 
-    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
-    wptr<IRemoteObject> remote(remoteObject);
-    DScreenSourceHandler::GetInstance().sourceSvrRecipient_->OnRemoteDied(remote);
+    sptr<IRemoteObject> remoteObject2 = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    wptr<IRemoteObject> remote2(remoteObject2);
+    DScreenSourceHandler::GetInstance().sourceSvrRecipient_->OnRemoteDied(remote2);
     EXPECT_EQ(nullptr, DScreenSourceHandler::GetInstance().dScreenSourceProxy_);
-}
-
-/**
- * @tc.name: OnRemoteDied_002
- * @tc.desc: Verify the OnRemoteDied function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(DScreenSourceHandlerTest, OnRemoteDied_002, TestSize.Level1)
-{
-    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    sptr<IRemoteObject> remoteObject = nullptr;
-    wptr<IRemoteObject> remote(remoteObject);
-    DScreenSourceHandler::GetInstance().sourceSvrRecipient_->OnRemoteDied(remote);
-    EXPECT_EQ(remote, remote);
 }
 }  // namespace DistributedHardware
 }  // namespace OHOS

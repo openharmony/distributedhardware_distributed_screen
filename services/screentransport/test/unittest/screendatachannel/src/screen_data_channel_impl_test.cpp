@@ -396,5 +396,21 @@ HWTEST_F(ScreenDataChannelImplTest, JsonToDirtyJson_001, TestSize.Level1)
     EXPECT_EQ(nullptr, dataChannelImpl_->channelListener_.lock());
 }
 
+/**
+ * @tc.name: SetJpegSessionFlag_001
+ * @tc.desc: Verify the SetJpegSessionFlag function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenDataChannelImplTest, SetJpegSessionFlag_001, TestSize.Level1)
+{
+    bool flag = true;
+    dataChannelImpl_->SetJpegSessionFlag(flag);
+    EXPECT_EQ(dataChannelImpl_->jpegSessionFlag_, flag);
+
+    flag = false;
+    dataChannelImpl_->SetJpegSessionFlag(flag);
+    EXPECT_EQ(dataChannelImpl_->jpegSessionFlag_, flag);
+}
 } // DistributedHardware
 } // OHOS

@@ -189,7 +189,9 @@ HWTEST_F(ImageSinkProcessorTest, set_image_surface_test_002, TestSize.Level1)
  */
 HWTEST_F(ImageSinkProcessorTest, processimage_test_001, TestSize.Level1)
 {
-    std::shared_ptr<DataBuffer> data = std::make_shared<DataBuffer>(DATA_LEN);
+    std::shared_ptr<DataBuffer> data = nullptr;
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, processor_->ProcessImage(data));
+    data = std::make_shared<DataBuffer>(DATA_LEN);
     EXPECT_EQ(DH_SUCCESS, processor_->ProcessImage(data));
 }
 

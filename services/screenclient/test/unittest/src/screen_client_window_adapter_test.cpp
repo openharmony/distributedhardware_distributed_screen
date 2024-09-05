@@ -254,6 +254,10 @@ HWTEST_F(ScreenClientWindowAdapterTest, ScreenClientInputEventListener_OnInputEv
     std::shared_ptr<MMI::PointerEvent> pointerEvent = nullptr;
     std::shared_ptr<ScreenClientInputEventListener> listener = std::make_shared<ScreenClientInputEventListener>();
     EXPECT_FALSE(listener->OnInputEvent(pointerEvent));
+
+    pointerEvent = MMI::PointerEvent::Create();
+    EXPECT_TRUE(pointerEvent != nullptr);
+    EXPECT_TRUE(listener->OnInputEvent(pointerEvent));
 }
 
 /**
@@ -267,6 +271,10 @@ HWTEST_F(ScreenClientWindowAdapterTest, ScreenClientInputEventListener_OnInputEv
     std::shared_ptr<MMI::KeyEvent> keyEvent = nullptr;
     std::shared_ptr<ScreenClientInputEventListener> listener = std::make_shared<ScreenClientInputEventListener>();
     EXPECT_FALSE(listener->OnInputEvent(keyEvent));
+
+    keyEvent = MMI::KeyEvent::Create();
+    EXPECT_TRUE(keyEvent != nullptr);
+    EXPECT_TRUE(listener->OnInputEvent(keyEvent));
 }
 
 /**
@@ -280,6 +288,10 @@ HWTEST_F(ScreenClientWindowAdapterTest, ScreenClientInputEventListener_OnInputEv
     std::shared_ptr<MMI::AxisEvent> axisEvent = nullptr;
     std::shared_ptr<ScreenClientInputEventListener> listener = std::make_shared<ScreenClientInputEventListener>();
     EXPECT_FALSE(listener->OnInputEvent(axisEvent));
+
+    axisEvent = MMI::AxisEvent::Create();
+    EXPECT_TRUE(axisEvent != nullptr);
+    EXPECT_TRUE(listener->OnInputEvent(axisEvent));
 }
 } // DistributedHardware
 } // OHOS
