@@ -22,6 +22,8 @@ using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
 namespace V1_0 {
+constexpr static uint32_t VIDEO_DATA_NUM = 480;
+
 void ScreenRegionTestV1::SetUpTestCase(void) {}
 
 void ScreenRegionTestV1::TearDownTestCase(void) {}
@@ -137,6 +139,8 @@ HWTEST_F(ScreenRegionTestV1, GetVideoParam_001, TestSize.Level1)
 HWTEST_F(ScreenRegionTestV1, GetWindowProperty_001, TestSize.Level1)
 {
     screenRegion_->windowProperty_ = std::make_shared<WindowProperty>();
+    screenRegion_->windowProperty_->width = VIDEO_DATA_NUM;
+    screenRegion_->windowProperty_->height = VIDEO_DATA_NUM;
     std::shared_ptr<WindowProperty> ret = screenRegion_->GetWindowProperty();
     EXPECT_EQ(screenRegion_->windowProperty_, ret);
 }

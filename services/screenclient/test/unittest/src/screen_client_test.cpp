@@ -19,13 +19,23 @@ using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+constexpr static uint32_t VIDEO_DATA_NUM = 480;
+
 void ScreenClientTest::SetUpTestCase(void) {}
 
 void ScreenClientTest::TearDownTestCase(void) {}
 
-void ScreenClientTest::SetUp() {}
+void ScreenClientTest::SetUp()
+{
+    windowProperty_ = std::make_shared<WindowProperty>();
+    windowProperty_->width = VIDEO_DATA_NUM;
+    windowProperty_->height = VIDEO_DATA_NUM;
+}
 
-void ScreenClientTest::TearDown() {}
+void ScreenClientTest::TearDown()
+{
+    windowProperty_ = nullptr;
+}
 
 /**
  * @tc.name: AddWindow_001
@@ -35,8 +45,8 @@ void ScreenClientTest::TearDown() {}
  */
 HWTEST_F(ScreenClientTest, AddWindow_001, TestSize.Level1)
 {
-    std::shared_ptr<WindowProperty> windowProperty = nullptr;
-    int32_t ret = ScreenClient::GetInstance().AddWindow(windowProperty);
+    windowProperty_ = nullptr;
+    int32_t ret = ScreenClient::GetInstance().AddWindow(windowProperty_);
     EXPECT_EQ(ERR_DH_SCREEN_SCREENCLIENT_ADD_WINDOW_ERROR, ret);
 }
 
@@ -48,8 +58,7 @@ HWTEST_F(ScreenClientTest, AddWindow_001, TestSize.Level1)
  */
 HWTEST_F(ScreenClientTest, AddWindow_002, TestSize.Level1)
 {
-    std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
-    int32_t expectId = ScreenClient::GetInstance().AddWindow(windowProperty);
+    int32_t expectId = ScreenClient::GetInstance().AddWindow(windowProperty_);
     int32_t ret = ScreenClient::GetInstance().RemoveWindow(expectId);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
@@ -74,8 +83,7 @@ HWTEST_F(ScreenClientTest, ShowWindow_001, TestSize.Level1)
  */
 HWTEST_F(ScreenClientTest, ShowWindow_002, TestSize.Level1)
 {
-    std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
-    int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty);
+    int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty_);
     int32_t ret = ScreenClient::GetInstance().ShowWindow(windowId);
     EXPECT_EQ(DH_SUCCESS, ret);
     ret = ScreenClient::GetInstance().RemoveWindow(windowId);
@@ -118,8 +126,7 @@ HWTEST_F(ScreenClientTest, HideWindow_001, TestSize.Level1)
  */
 HWTEST_F(ScreenClientTest, HideWindow_002, TestSize.Level1)
 {
-    std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
-    int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty);
+    int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty_);
     int32_t ret = ScreenClient::GetInstance().HideWindow(windowId);
     EXPECT_EQ(DH_SUCCESS, ret);
     ret = ScreenClient::GetInstance().RemoveWindow(windowId);
@@ -162,8 +169,7 @@ HWTEST_F(ScreenClientTest, MoveWindow_001, TestSize.Level1)
  */
 HWTEST_F(ScreenClientTest, MoveWindow_002, TestSize.Level1)
 {
-    std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
-    int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty);
+    int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty_);
     int32_t ret = ScreenClient::GetInstance().MoveWindow(windowId, 0, 0);
     EXPECT_EQ(DH_SUCCESS, ret);
     ret = ScreenClient::GetInstance().RemoveWindow(windowId);
@@ -206,8 +212,7 @@ HWTEST_F(ScreenClientTest, RemoveWindow_001, TestSize.Level1)
  */
 HWTEST_F(ScreenClientTest, RemoveWindow_002, TestSize.Level1)
 {
-    std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
-    int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty);
+    int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty_);
     int32_t ret = ScreenClient::GetInstance().RemoveWindow(windowId);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
@@ -245,8 +250,7 @@ HWTEST_F(ScreenClientTest, GetSurface_001, TestSize.Level1)
  */
 HWTEST_F(ScreenClientTest, GetSurface_002, TestSize.Level1)
 {
-    std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
-    int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty);
+    int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty_);
     sptr<Surface> actualSurface = ScreenClient::GetInstance().GetSurface(windowId);
     EXPECT_NE(nullptr, actualSurface);
     int32_t ret = ScreenClient::GetInstance().RemoveWindow(windowId);
@@ -261,8 +265,7 @@ HWTEST_F(ScreenClientTest, GetSurface_002, TestSize.Level1)
  */
 HWTEST_F(ScreenClientTest, DestroyAllWindow_001, TestSize.Level1)
 {
-    std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
-    ScreenClient::GetInstance().AddWindow(windowProperty);
+    ScreenClient::GetInstance().AddWindow(windowProperty_);
     int32_t ret = ScreenClient::GetInstance().DestroyAllWindow();
     EXPECT_EQ(DH_SUCCESS, ret);
 }
