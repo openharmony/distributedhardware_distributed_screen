@@ -25,6 +25,8 @@ using namespace testing::ext;
 namespace OHOS {
 namespace DistributedHardware {
 namespace V2_0 {
+constexpr static uint32_t VIDEO_DATA_NUM = 480;
+
 void ScreenRegionTestV2::SetUpTestCase(void) {}
 
 void ScreenRegionTestV2::TearDownTestCase(void) {}
@@ -329,7 +331,13 @@ HWTEST_F(ScreenRegionTestV2, SetUp_001, TestSize.Level1)
     content = contentJson.dump();
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, screenRegion_->SetUp(content));
 
+    ScreenRect screenRect;
+    screenRect.startX = 0;
+    screenRect.startY = 0;
+    screenRect.width = VIDEO_DATA_NUM;
+    screenRect.height = VIDEO_DATA_NUM;
     DScreenMapRelation dScreenMapRelation;
+    dScreenMapRelation.SetScreenRect(screenRect);
     contentJson[KEY_MAPRELATION] = dScreenMapRelation;
     content = contentJson.dump();
     screenRegion_->receiverAdapter_ = nullptr;
@@ -337,6 +345,7 @@ HWTEST_F(ScreenRegionTestV2, SetUp_001, TestSize.Level1)
 
     screenRegion_->receiverAdapter_ = std::make_shared<AVTransReceiverAdapter>();
     EXPECT_EQ(DH_SUCCESS, screenRegion_->SetUp(content));
+    screenRegion_->Release();
 }
 
 /**
@@ -359,10 +368,16 @@ HWTEST_F(ScreenRegionTestV2, ConfigWindow_001, TestSize.Level1)
  */
 HWTEST_F(ScreenRegionTestV2, ConfigWindow_002, TestSize.Level1)
 {
+    ScreenRect screenRect;
+    screenRect.startX = 0;
+    screenRect.startY = 0;
+    screenRect.width = VIDEO_DATA_NUM;
+    screenRect.height = VIDEO_DATA_NUM;
+    DScreenMapRelation dScreenMapRelation;
     screenRegion_->mapRelation_ = std::make_shared<DScreenMapRelation>();
-    std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
-    ScreenClient::GetInstance().AddWindow(windowProperty);
+    screenRegion_->mapRelation_->SetScreenRect(screenRect);
     EXPECT_EQ(DH_SUCCESS, screenRegion_->ConfigWindow());
+    screenRegion_->Release();
 }
 
 /**
