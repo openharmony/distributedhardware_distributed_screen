@@ -44,6 +44,11 @@ using AVTransProviderClass = IAVEngineProvider *(*)(const std::string);
 
 const std::string SENDER_SO_NAME = "libdistributed_av_sender.z.so";
 const std::string GET_PROVIDER_FUNC = "GetAVSenderEngineProvider";
+#ifdef __LP64__
+const std::string LIB_LOAD_PATH = "/system/lib64/";
+#else
+const std::string LIB_LOAD_PATH = "/system/lib/";
+#endif
 
 const std::map<DScreenState, std::string> stateMap = {
     { DISABLED, "disabled" },
@@ -397,13 +402,15 @@ void DScreenManager::PublishMessage(const DHTopic topic, const std::shared_ptr<D
 int32_t DScreenManager::LoadAVSenderEngineProvider()
 {
     DHLOGI("LoadAVSenderEngineProvider enter");
-    if ((SENDER_SO_NAME.length() == 0) || (SENDER_SO_NAME.length() > PATH_MAX)) {
-        DHLOGE("File canonicalization failed, so name: %{public}s.", SENDER_SO_NAME.c_str());
+    char path[PATH_MAX + 1] = {0x00};
+    if ((LIB_LOAD_PATH.length() + SENDER_SO_NAME.length()) > PATH_MAX ||
+        realpath((LIB_LOAD_PATH + SENDER_SO_NAME).c_str(), path) == nullptr) {
+        DHLOGE("File canonicalization failed");
         return ERR_DH_AV_TRANS_LOAD_ERROR;
     }
-    void *pHandler = dlopen(SENDER_SO_NAME.c_str(), RTLD_LAZY | RTLD_NODELETE);
+    void *pHandler = dlopen(path, RTLD_LAZY | RTLD_NODELETE);
     if (pHandler == nullptr) {
-        DHLOGE("so: %{public}s load failed, failed reason : %{public}s", SENDER_SO_NAME.c_str(), dlerror());
+        DHLOGE("%{public}s handler load failed, failed reason : %{public}s", path, dlerror());
         return ERR_DH_AV_TRANS_NULL_VALUE;
     }
     AVTransProviderClass getEngineFactoryFunc = (AVTransProviderClass)dlsym(pHandler, GET_PROVIDER_FUNC.c_str());
@@ -420,11 +427,13 @@ int32_t DScreenManager::LoadAVSenderEngineProvider()
 int32_t DScreenManager::UnloadAVSenderEngineProvider()
 {
     DHLOGI("UnloadAVSenderEngineProvider enter");
-    if ((SENDER_SO_NAME.length() == 0) || (SENDER_SO_NAME.length() > PATH_MAX)) {
-        DHLOGE("File canonicalization failed, so name: %{public}s.", SENDER_SO_NAME.c_str());
+    char path[PATH_MAX + 1] = {0x00};
+    if ((LIB_LOAD_PATH.length() + SENDER_SO_NAME.length()) > PATH_MAX ||
+        realpath((LIB_LOAD_PATH + SENDER_SO_NAME).c_str(), path) == nullptr) {
+        DHLOGE("File canonicalization failed");
         return ERR_DH_AV_TRANS_LOAD_ERROR;
     }
-    void *pHandler = dlopen(SENDER_SO_NAME.c_str(), RTLD_LAZY | RTLD_NODELETE);
+    void *pHandler = dlopen(path, RTLD_LAZY | RTLD_NODELETE);
     if (pHandler != nullptr) {
         dlclose(pHandler);
         pHandler = nullptr;
