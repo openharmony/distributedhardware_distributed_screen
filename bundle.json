@@ -47,8 +47,7 @@
                 "c_utils",
                 "window_manager",
                 "distributed_hardware_fwk",
-                "libjpeg-turbo",
-                "json"
+                "libjpeg-turbo"
             ],
             "third_party": []
         },

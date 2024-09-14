@@ -100,7 +100,7 @@ int32_t ScreenDataChannelImpl::ReleaseSession()
     return DH_SUCCESS;
 }
 
-int32_t ScreenDataChannelImpl::OpenSession(const std::shared_ptr<IScreenChannelListener> &listener)
+int32_t ScreenDataChannelImpl::OpenSession(const std::shared_ptr<IScreenChannelListener> listener)
 {
     DHLOGI("%{public}s: OpenSession, peerDevId(%{public}s)", DSCREEN_LOG_TAG, GetAnonyString(peerDevId_).c_str());
     if (listener == nullptr) {

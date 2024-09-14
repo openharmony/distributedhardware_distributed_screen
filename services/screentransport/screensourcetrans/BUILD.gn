@@ -81,8 +81,6 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "media_foundation:media_foundation",
   ]
 
-  public_external_deps = [ "json:nlohmann_json_static" ]
-
   subsystem_name = "distributedhardware"
 
   part_name = "distributed_screen"
