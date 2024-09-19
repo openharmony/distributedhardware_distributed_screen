@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -372,7 +372,7 @@ void ScreenDataChannelImpl::JsonToDirtyJson(nlohmann::json &rectJson, std::share
     if (!IsInt32(rectJson, "dirtySize") || !IsInt32(rectJson, "dataType")) {
         return;
     }
-    int32_t dirtySize = rectJson["dirtySize"].get<int32_t>();
+    int32_t dirtySize = rectJson["dirtySize"].get<uint32_t>();
     int32_t dataType = rectJson["dataType"].get<int32_t>();
     int32_t num = 0;
     if (dirtySize >= DIRTY_MAX_SIZE) {
@@ -389,11 +389,11 @@ void ScreenDataChannelImpl::JsonToDirtyJson(nlohmann::json &rectJson, std::share
             DHLOGE("%{public}s: JsonToDirtyJson rectJson not contain int32", DSCREEN_LOG_TAG);
             return;
         }
-        int32_t X = rectJson[item][KEY_POINT_DIRTY_X].get<int32_t>();
-        int32_t Y = rectJson[item][KEY_POINT_DIRTY_Y].get<int32_t>();
-        int32_t W = rectJson[item][KEY_POINT_DIRTY_W].get<int32_t>();
-        int32_t H = rectJson[item][KEY_POINT_DIRTY_H].get<int32_t>();
-        int32_t Size = rectJson[item][KEY_POINT_DIRTY_SIZE].get<int32_t>();
+        uint32_t X = rectJson[item][KEY_POINT_DIRTY_X].get<uint32_t>();
+        uint32_t Y = rectJson[item][KEY_POINT_DIRTY_Y].get<uint32_t>();
+        uint32_t W = rectJson[item][KEY_POINT_DIRTY_W].get<uint32_t>();
+        uint32_t H = rectJson[item][KEY_POINT_DIRTY_H].get<uint32_t>();
+        uint32_t Size = rectJson[item][KEY_POINT_DIRTY_SIZE].get<uint32_t>();
         DirtyRect rect = {X, Y, W, H, Size};
         screenData->AddDirtyRect(rect);
         num++;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,11 +25,11 @@
 namespace OHOS {
 namespace DistributedHardware {
 struct DirtyRect {
-    int32_t xPos;
-    int32_t yPos;
-    int32_t width;
-    int32_t height;
-    int32_t dirtySize;
+    uint32_t xPos;
+    uint32_t yPos;
+    uint32_t width;
+    uint32_t height;
+    uint32_t dirtySize;
 };
 class DataBuffer {
 public:

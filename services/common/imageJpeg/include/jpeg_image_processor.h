@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -43,7 +43,7 @@ public:
 private:
     uint32_t CompressRgbaToJpeg(const OHOS::Rect &damage, uint8_t *inputData,
         uint32_t inputDataSize, std::shared_ptr<DataBuffer> &data);
-    void DecompressJpegToNV12(size_t jpegSize, uint8_t *inputData, uint8_t *outputData);
+    void DecompressJpegToNV12(size_t jpegSize, uint8_t *inputData, uint8_t *outputData, const uint32_t &outputDataSize);
 
     static const constexpr char *DSCREEN_LOG_TAG = "JpegImageProcessor";
     sptr<Surface> imageSurface_;
