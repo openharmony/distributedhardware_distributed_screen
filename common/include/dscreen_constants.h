@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -210,6 +210,8 @@ constexpr float DEFAULT_DENSITY = 2.0;
 constexpr int32_t DEFAULT_SCREEN_FLAGS = 0;
 constexpr double DEFAULT_FPS = 60.0;
 constexpr int32_t DIRTY_MAX_SIZE = 10;
+constexpr uint32_t DIRTY_MAX_BUF_SIZE = 4096;
+constexpr uint32_t DIRTY_MAX_IMAGE_DATA_SIZE = 780000;
 constexpr uint8_t DEFAULT_CODECTYPE = VIDEO_CODEC_TYPE_VIDEO_H264;
 constexpr uint8_t DEFAULT_VIDEO_FORMAT = VIDEO_DATA_FORMAT_NV12;
 constexpr int32_t DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID = 4807;

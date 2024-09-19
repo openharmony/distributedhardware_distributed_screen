@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -145,12 +145,16 @@ int32_t JpegImageProcessor::DecodeDamageData(const std::shared_ptr<DataBuffer> &
     DHLOGI("%{public}s: DecodeDamageData.", DSCREEN_LOG_TAG);
     std::vector<DirtyRect> dirtyRectVec = data->GetDirtyRectVec();
     int32_t offset = 0;
-    int32_t screenWidth = static_cast<int32_t>(configParam_.GetScreenWidth());
-    int32_t screenHeight = static_cast<int32_t>(configParam_.GetScreenHeight());
+    uint32_t screenWidth = configParam_.GetScreenWidth();
+    uint32_t screenHeight = configParam_.GetScreenHeight();
     for (auto item : dirtyRectVec) {
         if (item.xPos > screenWidth || item.yPos > screenHeight ||
             item.width > screenWidth - item.xPos || item.height > screenHeight - item.yPos) {
             DHLOGE("%{public}s: Dirty rect invalid.", DSCREEN_LOG_TAG);
+            return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+        }
+        if (item.dirtySize > DIRTY_MAX_BUF_SIZE) {
+            DHLOGE("%{public}s: Dirty rect invalid, dirtySize = %{public}" PRIu32, DSCREEN_LOG_TAG, item.dirtySize);
             return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
         }
         uint8_t *jpegData = new uint8_t[item.dirtySize] {0};
@@ -160,9 +164,16 @@ int32_t JpegImageProcessor::DecodeDamageData(const std::shared_ptr<DataBuffer> &
             return ret;
         }
         offset += item.dirtySize;
-        uint8_t *dirtyImageData = new uint8_t[item.width * item.height * RGB_CHROMA] {0};
+        uint32_t dirtyImageDataSize = item.width * item.height * RGB_CHROMA;
+        if (dirtyImageDataSize > DIRTY_MAX_IMAGE_DATA_SIZE) {
+            DHLOGE("%{public}s: The dirtyImageDataSize is out of range. Expected max: %{public}" PRIu32
+                ", actual: %{public}" PRIu32, DSCREEN_LOG_TAG, DIRTY_MAX_IMAGE_DATA_SIZE, dirtyImageDataSize);
+            delete[] jpegData;
+            return ERR_DH_SCREEN_INPUT_PARAM_INVALID;
+        }
+        uint8_t *dirtyImageData = new uint8_t[dirtyImageDataSize] {0};
         DHLOGI("%{public}s: DecompressJpegToNV12.", DSCREEN_LOG_TAG);
-        DecompressJpegToNV12(item.dirtySize, jpegData, dirtyImageData);
+        DecompressJpegToNV12(item.dirtySize, jpegData, dirtyImageData, dirtyImageDataSize);
         DHLOGI("%{public}s: DecompressJpegToNV12 success.", DSCREEN_LOG_TAG);
         ret = ReplaceDamage2LastFrame(lastFrame, dirtyImageData, item);
         if (ret != DH_SUCCESS) {
@@ -182,30 +193,30 @@ int32_t JpegImageProcessor::ReplaceDamage2LastFrame(uint8_t *lastFrame, uint8_t 
 {
     DHLOGI("%{public}s: ReplaceDamage2LastFrame.", DSCREEN_LOG_TAG);
     uint8_t *lastFrameIdx = lastFrame;
-    uint8_t *yData = lastFrameIdx + static_cast<uint32_t>(configParam_.GetScreenWidth() * rect.yPos + rect.xPos);
+    uint8_t *yData = lastFrameIdx + configParam_.GetScreenWidth() * rect.yPos + rect.xPos;
     uint8_t *uData = lastFrameIdx + configParam_.GetScreenWidth() * configParam_.GetScreenHeight() +
-                static_cast<uint32_t>(configParam_.GetScreenWidth() * (rect.yPos / TWO) + rect.xPos);
+                     configParam_.GetScreenWidth() * rect.yPos / TWO + rect.xPos;
     uint8_t *yDirtyData = dirtyImageData;
     uint8_t *uDirtyData = dirtyImageData + rect.width * rect.height;
     uint8_t *yTempData = nullptr;
     uint8_t *uTempData = nullptr;
-    for (int32_t i = 0 ; i < rect.height ; i++) {
-        yTempData = yData + static_cast<uint32_t>(i) * configParam_.GetScreenWidth();
+    for (uint32_t i = 0 ; i < rect.height ; i++) {
+        yTempData = yData + i * configParam_.GetScreenWidth();
         int32_t ret = memcpy_s(yTempData, rect.width, yDirtyData, rect.width);
         if (ret != EOK) {
             DHLOGE("%{public}s: memcpy yData failed.", DSCREEN_LOG_TAG);
             return ret;
         }
-        yDirtyData += static_cast<uint32_t>(rect.width);
+        yDirtyData += rect.width;
         if (i % TWO) {
-            uTempData = uData + configParam_.GetScreenWidth() * (static_cast<uint32_t>(i) / TWO);
+            uTempData = uData + configParam_.GetScreenWidth() * i / TWO;
             ret = memcpy_s(uTempData, rect.width, uDirtyData, rect.width);
             if (ret != EOK) {
                 DHLOGE("%{public}s: memcpy uData failed.", DSCREEN_LOG_TAG);
                 return ret;
             }
-            uDirtyData += static_cast<uint32_t>(rect.width);
-            }
+            uDirtyData += rect.width;
+        }
     }
     DHLOGI("%{public}s: ReplaceDamage2LastFrame success.", DSCREEN_LOG_TAG);
     return DH_SUCCESS;
@@ -262,7 +273,8 @@ uint32_t JpegImageProcessor::CompressRgbaToJpeg(const OHOS::Rect &damage,
     return (uint32_t)outSize;
 }
 
-void JpegImageProcessor::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputData, uint8_t *outputData)
+void JpegImageProcessor::DecompressJpegToNV12(
+    size_t jpegSize, uint8_t *inputData, uint8_t *outputData, const uint32_t &outputDataSize)
 {
     jpeg_decompress_struct cinfo;
     jpeg_error_mgr jerr;
@@ -271,8 +283,25 @@ void JpegImageProcessor::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputDat
     jpeg_mem_src(&cinfo, inputData, jpegSize);
     (void)jpeg_read_header(&cinfo, TRUE);
     (void)jpeg_start_decompress(&cinfo);
-    int32_t row_stride = static_cast<int32_t>(cinfo.output_width) * cinfo.output_components;
+    if ((cinfo.output_width > DSCREEN_MAX_LEN) || (cinfo.output_height > DSCREEN_MAX_LEN)) {
+        DHLOGE("%{public}s: JPEG image dimensions exceed DSCREEN_MAX_LEN: width = %{public}" PRIu32
+               ", height = %{public}" PRIu32, DSCREEN_LOG_TAG, cinfo.output_width, cinfo.output_height);
+        jpeg_destroy_decompress(&cinfo);
+        return;
+    }
+    if (cinfo.output_components != RGB_CHROMA) {
+        DHLOGE("%{public}s: color components is not RGB, color components = %{public}" PRIu32,
+            DSCREEN_LOG_TAG, cinfo.output_components);
+        jpeg_destroy_decompress(&cinfo);
+        return;
+    }
+    uint32_t row_stride = static_cast<uint32_t>(cinfo.output_width) * static_cast<uint32_t>(cinfo.output_components);
     JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo, JPOOL_IMAGE, row_stride, 1);
+    if (buffer == nullptr) {
+        DHLOGE("%{public}s: buffer is nullptr.", DSCREEN_LOG_TAG);
+        jpeg_destroy_decompress(&cinfo);
+        return;
+    }
     uint32_t uvIndex = cinfo.output_width * cinfo.output_height;
     int32_t i = 0;
     int32_t yIndex = 0;
@@ -286,7 +315,7 @@ void JpegImageProcessor::DecompressJpegToNV12(size_t jpegSize, uint8_t *inputDat
             int32_t v = ((UB_PARAM * buffer[0][j * RGB_CHROMA] - VG_PARAM * buffer[0][j * RGB_CHROMA + 1] -
                 VB_PARAM * buffer[0][j * RGB_CHROMA + TWO] + UA_PARAM) >> MOVEBITS) + UA_PARAM;
             outputData[yIndex++] = static_cast<uint8_t>((y < 0) ? 0 : (y > YUV_PARAM) ? YUV_PARAM : y);
-            if ((i % TWO == 0) && (j % TWO == 0)) {
+            if ((i % TWO == 0) && (j % TWO == 0) && (uvIndex < outputDataSize)) {
                 outputData[uvIndex++] = static_cast<uint8_t>((u < 0) ? 0 : (u > YUV_PARAM) ? YUV_PARAM : u);
                 outputData[uvIndex++] = static_cast<uint8_t>((v < 0) ? 0 : (v > YUV_PARAM) ? YUV_PARAM : v);
             }
