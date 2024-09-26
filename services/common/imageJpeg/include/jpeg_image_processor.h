@@ -43,7 +43,8 @@ public:
 private:
     uint32_t CompressRgbaToJpeg(const OHOS::Rect &damage, uint8_t *inputData,
         uint32_t inputDataSize, std::shared_ptr<DataBuffer> &data);
-    void DecompressJpegToNV12(size_t jpegSize, uint8_t *inputData, uint8_t *outputData, const uint32_t &outputDataSize);
+    void DecompressJpegToNV12(size_t jpegSize, uint8_t *inputData, uint8_t *outputData, const uint32_t &outputDataSize,
+        const DirtyRect &rect);
 
     static const constexpr char *DSCREEN_LOG_TAG = "JpegImageProcessor";
     sptr<Surface> imageSurface_;

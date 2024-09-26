@@ -372,9 +372,9 @@ void ScreenDataChannelImpl::JsonToDirtyJson(nlohmann::json &rectJson, std::share
     if (!IsInt32(rectJson, "dirtySize") || !IsInt32(rectJson, "dataType")) {
         return;
     }
-    int32_t dirtySize = rectJson["dirtySize"].get<uint32_t>();
+    uint32_t dirtySize = rectJson["dirtySize"].get<uint32_t>();
     int32_t dataType = rectJson["dataType"].get<int32_t>();
-    int32_t num = 0;
+    uint32_t num = 0;
     if (dirtySize >= DIRTY_MAX_SIZE) {
         return;
     }

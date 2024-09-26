@@ -140,6 +140,12 @@ constexpr uint32_t DSCREEN_MAX_SCREEN_DATA_WIDTH = 2560;
 /* Screen max screen data height */
 constexpr uint32_t DSCREEN_MAX_SCREEN_DATA_HEIGHT = 2772;
 
+/* Screen max display data width */
+constexpr uint32_t DSCREEN_MAX_DISPLAY_DATA_WIDTH = 2560;
+
+/* Screen max display data height */
+constexpr uint32_t DSCREEN_MAX_DISPLAY_DATA_HEIGHT = 2772;
+
 /* Screen dump data max file size */
 constexpr uint32_t DUMP_FILE_MAX_SIZE = 295 * 1024 * 1024;
 
@@ -185,7 +191,7 @@ const std::string KEY_ERR_CODE = "errCode";
 const std::string KEY_ERR_CONTENT = "errContent";
 const std::string KEY_VIDEO_PARAM = "videoParam";
 const std::string KEY_MAPRELATION = "mapRelation";
-const std::string KEY_PARTIALREFREAH = "PartialRefresh";
+const std::string KEY_PARTIALREFRESH = "PartialRefresh";
 const std::string CODEC_NAME_H264 = "OMX_hisi_video_encoder_avc";
 const std::string CODEC_NAME_H265 = "OMX_hisi_video_encoder_hevc";
 const std::string CODEC_NAME_MPEG4 = "avenc_mpeg4";
@@ -209,8 +215,8 @@ constexpr uint32_t MAX_MESSAGES_LEN = 40 * 1024 * 1024;
 constexpr float DEFAULT_DENSITY = 2.0;
 constexpr int32_t DEFAULT_SCREEN_FLAGS = 0;
 constexpr double DEFAULT_FPS = 60.0;
-constexpr int32_t DIRTY_MAX_SIZE = 10;
-constexpr uint32_t DIRTY_MAX_BUF_SIZE = 4096;
+constexpr uint32_t DIRTY_MAX_SIZE = 10;
+constexpr uint32_t DIRTY_MAX_BUF_SIZE = 1560000;
 constexpr uint32_t DIRTY_MAX_IMAGE_DATA_SIZE = 780000;
 constexpr uint8_t DEFAULT_CODECTYPE = VIDEO_CODEC_TYPE_VIDEO_H264;
 constexpr uint8_t DEFAULT_VIDEO_FORMAT = VIDEO_DATA_FORMAT_NV12;
