@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,6 +18,7 @@
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
 #include "dscreen_json_util.h"
+#include "dscreen_log.h"
 
 using json = nlohmann::json;
 
@@ -80,11 +81,13 @@ void to_json(json &j, const DScreenMapRelation &dScreenMapRelation)
 void from_json(const json &j, DScreenMapRelation &dScreenMapRelation)
 {
     if (!IsUInt64(j, KEY_DISPLAY_ID) || !IsUInt64(j, KEY_SCREEN_ID)) {
+        DHLOGE("Invalid display or screen ID.");
         return;
     }
     dScreenMapRelation.displayId_ = j[KEY_DISPLAY_ID].get<uint64_t>();
     dScreenMapRelation.screenId_ = j[KEY_SCREEN_ID].get<uint64_t>();
     if (!j.contains(KEY_DISPLAY_RECT) || !j.contains(KEY_SCREEN_RECT)) {
+        DHLOGE("Missing display or screen rect.");
         return;
     }
     from_json(j.at(KEY_DISPLAY_RECT), dScreenMapRelation.displayRect_);
@@ -103,14 +106,23 @@ void to_json(json &j, const DisplayRect &rect)
 
 void from_json(const json &j, DisplayRect &rect)
 {
-    if (!IsInt32(j, KEY_POINT_START_X) || !IsInt32(j, KEY_POINT_START_Y) ||
-        !IsInt32(j, KEY_WIDTH) || !IsInt32(j, KEY_HEIGHT)) {
+    if (!IsInt32(j, KEY_POINT_START_X) || !IsInt32(j, KEY_POINT_START_Y) || !IsInt32(j, KEY_WIDTH) ||
+        !IsInt32(j, KEY_HEIGHT)) {
+        DHLOGE("Invalid display rect parameters.");
         return;
     }
-    rect.startX = j[KEY_POINT_START_X].get<int32_t>();
-    rect.startY = j[KEY_POINT_START_Y].get<int32_t>();
-    rect.width = j[KEY_WIDTH].get<int32_t>();
-    rect.height = j[KEY_HEIGHT].get<int32_t>();
+    int32_t startX = j[KEY_POINT_START_X].get<int32_t>();
+    int32_t startY = j[KEY_POINT_START_Y].get<int32_t>();
+    int32_t width = j[KEY_WIDTH].get<int32_t>();
+    int32_t height = j[KEY_HEIGHT].get<int32_t>();
+    if ((width > DSCREEN_MAX_VIDEO_DATA_WIDTH) || (height > DSCREEN_MAX_VIDEO_DATA_HEIGHT)) {
+        DHLOGE("Screen video width or height exceeds the maximum limit.");
+        return;
+    }
+    rect.startX = startX;
+    rect.startY = startY;
+    rect.width = width;
+    rect.height = height;
 }
 
 void to_json(json &j, const ScreenRect &rect)
@@ -125,14 +137,23 @@ void to_json(json &j, const ScreenRect &rect)
 
 void from_json(const json &j, ScreenRect &rect)
 {
-    if (!IsInt32(j, KEY_POINT_START_X) || !IsInt32(j, KEY_POINT_START_Y) ||
-        !IsUInt32(j, KEY_WIDTH) || !IsUInt32(j, KEY_HEIGHT)) {
+    if (!IsInt32(j, KEY_POINT_START_X) || !IsInt32(j, KEY_POINT_START_Y) || !IsUInt32(j, KEY_WIDTH) ||
+        !IsUInt32(j, KEY_HEIGHT)) {
+        DHLOGE("Invalid screen rect parameters.");
         return;
     }
-    rect.startX = j[KEY_POINT_START_X].get<int32_t>();
-    rect.startY = j[KEY_POINT_START_Y].get<int32_t>();
-    rect.width = j[KEY_WIDTH].get<uint32_t>();
-    rect.height = j[KEY_HEIGHT].get<uint32_t>();
+    int32_t startX = j[KEY_POINT_START_X].get<int32_t>();
+    int32_t startY = j[KEY_POINT_START_Y].get<int32_t>();
+    uint32_t width = j[KEY_WIDTH].get<uint32_t>();
+    uint32_t height = j[KEY_HEIGHT].get<uint32_t>();
+    if ((width > DSCREEN_MAX_SCREEN_DATA_WIDTH) || (height > DSCREEN_MAX_SCREEN_DATA_HEIGHT)) {
+        DHLOGE("Screen width or height exceeds the maximum limit.");
+        return;
+    }
+    rect.startX = startX;
+    rect.startY = startY;
+    rect.width = width;
+    rect.height = height;
 }
 } // namespace DistributedHardware
 } // namespace OHOS

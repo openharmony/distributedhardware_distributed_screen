@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,6 +16,7 @@
 
 #include "dscreen_constants.h"
 #include "dscreen_json_util.h"
+#include "dscreen_log.h"
 
 using json = nlohmann::json;
 
@@ -111,7 +112,7 @@ void to_json(json &j, const DistributedHardware::VideoParam &videoParam)
         {KEY_FPS, videoParam.fps_},
         {KEY_CODECTYPE, videoParam.codecType_},
         {KEY_COLOR_FORMAT, videoParam.videoFormat_},
-        {KEY_PARTIALREFREAH, videoParam.isPartialRefresh_}
+        {KEY_PARTIALREFRESH, videoParam.isPartialRefresh_}
     };
 }
 
@@ -121,19 +122,35 @@ void from_json(const json &j, DistributedHardware::VideoParam &videoParam)
         !IsUInt32(j, KEY_VIDEO_WIDTH) || !IsUInt32(j, KEY_VIDEO_HEIGHT) ||
         !IsFloat(j, KEY_FPS) || !IsUInt8(j, KEY_CODECTYPE) ||
         !IsUInt8(j, KEY_COLOR_FORMAT)) {
+        DHLOGE("Invalid JSON value for one or more keys.");
         return;
     }
 
-    videoParam.screenWidth_ = j[KEY_SCREEN_WIDTH].get<uint32_t>();
-    videoParam.screenHeight_ = j[KEY_SCREEN_HEIGHT].get<uint32_t>();
-    videoParam.videoWidth_ = j[KEY_VIDEO_WIDTH].get<uint32_t>();
-    videoParam.videoHeight_ = j[KEY_VIDEO_HEIGHT].get<uint32_t>();
+    const uint32_t screenWidth = j[KEY_SCREEN_WIDTH].get<uint32_t>();
+    const uint32_t screenHeight = j[KEY_SCREEN_HEIGHT].get<uint32_t>();
+    const uint32_t videoWidth = j[KEY_VIDEO_WIDTH].get<uint32_t>();
+    const uint32_t videoHeight = j[KEY_VIDEO_HEIGHT].get<uint32_t>();
+
+    if ((screenWidth > DSCREEN_MAX_SCREEN_DATA_WIDTH) || (screenHeight > DSCREEN_MAX_SCREEN_DATA_HEIGHT)) {
+        DHLOGE("Screen width or height exceeds the maximum limit.");
+        return;
+    }
+
+    if ((videoWidth > DSCREEN_MAX_VIDEO_DATA_WIDTH) || (videoHeight > DSCREEN_MAX_VIDEO_DATA_HEIGHT)) {
+        DHLOGE("Video width or height exceeds the maximum limit.");
+        return;
+    }
+
+    videoParam.screenWidth_ = screenWidth;
+    videoParam.screenHeight_ = screenHeight;
+    videoParam.videoWidth_ = videoWidth;
+    videoParam.videoHeight_ = videoHeight;
     videoParam.fps_ = j[KEY_FPS].get<double>();
     videoParam.codecType_ = j[KEY_CODECTYPE].get<uint8_t>();
     videoParam.videoFormat_ = j[KEY_COLOR_FORMAT].get<uint8_t>();
     videoParam.isPartialRefresh_ = false;
-    if (IsBool(j, KEY_PARTIALREFREAH)) {
-        videoParam.isPartialRefresh_ = j[KEY_PARTIALREFREAH].get<bool>();
+    if (IsBool(j, KEY_PARTIALREFRESH)) {
+        videoParam.isPartialRefresh_ = j[KEY_PARTIALREFRESH].get<bool>();
     }
 }
 } // namespace DistributedHardware

@@ -273,6 +273,12 @@ int32_t DScreen::CheckJsonData(json &attrJson)
         DHLOGE("enable param is invalid.");
         return ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR;
     }
+
+    if ((attrJson[KEY_SCREEN_WIDTH].get<uint32_t>() > DSCREEN_MAX_SCREEN_DATA_WIDTH) ||
+        (attrJson[KEY_SCREEN_HEIGHT].get<uint32_t>() > DSCREEN_MAX_SCREEN_DATA_HEIGHT)) {
+        DHLOGE("Screen width or height is out of range.");
+        return ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR;
+    }
     return DH_SUCCESS;
 }
 
