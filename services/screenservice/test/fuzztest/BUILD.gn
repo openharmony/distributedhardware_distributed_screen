@@ -16,7 +16,7 @@ group("fuzztest") {
 
   deps = [
     "sinkservice/dscreenservice/dscreensinkstub_fuzzer:fuzztest",
-    "sourceservice/dscreenmgr/onchange_fuzzer:fuzztest",
+    "sourceservice/dscreenmgr/dscreenmanager_fuzzer:fuzztest",
     "sourceservice/dscreenservice/dscreensourcecallbackproxy_fuzzer:fuzztest",
     "sourceservice/dscreenservice/dscreensourceservice_fuzzer:fuzztest",
     "sourceservice/dscreenservice/dscreensourcestub_fuzzer:fuzztest",

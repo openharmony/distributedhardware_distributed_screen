@@ -55,16 +55,14 @@ ohos_unittest("SourceProcessorTest") {
     "${common_path}/test/unittest/resource:dscreen_unittest_public_config",
   ]
 
-  deps = [
-    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest_main",
-  ]
+  deps = [ "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans" ]
 
   external_deps = [
     "av_codec:av_codec_client",
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "googletest:gmock",
+    "googletest:gtest_main",
     "graphic_surface:surface",
     "graphic_surface:sync_fence",
     "ipc:ipc_core",

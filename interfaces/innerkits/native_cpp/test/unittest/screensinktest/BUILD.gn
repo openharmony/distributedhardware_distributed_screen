@@ -48,15 +48,13 @@ ohos_unittest("ScreenSinkTest") {
     "${common_path}/test/unittest/resource:dscreen_unittest_public_config",
   ]
 
-  deps = [
-    "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest_main",
-  ]
+  deps = [ "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk" ]
 
   external_deps = [
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "googletest:gmock",
+    "googletest:gtest_main",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
   ]

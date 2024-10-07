@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -48,24 +48,29 @@ int32_t ScreenSinkTrans::SetUp(const VideoParam &localParam, const VideoParam &r
 int32_t ScreenSinkTrans::Release()
 {
     DHLOGI("%{public}s: Release.", DSCREEN_LOG_TAG);
-    if (imageProcessor_ == nullptr || screenChannel_ == nullptr) {
-        DHLOGE("%{public}s: Processor or channel is null, Setup first.", DSCREEN_LOG_TAG);
-        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
+
+    int32_t ret = 0;
+    if (imageProcessor_ != nullptr) {
+        ret = imageProcessor_->ReleaseImageProcessor();
+        if (ret != DH_SUCCESS) {
+            DHLOGW("%{public}s: Release image processor failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        }
+        imageProcessor_ = nullptr;
+    } else {
+        DHLOGI("%{public}s: Processor is null, Setup first.", DSCREEN_LOG_TAG);
     }
 
-    int32_t ret = imageProcessor_->ReleaseImageProcessor();
-    if (ret != DH_SUCCESS) {
-        DHLOGD("%{public}s: Release image processor failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+    if (screenChannel_ != nullptr) {
+        StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SINK_RELEASE_SESSION_START);
+        ret = screenChannel_->ReleaseSession();
+        FinishTrace(DSCREEN_HITRACE_LABEL);
+        if (ret != DH_SUCCESS) {
+            DHLOGW("%{public}s: Release channel session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        }
+        screenChannel_ = nullptr;
+    } else {
+        DHLOGI("%{public}s: Channel is null, Setup first.", DSCREEN_LOG_TAG);
     }
-    imageProcessor_ = nullptr;
-
-    StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SINK_RELEASE_SESSION_START);
-    ret = screenChannel_->ReleaseSession();
-    FinishTrace(DSCREEN_HITRACE_LABEL);
-    if (ret != DH_SUCCESS) {
-        DHLOGD("%{public}s: Release channel session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
-    }
-    screenChannel_ = nullptr;
 
     DHLOGI("%{public}s: Release success.", DSCREEN_LOG_TAG);
     return DH_SUCCESS;
@@ -92,29 +97,26 @@ int32_t ScreenSinkTrans::Start()
 int32_t ScreenSinkTrans::Stop()
 {
     DHLOGI("%{public}s: Stop.", DSCREEN_LOG_TAG);
-    if (imageProcessor_ == nullptr || screenChannel_ == nullptr) {
-        DHLOGE("%{public}s: Processor or channel is null, Setup first.", DSCREEN_LOG_TAG);
-        return ERR_DH_SCREEN_TRANS_NULL_VALUE;
+
+    int32_t ret = 0;
+    if (imageProcessor_ != nullptr) {
+        ret = imageProcessor_->StopImageProcessor();
+        if (ret != DH_SUCCESS) {
+            DHLOGW("%{public}s: Stop image processor failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        }
+    } else {
+        DHLOGI("%{public}s: Processor is null, Setup first.", DSCREEN_LOG_TAG);
     }
 
-    bool stopStatus = true;
-    int32_t ret = imageProcessor_->StopImageProcessor();
-    if (ret != DH_SUCCESS) {
-        DHLOGD("%{public}s: Stop image processor failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
-        stopStatus = false;
-    }
-
-    StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SINK_CLOSE_SESSION_START);
-    ret = screenChannel_->CloseSession();
-    FinishTrace(DSCREEN_HITRACE_LABEL);
-    if (ret != DH_SUCCESS && ret != ERR_DH_SCREEN_TRANS_SESSION_NOT_OPEN) {
-        DHLOGD("%{public}s: Close Session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
-        stopStatus = false;
-    }
-
-    if (!stopStatus) {
-        DHLOGE("%{public}s: Stop sink trans failed.", DSCREEN_LOG_TAG);
-        return ERR_DH_SCREEN_TRANS_ERROR;
+    if (screenChannel_ != nullptr) {
+        StartTrace(DSCREEN_HITRACE_LABEL, DSCREEN_SINK_CLOSE_SESSION_START);
+        ret = screenChannel_->CloseSession();
+        FinishTrace(DSCREEN_HITRACE_LABEL);
+        if (ret != DH_SUCCESS) {
+            DHLOGW("%{public}s: Close Session failed ret: %{public}" PRId32, DSCREEN_LOG_TAG, ret);
+        }
+    } else {
+        DHLOGI("%{public}s: Channel is null, Setup first.", DSCREEN_LOG_TAG);
     }
 
     DHLOGI("%{public}s: Stop success.", DSCREEN_LOG_TAG);

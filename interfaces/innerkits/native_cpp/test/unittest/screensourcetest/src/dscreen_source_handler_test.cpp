@@ -69,6 +69,21 @@ HWTEST_F(DScreenSourceHandlerTest, InitSource_002, TestSize.Level1)
 
 
 /**
+ * @tc.name: FinishStartSA_001
+ * @tc.desc: Verify the FinishStartSA function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceHandlerTest, FinishStartSA_001, TestSize.Level1)
+{
+    const std::string param = "";
+    sptr<IRemoteObject> remoteObject = nullptr;
+    DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = nullptr;
+    DScreenSourceHandler::GetInstance().FinishStartSA(param, remoteObject);
+    EXPECT_EQ(DScreenSourceHandler::GetInstance().dScreenSourceProxy_, nullptr);
+}
+
+/**
  * @tc.name: RegisterDistributedHardware_001
  * @tc.desc: Verify the RegisterDistributedHardware function.
  * @tc.type: FUNC

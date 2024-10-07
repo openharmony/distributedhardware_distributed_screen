@@ -97,6 +97,12 @@ void DScreenSourceHandler::FinishStartSA(const std::string &params, const sptr<I
 {
     DHLOGI("DScreenSourceHandler FinishStartSA");
     std::lock_guard<std::mutex> lock(proxyMutex_);
+    if (remoteObject == nullptr) {
+        DHLOGE("remoteObject is nullptr.");
+        ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,
+            "remoteObject is nullptr.");
+        return;
+    }
     if (sourceSvrRecipient_ == nullptr) {
         DHLOGE("sourceSvrRecipient is nullptr.");
         ReportSaFail(DSCREEN_INIT_FAIL, ERR_DH_SCREEN_SA_SOURCEPROXY_NOT_INIT, DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID,

@@ -65,6 +65,21 @@ HWTEST_F(DScreenSinkHandlerTest, InitSink_002, TestSize.Level1)
 }
 
 /**
+ * @tc.name: FinishStartSA_001
+ * @tc.desc: Verify the FinishStartSA function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkHandlerTest, FinishStartSA_001, TestSize.Level1)
+{
+    const std::string param = "";
+    sptr<IRemoteObject> remoteObject = nullptr;
+    DScreenSinkHandler::GetInstance().dScreenSinkProxy_ = nullptr;
+    DScreenSinkHandler::GetInstance().FinishStartSA(param, remoteObject);
+    EXPECT_EQ(DScreenSinkHandler::GetInstance().dScreenSinkProxy_, nullptr);
+}
+
+/**
  * @tc.name: LocalHardware_001
  * @tc.desc: Verify the SubscribeLocalHardware function.
  * @tc.type: FUNC

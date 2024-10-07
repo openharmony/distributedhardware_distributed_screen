@@ -16,6 +16,7 @@
 #include "2.0/include/screenregion_test.h"
 #include "dscreen_constants.h"
 #include "engine_test_utils.h"
+#include "iconsumer_surface.h"
 #include "screen_client.h"
 
 using namespace testing;
@@ -34,7 +35,12 @@ void ScreenRegionTestV2::SetUp(void)
     screenRegion_ = std::make_shared<ScreenRegion>(remoteDevId);
 }
 
-void ScreenRegionTestV2::TearDown(void) {}
+void ScreenRegionTestV2::TearDown(void)
+{
+    if (screenRegion_ != nullptr) {
+        screenRegion_ = nullptr;
+    }
+}
 
 /**
  * @tc.name: OnEngineEvent_001
@@ -47,6 +53,8 @@ HWTEST_F(ScreenRegionTestV2, OnEngineEvent_001, TestSize.Level1)
     DScreenEventType event = DScreenEventType::ENGINE_ERROR;
     const std::string content = "OnEngineEvent_001";
     screenRegion_->receiverAdapter_ = nullptr;
+    screenRegion_->OnEngineEvent(event, content);
+    event = DScreenEventType::TRANS_CHANNEL_CLOSED;
     screenRegion_->OnEngineEvent(event, content);
     EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, screenRegion_->StopReceiverEngine());
 }
@@ -299,14 +307,36 @@ HWTEST_F(ScreenRegionTestV2, StopReceiverEngine_002, TestSize.Level1)
 
 /**
  * @tc.name: SetUp_001
- * @tc.desc: Verify the SetUp function failed.
+ * @tc.desc: Verify the SetUp function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
 HWTEST_F(ScreenRegionTestV2, SetUp_001, TestSize.Level1)
 {
-    const std::string content = "SetUp_001";
+    std::string content = "invalidJsonString";
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, screenRegion_->SetUp(content));
+
+    json contentJson;
+    content = contentJson.dump();
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, screenRegion_->SetUp(content));
+
+    contentJson[KEY_SCREEN_ID] = 12345;
+    content = contentJson.dump();
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, screenRegion_->SetUp(content));
+
+    VideoParam param;
+    contentJson[KEY_VIDEO_PARAM] = param;
+    content = contentJson.dump();
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, screenRegion_->SetUp(content));
+
+    DScreenMapRelation dScreenMapRelation;
+    contentJson[KEY_MAPRELATION] = dScreenMapRelation;
+    content = contentJson.dump();
+    screenRegion_->receiverAdapter_ = nullptr;
+    EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, screenRegion_->SetUp(content));
+
+    screenRegion_->receiverAdapter_ = std::make_shared<AVTransReceiverAdapter>();
+    EXPECT_EQ(DH_SUCCESS, screenRegion_->SetUp(content));
 }
 
 /**
@@ -333,6 +363,113 @@ HWTEST_F(ScreenRegionTestV2, ConfigWindow_002, TestSize.Level1)
     std::shared_ptr<WindowProperty> windowProperty = std::make_shared<WindowProperty>();
     ScreenClient::GetInstance().AddWindow(windowProperty);
     EXPECT_EQ(DH_SUCCESS, screenRegion_->ConfigWindow());
+}
+
+/**
+ * @tc.name: SetReceiverAdapterParameters_001
+ * @tc.desc: Verify the SetReceiverAdapterParameters function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTestV2, SetReceiverAdapterParameters_001, TestSize.Level1)
+{
+    screenRegion_->videoParam_ = nullptr;
+    int32_t ret = screenRegion_->SetReceiverAdapterParameters();
+    EXPECT_EQ(ret, ERR_DH_AV_TRANS_NULL_VALUE);
+
+    screenRegion_->videoParam_ = std::make_shared<VideoParam>();
+    screenRegion_->receiverAdapter_ = nullptr;
+    ret = screenRegion_->SetReceiverAdapterParameters();
+    EXPECT_EQ(ret, ERR_DH_AV_TRANS_NULL_VALUE);
+
+    uint8_t codecType = VIDEO_CODEC_TYPE_VIDEO_H265;
+    uint8_t videoFormat = VIDEO_DATA_FORMAT_YUVI420;
+    screenRegion_->receiverAdapter_ = std::make_shared<AVTransReceiverAdapter>();
+    screenRegion_->videoParam_->SetCodecType(codecType);
+    screenRegion_->videoParam_->SetVideoFormat(videoFormat);
+    ret = screenRegion_->SetReceiverAdapterParameters();
+    EXPECT_EQ(ret, DH_SUCCESS);
+
+    codecType = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
+    videoFormat = VIDEO_DATA_FORMAT_RGBA8888;
+    screenRegion_->videoParam_->SetCodecType(codecType);
+    screenRegion_->videoParam_->SetVideoFormat(videoFormat);
+    ret = screenRegion_->SetReceiverAdapterParameters();
+    EXPECT_EQ(ret, DH_SUCCESS);
+
+    videoFormat = VIDEO_DATA_FORMAT_NV21;
+    screenRegion_->videoParam_->SetCodecType(codecType);
+    screenRegion_->videoParam_->SetVideoFormat(videoFormat);
+    ret = screenRegion_->SetReceiverAdapterParameters();
+    EXPECT_EQ(ret, DH_SUCCESS);
+}
+
+/**
+ * @tc.name: SetAlignedHeight_001
+ * @tc.desc: Verify the SetAlignedHeight function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTestV2, SetAlignedHeight_001, TestSize.Level1)
+{
+    sptr<SurfaceBuffer> wsBuffer = nullptr;
+    std::shared_ptr<AVTransBuffer> buffer = nullptr;
+    screenRegion_->GetWSBuffer(wsBuffer, buffer);
+
+    wsBuffer = SurfaceBuffer::Create();
+    screenRegion_->GetWSBuffer(wsBuffer, buffer);
+
+    buffer = std::make_shared<AVTransBuffer>();
+    screenRegion_->videoParam_ = nullptr;
+    screenRegion_->windowSurface_ = nullptr;
+    screenRegion_->GetWSBuffer(wsBuffer, buffer);
+
+    int32_t ret = screenRegion_->SetAlignedHeight();
+    EXPECT_EQ(ret, ERR_DH_AV_TRANS_NULL_VALUE);
+
+    uint32_t height = 31;
+    screenRegion_->videoParam_ = std::make_shared<VideoParam>();
+    screenRegion_->videoParam_->SetVideoHeight(height);
+    screenRegion_->GetWSBuffer(wsBuffer, buffer);
+    ret = screenRegion_->SetAlignedHeight();
+    EXPECT_EQ(ret, DH_SUCCESS);
+    EXPECT_EQ(screenRegion_->alignedHeight_, 32);
+
+    height = 32;
+    screenRegion_->videoParam_->SetVideoHeight(height);
+    ret = screenRegion_->SetAlignedHeight();
+    EXPECT_EQ(ret, DH_SUCCESS);
+    EXPECT_EQ(screenRegion_->alignedHeight_, 32);
+}
+/**
+ * @tc.name: OnEngineDataDone_001
+ * @tc.desc: Verify the OnEngineDataDone function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTestV2, OnEngineDataDone_001, TestSize.Level1)
+{
+    std::shared_ptr<AVTransBuffer> buffer = nullptr;
+    size_t frameNumber = screenRegion_->frameNumber_;
+    screenRegion_->OnEngineDataDone(buffer);
+    EXPECT_TRUE(screenRegion_->frameNumber_ > frameNumber);
+
+    buffer = std::make_shared<AVTransBuffer>();
+    screenRegion_->videoParam_ = nullptr;
+    screenRegion_->windowSurface_ = nullptr;
+    frameNumber = screenRegion_->frameNumber_;
+    screenRegion_->OnEngineDataDone(buffer);
+    EXPECT_TRUE(screenRegion_->frameNumber_ > frameNumber);
+
+    screenRegion_->windowSurface_ = IConsumerSurface::Create();
+    frameNumber = screenRegion_->frameNumber_;
+    screenRegion_->OnEngineDataDone(buffer);
+    EXPECT_TRUE(screenRegion_->frameNumber_ > frameNumber);
+
+    screenRegion_->videoParam_ = std::make_shared<VideoParam>();
+    frameNumber = screenRegion_->frameNumber_;
+    screenRegion_->OnEngineDataDone(buffer);
+    EXPECT_TRUE(screenRegion_->frameNumber_ > frameNumber);
 }
 
 /**
