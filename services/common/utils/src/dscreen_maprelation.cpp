@@ -115,7 +115,8 @@ void from_json(const json &j, DisplayRect &rect)
     int32_t startY = j[KEY_POINT_START_Y].get<int32_t>();
     int32_t width = j[KEY_WIDTH].get<int32_t>();
     int32_t height = j[KEY_HEIGHT].get<int32_t>();
-    if ((width > DSCREEN_MAX_VIDEO_DATA_WIDTH) || (height > DSCREEN_MAX_VIDEO_DATA_HEIGHT)) {
+    if ((width > static_cast<int32_t>(DSCREEN_MAX_VIDEO_DATA_WIDTH)) ||
+        (height > static_cast<int32_t>(DSCREEN_MAX_VIDEO_DATA_HEIGHT))) {
         DHLOGE("Screen video width or height exceeds the maximum limit.");
         return;
     }
