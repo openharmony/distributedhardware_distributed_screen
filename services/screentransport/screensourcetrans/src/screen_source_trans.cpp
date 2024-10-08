@@ -415,7 +415,13 @@ void ScreenSourceTrans::FeedChannelData()
         std::shared_ptr<DataBuffer> screenData;
         {
             std::unique_lock<std::mutex> lock(dataQueueMtx_);
-            dataCond_.wait_for(lock, std::chrono::seconds(DATA_WAIT_SECONDS), [this]() { return !dataQueue_.empty(); });
+            auto status = dataCond_.wait_for(
+                lock, std::chrono::seconds(DATA_WAIT_SECONDS), [this]() { return !dataQueue_.empty(); });
+            if (!status) {
+                DHLOGD("%{public}s: Data queue wait timeout after %{public}d seconds.", DSCREEN_LOG_TAG,
+                    DATA_WAIT_SECONDS);
+                continue;
+            }
             if (dataQueue_.empty()) {
                 DHLOGD("%{public}s:Data queue is empty.", DSCREEN_LOG_TAG);
                 continue;

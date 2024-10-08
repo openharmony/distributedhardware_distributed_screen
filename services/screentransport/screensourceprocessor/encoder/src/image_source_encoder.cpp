@@ -43,10 +43,6 @@ void ConsumerBufferListener::OnBufferAvailable()
 
 void ImageSourceEncoder::InitDscreenDBG()
 {
-    if ((DBG_SO_NAME.length() == 0) || (DBG_SO_NAME.length() > PATH_MAX)) {
-        DHLOGE("File canonicalization failed, so name: %{public}s.", DBG_SO_NAME.c_str());
-        return;
-    }
     pHandler_ = dlopen(DBG_SO_NAME.c_str(), RTLD_LAZY | RTLD_NODELETE | RTLD_GLOBAL);
     if (pHandler_ == nullptr) {
         DHLOGE("so: %{public}s load failed, fail reason: %{public}s.", DBG_SO_NAME.c_str(), dlerror());

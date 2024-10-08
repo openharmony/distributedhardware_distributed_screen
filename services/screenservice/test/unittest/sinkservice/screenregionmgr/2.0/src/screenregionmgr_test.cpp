@@ -97,16 +97,25 @@ HWTEST_F(ScreenRegionManagerTestV2, GetScreenDumpInfo_002, TestSize.Level1)
 }
 
 /**
- * @tc.name: OnProviderEvent_002
+ * @tc.name: OnProviderEvent_001
  * @tc.desc: Verify the OnProviderEvent function failed.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenRegionManagerTestV2, OnProviderEvent_002, TestSize.Level1)
+HWTEST_F(ScreenRegionManagerTestV2, OnProviderEvent_001, TestSize.Level1)
 {
     AVTransEvent event;
     EngineProviderListener engineProviderListener;
+    event.type = EventType::EVENT_CHANNEL_OPENED;
     int32_t ret = engineProviderListener.OnProviderEvent(event);
+    EXPECT_EQ(DH_SUCCESS, ret);
+
+    event.type = EventType::EVENT_CHANNEL_CLOSED;
+    ret = engineProviderListener.OnProviderEvent(event);
+    EXPECT_EQ(DH_SUCCESS, ret);
+
+    event.type = EventType::EVENT_ENGINE_ERROR;
+    ret = engineProviderListener.OnProviderEvent(event);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 }  // namespace V2_0

@@ -479,11 +479,15 @@ void ImageSinkDecoder::DecodeScreenData()
         int32_t bufferIndex = 0;
         {
             std::unique_lock<std::mutex> lock(dataMutex_);
-            decodeCond_.wait_for(lock, std::chrono::milliseconds(DECODE_WAIT_MILLISECONDS), [this]() {
+            auto status = decodeCond_.wait_for(lock, std::chrono::milliseconds(DECODE_WAIT_MILLISECONDS), [this]() {
                 return (!videoDataQueue_.empty() && !availableInputIndexsQueue_.empty() &&
                         !availableInputBufferQueue_.empty());
             });
-
+            if (!status) {
+                DHLOGD("%{public}s: Data queue wait timeout after %{public}d ms.", DSCREEN_LOG_TAG,
+                    DECODE_WAIT_MILLISECONDS);
+                continue;
+            }
             if (videoDataQueue_.empty() || availableInputIndexsQueue_.empty() || availableInputBufferQueue_.empty()) {
                 DHLOGD("%{public}s: Index queue or data queue or buffer queue is empty.", DSCREEN_LOG_TAG);
                 continue;

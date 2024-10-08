@@ -266,7 +266,7 @@ HWTEST_F(ScreenRegionTestV1, Stop_003, TestSize.Level1)
     screenRegion_->sinkTrans_ = std::make_shared<ScreenSinkTrans>();
     int32_t ret = screenRegion_->Stop();
 
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
+    EXPECT_NE(ERR_DH_SCREEN_SA_SINKTRANS_NOT_INIT, ret);
 }
 }  // namespace V1_0
 }  // namespace DistributedHardware

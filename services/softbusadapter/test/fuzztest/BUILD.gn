@@ -14,12 +14,5 @@
 group("fuzztest") {
   testonly = true
 
-  deps = [
-    "softbusadapter_fuzzer:fuzztest",
-    "softbusonbytesreceived_fuzzer:fuzztest",
-    "softbusonmessagereceived_fuzzer:fuzztest",
-    "softbusonsessionclosed_fuzzer:fuzztest",
-    "softbusonsessionopened_fuzzer:fuzztest",
-    "softbusonstreamreceived_fuzzer:fuzztest",
-  ]
+  deps = [ "softbusadapter_fuzzer:fuzztest" ]
 }

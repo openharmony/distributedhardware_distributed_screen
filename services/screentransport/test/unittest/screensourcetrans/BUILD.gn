@@ -55,11 +55,7 @@ ohos_unittest("SourceTransTest") {
     "${common_path}/test/unittest/resource:dscreen_unittest_public_config",
   ]
 
-  deps = [
-    "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans",
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest_main",
-  ]
+  deps = [ "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans" ]
 
   external_deps = [
     "access_token:libaccesstoken_sdk",
@@ -69,6 +65,8 @@ ohos_unittest("SourceTransTest") {
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
     "dsoftbus:softbus_client",
+    "googletest:gmock",
+    "googletest:gtest_main",
     "graphic_2d:libgraphic_utils",
     "graphic_surface:surface",
     "graphic_surface:sync_fence",

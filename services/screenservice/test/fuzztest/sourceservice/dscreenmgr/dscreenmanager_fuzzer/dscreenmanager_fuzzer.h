@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-#ifndef SOFTBUSONMESSAGESECEIVED_FUZZER_H
-#define SOFTBUSONMESSAGESECEIVED_FUZZER_H
+#ifndef ONCHANGE_FUZZER_H
+#define ONCHANGE_FUZZER_H
 
-#define FUZZ_PROJECT_NAME "softbusonmessagereceived_fuzzer"
+#define FUZZ_PROJECT_NAME "dscreenmanager_fuzzer"
 
 #endif

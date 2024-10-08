@@ -47,12 +47,12 @@ ohos_unittest("DScreenSinkStubTest") {
   deps = [
     "${interfaces_path}/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
     "${services_path}/screenservice/sinkservice:distributed_screen_sink",
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
     "c_utils:utils",
+    "googletest:gmock",
+    "googletest:gtest_main",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
   ]

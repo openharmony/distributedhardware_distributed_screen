@@ -29,8 +29,13 @@ void InitSinkFuzzTest(const uint8_t* data, size_t size)
     }
 
     std::string params(reinterpret_cast<const char*>(data), size);
+    std::string networkId(reinterpret_cast<const char*>(data), size);
 
     DScreenSinkHandler::GetInstance().InitSink(params);
+    DScreenSinkHandler::GetInstance().PauseDistributedHardware(networkId);
+    DScreenSinkHandler::GetInstance().ResumeDistributedHardware(networkId);
+    DScreenSinkHandler::GetInstance().StopDistributedHardware(networkId);
+    DScreenSinkHandler::GetInstance().ReleaseSink();
 }
 }  // namespace DistributedHardware
 }  // namespace OHOS

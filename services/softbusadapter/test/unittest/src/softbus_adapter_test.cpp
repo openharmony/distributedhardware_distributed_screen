@@ -106,6 +106,10 @@ HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_001, TestSize.Level1)
     streamData = &sData;
     softbusAdapter.OnBytesReceived(sessionId, data, dataLen);
     softbusAdapter.OnStreamReceived(sessionId, streamData, ext, frameInfo);
+    dataLen = DSCREEN_MAX_RECV_DATA_LEN + 1;
+    sData.bufLen = DSCREEN_MAX_RECV_DATA_LEN + 1;
+    softbusAdapter.OnBytesReceived(sessionId, data, dataLen);
+    softbusAdapter.OnStreamReceived(sessionId, streamData, ext, frameInfo);
     dataLen = 100;
     sData.bufLen = 100;
     softbusAdapter.OnBytesReceived(sessionId, data, dataLen);

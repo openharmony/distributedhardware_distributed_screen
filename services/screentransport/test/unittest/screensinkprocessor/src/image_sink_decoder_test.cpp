@@ -287,6 +287,37 @@ HWTEST_F(ImageSinkDecoderTest, set_output_surface_test_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: set_output_surface_test_002
+ * @tc.desc: Verify the SetOutputSurface function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, set_output_surface_test_002, TestSize.Level1)
+{
+    MediaAVCodec::AVCodecErrorType errorType = MediaAVCodec::AVCODEC_ERROR_EXTEND_START;
+    imageDecoder_->OnError(errorType, DH_SUCCESS);
+    sptr<IConsumerSurface> surface = IConsumerSurface::Create("test");
+    sptr<IBufferProducer> bp = surface->GetProducer();
+    sptr<Surface> pSurface = nullptr;
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->SetOutputSurface(pSurface));
+
+    pSurface = Surface::CreateSurfaceAsProducer(bp);
+    imageDecoder_->consumerSurface_ = nullptr;
+    EXPECT_NE(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->SetOutputSurface(pSurface));
+
+    imageDecoder_->consumerSurface_ = IConsumerSurface::Create();
+    imageDecoder_->producerSurface_ = nullptr;
+    EXPECT_NE(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->SetOutputSurface(pSurface));
+
+    imageDecoder_->producerSurface_ = IConsumerSurface::Create();
+    imageDecoder_->configParam_.SetPartialRefreshFlag(false);
+    EXPECT_NE(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->SetOutputSurface(pSurface));
+
+    imageDecoder_->configParam_.SetPartialRefreshFlag(true);
+    EXPECT_NE(ERR_DH_SCREEN_TRANS_NULL_VALUE, imageDecoder_->SetOutputSurface(pSurface));
+}
+
+/**
  * @tc.name: InputScreenData_test_001
  * @tc.desc: Verify the InputScreenData function.
  * @tc.type: FUNC
@@ -383,7 +414,7 @@ HWTEST_F(ImageSinkDecoderTest, on_output_format_changed_test_001, TestSize.Level
 
 /**
  * @tc.name: ProcessData_001
- * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.desc: Verify the ProcessData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
@@ -396,7 +427,7 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_001, TestSize.Level1)
 
 /**
  * @tc.name: ProcessData_002
- * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.desc: Verify the ProcessData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
@@ -410,7 +441,7 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_002, TestSize.Level1)
 
 /**
  * @tc.name: ProcessData_003
- * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.desc: Verify the ProcessData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
@@ -423,7 +454,7 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_003, TestSize.Level1)
 
 /**
  * @tc.name: ProcessData_004
- * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.desc: Verify the ProcessData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
@@ -438,7 +469,7 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_004, TestSize.Level1)
 
 /**
  * @tc.name: ProcessData_005
- * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.desc: Verify the ProcessData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
@@ -454,7 +485,7 @@ HWTEST_F(ImageSinkDecoderTest, ProcessData_005, TestSize.Level1)
 
 /**
  * @tc.name: ProcessData_006
- * @tc.desc: Verify the DecodeScreenData function.
+ * @tc.desc: Verify the ProcessData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
