@@ -14,11 +14,28 @@
  */
 
 #include "dscreen_hidumper_test.h"
+#include "dscreen_hidumper.h"
 
 using namespace testing::ext;
 
 namespace OHOS {
 namespace DistributedHardware {
+
+int32_t DscreenHidumper::DumpScreenData(std::string &result)
+{
+    return DH_SUCCESS;
+}
+
+int32_t DscreenHidumper::ReDumpScreenData(std::string &result)
+{
+    return DH_SUCCESS;
+}
+
+int32_t DscreenHidumper::ShowIllegalInfomation(std::string &result)
+{
+    return DH_SUCCESS;
+}
+
 void DScreenHidumperTest::SetUpTestCase(void) {}
 
 void DScreenHidumperTest::TearDownTestCase(void) {}
@@ -76,5 +93,60 @@ HWTEST_F(DScreenHidumperTest, Dump_003, TestSize.Level1)
     EXPECT_EQ(helpStr, result);
 }
 
+/**
+ * @tc.name: ProcessDump_001
+ * @tc.desc: Verify the ProcessDump function with HidumpFlag::DUMP_SCREEN_DATA.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenHidumperTest, ProcessDump_001, TestSize.Level1)
+{
+    std::string result;
+    std::string argsStr = "--dump";
+    int32_t ret = DscreenHidumper::GetInstance().ProcessDump(argsStr, result);
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+/**
+ * @tc.name: ProcessDump_002
+ * @tc.desc: Verify the ProcessDump function with HidumpFlag::DUMP_SCREEN_DATA_RESTART.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenHidumperTest, ProcessDump_002, TestSize.Level1)
+{
+    std::string result;
+    std::string argsStr = "--redump";
+    int32_t ret = DscreenHidumper::GetInstance().ProcessDump(argsStr, result);
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+/**
+ * @tc.name: ProcessDump_003
+ * @tc.desc: Verify the ProcessDump function with HidumpFlag::DUMP_SCREEN_DATA_STOP.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenHidumperTest, ProcessDump_003, TestSize.Level1)
+{
+    std::string result;
+    std::string argsStr = "--stopdump";
+    int32_t ret = DscreenHidumper::GetInstance().ProcessDump(argsStr, result);
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+/**
+ * @tc.name: ProcessDump_004
+ * @tc.desc: Verify the ProcessDump function with an unknown command.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenHidumperTest, ProcessDump_004, TestSize.Level1)
+{
+    std::string result;
+    std::string argsStr = "unknown_command";
+    int32_t ret = DscreenHidumper::GetInstance().ProcessDump(argsStr, result);
+    EXPECT_EQ(DH_SUCCESS, ret);
+}
 } // namespace DistributedHardware
 } // namespace OHOS

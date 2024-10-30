@@ -366,5 +366,21 @@ HWTEST_F(DScreenSourceHandlerTest, OnRemoteDied_001, TestSize.Level1)
     DScreenSourceHandler::GetInstance().sourceSvrRecipient_->OnRemoteDied(remote2);
     EXPECT_EQ(nullptr, DScreenSourceHandler::GetInstance().dScreenSourceProxy_);
 }
+
+/**
+ * @tc.name: OnRemoteSourceSvrDied_001
+ * @tc.desc: Verify the OnRemoteSourceSvrDied function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceHandlerTest, OnRemoteSourceSvrDied_001, TestSize.Level1)
+{
+    sptr<ISystemAbilityManager> samgr =
+            SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    wptr<IRemoteObject> remote(remoteObject);
+    DScreenSourceHandler::GetInstance().OnRemoteSourceSvrDied(remote);
+    EXPECT_EQ(nullptr, DScreenSourceHandler::GetInstance().dScreenSourceProxy_);
+}
 }  // namespace DistributedHardware
 }  // namespace OHOS

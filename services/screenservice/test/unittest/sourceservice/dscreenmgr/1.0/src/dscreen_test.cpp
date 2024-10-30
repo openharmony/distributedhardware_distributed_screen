@@ -14,17 +14,13 @@
  */
 
 #include "1.0/include/dscreen_test.h"
-#include "accesstoken_kit.h"
-#include "nativetoken_kit.h"
-#include "token_setproc.h"
-
-#include "dscreen_constants.h"
-#include "dscreen_errcode.h"
 #include "1.0/include/dscreen_manager.h"
 #include "common/include/screen_manager_adapter.h"
+#include "dscreen_constants.h"
+#include "dscreen_errcode.h"
 #include "dscreen_util.h"
-#include "video_param.h"
 #include "screen_source_trans.h"
+#include "video_param.h"
 
 using namespace testing;
 using namespace testing::ext;
@@ -55,29 +51,6 @@ void DScreenTestV1::SetUp(void)
 }
 
 void DScreenTestV1::TearDown(void) {}
-
-void EnablePermissionAccess(const char* perms[], size_t permsNum, uint64_t &tokenId)
-{
-    NativeTokenInfoParams infoInstance = {
-        .dcapsNum = 0,
-        .permsNum = permsNum,
-        .aclsNum = 0,
-        .dcaps = nullptr,
-        .perms = perms,
-        .acls = nullptr,
-        .aplStr = "system_basic",
-    };
-
-    infoInstance.processName = "DscreenMgrTest";
-    tokenId = GetAccessTokenId(&infoInstance);
-    SetSelfTokenID(tokenId);
-    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
-}
-
-void DisablePermissionAccess(const uint64_t &tokenId)
-{
-    OHOS::Security::AccessToken::AccessTokenKit::DeleteToken(tokenId);
-}
 
 /**
  * @tc.name: AddTask_001
@@ -381,16 +354,10 @@ HWTEST_F(DScreenTestV1, NegotiateCodecType_002, TestSize.Level1)
  */
 HWTEST_F(DScreenTestV1, SetUp_001, TestSize.Level1)
 {
-    const char* perms[] = {
-        "ohos.permission.DISTRIBUTED_DATASYNC",
-        "ohos.permission.CAPTURE_SCREEN",
-    };
-    EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
     dScreen_->sourceTrans_ = nullptr;
     dScreen_->version_ = "1.0";
     int32_t ret = dScreen_->SetUp();
     EXPECT_EQ(DH_SUCCESS, ret);
-    DisablePermissionAccess(tokenId_);
 }
 
 /**
@@ -401,16 +368,10 @@ HWTEST_F(DScreenTestV1, SetUp_001, TestSize.Level1)
  */
 HWTEST_F(DScreenTestV1, SetUp_002, TestSize.Level1)
 {
-    const char* perms[] = {
-        "ohos.permission.DISTRIBUTED_DATASYNC",
-        "ohos.permission.CAPTURE_SCREEN",
-    };
-    EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
     dScreen_->sourceTrans_ = std::make_shared<ScreenSourceTrans>();
     dScreen_->version_ = "1.0";
     int32_t ret = dScreen_->SetUp();
     EXPECT_EQ(DH_SUCCESS, ret);
-    DisablePermissionAccess(tokenId_);
 }
 
 /**

@@ -95,8 +95,12 @@ HWTEST_F(ScreenSinkTransTest, register_processor_listener_001, TestSize.Level1)
  */
 HWTEST_F(ScreenSinkTransTest, register_processor_listener_002, TestSize.Level1)
 {
-    trans_->imageProcessor_ = nullptr;
+    trans_->decoderSurface_ = nullptr;
     int32_t ret = trans_->RegisterProcessorListener(param_, param_, peerDevId_);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
+
+    trans_->imageProcessor_ = nullptr;
+    ret = trans_->RegisterProcessorListener(param_, param_, peerDevId_);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, ret);
 }
 
@@ -196,8 +200,11 @@ HWTEST_F(ScreenSinkTransTest, set_image_surface_test_001, TestSize.Level1)
 HWTEST_F(ScreenSinkTransTest, set_image_surface_test_002, TestSize.Level1)
 {
     trans_->transCallback_ = std::make_shared<MockIScreenSinkTransCallback>();
+    trans_->OnSessionOpened();
     trans_->OnSessionClosed();
     trans_->OnProcessorStateNotify(DH_SUCCESS);
+    trans_->OnDataReceived(nullptr);
+    trans_->imageProcessor_ = nullptr;
     trans_->OnDataReceived(nullptr);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, trans_->SetImageSurface(nullptr));
 }
@@ -219,20 +226,35 @@ HWTEST_F(ScreenSinkTransTest, check_trans_param_test_001, TestSize.Level1)
     param_.videoFormat_ = VIDEO_DATA_FORMAT_INVALID;
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, trans_->CheckTransParam(param_, param_, peerDevId_));
 
+    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H265;
     param_.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
     param_.videoWidth_ = WIDTH_INVALID;
     param_.videoHeight_ = HEIGHT_INVALID;
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, trans_->CheckTransParam(param_, param_, peerDevId_));
-
-    param_.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
-    param_.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
     param_.screenWidth_ = WIDTH_INVALID;
     param_.screenHeight_ = HEIGHT_INVALID;
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, trans_->CheckTransParam(param_, param_, peerDevId_));
 
+    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
+    param_.videoFormat_ = VIDEO_DATA_FORMAT_NV12;
+    param_.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, trans_->CheckTransParam(param_, param_, peerDevId_));
+
+    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
+    param_.videoFormat_ = VIDEO_DATA_FORMAT_NV21;
+    param_.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, trans_->CheckTransParam(param_, param_, peerDevId_));
+
+    param_.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
+    param_.videoFormat_ = VIDEO_DATA_FORMAT_RGBA8888;
     param_.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, trans_->CheckTransParam(param_, param_, peerDevId_));
+
+    VideoParam remoteParam = param_;
+
     param_.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
     EXPECT_EQ(DH_SUCCESS, trans_->CheckTransParam(param_, param_, peerDevId_));
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, trans_->CheckTransParam(param_, remoteParam, peerDevId_));
 }
 }  // namespace DistributedHardware
 }  // namespace OHOS

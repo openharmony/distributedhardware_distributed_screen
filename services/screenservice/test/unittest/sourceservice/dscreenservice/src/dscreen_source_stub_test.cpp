@@ -13,15 +13,24 @@
  * limitations under the License.
  */
 
-#include "dscreen_source_stub_test.h"
-#include "dscreen_constants.h"
-
 #include <memory>
+#include "dscreen_source_stub_test.h"
+#include "accesstoken_kit.h"
+#include "dscreen_constants.h"
 
 using namespace testing;
 using namespace testing::ext;
 
+static int g_mockVerifyAccessTokenReturnIntValue = -1;
+
 namespace OHOS {
+namespace Security::AccessToken {
+int AccessTokenKit::VerifyAccessToken(AccessTokenID tokenID, const std::string& permissionName)
+{
+    return g_mockVerifyAccessTokenReturnIntValue;
+}
+}
+
 namespace DistributedHardware {
 void DScreenSourceStubTest::SetUpTestCase(void)
 {
@@ -33,6 +42,7 @@ void DScreenSourceStubTest::TearDownTestCase(void)
 
 void DScreenSourceStubTest::SetUp(void)
 {
+    g_mockVerifyAccessTokenReturnIntValue = -1;
 }
 
 void DScreenSourceStubTest::TearDown(void)
@@ -104,6 +114,10 @@ HWTEST_F(DScreenSourceStubTest, InitSource_001, TestSize.Level1)
     int32_t ret = sourceProxy.InitSource("", callback);
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 
+    std::string params(PARAM_MAX_SIZE + 1, 'a');
+    ret = sourceProxy.InitSource(params, callback);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
     ret = sourceProxy.InitSource("params000", callback);
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 
@@ -171,6 +185,58 @@ HWTEST_F(DScreenSourceStubTest, RegisterDistributedHardware_001, TestSize.Level1
     param.sinkAttrs = "attrs";
     ret = sourceProxy.RegisterDistributedHardware("devId000", "dhId000", param, "reqId000");
     EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+/**
+ * @tc.name: CheckRegParams_001
+ * @tc.desc: Test CheckRegParams with valid parameters.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, DScreenSourceProxy_CheckRegParams_001, TestSize.Level1)
+{
+    std::string exceedParamMaxSizeStr(PARAM_MAX_SIZE + 1, 'a');
+    EnableParam validParam;
+    validParam.sinkVersion = exceedParamMaxSizeStr;
+    validParam.sinkAttrs = exceedParamMaxSizeStr;
+    std::string devId = "devId";
+    std::string dhId = "dhId";
+    std::string reqId = "reqId";
+
+    sptr<IRemoteObject> sourceStubPtr(new TestDScreenSourceStub());
+    DScreenSourceProxy sourceProxy(sourceStubPtr);
+    EXPECT_FALSE(sourceProxy.CheckRegParams(devId, dhId, validParam, reqId));
+
+    validParam.sinkVersion = "sinkVersion";
+    EXPECT_FALSE(sourceProxy.CheckRegParams(devId, dhId, validParam, reqId));
+
+    validParam.sinkAttrs = "sinkAttrs";
+    EXPECT_TRUE(sourceProxy.CheckRegParams(devId, dhId, validParam, reqId));
+}
+
+/**
+ * @tc.name: CheckConfigParams_001
+ * @tc.desc: Test CheckConfigParams with valid parameters.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, DScreenSourceProxy_CheckConfigParams_001, TestSize.Level1)
+{
+    std::string exceedParamMaxSizeStr(PARAM_MAX_SIZE + 1, 'a');
+    std::string devId = "devId";
+    std::string dhId = "dhId";
+    std::string key = exceedParamMaxSizeStr;
+    std::string value = exceedParamMaxSizeStr;
+
+    sptr<IRemoteObject> sourceStubPtr(new TestDScreenSourceStub());
+    DScreenSourceProxy sourceProxy(sourceStubPtr);
+    EXPECT_FALSE(sourceProxy.CheckConfigParams(devId, dhId, key, value));
+
+    key = "key";
+    EXPECT_FALSE(sourceProxy.CheckConfigParams(devId, dhId, key, value));
+
+    value = "value";
+    EXPECT_TRUE(sourceProxy.CheckConfigParams(devId, dhId, key, value));
 }
 
 /**
@@ -253,21 +319,26 @@ HWTEST_F(DScreenSourceStubTest, ConfigDistributedHardware_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSourceStubTest, DScreenNotify_001, TestSize.Level1)
 {
+    std::string exceedDidMaxSizeStr(DID_MAX_SIZE + 1, 'a');
+    std::string exceedParamMaxSizeStr(PARAM_MAX_SIZE + 1, 'a');
+    int32_t eventCode = 0;
+    std::string eventContent = "";
+    std::string devId = "";
+
     sptr<IRemoteObject> sourceStubPtr(new TestDScreenSourceStub());
     DScreenSourceProxy sourceProxy(sourceStubPtr);
+    sourceProxy.DScreenNotify(devId, eventCode, eventContent);
 
-    sourceProxy.DScreenNotify("", 0, "eventContent000");
+    devId = exceedDidMaxSizeStr;
+    sourceProxy.DScreenNotify(devId, eventCode, eventContent);
 
-    std::string longString = R"(dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
-        Id000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
-        hId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000)";
-    sourceProxy.DScreenNotify(longString, 0, "eventContent000");
+    devId = "devId000";
+    sourceProxy.DScreenNotify(devId, eventCode, eventContent);
 
-    sourceProxy.DScreenNotify("devId000", 0, "");
+    eventContent = exceedParamMaxSizeStr;
+    sourceProxy.DScreenNotify(devId, eventCode, eventContent);
 
-    std::string devId = "devId000";
-    int32_t eventCode = 0;
-    std::string eventContent = "eventContent000";
+    eventContent = "eventContent000";
     sourceProxy.DScreenNotify(devId, eventCode, eventContent);
     EXPECT_STREQ(devId.c_str(), ((sptr<TestDScreenSourceStub> &)sourceStubPtr)->devId_.c_str());
     EXPECT_EQ(eventCode, ((sptr<TestDScreenSourceStub> &)sourceStubPtr)->eventCode_);
@@ -352,6 +423,66 @@ HWTEST_F(DScreenSourceStubTest, InitSourceInner_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: InitSourceInner_002
+ * @tc.desc: When HasEnableDHPermission returns true but param is empty or exceeds max size
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, InitSourceInner_002, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    g_mockVerifyAccessTokenReturnIntValue = 0;
+    data.WriteString("");
+    int32_t result = stubPtr->InitSourceInner(data, reply, option);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, result);
+    std::string longParam(PARAM_MAX_SIZE + 1, 'a');
+    data.WriteString(longParam);
+    result = stubPtr->InitSourceInner(data, reply, option);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, result);
+}
+
+/**
+ * @tc.name: InitSourceInner_003
+ * @tc.desc: When HasEnableDHPermission returns true but remoteObject is nullptr
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, InitSourceInner_003, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    g_mockVerifyAccessTokenReturnIntValue = 0;
+    data.WriteString("validParam");
+    int32_t result = stubPtr->InitSourceInner(data, reply, option);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_READPARAM_FAILED, result);
+}
+
+/**
+ * @tc.name: InitSourceInner_005
+ * @tc.desc: When HasEnableDHPermission returns true and all parameters are valid
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, InitSourceInner_005, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    g_mockVerifyAccessTokenReturnIntValue = 0;
+    data.WriteString("validParam");
+    sptr<IRemoteObject> remoteObject = new TestDScreenSourceStub();
+    data.WriteRemoteObject(remoteObject);
+    int32_t result = stubPtr->InitSourceInner(data, reply, option);
+    EXPECT_EQ(DH_SUCCESS, result);
+}
+
+/**
  * @tc.name: ReleaseSourceInner_001
  * @tc.desc: When there is no permission
  * @tc.type: FUNC
@@ -369,6 +500,23 @@ HWTEST_F(DScreenSourceStubTest, ReleaseSourceInner_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: ReleaseSourceInner_002
+ * @tc.desc: When HasEnableDHPermission returns true
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, ReleaseSourceInner_002, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    g_mockVerifyAccessTokenReturnIntValue = 0;
+    int32_t result = stubPtr->ReleaseSourceInner(data, reply, option);
+    EXPECT_EQ(DH_SUCCESS, result);
+}
+
+/**
  * @tc.name: RegisterDistributedHardwareInner_001
  * @tc.desc: When there is no permission
  * @tc.type: FUNC
@@ -383,6 +531,134 @@ HWTEST_F(DScreenSourceStubTest, RegisterDistributedHardwareInner_001, TestSize.L
     MessageOption option;
     int32_t result = stubPtr->RegisterDistributedHardwareInner(data, reply, option);
     EXPECT_EQ(DSCREEN_INIT_ERR, result);
+}
+
+/**
+ * @tc.name: RegisterDistributedHardwareInner_002
+ * @tc.desc: When HasEnableDHPermission returns true but input parameters are invalid
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, RegisterDistributedHardwareInner_002, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    g_mockVerifyAccessTokenReturnIntValue = 0;
+    data.WriteString("");
+    data.WriteString("dhId");
+    data.WriteString("version");
+    data.WriteString("attrs");
+    data.WriteString("reqId");
+    int32_t result = stubPtr->RegisterDistributedHardwareInner(data, reply, option);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, result);
+
+    data.WriteString("devId");
+    data.WriteString("");
+    data.WriteString("version");
+    data.WriteString("attrs");
+    data.WriteString("reqId");
+    result = stubPtr->RegisterDistributedHardwareInner(data, reply, option);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, result);
+
+    data.WriteString("devId");
+    data.WriteString("dhId");
+    data.WriteString("");
+    data.WriteString("attrs");
+    data.WriteString("reqId");
+    result = stubPtr->RegisterDistributedHardwareInner(data, reply, option);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, result);
+
+    data.WriteString("devId");
+    data.WriteString("dhId");
+    data.WriteString("version");
+    data.WriteString("");
+    data.WriteString("reqId");
+    result = stubPtr->RegisterDistributedHardwareInner(data, reply, option);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, result);
+
+    data.WriteString("devId");
+    data.WriteString("dhId");
+    data.WriteString("version");
+    data.WriteString("attrs");
+    data.WriteString("");
+    result = stubPtr->RegisterDistributedHardwareInner(data, reply, option);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, result);
+}
+
+/**
+ * @tc.name: RegisterDistributedHardwareInner_003
+ * @tc.desc: When HasEnableDHPermission returns true and all parameters are valid
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, RegisterDistributedHardwareInner_003, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    g_mockVerifyAccessTokenReturnIntValue = 0;
+    data.WriteString("devId");
+    data.WriteString("dhId");
+    data.WriteString("version");
+    data.WriteString("attrs");
+    data.WriteString("reqId");
+    int32_t result = stubPtr->RegisterDistributedHardwareInner(data, reply, option);
+    EXPECT_EQ(DH_SUCCESS, result);
+}
+
+/**
+ * @tc.name: UnregisterDistributedHardwareInner_001
+ * @tc.desc: When HasEnableDHPermission returns true but input parameters are invalid
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, UnregisterDistributedHardwareInner_001, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    g_mockVerifyAccessTokenReturnIntValue = 0;
+    data.WriteString("");
+    data.WriteString("dhId");
+    data.WriteString("reqId");
+    int32_t result = stubPtr->UnregisterDistributedHardwareInner(data, reply, option);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, result);
+
+    data.WriteString("devId");
+    data.WriteString("");
+    data.WriteString("reqId");
+    result = stubPtr->UnregisterDistributedHardwareInner(data, reply, option);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, result);
+
+    data.WriteString("devId");
+    data.WriteString("dhId");
+    data.WriteString("");
+    result = stubPtr->UnregisterDistributedHardwareInner(data, reply, option);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, result);
+}
+
+/**
+ * @tc.name: UnregisterDistributedHardwareInner_002
+ * @tc.desc: When HasEnableDHPermission returns true and all parameters are valid
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceStubTest, UnregisterDistributedHardwareInner_002, TestSize.Level1)
+{
+    std::shared_ptr<TestDScreenSourceStub> stubPtr = std::make_shared<TestDScreenSourceStub>();
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    g_mockVerifyAccessTokenReturnIntValue = 0;
+    data.WriteString("devId");
+    data.WriteString("dhId");
+    data.WriteString("reqId");
+    int32_t result = stubPtr->UnregisterDistributedHardwareInner(data, reply, option);
+    EXPECT_EQ(DH_SUCCESS, result);
 }
 
 /**

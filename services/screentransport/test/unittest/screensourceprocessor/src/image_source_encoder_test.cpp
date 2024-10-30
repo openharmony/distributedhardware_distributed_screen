@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,6 +14,8 @@
  */
 
 #include "image_source_encoder_test.h"
+#include "buffer/avsharedmemorybase.h"
+#include "screen_source_trans.h"
 
 using namespace testing::ext;
 
@@ -307,5 +309,79 @@ HWTEST_F(ImageSourceEncoderTest, SetEncoderFormat_007, TestSize.Level1)
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
 }
 
+/**
+ * @tc.name: FeedEncoderData_001
+ * @tc.desc: Verify the FeedEncoderData function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSourceEncoderTest, FeedEncoderData_001, TestSize.Level1)
+{
+    VideoParam configParam;
+    configParam.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
+    configParam.SetVideoWidth(DSCREEN_MAX_VIDEO_DATA_WIDTH);
+    configParam.SetVideoHeight(DSCREEN_MAX_VIDEO_DATA_HEIGHT);
+    int32_t ret = encoder->ConfigureEncoder(configParam);
+    ASSERT_EQ(DH_SUCCESS, ret);
+
+    sptr<SurfaceBuffer> buffer = SurfaceBuffer::Create();
+    ret = encoder->FeedEncoderData(buffer);
+    EXPECT_NE(DH_SUCCESS, ret);
+}
+
+/**
+ * @tc.name: OnOutputBufferAvailable_001
+ * @tc.desc: Verify the OnOutputBufferAvailable function with various scenarios to cover all branches.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSourceEncoderTest, OnOutputBufferAvailable_001, TestSize.Level1)
+{
+    encoder->videoEncoder_ = nullptr;
+    std::shared_ptr<IImageSourceProcessorListener> listener = nullptr;
+    encoder->imageProcessorListener_ = listener;
+    MediaAVCodec::AVCodecBufferInfo info;
+    MediaAVCodec::AVCodecBufferFlag flag = MediaAVCodec::AVCODEC_BUFFER_FLAG_NONE;
+    std::shared_ptr<Media::AVSharedMemory> buffer = Media::AVSharedMemoryBase::CreateFromLocal(100,
+        Media::AVSharedMemory::FLAGS_READ_WRITE, "userBuffer");
+    encoder->OnOutputBufferAvailable(0, info, flag, buffer);
+    encoder->OnError(MediaAVCodec::AVCODEC_ERROR_EXTEND_START, 0);
+
+    std::shared_ptr<ScreenSourceTrans> trans = std::make_shared<ScreenSourceTrans>();
+    encoder->imageProcessorListener_ = trans;
+    encoder->OnOutputBufferAvailable(0, info, flag, buffer);
+    EXPECT_EQ(trans->dataQueue_.size(), 0);
+
+    encoder->videoEncoder_ = MediaAVCodec::VideoEncoderFactory::CreateByMime(
+        std::string(MediaAVCodec::CodecMimeType::VIDEO_AVC));
+    buffer = nullptr;
+    encoder->OnOutputBufferAvailable(0, info, flag, buffer);
+    EXPECT_EQ(trans->dataQueue_.size(), 0);
+
+    info.size = 0;
+    buffer = Media::AVSharedMemoryBase::CreateFromLocal(100,
+        Media::AVSharedMemory::FLAGS_READ_WRITE, "userBuffer");
+    encoder->OnOutputBufferAvailable(0, info, flag, buffer);
+    EXPECT_EQ(trans->dataQueue_.size(), 0);
+
+    info.size = DATA_BUFFER_MAX_SIZE + 1;
+    buffer = Media::AVSharedMemoryBase::CreateFromLocal(100,
+        Media::AVSharedMemory::FLAGS_READ_WRITE, "userBuffer");
+    encoder->OnOutputBufferAvailable(0, info, flag, buffer);
+    EXPECT_EQ(trans->dataQueue_.size(), 0);
+
+    info.size = 100;
+    buffer = Media::AVSharedMemoryBase::CreateFromLocal(0,
+        Media::AVSharedMemory::FLAGS_READ_WRITE, "userBuffer");
+    encoder->OnOutputBufferAvailable(0, info, flag, buffer);
+    EXPECT_EQ(trans->dataQueue_.size(), 0);
+
+    info.size = 100;
+    buffer = Media::AVSharedMemoryBase::CreateFromLocal(100,
+        Media::AVSharedMemory::FLAGS_READ_WRITE, "userBuffer");
+    encoder->videoEncoder_ = nullptr;
+    encoder->OnOutputBufferAvailable(0, info, flag, buffer);
+    EXPECT_EQ(trans->dataQueue_.size(), 0);
+}
 } // DistributedHardware
 } // OHOS
