@@ -50,6 +50,7 @@ ohos_shared_library("distributed_screen_client") {
     "distributed_hardware_fwk:distributedhardwareutils",
     "eventhandler:libeventhandler",
     "graphic_2d:2d_graphics",
+    "graphic_2d:GLESv3",
     "graphic_2d:libcomposer",
     "graphic_2d:libgraphic_utils",
     "graphic_2d:librender_service_base",
