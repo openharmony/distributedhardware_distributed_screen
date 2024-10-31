@@ -114,5 +114,55 @@ HWTEST_F(ScreenImageJpegTest, ReplaceDamage2LastFrame_001, TestSize.Level1)
     int32_t ret = jpeg_->ReplaceDamage2LastFrame(lastframe, dirtyImageData, rect);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
+
+/**
+ * @tc.name: DecodeDamageData_001
+ * @tc.desc: Verify the DecodeDamageData function with invalid dirty rect position and size.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenImageJpegTest, DecodeDamageData_001, TestSize.Level1)
+{
+    std::shared_ptr<DataBuffer> dataBuffer = std::make_shared<DataBuffer>(16);
+    uint8_t *lastFrame = nullptr;
+    DirtyRect rect = {100, 100, 100, 100, 100};
+    dataBuffer->AddDirtyRect(rect);
+    jpeg_->configParam_.SetScreenWidth(rect.xPos - 1);
+    int32_t ret = jpeg_->DecodeDamageData(dataBuffer, lastFrame);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    dataBuffer->AddDirtyRect(rect);
+    jpeg_->configParam_.SetScreenWidth(rect.xPos);
+    jpeg_->configParam_.SetScreenHeight(rect.xPos - 1);
+    ret = jpeg_->DecodeDamageData(dataBuffer, lastFrame);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    dataBuffer->AddDirtyRect(rect);
+    jpeg_->configParam_.SetScreenHeight(rect.xPos);
+    ret = jpeg_->DecodeDamageData(dataBuffer, lastFrame);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    rect.width = 0;
+    dataBuffer->AddDirtyRect(rect);
+    ret = jpeg_->DecodeDamageData(dataBuffer, lastFrame);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+}
+
+/**
+ * @tc.name: DecodeDamageData_002
+ * @tc.desc: Verify the DecodeDamageData function with invalid dirty rect size.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenImageJpegTest, DecodeDamageData_002, TestSize.Level1)
+{
+    std::shared_ptr<DataBuffer> dataBuffer = std::make_shared<DataBuffer>(10);
+    uint8_t *lastFrame = nullptr;
+
+    DirtyRect rect = {20, 20, 20, 20, DIRTY_MAX_BUF_SIZE + 1};
+    dataBuffer->AddDirtyRect(rect);
+    int32_t ret = jpeg_->DecodeDamageData(dataBuffer, lastFrame);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+}
 } // namespace DistributedHardware
 } // namespace OHOS

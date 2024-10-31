@@ -24,6 +24,8 @@ config("module_private_config") {
     "${services_path}/screentransport/test/unittest/screentranstestutils/include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",
+    "${services_path}/common/decision_center/include",
+    "${services_path}/common/imageJpeg/include",
     "${services_path}/common/screen_channel/include",
     "${services_path}/common/utils/include",
     "${services_path}/screentransport/test/unittest/screensourcetrans",

@@ -50,6 +50,7 @@ ohos_unittest("DScreenSinkStubTest") {
   ]
 
   external_deps = [
+    "access_token:libaccesstoken_sdk",
     "c_utils:utils",
     "googletest:gmock",
     "googletest:gtest_main",

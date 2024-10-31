@@ -37,7 +37,7 @@ public:
     void SetUp();
     void TearDown();
 
-    SoftbusAdapter softbusAdapter;
+    std::shared_ptr<SoftbusAdapter> softbusAdapter_ = nullptr;
     uint64_t tokenId_;
 };
 class MockSoftbusListener : public ISoftbusListener {

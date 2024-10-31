@@ -21,17 +21,19 @@ config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "./include",
-    "${services_path}/screentransport/test/unittest/screentranstestutils/include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",
+    "${services_path}/common/decision_center/include",
+    "${services_path}/common/imageJpeg/include",
     "${services_path}/common/screen_channel/include",
     "${services_path}/common/utils/include",
+    "${services_path}/screentransport/screendatachannel/include",
     "${services_path}/screentransport/screensinkprocessor/include",
     "${services_path}/screentransport/screensinktrans/include",
-    "${services_path}/screentransport/screensourcetrans/include",
-    "${services_path}/screentransport/screendatachannel/include",
-    "${services_path}/screentransport/screensourceprocessor/include",
     "${services_path}/screentransport/screensourceprocessor/encoder/include",
+    "${services_path}/screentransport/screensourceprocessor/include",
+    "${services_path}/screentransport/screensourcetrans/include",
+    "${services_path}/screentransport/test/unittest/screentranstestutils/include",
     "${services_path}/softbusadapter/include",
   ]
 }
@@ -58,13 +60,16 @@ ohos_unittest("DataChannelTest") {
     "access_token:libaccesstoken_sdk",
     "access_token:libnativetoken_shared",
     "access_token:libtokensetproc_shared",
+    "av_codec:av_codec_client",
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
     "dsoftbus:softbus_client",
     "googletest:gmock",
     "googletest:gtest_main",
+    "graphic_surface:surface",
     "hilog:libhilog",
     "json:nlohmann_json_static",
+    "media_foundation:media_foundation",
   ]
 
   defines = [

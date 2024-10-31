@@ -13,15 +13,24 @@
  * limitations under the License.
  */
 
-#include "dscreen_sink_stub_test.h"
-
 #include <memory>
+#include "dscreen_sink_stub_test.h"
+#include "accesstoken_kit.h"
 #include "dscreen_constants.h"
 
 using namespace testing;
 using namespace testing::ext;
 
+static int g_mockVerifyAccessTokenReturnIntValue = -1;
+
 namespace OHOS {
+namespace Security::AccessToken {
+int AccessTokenKit::VerifyAccessToken(AccessTokenID tokenID, const std::string& permissionName)
+{
+    return g_mockVerifyAccessTokenReturnIntValue;
+}
+}
+
 namespace DistributedHardware {
 void DScreenSinkStubTest::SetUpTestCase(void)
 {
@@ -33,6 +42,7 @@ void DScreenSinkStubTest::TearDownTestCase(void)
 
 void DScreenSinkStubTest::SetUp(void)
 {
+    g_mockVerifyAccessTokenReturnIntValue = -1;
 }
 
 void DScreenSinkStubTest::TearDown(void)
@@ -88,6 +98,10 @@ HWTEST_F(DScreenSinkStubTest, InitSink_001, TestSize.Level1)
 
     ret = sinkProxy.InitSink("");
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    std::string param(PARAM_MAX_SIZE + 1, 'a');
+    ret = sinkProxy.InitSink(param);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 }
 
 /**
@@ -133,6 +147,21 @@ HWTEST_F(DScreenSinkStubTest, SubscribeLocalHardware_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: SubscribeLocalHardware_002
+ * @tc.desc: Test the SubscribeLocalHardware method when param exceeds the maximum size.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkStubTest, SubscribeLocalHardware_002, TestSize.Level1)
+{
+    sptr<IRemoteObject> sinkStubPtr(new TestDScreenSinkStub());
+    DScreenSinkProxy sinkProxy(sinkStubPtr);
+    std::string param(PARAM_MAX_SIZE + 1, 'a');
+    int32_t ret = sinkProxy.SubscribeLocalHardware("dhId000", param);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+}
+
+/**
  * @tc.name: UnsubscribeLocalHardware_001
  * @tc.desc: Invoke the UnsubscribeLocalHardware ipc interface.
  * @tc.type: FUNC
@@ -152,6 +181,25 @@ HWTEST_F(DScreenSinkStubTest, UnsubscribeLocalHardware_001, TestSize.Level1)
     std::string dhId = R"(dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dh
         Id000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000d
         hId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000dhId000)";
+    ret = sinkProxy.UnsubscribeLocalHardware(dhId);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+}
+
+/**
+ * @tc.name: UnsubscribeLocalHardware_002
+ * @tc.desc: Invoke the UnsubscribeLocalHardware ipc interface.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkStubTest, UnsubscribeLocalHardware_002, TestSize.Level1)
+{
+    sptr<IRemoteObject> sinkStubPtr(new TestDScreenSinkStub());
+    DScreenSinkProxy sinkProxy(sinkStubPtr);
+    std::string dhId(DID_MAX_SIZE + 1, 'a');
+    int32_t ret = sinkProxy.UnsubscribeLocalHardware(dhId);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    dhId.clear();
     ret = sinkProxy.UnsubscribeLocalHardware(dhId);
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 }
@@ -292,6 +340,47 @@ HWTEST_F(DScreenSinkStubTest, DScreenNotifyInner_005, TestSize.Level1)
     data.WriteInt32(eventCode);
     data.WriteString(eventContent);
     int32_t ret = sinkStub->DScreenNotifyInner(data, reply, option);
+    EXPECT_EQ(ret, DH_SUCCESS);
+}
+
+/**
+ * @tc.name: InitSinkInner_001
+ * @tc.desc: Verify the InitSinkInner function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkStubTest, InitSinkInner_001, TestSize.Level1)
+{
+    sptr<DScreenSinkStub> sinkStub(new TestDScreenSinkStub());
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    std::string param = "";
+    data.WriteString(param);
+    g_mockVerifyAccessTokenReturnIntValue = 0;
+    int32_t ret = sinkStub->InitSinkInner(data, reply, option);
+    EXPECT_EQ(ret, ERR_DH_SCREEN_INPUT_PARAM_INVALID);
+
+    param = "param";
+    data.WriteString(param);
+    ret = sinkStub->InitSinkInner(data, reply, option);
+    EXPECT_EQ(ret, DH_SUCCESS);
+}
+
+/**
+ * @tc.name: ReleaseSinkInner_001
+ * @tc.desc: Verify the ReleaseSinkInner function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkStubTest, ReleaseSinkInner_001, TestSize.Level1)
+{
+    sptr<DScreenSinkStub> sinkStub(new TestDScreenSinkStub());
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+    g_mockVerifyAccessTokenReturnIntValue = 0;
+    int32_t ret = sinkStub->ReleaseSinkInner(data, reply, option);
     EXPECT_EQ(ret, DH_SUCCESS);
 }
 }  // namespace DistributedHardware

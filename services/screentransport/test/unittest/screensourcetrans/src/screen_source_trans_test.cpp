@@ -15,8 +15,6 @@
 
 #include "screen_source_trans_test.h"
 #include "screentrans_test_utils.h"
-#include "accesstoken_kit.h"
-#include "nativetoken_kit.h"
 #include "token_setproc.h"
 
 using namespace testing::ext;
@@ -34,29 +32,6 @@ void ScreenSourceTransTest::SetUp(void)
 }
 
 void ScreenSourceTransTest::TearDown(void) {}
-
-void EnablePermissionAccess(const char* perms[], size_t permsNum, uint64_t &tokenId)
-{
-    NativeTokenInfoParams infoInstance = {
-        .dcapsNum = 0,
-        .permsNum = permsNum,
-        .aclsNum = 0,
-        .dcaps = nullptr,
-        .perms = perms,
-        .acls = nullptr,
-        .aplStr = "system_basic",
-    };
-
-    infoInstance.processName = "SourceTransTest";
-    tokenId = GetAccessTokenId(&infoInstance);
-    SetSelfTokenID(tokenId);
-    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
-}
-
-void DisablePermissionAccess(const uint64_t &tokenId)
-{
-    OHOS::Security::AccessToken::AccessTokenKit::DeleteToken(tokenId);
-}
 
 /**
  * @tc.name: RegisterChannelListener_001
@@ -110,11 +85,6 @@ HWTEST_F(ScreenSourceTransTest, SetUp_001, TestSize.Level1)
  */
 HWTEST_F(ScreenSourceTransTest, SetUp_002, TestSize.Level1)
 {
-    const char* perms[] = {
-        "ohos.permission.DISTRIBUTED_DATASYNC",
-        "ohos.permission.CAPTURE_SCREEN",
-    };
-    EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
     VideoParam localParam;
     localParam.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
     localParam.SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
@@ -129,10 +99,7 @@ HWTEST_F(ScreenSourceTransTest, SetUp_002, TestSize.Level1)
     remoteParam.SetVideoWidth(VIDEO_DATA_NUM);
     remoteParam.SetScreenHeight(VIDEO_DATA_NUM);
     remoteParam.SetScreenWidth(VIDEO_DATA_NUM);
-
     int32_t actual = trans->SetUp(localParam, remoteParam, "peerDevId");
-    DisablePermissionAccess(tokenId_);
-
     EXPECT_EQ(DH_SUCCESS, actual);
 }
 
@@ -144,18 +111,11 @@ HWTEST_F(ScreenSourceTransTest, SetUp_002, TestSize.Level1)
  */
 HWTEST_F(ScreenSourceTransTest, InitScreenTrans_001, TestSize.Level1)
 {
-    const char* perms[] = {
-        "ohos.permission.DISTRIBUTED_DATASYNC",
-        "ohos.permission.CAPTURE_SCREEN",
-    };
-    EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
     VideoParam localParam;
     VideoParam remoteParam;
     std::string peerDevId = "sinkDevId";
     trans->screenChannel_ = std::make_shared<MockScreenDataChannelImpl>();
     int32_t actual = trans->InitScreenTrans(localParam, remoteParam, peerDevId);
-    DisablePermissionAccess(tokenId_);
-
     EXPECT_EQ(ERR_DH_SCREEN_CODEC_CONFIGURE_FAILED, actual);
 }
 
@@ -167,19 +127,12 @@ HWTEST_F(ScreenSourceTransTest, InitScreenTrans_001, TestSize.Level1)
  */
 HWTEST_F(ScreenSourceTransTest, InitScreenTrans_002, TestSize.Level1)
 {
-    const char* perms[] = {
-        "ohos.permission.DISTRIBUTED_DATASYNC",
-        "ohos.permission.CAPTURE_SCREEN",
-    };
-    EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
     VideoParam localParam;
     VideoParam remoteParam;
     std::string peerDevId = "sinkDevId";
     trans->SetScreenVersion("0");
     trans->screenChannel_ = std::make_shared<MockScreenDataChannelImpl>();
     int32_t actual = trans->InitScreenTrans(localParam, remoteParam, peerDevId);
-    DisablePermissionAccess(tokenId_);
-
     EXPECT_EQ(ERR_DH_SCREEN_CODEC_CONFIGURE_FAILED, actual);
 }
 
@@ -346,7 +299,7 @@ HWTEST_F(ScreenSourceTransTest, CheckVideoParam_001, TestSize.Level1)
 }
 
 /**
- * @tc.name: CheckVideoParam
+ * @tc.name: CheckVideoParam_002
  * @tc.desc: Verify the CheckVideoParam function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
@@ -356,11 +309,105 @@ HWTEST_F(ScreenSourceTransTest, CheckVideoParam_002, TestSize.Level1)
     VideoParam localParam;
     localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
     localParam.videoFormat_ = VIDEO_DATA_FORMAT_RGBA8888 + 1;
-    VideoParam remoteParam;
-    std::string peerDevId;
     int32_t actual = trans->CheckVideoParam(localParam);
 
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
+}
+
+/**
+ * @tc.name: CheckVideoParam_003
+ * @tc.desc: Verify the CheckVideoParam function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, CheckVideoParam_003, TestSize.Level1)
+{
+    VideoParam localParam;
+    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H265;
+    localParam.videoFormat_ = VIDEO_DATA_FORMAT_YUVI420;
+    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH + 1;
+    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    int32_t actual = trans->CheckVideoParam(localParam);
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
+}
+
+/**
+ * @tc.name: CheckVideoParam_004
+ * @tc.desc: Verify the CheckVideoParam function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, CheckVideoParam_004, TestSize.Level1)
+{
+    VideoParam localParam;
+    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_MPEG4;
+    localParam.videoFormat_ = VIDEO_DATA_FORMAT_NV12;
+    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT + 1;
+    int32_t actual = trans->CheckVideoParam(localParam);
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
+}
+
+/**
+ * @tc.name: CheckVideoParam_005
+ * @tc.desc: Verify the CheckVideoParam function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, CheckVideoParam_005, TestSize.Level1)
+{
+    VideoParam localParam;
+    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    localParam.videoFormat_ = VIDEO_DATA_FORMAT_NV21;
+    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    localParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH + 1;
+    localParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
+    int32_t actual = trans->CheckVideoParam(localParam);
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
+}
+
+/**
+ * @tc.name: CheckVideoParam_006
+ * @tc.desc: Verify the CheckVideoParam function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, CheckVideoParam_006, TestSize.Level1)
+{
+    VideoParam localParam;
+    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    localParam.videoFormat_ = VIDEO_DATA_FORMAT_RGBA8888;
+    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    localParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    localParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT + 1;
+    int32_t actual = trans->CheckVideoParam(localParam);
+
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
+}
+
+/**
+ * @tc.name: CheckVideoParam_007
+ * @tc.desc: Verify the CheckVideoParam function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenSourceTransTest, CheckVideoParam_007, TestSize.Level1)
+{
+    VideoParam localParam;
+    localParam.codecType_ = VIDEO_CODEC_TYPE_VIDEO_H264;
+    localParam.videoFormat_ = VIDEO_DATA_FORMAT_RGBA8888;
+    localParam.videoWidth_ = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    localParam.videoHeight_ = DSCREEN_MAX_VIDEO_DATA_HEIGHT;
+    localParam.screenWidth_ = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    localParam.screenHeight_ = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
+    int32_t actual = trans->CheckVideoParam(localParam);
+
+    EXPECT_EQ(DH_SUCCESS, actual);
 }
 
 /**

@@ -171,9 +171,6 @@ HWTEST_F(DScreenManagerTestV2, OnUnregResult_001, TestSize.Level1)
  */
 HWTEST_F(DScreenManagerTestV2, EnableDistributedScreen_001, TestSize.Level1)
 {
-    int32_t ret = DScreenManager::GetInstance().EnableDistributedScreen("", "", EnableParam{"", "", "", ""}, "");
-    EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_FAILED, ret);
-
     std::string devId = "devId000";
     std::string dhId = "dhId000";
     EnableParam param = {"", "", "2.0", "attrs000"};
@@ -183,7 +180,7 @@ HWTEST_F(DScreenManagerTestV2, EnableDistributedScreen_001, TestSize.Level1)
     std::shared_ptr<IDScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
     std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>(devId, dhId, dScreenCallback);
     dScreen->SetState(DScreenState::ENABLED);
-    ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
+    int32_t ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
     EXPECT_EQ(DH_SUCCESS, ret);
 
     dScreen->SetState(DScreenState::DISCONNECTING);
@@ -192,6 +189,39 @@ HWTEST_F(DScreenManagerTestV2, EnableDistributedScreen_001, TestSize.Level1)
     dScreen->SetState(DScreenState::ENABLING);
     ret = DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId);
     EXPECT_EQ(DH_SUCCESS, ret);
+}
+
+/* *
+ * @tc.name: EnableDistributedScreen_002
+ * @tc.desc: Verify the EnableDistributedScreen function failed with invalid parameters.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenManagerTestV2, EnableDistributedScreen_002, TestSize.Level1)
+{
+    std::string devId = "devId000";
+    std::string dhId = "dhId000";
+    EnableParam param = { "2.0", "attrs000", "", "" };
+    std::string reqId = "reqId000";
+
+    EXPECT_EQ(DScreenManager::GetInstance().EnableDistributedScreen("", dhId, param, reqId),
+        ERR_DH_SCREEN_SA_ENABLE_FAILED);
+
+    EXPECT_EQ(DScreenManager::GetInstance().EnableDistributedScreen(devId, "", param, reqId),
+        ERR_DH_SCREEN_SA_ENABLE_FAILED);
+
+    param.sinkVersion = "";
+    EXPECT_EQ(DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId),
+        ERR_DH_SCREEN_SA_ENABLE_FAILED);
+
+    param.sinkVersion = "2.0";
+    param.sinkAttrs = "";
+    EXPECT_EQ(DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, reqId),
+        ERR_DH_SCREEN_SA_ENABLE_FAILED);
+
+    param.sinkAttrs = "attrs000";
+    EXPECT_EQ(DScreenManager::GetInstance().EnableDistributedScreen(devId, dhId, param, ""),
+        ERR_DH_SCREEN_SA_ENABLE_FAILED);
 }
 
 /**
@@ -340,6 +370,20 @@ HWTEST_F(DScreenManagerTestV2, GetScreenDumpInfo_001, TestSize.Level1)
 HWTEST_F(DScreenManagerTestV2, GetScreenDumpInfo_002, TestSize.Level1)
 {
     std::string result;
+    DScreenManager::GetInstance().GetScreenDumpInfo(result);
+    EXPECT_EQ(false, result.empty());
+}
+
+/**
+ * @tc.name: GetScreenDumpInfo_003
+ * @tc.desc: Verify the GetScreenDumpInfo function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenManagerTestV2, GetScreenDumpInfo_003, TestSize.Level1)
+{
+    std::string result;
+    DScreenManager::GetInstance().Release();
     DScreenManager::GetInstance().GetScreenDumpInfo(result);
     EXPECT_EQ(false, result.empty());
 }

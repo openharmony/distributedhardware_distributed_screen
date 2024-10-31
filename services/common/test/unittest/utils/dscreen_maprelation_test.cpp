@@ -189,6 +189,12 @@ HWTEST_F(DScreenMapRelationTest, from_json_003, TestSize.Level1)
     j[KEY_POINT_START_Y] = startY;
     from_json(j, displayRect);
     EXPECT_EQ(0, displayRect.startY);
+    j[KEY_WIDTH] = static_cast<int32_t>(DSCREEN_MAX_VIDEO_DATA_WIDTH) + 1;
+    from_json(j, displayRect);
+    EXPECT_EQ(0, displayRect.width);
+    j[KEY_HEIGHT] = static_cast<int32_t>(DSCREEN_MAX_VIDEO_DATA_HEIGHT) + 1;
+    from_json(j, displayRect);
+    EXPECT_EQ(0, displayRect.height);
     j[KEY_WIDTH] = width;
     from_json(j, displayRect);
     EXPECT_EQ(0, displayRect.width);
@@ -219,6 +225,12 @@ HWTEST_F(DScreenMapRelationTest, from_json_004, TestSize.Level1)
     j[KEY_POINT_START_Y] = startY;
     from_json(j, screenRect);
     EXPECT_EQ(0, screenRect.startY);
+    j[KEY_WIDTH] = DSCREEN_MAX_SCREEN_DATA_WIDTH + 1;
+    from_json(j, screenRect);
+    EXPECT_EQ(0, screenRect.width);
+    j[KEY_HEIGHT] = DSCREEN_MAX_SCREEN_DATA_HEIGHT + 1;
+    from_json(j, screenRect);
+    EXPECT_EQ(0, screenRect.height);
     j[KEY_WIDTH] = width;
     from_json(j, screenRect);
     EXPECT_EQ(0, screenRect.width);

@@ -55,6 +55,7 @@ ohos_unittest("DScreenSourceStubTest") {
   ]
 
   external_deps = [
+    "access_token:libaccesstoken_sdk",
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
     "googletest:gmock",

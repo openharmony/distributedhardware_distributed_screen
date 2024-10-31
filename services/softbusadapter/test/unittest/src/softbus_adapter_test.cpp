@@ -14,11 +14,17 @@
  */
 
 #include "softbus_adapter_test.h"
-#include "accesstoken_kit.h"
-#include "nativetoken_kit.h"
+#include "socket.h"
+#include "softbus_adapter.h"
 #include "token_setproc.h"
 
 using namespace testing::ext;
+
+static int g_mockBindReturnIntValue = 0;
+static int g_mockListenReturnIntValue = 0;
+static int g_mockSendBytesReturnIntValue = 0;
+static int g_mockSendStreamReturnIntValue = 0;
+static int g_mockSocketReturnIntValue = 0;
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -31,31 +37,19 @@ void SoftbusAdapterTest::SetUpTestCase(void) {}
 
 void SoftbusAdapterTest::TearDownTestCase(void) {}
 
-void SoftbusAdapterTest::SetUp(void) {}
-
-void SoftbusAdapterTest::TearDown(void) {}
-
-void EnablePermissionAccess(const char* perms[], size_t permsNum, uint64_t &tokenId)
+void SoftbusAdapterTest::SetUp(void)
 {
-    NativeTokenInfoParams infoInstance = {
-        .dcapsNum = 0,
-        .permsNum = permsNum,
-        .aclsNum = 0,
-        .dcaps = nullptr,
-        .perms = perms,
-        .acls = nullptr,
-        .aplStr = "system_basic",
-    };
-
-    infoInstance.processName = "SoftBusAdapterTest";
-    tokenId = GetAccessTokenId(&infoInstance);
-    SetSelfTokenID(tokenId);
-    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
+    g_mockBindReturnIntValue = 0;
+    g_mockListenReturnIntValue = 0;
+    g_mockSendBytesReturnIntValue = 0;
+    g_mockSendStreamReturnIntValue = 0;
+    g_mockSocketReturnIntValue = 0;
+    softbusAdapter_ = std::make_shared<SoftbusAdapter>();
 }
 
-void DisablePermissionAccess(const uint64_t &tokenId)
+void SoftbusAdapterTest::TearDown(void)
 {
-    OHOS::Security::AccessToken::AccessTokenKit::DeleteToken(tokenId);
+    softbusAdapter_ = nullptr;
 }
 
 static void ScreenOnSoftbusSessionOpened(int32_t sessionId, PeerSocketInfo info) {}
@@ -77,16 +71,11 @@ static void ScreenOnMessageReceived(int sessionId, const void *data, unsigned in
  */
 HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_001, TestSize.Level1)
 {
-    const char* perms[] = {
-        "ohos.permission.DISTRIBUTED_DATASYNC",
-        "ohos.permission.CAPTURE_SCREEN",
-    };
-    EnablePermissionAccess(perms, sizeof(perms) / sizeof(perms[0]), tokenId_);
-    softbusAdapter.sessListener_.OnBind = ScreenOnSoftbusSessionOpened;
-    softbusAdapter.sessListener_.OnShutdown = ScreenOnSoftbusSessionClosed;
-    softbusAdapter.sessListener_.OnBytes = ScreenOnBytesReceived;
-    softbusAdapter.sessListener_.OnStream = ScreenOnStreamReceived;
-    softbusAdapter.sessListener_.OnMessage = ScreenOnMessageReceived;
+    softbusAdapter_->sessListener_.OnBind = ScreenOnSoftbusSessionOpened;
+    softbusAdapter_->sessListener_.OnShutdown = ScreenOnSoftbusSessionClosed;
+    softbusAdapter_->sessListener_.OnBytes = ScreenOnBytesReceived;
+    softbusAdapter_->sessListener_.OnStream = ScreenOnStreamReceived;
+    softbusAdapter_->sessListener_.OnMessage = ScreenOnMessageReceived;
 
     std::string pkgname = PKG_NAME;
     std::string sessionName = DATA_SESSION_NAME;
@@ -100,24 +89,30 @@ HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_001, TestSize.Level1)
     StreamData *streamData = nullptr;
     StreamData *ext = nullptr;
     StreamFrameInfo *frameInfo = nullptr;
-    softbusAdapter.OnBytesReceived(sessionId, data, dataLen);
-    softbusAdapter.OnStreamReceived(sessionId, streamData, ext, frameInfo);
+    softbusAdapter_->OnBytesReceived(sessionId, data, dataLen);
+    softbusAdapter_->OnStreamReceived(sessionId, streamData, ext, frameInfo);
     data = reinterpret_cast<void*>(&dataLen);
     streamData = &sData;
-    softbusAdapter.OnBytesReceived(sessionId, data, dataLen);
-    softbusAdapter.OnStreamReceived(sessionId, streamData, ext, frameInfo);
+    softbusAdapter_->OnBytesReceived(sessionId, data, dataLen);
+    softbusAdapter_->OnStreamReceived(sessionId, streamData, ext, frameInfo);
     dataLen = DSCREEN_MAX_RECV_DATA_LEN + 1;
     sData.bufLen = DSCREEN_MAX_RECV_DATA_LEN + 1;
-    softbusAdapter.OnBytesReceived(sessionId, data, dataLen);
-    softbusAdapter.OnStreamReceived(sessionId, streamData, ext, frameInfo);
+    softbusAdapter_->OnBytesReceived(sessionId, data, dataLen);
+    softbusAdapter_->OnStreamReceived(sessionId, streamData, ext, frameInfo);
     dataLen = 100;
     sData.bufLen = 100;
-    softbusAdapter.OnBytesReceived(sessionId, data, dataLen);
-    softbusAdapter.OnStreamReceived(sessionId, streamData, ext, frameInfo);
-    int32_t actual = softbusAdapter.CreateSoftbusSessionServer(pkgname, sessionName, peerDevId);
+    softbusAdapter_->OnBytesReceived(sessionId, data, dataLen);
+    softbusAdapter_->OnStreamReceived(sessionId, streamData, ext, frameInfo);
+
+    std::shared_ptr<ISoftbusListener> listener = std::make_shared<MockSoftbusListener>();
+    softbusAdapter_->devId2SessIdMap_[sessionId] = "strListenerKey";
+    softbusAdapter_->mapListeners_["strListenerKey"] = listener;
+    softbusAdapter_->OnBytesReceived(sessionId, data, dataLen);
+    softbusAdapter_->OnStreamReceived(sessionId, streamData, ext, frameInfo);
+
+    int32_t actual = softbusAdapter_->CreateSoftbusSessionServer(pkgname, sessionName, peerDevId);
     EXPECT_EQ(DH_SUCCESS, actual);
-    softbusAdapter.RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
-    DisablePermissionAccess(tokenId_);
+    softbusAdapter_->RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
 }
 
 /**
@@ -128,14 +123,12 @@ HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_001, TestSize.Level1)
  */
 HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_002, TestSize.Level1)
 {
-    softbusAdapter.serverIdMap_.clear();
     std::string pkgname = PKG_NAME;
     std::string sessionName = DATA_SESSION_NAME;
     std::string peerDevId = "peerDevId";
-
-    int32_t actual = softbusAdapter.CreateSoftbusSessionServer(pkgname, sessionName, peerDevId);
+    int32_t actual = softbusAdapter_->CreateSoftbusSessionServer(pkgname, sessionName, peerDevId);
     EXPECT_EQ(DH_SUCCESS, actual);
-    softbusAdapter.RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
+    softbusAdapter_->RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
 }
 
 /**
@@ -149,9 +142,8 @@ HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_003, TestSize.Level1)
     std::string pkgName = "ohos.dhardware.dscreentest";
     std::string sessionName = DATA_SESSION_NAME;
     std::string peerDevId = "peerDevId";
-    softbusAdapter.serverIdMap_.clear();
-    softbusAdapter.serverIdMap_.insert(std::make_pair(100000, sessionName + "_" + peerDevId));
-    int32_t actual = softbusAdapter.CreateSoftbusSessionServer(pkgName, sessionName, peerDevId);
+    softbusAdapter_->serverIdMap_.insert(std::make_pair(100000, sessionName + "_" + peerDevId));
+    int32_t actual = softbusAdapter_->CreateSoftbusSessionServer(pkgName, sessionName, peerDevId);
     EXPECT_EQ(DH_SUCCESS, actual);
 }
 
@@ -163,13 +155,19 @@ HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_003, TestSize.Level1)
  */
 HWTEST_F(SoftbusAdapterTest, CreateSoftbusSessionServer_004, TestSize.Level1)
 {
-    std::string pkgName = "ohos.dhardware.dscreentest";
+    std::string pkgName = PKG_NAME;
     std::string sessionName = DATA_SESSION_NAME;
     std::string peerDevId = "peerDevId";
-    softbusAdapter.serverIdMap_.clear();
-    softbusAdapter.serverIdMap_.insert(std::make_pair(100000, sessionName + "__" + peerDevId));
-    int32_t actual = softbusAdapter.CreateSoftbusSessionServer(pkgName, sessionName, peerDevId);
+    g_mockListenReturnIntValue = -1;
+    softbusAdapter_->serverIdMap_.insert(std::make_pair(100000, "test"));
+    int32_t actual = softbusAdapter_->CreateSoftbusSessionServer(pkgName, sessionName, peerDevId);
     EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_BAD_VALUE, actual);
+
+    softbusAdapter_->serverIdMap_.clear();
+    g_mockSocketReturnIntValue = -1;
+    actual = softbusAdapter_->CreateSoftbusSessionServer(pkgName, sessionName, peerDevId);
+    EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_BAD_VALUE, actual);
+    softbusAdapter_->RemoveSoftbusSessionServer(pkgName, sessionName, peerDevId);
 }
 
 /**
@@ -184,10 +182,10 @@ HWTEST_F(SoftbusAdapterTest, RegisterSoftbusListener_001, TestSize.Level1)
     std::string sessionName = DATA_SESSION_NAME;
     std::string peerDevId = "testDevId";
 
-    int32_t actual = softbusAdapter.RegisterSoftbusListener(listener, sessionName, peerDevId);
+    int32_t actual = softbusAdapter_->RegisterSoftbusListener(listener, sessionName, peerDevId);
     EXPECT_EQ(DH_SUCCESS, actual);
 
-    actual = softbusAdapter.UnRegisterSoftbusListener(sessionName, peerDevId);
+    actual = softbusAdapter_->UnRegisterSoftbusListener(sessionName, peerDevId);
     EXPECT_EQ(DH_SUCCESS, actual);
 }
 
@@ -203,10 +201,10 @@ HWTEST_F(SoftbusAdapterTest, RegisterSoftbusListener_002, TestSize.Level1)
     std::string sessionName = DATA_SESSION_NAME;
     std::string peerDevId = "testDevId";
 
-    int32_t actual = softbusAdapter.RegisterSoftbusListener(listener, sessionName, peerDevId);
+    int32_t actual = softbusAdapter_->RegisterSoftbusListener(listener, sessionName, peerDevId);
     EXPECT_EQ(DH_SUCCESS, actual);
 
-    actual = softbusAdapter.RegisterSoftbusListener(listener, sessionName, peerDevId);
+    actual = softbusAdapter_->RegisterSoftbusListener(listener, sessionName, peerDevId);
     EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_REGISTER_SOFTBUS_LISTENER_FAIL, actual);
 }
 
@@ -222,7 +220,7 @@ HWTEST_F(SoftbusAdapterTest, RegisterSoftbusListener_003, TestSize.Level1)
     std::string sessionName = DATA_SESSION_NAME;
     std::string peerDevId = "testDevId";
 
-    int32_t actual = softbusAdapter.RegisterSoftbusListener(listener, sessionName, peerDevId);
+    int32_t actual = softbusAdapter_->RegisterSoftbusListener(listener, sessionName, peerDevId);
     EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_REGISTER_SOFTBUS_LISTENER_FAIL, actual);
 }
 
@@ -237,7 +235,7 @@ HWTEST_F(SoftbusAdapterTest, UnRegisterSoftbusListener_001, TestSize.Level1)
     std::string sessionName = DATA_SESSION_NAME;
     std::string peerDevId = "testDevId";
 
-    int32_t actual = softbusAdapter.UnRegisterSoftbusListener(sessionName, peerDevId);
+    int32_t actual = softbusAdapter_->UnRegisterSoftbusListener(sessionName, peerDevId);
 
     EXPECT_EQ(DH_SUCCESS, actual);
 }
@@ -254,8 +252,11 @@ HWTEST_F(SoftbusAdapterTest, RemoveSoftbusSessionServer_001, TestSize.Level1)
     std::string sessionName = "";
     std::string peerDevId = "";
 
-    int32_t actual = softbusAdapter.RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
+    int32_t actual = softbusAdapter_->RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, actual);
 
+    sessionName = "sessionName";
+    actual = softbusAdapter_->RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_NULL_VALUE, actual);
 }
 
@@ -271,7 +272,7 @@ HWTEST_F(SoftbusAdapterTest, RemoveSoftbusSessionServer_002, TestSize.Level1)
     std::string sessionName = DATA_SESSION_NAME;
     std::string peerDevId = "peerDevId";
 
-    int32_t actual = softbusAdapter.RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
+    int32_t actual = softbusAdapter_->RemoveSoftbusSessionServer(pkgname, sessionName, peerDevId);
     EXPECT_EQ(DH_SUCCESS, actual);
 }
 
@@ -286,7 +287,15 @@ HWTEST_F(SoftbusAdapterTest, OpenSoftbusSession_001, TestSize.Level1)
     std::string mySessionName = DATA_SESSION_NAME;
     std::string peerSessionName = DATA_SESSION_NAME;
     std::string peerDevId = "testDevId";
-    int32_t actual = softbusAdapter.OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
+    int32_t actual = softbusAdapter_->OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
+    EXPECT_NE(DH_SUCCESS, actual);
+
+    g_mockBindReturnIntValue = -1;
+    actual = softbusAdapter_->OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
+    EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_PARA_ERROR, actual);
+
+    g_mockSocketReturnIntValue = -1;
+    actual = softbusAdapter_->OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
     EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_PARA_ERROR, actual);
 }
 
@@ -298,7 +307,7 @@ HWTEST_F(SoftbusAdapterTest, OpenSoftbusSession_001, TestSize.Level1)
  */
 HWTEST_F(SoftbusAdapterTest, CloseSoftbusSession_001, TestSize.Level1)
 {
-    int32_t actual = softbusAdapter.CloseSoftbusSession(0);
+    int32_t actual = softbusAdapter_->CloseSoftbusSession(0);
     EXPECT_EQ(DH_SUCCESS, actual);
 }
 
@@ -313,7 +322,11 @@ HWTEST_F(SoftbusAdapterTest, SendSoftbusBytes_001, TestSize.Level1)
     int32_t sessionId = 0;
     void *data = nullptr;
     int32_t dataLen = 0;
-    int32_t actual = softbusAdapter.SendSoftbusBytes(sessionId, data, dataLen);
+    int32_t actual = softbusAdapter_->SendSoftbusBytes(sessionId, data, dataLen);
+    EXPECT_EQ(DH_SUCCESS, actual);
+
+    g_mockSendBytesReturnIntValue = -1;
+    actual = softbusAdapter_->SendSoftbusBytes(sessionId, data, dataLen);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, actual);
 }
 
@@ -329,26 +342,8 @@ HWTEST_F(SoftbusAdapterTest, SendSoftbusStream_001, TestSize.Level1)
     StreamData *data = nullptr;
     StreamData *ext = nullptr;
     StreamFrameInfo *param = nullptr;
-    int32_t actual = softbusAdapter.SendSoftbusStream(sessionId, data, ext, param);
-    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, actual);
-}
-
-/**
- * @tc.name: GetSoftbusListener_001
- * @tc.desc: Verify the GetSoftbusListener function.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(SoftbusAdapterTest, GetSoftbusListener_001, TestSize.Level1)
-{
-    int32_t sessionId = 0;
-    SessionInfo sessionInfo;
-    sessionInfo.sessionName = "hello";
-    sessionInfo.peerDevId = "world";
-    std::shared_ptr<ISoftbusListener> listener = nullptr;
-    softbusAdapter.mapListeners_["hello_world"] = listener;
-    std::shared_ptr<ISoftbusListener> actual = softbusAdapter.GetSoftbusListenerById(sessionId);
-    EXPECT_EQ(nullptr, actual);
+    int32_t actual = softbusAdapter_->SendSoftbusStream(sessionId, data, ext, param);
+    EXPECT_EQ(DH_SUCCESS, actual);
 }
 
 /**
@@ -365,8 +360,149 @@ HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionOpened_001, TestSize.Level1)
         .pkgName = const_cast<char*>(DSCREEN_PKG_NAME_TEST.c_str()),
         .dataType = DATA_TYPE_BYTES
     };
-    int32_t actual = softbusAdapter.OnSoftbusSessionOpened(0, peerSocketInfo);
+    int32_t actual = softbusAdapter_->OnSoftbusSessionOpened(0, peerSocketInfo);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, actual);
+}
+
+/**
+ * @tc.name: OnSoftbusSessionOpened_002
+ * @tc.desc: Verify the OnSoftbusSessionOpened function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionOpened_002, TestSize.Level1)
+{
+    PeerSocketInfo peerSocketInfo = {
+        .name = const_cast<char*>(PEER_SESSION_NAME.c_str()),
+        .networkId = nullptr,
+        .pkgName = const_cast<char*>(DSCREEN_PKG_NAME_TEST.c_str()),
+        .dataType = DATA_TYPE_BYTES
+    };
+    std::string pkgName = "ohos.dhardware.dscreentest";
+    std::string sessionName = DATA_SESSION_NAME;
+    std::string peerDevId = "peerDevId";
+    softbusAdapter_->serverIdMap_.insert(std::make_pair(100000, sessionName + "_" + peerDevId));
+
+    int32_t sessionId = 0;
+    std::shared_ptr<ISoftbusListener> listener = std::make_shared<MockSoftbusListener>();
+    softbusAdapter_->devId2SessIdMap_[sessionId] = "strListenerKey";
+    softbusAdapter_->mapListeners_["strListenerKey"] = listener;
+
+    int32_t actual = softbusAdapter_->OnSoftbusSessionOpened(sessionId, peerSocketInfo);
+    EXPECT_EQ(DH_SUCCESS, actual);
+}
+
+/**
+ * @tc.name: OnSoftbusSessionOpened_003
+ * @tc.desc: Verify the OnSoftbusSessionOpened function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionOpened_003, TestSize.Level1)
+{
+    PeerSocketInfo peerSocketInfo = {
+        .name = const_cast<char*>(PEER_SESSION_NAME.c_str()),
+        .networkId = const_cast<char*>(REMOTE_DEV_ID.c_str()),
+        .pkgName = const_cast<char*>(DSCREEN_PKG_NAME_TEST.c_str()),
+        .dataType = DATA_TYPE_BYTES
+    };
+    softbusAdapter_->serverIdMap_.insert(std::make_pair(100000, REMOTE_DEV_ID));
+    int32_t actual = softbusAdapter_->OnSoftbusSessionOpened(0, peerSocketInfo);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, actual);
+}
+
+/**
+ * @tc.name: OnSoftbusSessionOpened_004
+ * @tc.desc: Verify the OnSoftbusSessionOpened function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionOpened_004, TestSize.Level1)
+{
+    PeerSocketInfo peerSocketInfo = {
+        .name = const_cast<char*>(PEER_SESSION_NAME.c_str()),
+        .networkId = const_cast<char*>(REMOTE_DEV_ID.c_str()),
+        .pkgName = const_cast<char*>(DSCREEN_PKG_NAME_TEST.c_str()),
+        .dataType = DATA_TYPE_BYTES
+    };
+    softbusAdapter_->serverIdMap_.insert(std::make_pair(100000, "not exist id"));
+    int32_t actual = softbusAdapter_->OnSoftbusSessionOpened(0, peerSocketInfo);
+    EXPECT_EQ(ERR_DH_SCREEN_TRANS_ERROR, actual);
+}
+
+/**
+ * @tc.name: OnSoftbusSessionClosed_001
+ * @tc.desc: Verify the OnSoftbusSessionClosed function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionClosed_001, TestSize.Level1)
+{
+    int32_t sessionId = 0;
+    ShutdownReason reason = SHUTDOWN_REASON_UNKNOWN;
+    softbusAdapter_->mapSessListeners_[sessionId] = nullptr;
+    softbusAdapter_->OnSoftbusSessionClosed(sessionId, reason);
+    EXPECT_TRUE(softbusAdapter_->mapSessListeners_.size() > 0);
+}
+
+/**
+ * @tc.name: OnSoftbusSessionClosed_002
+ * @tc.desc: Verify the OnSoftbusSessionClosed function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionClosed_002, TestSize.Level1)
+{
+    int32_t sessionId = 0;
+    ShutdownReason reason = SHUTDOWN_REASON_UNKNOWN;
+    std::shared_ptr<ISoftbusListener> listener = std::make_shared<MockSoftbusListener>();
+    softbusAdapter_->mapSessListeners_[sessionId] = listener;
+    softbusAdapter_->OnSoftbusSessionClosed(sessionId, reason);
+    EXPECT_TRUE(softbusAdapter_->mapSessListeners_.size() == 0);
+}
+
+/**
+ * @tc.name: GetSoftbusListenerByName_001
+ * @tc.desc: Verify the GetSoftbusListenerByName function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, GetSoftbusListenerByName_001, TestSize.Level1)
+{
+    int32_t sessionId = 0;
+    softbusAdapter_->devId2SessIdMap_[sessionId] = "test";
+    std::shared_ptr<ISoftbusListener> listener = softbusAdapter_->GetSoftbusListenerByName(sessionId);
+    EXPECT_EQ(nullptr, listener);
+}
+
+/**
+ * @tc.name: GetSoftbusListenerByName_002
+ * @tc.desc: Verify the GetSoftbusListenerByName function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, GetSoftbusListenerByName_002, TestSize.Level1)
+{
+    int32_t sessionId = 0;
+    softbusAdapter_->devId2SessIdMap_[sessionId + 1] = "test";
+    std::shared_ptr<ISoftbusListener> listener = softbusAdapter_->GetSoftbusListenerByName(sessionId);
+    EXPECT_EQ(nullptr, listener);
+}
+
+/**
+ * @tc.name: GetSoftbusListenerByName_003
+ * @tc.desc: Verify the GetSoftbusListenerByName function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, GetSoftbusListenerByName_003, TestSize.Level1)
+{
+    int32_t sessionId = 0;
+    std::shared_ptr<ISoftbusListener> listener = std::make_shared<MockSoftbusListener>();
+    softbusAdapter_->devId2SessIdMap_[sessionId] = "strListenerKey";
+    softbusAdapter_->mapListeners_["strListenerKey"] = listener;
+    std::shared_ptr<ISoftbusListener> mapListener = softbusAdapter_->GetSoftbusListenerByName(sessionId);
+    EXPECT_NE(nullptr, mapListener);
 }
 
 /**
@@ -378,9 +514,57 @@ HWTEST_F(SoftbusAdapterTest, OnSoftbusSessionOpened_001, TestSize.Level1)
 HWTEST_F(SoftbusAdapterTest, GetSoftbusListenerById_001, TestSize.Level1)
 {
     int32_t sessionId = 0;
-    softbusAdapter.mapSessListeners_[sessionId] = nullptr;
-    std::shared_ptr<ISoftbusListener> listener = softbusAdapter.GetSoftbusListenerById(sessionId);
+    softbusAdapter_->mapSessListeners_[sessionId] = nullptr;
+    std::shared_ptr<ISoftbusListener> listener = softbusAdapter_->GetSoftbusListenerById(sessionId);
     EXPECT_EQ(nullptr, listener);
+}
+
+/**
+ * @tc.name: GetSoftbusListenerById_002
+ * @tc.desc: Verify the GetSoftbusListenerById function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, GetSoftbusListenerById_002, TestSize.Level1)
+{
+    int32_t sessionId = 0;
+    SessionInfo sessionInfo;
+    sessionInfo.sessionName = "hello";
+    sessionInfo.peerDevId = "world";
+    std::shared_ptr<ISoftbusListener> listener = nullptr;
+    softbusAdapter_->mapListeners_["hello_world"] = listener;
+    std::shared_ptr<ISoftbusListener> actual = softbusAdapter_->GetSoftbusListenerById(sessionId);
+    EXPECT_EQ(nullptr, actual);
 }
 } // DistributedHardware
 } // OHOS
+
+extern "C" __attribute__((constructor)) int Socket(SocketInfo info)
+{
+    return g_mockSocketReturnIntValue;
+}
+
+extern "C" __attribute__((constructor)) int Bind(int32_t socket, const QosTV qos[], uint32_t qosCount,
+    const ISocketListener *listener)
+{
+    return g_mockBindReturnIntValue;
+}
+
+extern "C" __attribute__((constructor)) int Listen(int32_t socket, const QosTV qos[], uint32_t qosCount,
+    const ISocketListener *listener)
+{
+    return g_mockListenReturnIntValue;
+}
+
+extern "C" __attribute__((constructor)) int SendBytes(int32_t socket, const void *data, uint32_t len)
+{
+    return g_mockSendBytesReturnIntValue;
+}
+
+extern "C" __attribute__((constructor)) void Shutdown(int32_t socket) {}
+
+extern "C" __attribute__((constructor)) int SendStream(int32_t socket, const StreamData *data, const StreamData *ext,
+    const StreamFrameInfo *param)
+{
+    return g_mockSendStreamReturnIntValue;
+}
