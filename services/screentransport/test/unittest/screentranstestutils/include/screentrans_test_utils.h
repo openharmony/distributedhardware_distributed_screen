@@ -90,7 +90,7 @@ public:
     {
         return DH_SUCCESS;
     }
-    int32_t OpenSession(const std::shared_ptr<IScreenChannelListener> &listener) override
+    int32_t OpenSession(const std::shared_ptr<IScreenChannelListener> listener) override
     {
         return DH_SUCCESS;
     }
