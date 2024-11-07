@@ -18,21 +18,22 @@
 #include <iostream>
 
 #include "avcodec_common.h"
+#include "avcodec_errors.h"
+#include "dscreen_constants.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
-#include "meta/format.h"
 #include "iimage_source_processor_listener.h"
-#include "image_source_encoder.h"
 #include "image_encoder_callback.h"
+#include "image_source_encoder.h"
 #include "iscreen_channel_listener.h"
-#include "avcodec_errors.h"
+#include "meta/format.h"
 #include "screen_source_trans.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 void OnOutputFormatChangedFuzzTest(const uint8_t* data, size_t size)
 {
-    if ((data == nullptr) || (size == 0)) {
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
         return;
     }
     std::shared_ptr<IImageSourceProcessorListener> listener = std::make_shared<ScreenSourceTrans>();
@@ -40,6 +41,10 @@ void OnOutputFormatChangedFuzzTest(const uint8_t* data, size_t size)
     std::shared_ptr<ImageEncoderCallback> encoderCallback = std::make_shared<ImageEncoderCallback>(encoder);
 
     Media::Format format;
+    int32_t width = *(reinterpret_cast<const int32_t*>(data));
+    int32_t height = *(reinterpret_cast<const int32_t*>(data));
+    format.PutIntValue(KEY_WIDTH, width);
+    format.PutIntValue(KEY_HEIGHT, height);
     encoderCallback->OnOutputFormatChanged(format);
 }
 }  // namespace DistributedHardware

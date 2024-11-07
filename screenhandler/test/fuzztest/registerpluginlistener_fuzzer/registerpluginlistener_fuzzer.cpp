@@ -36,13 +36,31 @@ public:
 
 void RegisterPluginListenerFuzzTest(const uint8_t* data, size_t size)
 {
-    if ((data == nullptr) || (size == 0)) {
+    if ((data == nullptr) || (size < sizeof(int32_t))) {
         return;
     }
 
-    DHType dhType = DHType::SCREEN;
-    std::shared_ptr<PluginListener> listener = std::make_shared<DScreenHandlerFuzzTestPluginListener>(dhType);
+    int32_t i = 0;
+    std::unordered_map<int32_t, DHType> dhTypeMap;
+    dhTypeMap[i++] = DHType::UNKNOWN;
+    dhTypeMap[i++] = DHType::CAMERA;
+    dhTypeMap[i++] = DHType::AUDIO;
+    dhTypeMap[i++] = DHType::SCREEN;
+    dhTypeMap[i++] = DHType::GPS;
+    dhTypeMap[i++] = DHType::INPUT;
+    dhTypeMap[i++] = DHType::HFP;
+    dhTypeMap[i++] = DHType::A2D;
+    dhTypeMap[i++] = DHType::VIRMODEM_AUDIO;
+    dhTypeMap[i++] = DHType::MODEM;
+    dhTypeMap[i++] = DHType::MAX_DH;
 
+    int32_t key = *(reinterpret_cast<const int32_t*>(data)) % static_cast<int32_t>(dhTypeMap.size());
+    if (dhTypeMap.count(key) == 0) {
+        return;
+    }
+
+    DHType dhType = dhTypeMap[key];
+    std::shared_ptr<PluginListener> listener = std::make_shared<DScreenHandlerFuzzTestPluginListener>(dhType);
     DScreenHandler::GetInstance().RegisterPluginListener(listener);
 }
 }  // namespace DistributedHardware
