@@ -37,7 +37,8 @@ void OnRemoteSourceSvrDiedFuzzTest(const uint8_t* data, size_t size)
         return;
     }
 
-    sptr<IRemoteObject> remoteObject = systemAbilityManager->GetSystemAbility(DISTRIBUTED_HARDWARE_DM_SA_ID);
+    int32_t saId = *(reinterpret_cast<const int32_t*>(data));
+    sptr<IRemoteObject> remoteObject = systemAbilityManager->GetSystemAbility(saId);
     if (remoteObject == nullptr) {
         return;
     }
