@@ -24,11 +24,15 @@ const std::string GET_DBG_ITF_FUNC = "GetDBGItf";
 const std::string GET_IMAGE_DIRTY_FUNC = "GetImageSetDirty";
 class IDScreenDBGItf {
 public:
+    virtual ~IDScreenDBGItf() = default;
+
     virtual int32_t Init() = 0;
     virtual int32_t Release() = 0;
 };
 class IImageSetDirty {
 public:
+    virtual ~IImageSetDirty() = default;
+
     virtual void SetDamage(std::vector<std::vector<int32_t>> dirtyVecs) = 0;
     virtual std::vector<std::vector<int32_t>> GetDamage() = 0;
 };
