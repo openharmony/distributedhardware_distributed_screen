@@ -46,6 +46,8 @@ void DscreenSourceServiceFuzzTest(const uint8_t* data, size_t size)
     sourceServicePtr->InitSource(params, callback);
     sourceServicePtr->RegisterDistributedHardware(devId, dhId, param, reqId);
     sourceServicePtr->DScreenNotify(devId, eventCode, eventContent);
+    sourceServicePtr->UnregisterDistributedHardware(devId, dhId, reqId);
+    sourceServicePtr->ReleaseSource();
 }
 }  // namespace DistributedHardware
 }  // namespace OHOS

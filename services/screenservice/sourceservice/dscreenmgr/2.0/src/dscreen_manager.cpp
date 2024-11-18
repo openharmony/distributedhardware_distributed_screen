@@ -397,16 +397,16 @@ void DScreenManager::PublishMessage(const DHTopic topic, const std::shared_ptr<D
 int32_t DScreenManager::LoadAVSenderEngineProvider()
 {
     DHLOGI("LoadAVSenderEngineProvider enter");
-    void *pHandler = dlopen(SENDER_SO_NAME.c_str(), RTLD_LAZY | RTLD_NODELETE);
-    if (pHandler == nullptr) {
+    pHandler_ = dlopen(SENDER_SO_NAME.c_str(), RTLD_LAZY | RTLD_NODELETE);
+    if (pHandler_ == nullptr) {
         DHLOGE("so: %{public}s load failed, failed reason : %{public}s", SENDER_SO_NAME.c_str(), dlerror());
         return ERR_DH_AV_TRANS_NULL_VALUE;
     }
-    AVTransProviderClass getEngineFactoryFunc = (AVTransProviderClass)dlsym(pHandler, GET_PROVIDER_FUNC.c_str());
+    AVTransProviderClass getEngineFactoryFunc = (AVTransProviderClass)dlsym(pHandler_, GET_PROVIDER_FUNC.c_str());
     if (getEngineFactoryFunc == nullptr) {
         DHLOGE("av transport engine factory function handler is null, failed reason : %{public}s", dlerror());
-        dlclose(pHandler);
-        pHandler = nullptr;
+        dlclose(pHandler_);
+        pHandler_ = nullptr;
         return ERR_DH_AV_TRANS_NULL_VALUE;
     }
     providerPtr_ = getEngineFactoryFunc(OWNER_NAME_D_SCREEN);
@@ -416,10 +416,13 @@ int32_t DScreenManager::LoadAVSenderEngineProvider()
 int32_t DScreenManager::UnloadAVSenderEngineProvider()
 {
     DHLOGI("UnloadAVSenderEngineProvider enter");
-    void *pHandler = dlopen(SENDER_SO_NAME.c_str(), RTLD_LAZY | RTLD_NODELETE);
-    if (pHandler != nullptr) {
-        dlclose(pHandler);
-        pHandler = nullptr;
+    if (providerPtr_ != nullptr) {
+        delete providerPtr_;
+        providerPtr_ = nullptr;
+    }
+    if (pHandler_ != nullptr) {
+        dlclose(pHandler_);
+        pHandler_ = nullptr;
     }
     return DH_SUCCESS;
 }

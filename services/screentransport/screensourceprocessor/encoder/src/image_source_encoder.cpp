@@ -249,8 +249,16 @@ int32_t ImageSourceEncoder::ReleaseEncoder()
         DHLOGE("%{public}s: Release encoder failed.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_CODEC_RELEASE_FAILED;
     }
-    if (pHandler_ != nullptr) {
+    if (dscreenDbgItfPtr_ != nullptr) {
         dscreenDbgItfPtr_->Release();
+        delete dscreenDbgItfPtr_;
+        dscreenDbgItfPtr_ = nullptr;
+    }
+    if (imageSetDirtyPtr_ != nullptr) {
+        delete imageSetDirtyPtr_;
+        imageSetDirtyPtr_ = nullptr;
+    }
+    if (pHandler_ != nullptr) {
         dlclose(pHandler_);
     }
     encodeVideoCallback_ = nullptr;

@@ -81,6 +81,7 @@ private:
     std::map<std::string, std::shared_ptr<DScreen>> dScreens_;
 
     IAVEngineProvider *providerPtr_ = nullptr;
+    void* pHandler_ = nullptr;
     sptr<DScreenGroupListener> dScreenGroupListener_ = nullptr;
     std::shared_ptr<IDScreenCallback> dScreenCallback_ = nullptr;
     sptr<IDScreenSourceCallback> dScreenSourceCallbackProxy_ = nullptr;
