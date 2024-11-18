@@ -181,7 +181,7 @@ HWTEST_F(ScreenRegionManagerTestV1, HandleNotifySetUp_003, TestSize.Level1)
     const std::string eventContent = "{\"dhIds\"\"SCREEN#0\", \"mapRelations\":{\"displayIds\":0, \
         \"displayRects\":{\"heights\":1280, \"startXs\":0, \"startYs\":0, \"widths\":720}, \"screenIds\":2, \
         \"screenRects\":{\"heights\":1280, \"startXs\":0, \"startYs\":0, \"widths\":720}}, \"screenIds\":2, \
-        \"videoParams\":{\"codecTypes\":2, \"colorFormats\":3, \"fpss\":30, \"screenHeights\":1280, \
+        \"videoParam\":{\"codecTypes\":2, \"colorFormats\":3, \"fpss\":30, \"screenHeights\":1280, \
         \"screenWidths\":720, \"videoHeights\":1280, \"videoWidths\":720}}";
     ScreenRegionManager::GetInstance().HandleNotifySetUp(remoteDevId, eventContent);
 

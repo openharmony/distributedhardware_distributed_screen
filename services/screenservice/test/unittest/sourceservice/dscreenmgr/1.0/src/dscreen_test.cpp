@@ -317,6 +317,14 @@ HWTEST_F(DScreenTestV1, CheckJsonData_003, TestSize.Level1)
 
     int32_t ret = dScreen_->CheckJsonData(attrJson);
     EXPECT_EQ(DH_SUCCESS, ret);
+
+    attrJson[KEY_SCREEN_HEIGHT] = DSCREEN_MAX_SCREEN_DATA_HEIGHT + 1;
+    ret = dScreen_->CheckJsonData(attrJson);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR, ret);
+
+    attrJson[KEY_SCREEN_WIDTH] = DSCREEN_MAX_SCREEN_DATA_WIDTH + 1;
+    ret = dScreen_->CheckJsonData(attrJson);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_ENABLE_JSON_ERROR, ret);
 }
 
 /**
@@ -342,6 +350,19 @@ HWTEST_F(DScreenTestV1, NegotiateCodecType_002, TestSize.Level1)
 {
     std::string remoteCodecInfoStr = "{\"codecType\":\"[\"OMX_rk_video_encoder_avc\", \"OMX_rk_video_encoder_hevc\", \
         \"avenc_mpeg4\"]\"}";
+    int32_t ret = dScreen_->NegotiateCodecType(remoteCodecInfoStr);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL, ret);
+}
+
+/**
+ * @tc.name: NegotiateCodecType_003
+ * @tc.desc: Verify the NegotiateCodecType function failed.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV1, NegotiateCodecType_003, TestSize.Level1)
+{
+    std::string remoteCodecInfoStr = "[\"test\"]";
     int32_t ret = dScreen_->NegotiateCodecType(remoteCodecInfoStr);
     EXPECT_EQ(ERR_DH_SCREEN_SA_DSCREEN_NEGOTIATE_CODEC_FAIL, ret);
 }
