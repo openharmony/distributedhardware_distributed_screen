@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-#include "dscreen_source_callback_stub_test.h"
-
 #include <memory>
+#include "dscreen_source_callback_stub_test.h"
+#include "dscreen_constants.h"
 
 using namespace testing;
 using namespace testing::ext;
@@ -136,6 +136,10 @@ HWTEST_F(DScreenSourceCallbackStubTest, OnNotifyUnregResult_001, TestSize.Level1
 
     ret = sourceCbkProxy.OnNotifyUnregResult("devId000", "dhId000", "reqId000", 0, "data000");
     EXPECT_EQ(DH_SUCCESS, ret);
+
+    std::string exceedParamMaxSizeStr(PARAM_MAX_SIZE + 1, 'a');
+    ret = sourceCbkProxy.OnNotifyUnregResult("devId000", "dhId000", "reqId000", 0, exceedParamMaxSizeStr);
+    EXPECT_NE(DH_SUCCESS, ret);
 }
 }  // namespace DistributedHardware
 }  // namespace OHOS
