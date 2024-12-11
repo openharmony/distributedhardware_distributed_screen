@@ -14,7 +14,11 @@
  */
 
 #include "1.0/include/screenregion_test.h"
+#include "accesstoken_kit.h"
 #include "dscreen_constants.h"
+#include "display_manager.h"
+#include "nativetoken_kit.h"
+#include "token_setproc.h"
 
 using namespace testing;
 using namespace testing::ext;
@@ -30,6 +34,23 @@ void ScreenRegionTestV1::TearDownTestCase(void) {}
 
 void ScreenRegionTestV1::SetUp(void)
 {
+    const char **perms = new const char *[1];
+    perms[0] = "ohos.permission.SYSTEM_FLOAT_WINDOW";
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = 1,
+        .aclsNum = 0,
+        .dcaps = nullptr,
+        .perms = perms,
+        .acls = nullptr,
+        .processName = "screen_client_unittest",
+        .aplStr = "system_core",
+    };
+    uint64_t tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
+    delete[] perms;
+
     const std::string remoteDevId = "sourceDevId";
     uint64_t screenId = 0;
     uint64_t displayId = 0;
@@ -141,6 +162,7 @@ HWTEST_F(ScreenRegionTestV1, GetWindowProperty_001, TestSize.Level1)
     screenRegion_->windowProperty_ = std::make_shared<WindowProperty>();
     screenRegion_->windowProperty_->width = VIDEO_DATA_NUM;
     screenRegion_->windowProperty_->height = VIDEO_DATA_NUM;
+    screenRegion_->windowProperty_->displayId = Rosen::DisplayManager::GetInstance().GetDefaultDisplay()->GetId();
     std::shared_ptr<WindowProperty> ret = screenRegion_->GetWindowProperty();
     EXPECT_EQ(screenRegion_->windowProperty_, ret);
 }

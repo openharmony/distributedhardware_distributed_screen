@@ -14,6 +14,10 @@
  */
 
 #include "screen_client_test.h"
+#include "accesstoken_kit.h"
+#include "display_manager.h"
+#include "nativetoken_kit.h"
+#include "token_setproc.h"
 
 using namespace testing::ext;
 
@@ -27,13 +31,32 @@ void ScreenClientTest::TearDownTestCase(void) {}
 
 void ScreenClientTest::SetUp()
 {
+    const char **perms = new const char *[1];
+    perms[0] = "ohos.permission.SYSTEM_FLOAT_WINDOW";
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = 1,
+        .aclsNum = 0,
+        .dcaps = nullptr,
+        .perms = perms,
+        .acls = nullptr,
+        .processName = "screen_client_unittest",
+        .aplStr = "system_core",
+    };
+    uint64_t tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
+    delete[] perms;
+
     windowProperty_ = std::make_shared<WindowProperty>();
     windowProperty_->width = VIDEO_DATA_NUM;
     windowProperty_->height = VIDEO_DATA_NUM;
+    windowProperty_->displayId = Rosen::DisplayManager::GetInstance().GetDefaultDisplay()->GetId();
 }
 
 void ScreenClientTest::TearDown()
 {
+    ScreenClient::GetInstance().DestroyAllWindow();
     windowProperty_ = nullptr;
 }
 
