@@ -51,6 +51,9 @@ ohos_unittest("ScreenClientTest") {
   ]
 
   external_deps = [
+    "access_token:libaccesstoken_sdk",
+    "access_token:libnativetoken",
+    "access_token:libtoken_setproc",
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
     "googletest:gmock",
@@ -58,6 +61,7 @@ ohos_unittest("ScreenClientTest") {
     "graphic_2d:librender_service_client",
     "graphic_surface:surface",
     "input:libmmi-client",
+    "window_manager:libdm",
     "window_manager:libwm",
   ]
 }
