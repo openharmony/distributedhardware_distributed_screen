@@ -65,6 +65,7 @@ ohos_unittest("ScreenCallbackTest") {
     "av_codec:av_codec_client",
     "c_utils:utils",
     "distributed_hardware_fwk:distributedhardwareutils",
+    "dsoftbus:softbus_client",
     "googletest:gmock",
     "googletest:gtest_main",
     "graphic_2d:libgraphic_utils",
