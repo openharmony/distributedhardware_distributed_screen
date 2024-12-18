@@ -16,12 +16,12 @@
 #include "onoutputformatchanged_fuzzer.h"
 
 #include <iostream>
-
 #include "avcodec_common.h"
 #include "avcodec_errors.h"
 #include "dscreen_constants.h"
 #include "dscreen_constants.h"
 #include "dscreen_errcode.h"
+#include "fuzzer/FuzzedDataProvider.h"
 #include "iimage_source_processor_listener.h"
 #include "image_encoder_callback.h"
 #include "image_source_encoder.h"
@@ -31,30 +31,30 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-void OnOutputFormatChangedFuzzTest(const uint8_t* data, size_t size)
+void OnOutputFormatChangedFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
     std::shared_ptr<IImageSourceProcessorListener> listener = std::make_shared<ScreenSourceTrans>();
     std::shared_ptr<ImageSourceEncoder> encoder = std::make_shared<ImageSourceEncoder>(listener);
     std::shared_ptr<ImageEncoderCallback> encoderCallback = std::make_shared<ImageEncoderCallback>(encoder);
 
+    FuzzedDataProvider dataProvider(data, size);
+    int32_t width = dataProvider.ConsumeIntegral<int32_t>();
+    int32_t height = dataProvider.ConsumeIntegral<int32_t>();
     Media::Format format;
-    int32_t width = *(reinterpret_cast<const int32_t*>(data));
-    int32_t height = *(reinterpret_cast<const int32_t*>(data));
     format.PutIntValue(KEY_WIDTH, width);
     format.PutIntValue(KEY_HEIGHT, height);
     encoderCallback->OnOutputFormatChanged(format);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::OnOutputFormatChangedFuzzTest(data, size);
     return 0;
 }
-
