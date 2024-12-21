@@ -13,42 +13,44 @@
  * limitations under the License.
  */
 
-#include "onerror_fuzzer.h"
-
 #include <iostream>
 
+#include "onerror_fuzzer.h"
 #include "avcodec_common.h"
-#include "dscreen_constants.h"
-#include "meta/format.h"
-#include "iimage_source_processor_listener.h"
-#include "image_source_encoder.h"
-#include "image_encoder_callback.h"
-#include "iscreen_channel_listener.h"
 #include "avcodec_errors.h"
+#include "dscreen_constants.h"
+#include "fuzzer/FuzzedDataProvider.h"
+#include "iimage_source_processor_listener.h"
+#include "image_encoder_callback.h"
+#include "image_source_encoder.h"
+#include "iscreen_channel_listener.h"
+#include "meta/format.h"
 #include "screen_source_trans.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-void OnErrorFuzzTest(const uint8_t* data, size_t size)
+void OnErrorFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < (sizeof(int32_t)))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
+
+    FuzzedDataProvider dataProvider(data, size);
+    int32_t errorCode = dataProvider.ConsumeIntegral<uint32_t>();
+
     std::shared_ptr<IImageSourceProcessorListener> listener = std::make_shared<ScreenSourceTrans>();
     std::shared_ptr<ImageSourceEncoder> encoder = std::make_shared<ImageSourceEncoder>(listener);
     std::shared_ptr<ImageEncoderCallback> encoderCallback = std::make_shared<ImageEncoderCallback>(encoder);
-    int32_t errorCode = *(reinterpret_cast<const uint32_t*>(data));
     MediaAVCodec::AVCodecErrorType errorType = MediaAVCodec::AVCODEC_ERROR_INTERNAL;
     encoderCallback->OnError(errorType, errorCode);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::OnErrorFuzzTest(data, size);
     return 0;
 }
-

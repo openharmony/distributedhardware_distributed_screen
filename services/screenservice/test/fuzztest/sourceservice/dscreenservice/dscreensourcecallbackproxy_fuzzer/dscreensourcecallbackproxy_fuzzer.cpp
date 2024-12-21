@@ -14,11 +14,11 @@
  */
 
 #include "dscreensourcecallbackproxy_fuzzer.h"
-
-#include "idscreen_source.h"
 #include "dscreen_source_callback_proxy.h"
-#include "idscreen_source.h"
 #include "dscreen_source_stub.h"
+#include "fuzzer/FuzzedDataProvider.h"
+#include "idscreen_source.h"
+#include "idscreen_source.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -56,14 +56,16 @@ public:
 
 void DscreenSourceCallbackProxyFuzzTest(const uint8_t* data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
-    int32_t status = *(reinterpret_cast<const int32_t*>(data));
-    std::string dhId(reinterpret_cast<const char*>(data), size);
-    std::string devId(reinterpret_cast<const char*>(data), size);
-    std::string reqId(reinterpret_cast<const char*>(data), size);
-    std::string resultData(reinterpret_cast<const char*>(data), size);
+
+    FuzzedDataProvider dataProvider(data, size);
+    int32_t status = dataProvider.ConsumeIntegral<int32_t>();
+    std::string dhId(dataProvider.ConsumeRandomLengthString());
+    std::string devId(dataProvider.ConsumeRandomLengthString());
+    std::string reqId(dataProvider.ConsumeRandomLengthString());
+    std::string resultData(dataProvider.ConsumeRandomLengthString());
 
     sptr<IRemoteObject> dscreenSourceStubPtr(new DScreenSourceStubFuzzTest());
     sptr<DScreenSourceCallbackProxy> sourceCbkProxy(new DScreenSourceCallbackProxy(dscreenSourceStubPtr));

@@ -13,26 +13,27 @@
  * limitations under the License.
  */
 
-#include "registerdistributedhardware_fuzzer.h"
-
 #include <cstddef>
 #include <cstdint>
 
+#include "registerdistributedhardware_fuzzer.h"
 #include "mock_component_enable.h"
 #include "dscreen_source_handler.h"
+#include "fuzzer/FuzzedDataProvider.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-void RegisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
+void RegisterDistributedHardwareFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    std::string devId(reinterpret_cast<const char*>(data), size);
-    std::string version(reinterpret_cast<const char*>(data), size);
-    std::string dhId(reinterpret_cast<const char*>(data), size);
-    std::string attrs(reinterpret_cast<const char*>(data), size);
+    FuzzedDataProvider dataProvider(data, size);
+    std::string devId(dataProvider.ConsumeRandomLengthString());
+    std::string version(dataProvider.ConsumeRandomLengthString());
+    std::string dhId(dataProvider.ConsumeRandomLengthString());
+    std::string attrs(dataProvider.ConsumeRandomLengthString());
     EnableParam param;
     param.sinkVersion = version;
     param.sinkAttrs = attrs;
@@ -40,11 +41,11 @@ void RegisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
 
     DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::RegisterDistributedHardwareFuzzTest(data, size);

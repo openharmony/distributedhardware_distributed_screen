@@ -16,41 +16,43 @@
 #include "dscreensourcecallbackstub_fuzzer.h"
 #include "dscreen_errcode.h"
 #include "dscreen_source_callback_stub.h"
+#include "fuzzer/FuzzedDataProvider.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-
 class DScreenSourceCallbackStubFuzzTest : public DScreenSourceCallbackStub {
 public:
     DScreenSourceCallbackStubFuzzTest() = default;
     ~DScreenSourceCallbackStubFuzzTest() = default;
-    int32_t OnNotifyRegResult(const std::string &devId, const std::string &dhId,
-        const std::string &reqId, int32_t status, const std::string &data) override
+    int32_t OnNotifyRegResult(const std::string &devId, const std::string &dhId, const std::string &reqId,
+        int32_t status, const std::string &data) override
     {
         return 0;
     };
-    int32_t OnNotifyUnregResult(const std::string &devId, const std::string &dhId,
-        const std::string &reqId, int32_t status, const std::string &data) override
+    int32_t OnNotifyUnregResult(const std::string &devId, const std::string &dhId, const std::string &reqId,
+        int32_t status, const std::string &data) override
     {
         return 0;
     };
 };
 
-void DscreenSourceCallbackStubFuzzTest(const uint8_t* data, size_t size)
+void DscreenSourceCallbackStubFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((size < sizeof(uint32_t)) || (data == nullptr)) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
+
+    FuzzedDataProvider dataProvider(data, size);
+    unsigned int code = dataProvider.ConsumeIntegral<uint32_t>();
+    uint32_t status = dataProvider.ConsumeIntegral<int32_t>();
+    std::string dhId(dataProvider.ConsumeRandomLengthString());
+    std::string devId(dataProvider.ConsumeRandomLengthString());
+    std::string reqId(dataProvider.ConsumeRandomLengthString());
+    std::string dataStr(dataProvider.ConsumeRandomLengthString());
 
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    unsigned int code = *(reinterpret_cast<const uint32_t*>(data)) % 2;
-    uint32_t status = *(reinterpret_cast<const int32_t*>(data));
-    std::string dhId(reinterpret_cast<const char*>(data), size);
-    std::string devId(reinterpret_cast<const char*>(data), size);
-    std::string reqId(reinterpret_cast<const char*>(data), size);
-    std::string dataStr(reinterpret_cast<const char*>(data), size);
     pdata.WriteInt32(status);
     pdata.WriteString(devId);
     pdata.WriteString(dhId);
@@ -63,11 +65,11 @@ void DscreenSourceCallbackStubFuzzTest(const uint8_t* data, size_t size)
     dScreenSourceCallbackStub->OnNotifyRegResultInner(pdata, reply, option);
     dScreenSourceCallbackStub->OnNotifyUnregResultInner(pdata, reply, option);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::DscreenSourceCallbackStubFuzzTest(data, size);

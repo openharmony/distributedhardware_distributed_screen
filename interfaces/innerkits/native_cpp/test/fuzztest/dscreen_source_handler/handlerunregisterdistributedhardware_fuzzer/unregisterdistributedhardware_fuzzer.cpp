@@ -13,33 +13,34 @@
  * limitations under the License.
  */
 
-#include "unregisterdistributedhardware_fuzzer.h"
-
 #include <cstddef>
 #include <cstdint>
 
+#include "unregisterdistributedhardware_fuzzer.h"
 #include "mock_component_disable.h"
 #include "dscreen_source_handler.h"
+#include "fuzzer/FuzzedDataProvider.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-void UnregisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
+void UnregisterDistributedHardwareFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    std::string devId(reinterpret_cast<const char*>(data), size);
-    std::string dhId(reinterpret_cast<const char*>(data), size);
+    FuzzedDataProvider dataProvider(data, size);
+    std::string devId(dataProvider.ConsumeRandomLengthString());
+    std::string dhId(dataProvider.ConsumeRandomLengthString());
     std::shared_ptr<UnregisterCallback> uncallback = std::make_shared<MockComponentDisable>();
 
     DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, uncallback);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::UnregisterDistributedHardwareFuzzTest(data, size);

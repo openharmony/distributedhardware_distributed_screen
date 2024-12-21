@@ -14,8 +14,8 @@
  */
 
 #include "dscreensinkstub_fuzzer.h"
-
 #include "dscreen_sink_stub.h"
+#include "fuzzer/FuzzedDataProvider.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -39,25 +39,26 @@ public:
     {
         return 0;
     };
-    void DScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent) override {};
+    void DScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent) override{};
 };
 
-
-void DscreenSinkStubFuzzTest(const uint8_t* data, size_t size)
+void DscreenSinkStubFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
+
+    FuzzedDataProvider dataProvider(data, size);
+    uint32_t code = dataProvider.ConsumeIntegral<uint32_t>();
+    uint32_t status = dataProvider.ConsumeIntegral<int32_t>();
+    std::string dhId(dataProvider.ConsumeRandomLengthString());
+    std::string devId(dataProvider.ConsumeRandomLengthString());
+    std::string reqId(dataProvider.ConsumeRandomLengthString());
+    std::string dataStr(dataProvider.ConsumeRandomLengthString());
 
     MessageParcel pdata;
     MessageParcel reply;
     MessageOption option;
-    uint32_t code = *(reinterpret_cast<const uint32_t*>(data)) % 2;
-    uint32_t status = *(reinterpret_cast<const int32_t*>(data));
-    std::string dhId(reinterpret_cast<const char*>(data), size);
-    std::string devId(reinterpret_cast<const char*>(data), size);
-    std::string reqId(reinterpret_cast<const char*>(data), size);
-    std::string dataStr(reinterpret_cast<const char*>(data), size);
     pdata.WriteInt32(status);
     pdata.WriteString(devId);
     pdata.WriteString(dhId);
@@ -72,11 +73,11 @@ void DscreenSinkStubFuzzTest(const uint8_t* data, size_t size)
     sourceStubPtr->UnsubscribeDistributedHardwareInner(pdata, reply, option);
     sourceStubPtr->DScreenNotifyInner(pdata, reply, option);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::DscreenSinkStubFuzzTest(data, size);

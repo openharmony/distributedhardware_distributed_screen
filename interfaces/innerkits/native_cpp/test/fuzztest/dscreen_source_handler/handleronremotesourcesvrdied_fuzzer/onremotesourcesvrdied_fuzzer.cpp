@@ -13,21 +13,21 @@
  * limitations under the License.
  */
 
-#include "onremotesourcesvrdied_fuzzer.h"
-
 #include <cstddef>
 #include <cstdint>
 
+#include "onremotesourcesvrdied_fuzzer.h"
 #include "dscreen_source_handler.h"
+#include "fuzzer/FuzzedDataProvider.h"
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 constexpr int32_t DISTRIBUTED_HARDWARE_DM_SA_ID = 4802;
-void OnRemoteSourceSvrDiedFuzzTest(const uint8_t* data, size_t size)
+void OnRemoteSourceSvrDiedFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
 
@@ -37,7 +37,8 @@ void OnRemoteSourceSvrDiedFuzzTest(const uint8_t* data, size_t size)
         return;
     }
 
-    int32_t saId = *(reinterpret_cast<const int32_t*>(data));
+    FuzzedDataProvider dataProvider(data, size);
+    int32_t saId = dataProvider.ConsumeIntegral<int32_t>();
     sptr<IRemoteObject> remoteObject = systemAbilityManager->GetSystemAbility(saId);
     if (remoteObject == nullptr) {
         return;
@@ -47,11 +48,11 @@ void OnRemoteSourceSvrDiedFuzzTest(const uint8_t* data, size_t size)
 
     DScreenSourceHandler::GetInstance().OnRemoteSourceSvrDied(remote);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::OnRemoteSourceSvrDiedFuzzTest(data, size);

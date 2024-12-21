@@ -13,35 +13,35 @@
  * limitations under the License.
  */
 
-#include "pluginhardware_fuzzer.h"
-
 #include <cstddef>
 #include <cstdint>
 
+#include "pluginhardware_fuzzer.h"
 #include "dscreen_handler.h"
+#include "fuzzer/FuzzedDataProvider.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-void PluginHardwareFuzzTest(const uint8_t* data, size_t size)
+void PluginHardwareFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    std::string dhId(reinterpret_cast<const char*>(data), size);
-    std::string attr(reinterpret_cast<const char*>(data), size);
-    std::string subtype(reinterpret_cast<const char*>(data), size);
+    FuzzedDataProvider dataProvider(data, size);
+    std::string dhId(dataProvider.ConsumeRandomLengthString());
+    std::string attr(dataProvider.ConsumeRandomLengthString());
+    std::string subtype(dataProvider.ConsumeRandomLengthString());
 
     DScreenHandler::GetInstance().PluginHardware(dhId, attr, subtype);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::PluginHardwareFuzzTest(data, size);
     return 0;
 }
-

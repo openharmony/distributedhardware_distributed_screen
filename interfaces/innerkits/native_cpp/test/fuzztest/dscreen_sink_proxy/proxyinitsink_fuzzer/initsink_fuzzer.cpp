@@ -13,28 +13,28 @@
  * limitations under the License.
  */
 
-#include "initsink_fuzzer.h"
-
 #include <cstddef>
 #include <cstdint>
 
+#include "initsink_fuzzer.h"
 #include "dscreen_constants.h"
 #include "dscreen_sink_proxy.h"
+#include "fuzzer/FuzzedDataProvider.h"
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-void InitSinkFuzzTest(const uint8_t* data, size_t size)
+void InitSinkFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    std::string params(reinterpret_cast<const char*>(data), size);
+    FuzzedDataProvider dataProvider(data, size);
+    std::string params(dataProvider.ConsumeRandomLengthString());
 
-    sptr<ISystemAbilityManager> samgr =
-            SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (samgr == nullptr) {
         return;
     }
@@ -49,14 +49,13 @@ void InitSinkFuzzTest(const uint8_t* data, size_t size)
     dscreenSinkProxy->InitSink(params);
     dscreenSinkProxy->ReleaseSink();
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::InitSinkFuzzTest(data, size);
     return 0;
 }
-
