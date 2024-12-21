@@ -14,31 +14,32 @@
  */
 
 #include "dscreensourceservice_fuzzer.h"
-
-#include "string_ex.h"
-#include "idscreen_source.h"
-#include "dscreen_source_service.h"
 #include "dscreen_source_callback.h"
+#include "dscreen_source_service.h"
+#include "fuzzer/FuzzedDataProvider.h"
+#include "idscreen_source.h"
+#include "string_ex.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 const std::u16string ABILITYMGR_INTERFACE_TOKEN = u"ohos.aafwk.AbilityManager";
-void DscreenSourceServiceFuzzTest(const uint8_t* data, size_t size)
+void DscreenSourceServiceFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    std::string version(reinterpret_cast<const char*>(data), size);
+    FuzzedDataProvider dataProvider(data, size);
+    std::string version(dataProvider.ConsumeRandomLengthString());
+    std::string dhId(dataProvider.ConsumeRandomLengthString());
+    std::string devId(dataProvider.ConsumeRandomLengthString());
+    std::string reqId(dataProvider.ConsumeRandomLengthString());
+    std::string eventContent(dataProvider.ConsumeRandomLengthString());
+    std::string params(dataProvider.ConsumeRandomLengthString());
     EnableParam param;
     param.sinkVersion = version;
     param.sinkAttrs = "";
     uint32_t eventCode = 1;
-    std::string dhId(reinterpret_cast<const char*>(data), size);
-    std::string devId(reinterpret_cast<const char*>(data), size);
-    std::string reqId(reinterpret_cast<const char*>(data), size);
-    std::string eventContent(reinterpret_cast<const char*>(data), size);
-    std::string params(reinterpret_cast<const char*>(data), size);
     std::shared_ptr<DScreenSourceService> sourceServicePtr = std::make_shared<DScreenSourceService>(0, false);
     sptr<IDScreenSourceCallback> callback(new DScreenSourceCallback());
     sourceServicePtr->registerToService_ = true;
@@ -49,11 +50,11 @@ void DscreenSourceServiceFuzzTest(const uint8_t* data, size_t size)
     sourceServicePtr->UnregisterDistributedHardware(devId, dhId, reqId);
     sourceServicePtr->ReleaseSource();
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::DscreenSourceServiceFuzzTest(data, size);

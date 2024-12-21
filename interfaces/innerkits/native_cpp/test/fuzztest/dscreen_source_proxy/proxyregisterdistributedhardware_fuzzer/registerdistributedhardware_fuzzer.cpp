@@ -13,15 +13,15 @@
  * limitations under the License.
  */
 
-#include "registerdistributedhardware_fuzzer.h"
-
 #include <cstddef>
 #include <cstdint>
 
+#include "registerdistributedhardware_fuzzer.h"
 #include "dscreen_constants.h"
 #include "dscreen_source_callback.h"
 #include "dscreen_source_proxy.h"
 #include "dscreen_source_stub.h"
+#include "fuzzer/FuzzedDataProvider.h"
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
 
@@ -39,36 +39,36 @@ public:
     {
         return 0;
     };
-    int32_t RegisterDistributedHardware(const std::string &devId, const std::string &dhId,
-        const EnableParam &param, const std::string &reqId) override
+    int32_t RegisterDistributedHardware(const std::string &devId, const std::string &dhId, const EnableParam &param,
+        const std::string &reqId) override
     {
         return 0;
     };
-    void DScreenNotify(const std::string &devId, int32_t eventCode,
-        const std::string &eventContent) override {};
+    void DScreenNotify(const std::string &devId, int32_t eventCode, const std::string &eventContent) override{};
     int32_t UnregisterDistributedHardware(const std::string &devId, const std::string &dhId,
         const std::string &reqId) override
     {
         return 0;
     };
-    int32_t ConfigDistributedHardware(const std::string &devId, const std::string &dhId,
-        const std::string &key, const std::string &value) override
+    int32_t ConfigDistributedHardware(const std::string &devId, const std::string &dhId, const std::string &key,
+        const std::string &value) override
     {
         return 0;
     };
 };
 
-void RegisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
+void RegisterDistributedHardwareFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    std::string devId(reinterpret_cast<const char*>(data), size);
-    std::string dhId(reinterpret_cast<const char*>(data), size);
-    std::string reqId(reinterpret_cast<const char*>(data), size);
-    std::string version(reinterpret_cast<const char*>(data), size);
-    std::string attrs(reinterpret_cast<const char*>(data), size);
+    FuzzedDataProvider dataProvider(data, size);
+    std::string devId(dataProvider.ConsumeRandomLengthString());
+    std::string dhId(dataProvider.ConsumeRandomLengthString());
+    std::string reqId(dataProvider.ConsumeRandomLengthString());
+    std::string version(dataProvider.ConsumeRandomLengthString());
+    std::string attrs(dataProvider.ConsumeRandomLengthString());
     EnableParam param;
     param.sinkVersion = version;
     param.sinkAttrs = attrs;
@@ -77,11 +77,11 @@ void RegisterDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
     std::shared_ptr<IDScreenSource> dscreenSourceProxy = std::make_shared<DScreenSourceProxy>(remoteObject);
     dscreenSourceProxy->RegisterDistributedHardware(devId, dhId, param, reqId);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::RegisterDistributedHardwareFuzzTest(data, size);

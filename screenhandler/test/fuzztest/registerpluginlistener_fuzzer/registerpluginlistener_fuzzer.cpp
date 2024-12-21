@@ -13,13 +13,13 @@
  * limitations under the License.
  */
 
-#include "registerpluginlistener_fuzzer.h"
-
 #include <cstddef>
 #include <cstdint>
 
+#include "registerpluginlistener_fuzzer.h"
 #include "dscreen_handler.h"
 #include "device_type.h"
+#include "fuzzer/FuzzedDataProvider.h"
 #include "ihardware_handler.h"
 
 namespace OHOS {
@@ -34,9 +34,9 @@ public:
     void UnPluginHardware(const std::string &dhId) override {}
 };
 
-void RegisterPluginListenerFuzzTest(const uint8_t* data, size_t size)
+void RegisterPluginListenerFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
 
@@ -54,7 +54,8 @@ void RegisterPluginListenerFuzzTest(const uint8_t* data, size_t size)
     dhTypeMap[i++] = DHType::MODEM;
     dhTypeMap[i++] = DHType::MAX_DH;
 
-    int32_t key = *(reinterpret_cast<const int32_t*>(data)) % static_cast<int32_t>(dhTypeMap.size());
+    FuzzedDataProvider dataProvider(data, size);
+    int32_t key = dataProvider.ConsumeIntegral<int32_t>() % static_cast<int32_t>(dhTypeMap.size());
     if (dhTypeMap.count(key) == 0) {
         return;
     }
@@ -63,14 +64,13 @@ void RegisterPluginListenerFuzzTest(const uint8_t* data, size_t size)
     std::shared_ptr<PluginListener> listener = std::make_shared<DScreenHandlerFuzzTestPluginListener>(dhType);
     DScreenHandler::GetInstance().RegisterPluginListener(listener);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::RegisterPluginListenerFuzzTest(data, size);
     return 0;
 }
-

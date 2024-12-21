@@ -13,39 +13,41 @@
  * limitations under the License.
  */
 
-#include "onoutputbufferavailable_fuzzer.h"
-
 #include <iostream>
 
+#include "onoutputbufferavailable_fuzzer.h"
 #include "avcodec_common.h"
-#include "meta/format.h"
+#include "fuzzer/FuzzedDataProvider.h"
 #include "image_encoder_callback.h"
+#include "meta/format.h"
 #include "screen_source_trans.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-void OnOutputBufferAvailableFuzzTest(const uint8_t* data, size_t size)
+void OnOutputBufferAvailableFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < (sizeof(uint32_t)))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
+
+    FuzzedDataProvider dataProvider(data, size);
+    uint32_t index = dataProvider.ConsumeIntegral<uint32_t>();
+
     std::shared_ptr<IImageSourceProcessorListener> listener = std::make_shared<ScreenSourceTrans>();
     std::shared_ptr<ImageSourceEncoder> encoder = std::make_shared<ImageSourceEncoder>(listener);
     std::shared_ptr<ImageEncoderCallback> encoderCallback = std::make_shared<ImageEncoderCallback>(encoder);
-    uint32_t index = *(reinterpret_cast<const uint32_t*>(data));
     MediaAVCodec::AVCodecBufferInfo info;
     MediaAVCodec::AVCodecBufferFlag flag = MediaAVCodec::AVCODEC_BUFFER_FLAG_NONE;
     std::shared_ptr<Media::AVSharedMemory> buffer = nullptr;
     encoderCallback->OnOutputBufferAvailable(index, info, flag, buffer);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::OnOutputBufferAvailableFuzzTest(data, size);
     return 0;
 }
-

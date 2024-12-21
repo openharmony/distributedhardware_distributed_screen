@@ -13,31 +13,32 @@
  * limitations under the License.
  */
 
-#include "initsource_fuzzer.h"
-
 #include <cstddef>
 #include <cstdint>
 
+#include "initsource_fuzzer.h"
 #include "dscreen_source_handler.h"
+#include "fuzzer/FuzzedDataProvider.h"
 
 namespace OHOS {
 namespace DistributedHardware {
-void InitSourceFuzzTest(const uint8_t* data, size_t size)
+void InitSourceFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    std::string params(reinterpret_cast<const char*>(data), size);
+    FuzzedDataProvider dataProvider(data, size);
+    std::string params(dataProvider.ConsumeRandomLengthString());
 
     DScreenSourceHandler::GetInstance().InitSource(params);
     DScreenSourceHandler::GetInstance().ReleaseSource();
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::InitSourceFuzzTest(data, size);

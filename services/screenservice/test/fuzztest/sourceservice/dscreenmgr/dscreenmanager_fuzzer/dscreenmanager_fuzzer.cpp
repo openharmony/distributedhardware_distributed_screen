@@ -13,36 +13,39 @@
  * limitations under the License.
  */
 
-#include "dscreenmanager_fuzzer.h"
-
 #include <cstddef>
 #include <cstdint>
 
+#include "dscreenmanager_fuzzer.h"
 #include "1.0/include/dscreen_manager.h"
+#include "fuzzer/FuzzedDataProvider.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 namespace V1_0 {
-void OnChangeFuzzTest(const uint8_t* data, size_t size)
+void OnChangeFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(uint64_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
+
+    FuzzedDataProvider dataProvider(data, size);
+    uint64_t screenIdOne = dataProvider.ConsumeIntegral<uint64_t>();
     std::vector<uint64_t> screenIds;
-    uint64_t screenIdOne = *(reinterpret_cast<const uint64_t*>(data));
     screenIds.emplace_back(screenIdOne);
     Rosen::ScreenGroupChangeEvent event = Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP;
     DScreenGroupListener dScreenGroupListener;
     dScreenGroupListener.OnChange(screenIds, event);
 }
 
-void HandleScreenChangeFuzzTest(const uint8_t* data, size_t size)
+void HandleScreenChangeFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(uint32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    uint32_t eventValue = *(reinterpret_cast<const uint32_t*>(data)) % 3;
+    FuzzedDataProvider dataProvider(data, size);
+    uint32_t eventValue = dataProvider.ConsumeIntegral<uint32_t>() % 3;
     if ((eventValue != static_cast<uint32_t>(Rosen::ScreenGroupChangeEvent::ADD_TO_GROUP)) ||
         (eventValue != static_cast<uint32_t>(Rosen::ScreenGroupChangeEvent::REMOVE_FROM_GROUP)) ||
         (eventValue != static_cast<uint32_t>(Rosen::ScreenGroupChangeEvent::CHANGE_GROUP))) {
@@ -57,13 +60,14 @@ void HandleScreenChangeFuzzTest(const uint8_t* data, size_t size)
     dscreenManager->HandleScreenChange(dScreen, event);
 }
 
-void AddToGroupFuzzTest(const uint8_t* data, size_t size)
+void AddToGroupFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(uint64_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    uint64_t screenId = *(reinterpret_cast<const uint64_t*>(data));
+    FuzzedDataProvider dataProvider(data, size);
+    uint64_t screenId = dataProvider.ConsumeIntegral<uint64_t>();
     std::shared_ptr<IDScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
     std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>("devId000", "dhId000", dScreenCallback);
 
@@ -72,15 +76,16 @@ void AddToGroupFuzzTest(const uint8_t* data, size_t size)
     dscreenManager->RemoveFromGroup(dScreen, screenId);
 }
 
-void DScreenCallbackOnRegResultFuzzTest(const uint8_t* data, size_t size)
+void DScreenCallbackOnRegResultFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    std::string screenId(reinterpret_cast<const char*>(data), size);
-    int32_t status = *(reinterpret_cast<const int32_t*>(data));
-    std::string dataStr(reinterpret_cast<const char*>(data), size);
+    FuzzedDataProvider dataProvider(data, size);
+    std::string screenId(dataProvider.ConsumeRandomLengthString());
+    int32_t status = dataProvider.ConsumeIntegral<int32_t>();
+    std::string dataStr(dataProvider.ConsumeRandomLengthString());
 
     std::shared_ptr<IDScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
     std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>("devId000", "dhId000", dScreenCallback);
@@ -88,15 +93,16 @@ void DScreenCallbackOnRegResultFuzzTest(const uint8_t* data, size_t size)
     dScreenCallback->OnUnregResult(dScreen, screenId, status, dataStr);
 }
 
-void DScreenManagerOnUnregResultFuzzTest(const uint8_t* data, size_t size)
+void DScreenManagerOnUnregResultFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    std::string reqId(reinterpret_cast<const char*>(data), size);
-    int32_t status = *(reinterpret_cast<const int32_t*>(data));
-    std::string dataStr(reinterpret_cast<const char*>(data), size);
+    FuzzedDataProvider dataProvider(data, size);
+    std::string reqId(dataProvider.ConsumeRandomLengthString());
+    int32_t status = dataProvider.ConsumeIntegral<int32_t>();
+    std::string dataStr(dataProvider.ConsumeRandomLengthString());
 
     std::shared_ptr<IDScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
     std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>("devId000", "dhId000", dScreenCallback);
@@ -105,39 +111,40 @@ void DScreenManagerOnUnregResultFuzzTest(const uint8_t* data, size_t size)
     dscreenManager->OnUnregResult(dScreen, reqId, status, dataStr);
 }
 
-void NotifyRemoteScreenServiceFuzzTest(const uint8_t* data, size_t size)
-{
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
-        return;
-    }
-
-    std::string devId(reinterpret_cast<const char*>(data), size);
-    int32_t eventCode = *(reinterpret_cast<const int32_t*>(data));
-    std::string eventContent(reinterpret_cast<const char*>(data), size);
-
-    std::shared_ptr<DScreenManager> dscreenManager = std::make_shared<DScreenManager>();
-    dscreenManager->NotifyRemoteScreenService(devId, eventCode, eventContent);
-}
-
-void HandleNotifySetUpResultFuzzTest(const uint8_t* data, size_t size)
+void NotifyRemoteScreenServiceFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    std::string remoteDevId(reinterpret_cast<const char*>(data), size);
-    std::string eventContent(reinterpret_cast<const char*>(data), size);
+    FuzzedDataProvider dataProvider(data, size);
+    int32_t eventCode = dataProvider.ConsumeIntegral<int32_t>();
+    std::string devId(dataProvider.ConsumeRandomLengthString());
+    std::string eventContent(dataProvider.ConsumeRandomLengthString());
+
+    std::shared_ptr<DScreenManager> dscreenManager = std::make_shared<DScreenManager>();
+    dscreenManager->NotifyRemoteScreenService(devId, eventCode, eventContent);
+}
+
+void HandleNotifySetUpResultFuzzTest(const uint8_t *data, size_t size)
+{
+    if ((data == nullptr) || (size == 0)) {
+        return;
+    }
+
+    FuzzedDataProvider dataProvider(data, size);
+    std::string remoteDevId(dataProvider.ConsumeRandomLengthString());
+    std::string eventContent(dataProvider.ConsumeRandomLengthString());
 
     std::shared_ptr<DScreenManager> dscreenManager = std::make_shared<DScreenManager>();
     dscreenManager->HandleNotifySetUpResult(remoteDevId, eventContent);
 }
-
-}  // namespace V1_0
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace V1_0
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::V1_0::OnChangeFuzzTest(data, size);

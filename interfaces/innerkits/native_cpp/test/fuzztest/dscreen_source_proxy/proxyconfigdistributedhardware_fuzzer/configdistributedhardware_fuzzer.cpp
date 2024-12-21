@@ -13,32 +13,32 @@
  * limitations under the License.
  */
 
-#include "configdistributedhardware_fuzzer.h"
-
 #include <cstddef>
 #include <cstdint>
 
+#include "configdistributedhardware_fuzzer.h"
 #include "dscreen_constants.h"
 #include "dscreen_source_proxy.h"
+#include "fuzzer/FuzzedDataProvider.h"
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 constexpr int32_t DISTRIBUTED_HARDWARE_DM_SA_ID = 4802;
-void ConfigDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
+void ConfigDistributedHardwareFuzzTest(const uint8_t *data, size_t size)
 {
-    if ((data == nullptr) || (size < sizeof(int32_t))) {
+    if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    std::string devId(reinterpret_cast<const char*>(data), size);
-    std::string dhId(reinterpret_cast<const char*>(data), size);
-    std::string key(reinterpret_cast<const char*>(data), size);
-    std::string value(reinterpret_cast<const char*>(data), size);
+    FuzzedDataProvider dataProvider(data, size);
+    std::string devId(dataProvider.ConsumeRandomLengthString());
+    std::string dhId(dataProvider.ConsumeRandomLengthString());
+    std::string key(dataProvider.ConsumeRandomLengthString());
+    std::string value(dataProvider.ConsumeRandomLengthString());
 
-    sptr<ISystemAbilityManager> samgr =
-            SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (!samgr) {
         return;
     }
@@ -52,11 +52,11 @@ void ConfigDistributedHardwareFuzzTest(const uint8_t* data, size_t size)
 
     dscreenSourceProxy->ConfigDistributedHardware(devId, dhId, key, value);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::ConfigDistributedHardwareFuzzTest(data, size);

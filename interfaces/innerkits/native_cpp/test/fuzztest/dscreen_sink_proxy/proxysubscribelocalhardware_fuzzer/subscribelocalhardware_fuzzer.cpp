@@ -13,30 +13,31 @@
  * limitations under the License.
  */
 
-#include "subscribelocalhardware_fuzzer.h"
-
 #include <cstddef>
 #include <cstdint>
 
+#include "subscribelocalhardware_fuzzer.h"
 #include "dscreen_constants.h"
 #include "dscreen_sink_proxy.h"
+#include "fuzzer/FuzzedDataProvider.h"
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 constexpr int32_t DISTRIBUTED_HARDWARE_DM_SA_ID = 4802;
-void SubscribeLocalHardwareFuzzTest(const uint8_t* data, size_t size)
+void SubscribeLocalHardwareFuzzTest(const uint8_t *data, size_t size)
 {
     if ((data == nullptr) || (size == 0)) {
         return;
     }
 
-    std::string dhId(reinterpret_cast<const char*>(data), size);
-    std::string param(reinterpret_cast<const char*>(data), size);
+    FuzzedDataProvider dataProvider(data, size);
+    std::string dhId(dataProvider.ConsumeRandomLengthString());
+    std::string param(dataProvider.ConsumeRandomLengthString());
 
     sptr<ISystemAbilityManager> systemAbilityManager =
-            SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+        SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     if (systemAbilityManager == nullptr) {
         return;
     }
@@ -50,14 +51,13 @@ void SubscribeLocalHardwareFuzzTest(const uint8_t* data, size_t size)
 
     dscreenSinkProxy->SubscribeLocalHardware(dhId, param);
 }
-}  // namespace DistributedHardware
-}  // namespace OHOS
+} // namespace DistributedHardware
+} // namespace OHOS
 
 /* Fuzzer entry point */
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
     /* Run your code on data */
     OHOS::DistributedHardware::SubscribeLocalHardwareFuzzTest(data, size);
     return 0;
 }
-
