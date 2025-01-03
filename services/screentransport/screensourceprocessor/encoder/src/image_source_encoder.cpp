@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -301,11 +301,14 @@ int32_t ImageSourceEncoder::StopEncoder()
         DHLOGE("%{public}s: Stop encoder failed.", DSCREEN_LOG_TAG);
         return ERR_DH_SCREEN_CODEC_STOP_FAILED;
     }
-    ret = consumerSurface_->UnregisterConsumerListener();
-    if (ret != SURFACE_ERROR_OK) {
-        DHLOGE("Unregister Consumer Listener failed.");
+    std::unique_lock<std::mutex> bufLock(bufferMtx_);
+    if (consumerSurface_ != nullptr) {
+        ret = consumerSurface_->UnregisterConsumerListener();
+        if (ret != SURFACE_ERROR_OK) {
+            DHLOGE("Unregister Consumer Listener failed.");
+        }
+        consumerSurface_ = nullptr;
     }
-    consumerSurface_ = nullptr;
     producerSurface_ = nullptr;
     return DH_SUCCESS;
 }
