@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -131,18 +131,27 @@ HWTEST_F(ScreenImageJpegTest, DecodeDamageData_001, TestSize.Level1)
     int32_t ret = jpeg_->DecodeDamageData(dataBuffer, lastFrame);
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 
+    dataBuffer->dirtyRectVec_.clear();
     dataBuffer->AddDirtyRect(rect);
     jpeg_->configParam_.SetScreenWidth(rect.xPos);
-    jpeg_->configParam_.SetScreenHeight(rect.xPos - 1);
+    jpeg_->configParam_.SetScreenHeight(rect.yPos - 1);
     ret = jpeg_->DecodeDamageData(dataBuffer, lastFrame);
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 
+    dataBuffer->dirtyRectVec_.clear();
     dataBuffer->AddDirtyRect(rect);
-    jpeg_->configParam_.SetScreenHeight(rect.xPos);
+    jpeg_->configParam_.SetScreenHeight(rect.yPos);
     ret = jpeg_->DecodeDamageData(dataBuffer, lastFrame);
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 
+    dataBuffer->dirtyRectVec_.clear();
     rect.width = 0;
+    dataBuffer->AddDirtyRect(rect);
+    ret = jpeg_->DecodeDamageData(dataBuffer, lastFrame);
+    EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
+
+    dataBuffer->dirtyRectVec_.clear();
+    rect.height = 0;
     dataBuffer->AddDirtyRect(rect);
     ret = jpeg_->DecodeDamageData(dataBuffer, lastFrame);
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
