@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -140,6 +140,27 @@ HWTEST_F(DScreenSourceCallbackStubTest, OnNotifyUnregResult_001, TestSize.Level1
     std::string exceedParamMaxSizeStr(PARAM_MAX_SIZE + 1, 'a');
     ret = sourceCbkProxy.OnNotifyUnregResult("devId000", "dhId000", "reqId000", 0, exceedParamMaxSizeStr);
     EXPECT_NE(DH_SUCCESS, ret);
+}
+
+/**
+ * @tc.name: OnRemoteRequest_001
+ * @tc.desc: Invoke the OnRemoteRequest ipc interface.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceCallbackStubTest, OnRemoteRequest_001, TestSize.Level1)
+{
+    std::shared_ptr<DScreenSourceCallbackStub> callback = std::make_shared<TestDScreenSourceCallbackStub>();
+    std::u16string descriptor = DScreenSourceCallbackStub::GetDescriptor();
+    std::u16string requestDescriptor = descriptor;
+    uint32_t requestCode = 999;
+    MessageParcel data;
+    data.WriteInterfaceToken(requestDescriptor);
+    data.WriteUint32(requestCode);
+    MessageParcel reply;
+    MessageOption option;
+    int32_t result = callback->OnRemoteRequest(requestCode, data, reply, option);
+    EXPECT_NE(0, result);
 }
 }  // namespace DistributedHardware
 }  // namespace OHOS

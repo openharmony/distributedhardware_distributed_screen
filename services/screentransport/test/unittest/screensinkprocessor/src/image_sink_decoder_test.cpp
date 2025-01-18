@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -92,6 +92,18 @@ HWTEST_F(ImageSinkDecoderTest, configure_decoder_test_003, TestSize.Level1)
 {
     param_.SetVideoWidth(0);
     EXPECT_EQ(ERR_DH_SCREEN_CODEC_CONFIGURE_FAILED, imageDecoder_->ConfigureDecoder(param_));
+}
+
+/**
+ * @tc.name: configure_decoder_test_004
+ * @tc.desc: Verify the ConfigureDecoder function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSinkDecoderTest, configure_decoder_test_004, TestSize.Level1)
+{
+    param_.videoWidth_ = VIDEO_DATA_NUM + 1;
+    EXPECT_EQ(DH_SUCCESS, imageDecoder_->ConfigureDecoder(param_));
 }
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -118,13 +118,19 @@ HWTEST_F(ScreenDecisionCenterTest, IsDirtyRectValid_003, TestSize.Level1)
     std::vector<OHOS::Rect> damages;
     decision->configParam_.SetScreenWidth(1);
     decision->configParam_.SetScreenHeight(1);
-    OHOS::Rect damage = {0, 0, -1, 0};
+    OHOS::Rect damage = {0, 0, 1, 0};
     damages.push_back(damage);
     int32_t ret = decision->IsDirtyRectValid(damages);
     EXPECT_EQ(false, ret);
 
     damages.clear();
     damage = {0, 0, 10, 0};
+    damages.push_back(damage);
+    ret = decision->IsDirtyRectValid(damages);
+    EXPECT_EQ(false, ret);
+
+    damages.clear();
+    damage = {0, 0, -2, 0};
     damages.push_back(damage);
     ret = decision->IsDirtyRectValid(damages);
     EXPECT_EQ(false, ret);
@@ -149,7 +155,7 @@ HWTEST_F(ScreenDecisionCenterTest, IsDirtyRectValid_003, TestSize.Level1)
 }
 
 /**
- * @tc.name: IsDirtyRectValid_005
+ * @tc.name: IsDirtyRectValid_004
  * @tc.desc: Verify the IsDirtyRectValid function.
  * @tc.type: FUNC
  * @tc.require: Issue Number

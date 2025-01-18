@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -226,6 +226,9 @@ HWTEST_F(DScreenSinkStubTest, DScreenNotify_001, TestSize.Level1)
 
     std::string devId = "devId000";
     int32_t eventCode = 0;
+    std::string exceedParamMaxSizeStr(PARAM_MAX_SIZE + 1, 'a');
+    sinkProxy.DScreenNotify(devId, eventCode, exceedParamMaxSizeStr);
+
     std::string eventContent = "eventContent000";
     sinkProxy.DScreenNotify(devId, eventCode, eventContent);
     EXPECT_STREQ(devId.c_str(), ((sptr<TestDScreenSinkStub> &)sinkStubPtr)->devId_.c_str());
