@@ -89,6 +89,7 @@ ohos_unittest("DscreenMgrTest") {
     "graphic_surface:sync_fence",
     "hdf_core:libhdi",
     "hicollie:libhicollie",
+    "hilog:libhilog",
     "json:nlohmann_json_static",
     "media_foundation:media_foundation",
     "window_manager:libdm",

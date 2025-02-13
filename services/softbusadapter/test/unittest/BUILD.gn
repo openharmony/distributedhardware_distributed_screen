@@ -61,6 +61,7 @@ ohos_unittest("SoftBusAdapterTest") {
     "dsoftbus:softbus_client",
     "googletest:gmock",
     "googletest:gtest_main",
+    "hilog:libhilog",
   ]
 }
 

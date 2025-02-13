@@ -55,6 +55,7 @@ ohos_unittest("ScreenSinkTest") {
     "distributed_hardware_fwk:distributedhardwareutils",
     "googletest:gmock",
     "googletest:gtest_main",
+    "hilog:libhilog",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
   ]
