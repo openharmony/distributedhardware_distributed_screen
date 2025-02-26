@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2025 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -37,17 +37,11 @@ config("module_private_config") {
     "${services_path}/screentransport/screensourcetrans/include",
     "${services_path}/screenservice/sinkservice/screenregionmgr",
     "${services_path}/screenservice/test/unittest/sourceservice/dscreenmgr",
-    "${services_path}/screenservice/test/unittest/sinkservice/screenregionmgr/engineutils/include",
   ]
 }
 
 ## UnitTest DscreenMgrTest
 ohos_unittest("DscreenMgrTest") {
-  sanitize = {
-    cfi = true
-    cfi_cross_dso = true
-    debug = false
-  }
   module_out_path = module_out_path
 
   sources = [

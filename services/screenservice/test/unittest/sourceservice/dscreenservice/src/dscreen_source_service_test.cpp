@@ -50,34 +50,34 @@ int32_t V2_0::DScreenManager::EnableDistributedScreen(const std::string &devId, 
     return g_mockEnableDistributedScreenReturnInt32Value;
 }
 
-int32_t V1_0::DScreenManager::DScreenManager::DisableDistributedScreen(const std::string &devId,
+int32_t V1_0::DScreenManager::DisableDistributedScreen(const std::string &devId,
     const std::string &dhId, const std::string &reqId)
 {
     return g_mockUnregisterDistributedHardwareV1ReturnInt32Value;
 }
 
-int32_t V2_0::DScreenManager::DScreenManager::DisableDistributedScreen(const std::string &devId,
+int32_t V2_0::DScreenManager::DisableDistributedScreen(const std::string &devId,
     const std::string &dhId, const std::string &reqId)
 {
     return g_mockUnregisterDistributedHardwareV2ReturnInt32Value;
 }
 
-int32_t V1_0::DScreenManager::DScreenManager::Init()
+int32_t V1_0::DScreenManager::Init()
 {
     return g_mockInitV1ReturnInt32Value;
 }
 
-int32_t V2_0::DScreenManager::DScreenManager::Initialize()
+int32_t V2_0::DScreenManager::Initialize()
 {
     return g_mockInitializeV2ReturnInt32Value;
 }
 
-int32_t V1_0::DScreenManager::DScreenManager::UnInit()
+int32_t V1_0::DScreenManager::UnInit()
 {
     return g_mockUnInitV1ReturnInt32Value;
 }
 
-int32_t V2_0::DScreenManager::DScreenManager::Release()
+int32_t V2_0::DScreenManager::Release()
 {
     return g_mockReleaseV2ReturnInt32Value;
 }

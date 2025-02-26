@@ -15,6 +15,7 @@
 
 #include "image_source_encoder_test.h"
 #include "buffer/avsharedmemorybase.h"
+#include "iconsumer_surface.h"
 #include "screen_source_trans.h"
 
 using namespace testing::ext;
@@ -302,7 +303,6 @@ HWTEST_F(ImageSourceEncoderTest, SetEncoderFormat_004, TestSize.Level1)
     EXPECT_EQ(DH_SUCCESS, actual);
 }
 
-
 /**
  * @tc.name: SetEncoderFormat_007
  * @tc.desc: Verify the SetEncoderFormat function.
@@ -319,6 +319,23 @@ HWTEST_F(ImageSourceEncoderTest, SetEncoderFormat_007, TestSize.Level1)
     configParam.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_MPEG4);
     actual = encoder->SetEncoderFormat(configParam);
     EXPECT_EQ(ERR_DH_SCREEN_TRANS_ILLEGAL_PARAM, actual);
+}
+
+/**
+ * @tc.name: GetInputSurface_001
+ * @tc.desc: Verify the GetInputSurface function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ImageSourceEncoderTest, GetInputSurface_001, TestSize.Level1)
+{
+    encoder->configParam_.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H265);
+    encoder->configParam_.SetVideoWidth(DSCREEN_MAX_VIDEO_DATA_WIDTH);
+    encoder->configParam_.SetVideoHeight(DSCREEN_MAX_VIDEO_DATA_HEIGHT);
+    encoder->configParam_.SetCodecType(VIDEO_CODEC_TYPE_VIDEO_MPEG4);
+    encoder->configParam_.SetPartialRefreshFlag(true);
+    encoder->producerSurface_ = IConsumerSurface::Create();
+    EXPECT_EQ(encoder->GetInputSurface(), encoder->producerSurface_);
 }
 
 /**

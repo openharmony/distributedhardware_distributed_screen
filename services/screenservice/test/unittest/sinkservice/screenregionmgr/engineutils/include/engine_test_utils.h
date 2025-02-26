@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,13 +30,6 @@ public:
     void OnEngineEvent(DScreenEventType event, const std::string &content) override {}
     void OnEngineMessage(const std::shared_ptr<AVTransMessage> &message) override {}
     void OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer) override {}
-};
-class MockAVSenderAdapterCallback : public AVSenderAdapterCallback {
-public:
-    explicit MockAVSenderAdapterCallback() {}
-    ~MockAVSenderAdapterCallback() {}
-    void OnEngineEvent(DScreenEventType event, const std::string &content) override {}
-    void OnEngineMessage(const std::shared_ptr<AVTransMessage> &message) override {}
 };
 
 class MockIAVReceiverEngine : public IAVReceiverEngine {
@@ -85,78 +78,6 @@ public:
     }
 
     int32_t RegisterReceiverCallback(const std::shared_ptr<IAVReceiverEngineCallback> &callback) override
-    {
-        (void) callback;
-        return 0;
-    }
-
-    bool StartDumpMediaData() override
-    {
-        return false;
-    }
-
-    bool StopDumpMediaData() override
-    {
-        return false;
-    }
-
-    bool ReStartDumpMediaData() override
-    {
-        return false;
-    }
-};
-
-class MockIAVSenderEngine : public IAVSenderEngine {
-public:
-    explicit MockIAVSenderEngine() {}
-    ~MockIAVSenderEngine() {}
-
-    int32_t Initialize() override
-    {
-        return 0;
-    }
-
-    int32_t Start() override
-    {
-        return 0;
-    }
-
-    int32_t Stop() override
-    {
-        return 0;
-    }
-
-    int32_t Release() override
-    {
-        return 0;
-    }
-
-    int32_t PushData(const std::shared_ptr<AVTransBuffer> &buffer) override
-    {
-        return 0;
-    }
-
-    int32_t SetParameter(AVTransTag tag, const std::string &value) override
-    {
-        (void) tag;
-        (void) value;
-        return 0;
-    }
-
-    int32_t SendMessage(const std::shared_ptr<AVTransMessage> &message) override
-    {
-        return 0;
-    }
-
-    int32_t CreateControlChannel(const std::vector<std::string> &dstDevIds,
-        const ChannelAttribute &attribution) override
-    {
-        (void) dstDevIds;
-        (void) attribution;
-        return 0;
-    }
-
-    int32_t RegisterSenderCallback(const std::shared_ptr<IAVSenderEngineCallback> &callback)
     {
         (void) callback;
         return 0;
