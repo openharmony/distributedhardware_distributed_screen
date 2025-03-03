@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -151,6 +151,10 @@ std::vector<DHItem> DScreenHandler::Query()
         uint32_t screenWidth = screen->GetWidth();
         if (screenListener_ == nullptr) {
             screenListener_ = new (std::nothrow) ScreenListener();
+            if (screenListener_ == nullptr) {
+                DHLOGE("New ScreenListener failed, dhID: %{public}s", dhId.c_str());
+                continue;
+            }
         }
         screenWidth = screenListener_->ByteCalculate(screenWidth);
         uint32_t screenHeight = screen->GetHeight();
