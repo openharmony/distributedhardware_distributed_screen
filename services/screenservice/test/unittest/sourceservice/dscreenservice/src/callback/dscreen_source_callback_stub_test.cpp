@@ -162,5 +162,60 @@ HWTEST_F(DScreenSourceCallbackStubTest, OnRemoteRequest_001, TestSize.Level1)
     int32_t result = callback->OnRemoteRequest(requestCode, data, reply, option);
     EXPECT_NE(0, result);
 }
+
+/**
+ * @tc.name: CheckParams_001
+ * @tc.desc: Invoke the CheckParams ipc interface.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceCallbackStubTest, CheckParams_001, TestSize.Level1)
+{
+    std::string devId = "devId";
+    std::string dhId = "dhId";
+    std::string reqId = "reqId";
+    std::string resultData = "resultData";
+    std::shared_ptr<DScreenSourceCallbackStub> callback = std::make_shared<TestDScreenSourceCallbackStub>();
+    EXPECT_TRUE(callback->CheckParams(devId, dhId, reqId, resultData));
+}
+
+/**
+ * @tc.name: CheckParams_002
+ * @tc.desc: Invoke the CheckParams ipc interface.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceCallbackStubTest, CheckParams_002, TestSize.Level1)
+{
+    std::string exceedDidMaxSizeStr(DID_MAX_SIZE + 1, 'a');
+    std::string exceedParamMaxSizeStr(PARAM_MAX_SIZE + 1, 'a');
+    std::string devId = "devId";
+    std::string dhId = "dhId";
+    std::string reqId = "reqId";
+    std::string resultData = exceedParamMaxSizeStr;
+    std::shared_ptr<DScreenSourceCallbackStub> callback = std::make_shared<TestDScreenSourceCallbackStub>();
+    EXPECT_FALSE(callback->CheckParams(devId, dhId, reqId, resultData));
+
+    resultData.clear();
+    EXPECT_FALSE(callback->CheckParams(devId, dhId, reqId, resultData));
+
+    reqId = exceedDidMaxSizeStr;
+    EXPECT_FALSE(callback->CheckParams(devId, dhId, reqId, resultData));
+
+    reqId.clear();
+    EXPECT_FALSE(callback->CheckParams(devId, dhId, reqId, resultData));
+
+    dhId = exceedDidMaxSizeStr;
+    EXPECT_FALSE(callback->CheckParams(devId, dhId, reqId, resultData));
+
+    dhId.clear();
+    EXPECT_FALSE(callback->CheckParams(devId, dhId, reqId, resultData));
+
+    devId = exceedDidMaxSizeStr;
+    EXPECT_FALSE(callback->CheckParams(devId, dhId, reqId, resultData));
+
+    devId.clear();
+    EXPECT_FALSE(callback->CheckParams(devId, dhId, reqId, resultData));
+}
 }  // namespace DistributedHardware
 }  // namespace OHOS

@@ -30,6 +30,9 @@ void DScreenSourceHandlerTest::TearDownTestCase(void) {}
 
 void DScreenSourceHandlerTest::SetUp(void)
 {
+    if (DScreenSourceHandler::GetInstance().sourceSvrRecipient_ == nullptr) {
+        DScreenSourceHandler::GetInstance().sourceSvrRecipient_ = new DScreenSourceHandler::DScreenSourceSvrRecipient();
+    }
     DScreenSourceHandler::GetInstance().InitSource("2.0");
 }
 
@@ -67,7 +70,6 @@ HWTEST_F(DScreenSourceHandlerTest, InitSource_002, TestSize.Level1)
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
-
 /**
  * @tc.name: FinishStartSA_001
  * @tc.desc: Verify the FinishStartSA function.
@@ -79,6 +81,23 @@ HWTEST_F(DScreenSourceHandlerTest, FinishStartSA_001, TestSize.Level1)
     const std::string param = "";
     sptr<IRemoteObject> remoteObject = nullptr;
     DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = nullptr;
+    DScreenSourceHandler::GetInstance().FinishStartSA(param, remoteObject);
+    EXPECT_EQ(DScreenSourceHandler::GetInstance().dScreenSourceProxy_, nullptr);
+}
+
+/**
+ * @tc.name: FinishStartSA_002
+ * @tc.desc: Verify the FinishStartSA function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSourceHandlerTest, FinishStartSA_002, TestSize.Level1)
+{
+    const std::string param = "";
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = nullptr;
+    DScreenSourceHandler::GetInstance().sourceSvrRecipient_ = nullptr;
     DScreenSourceHandler::GetInstance().FinishStartSA(param, remoteObject);
     EXPECT_EQ(DScreenSourceHandler::GetInstance().dScreenSourceProxy_, nullptr);
 }
@@ -99,8 +118,15 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_001, TestSize.Lev
     std::string callbackParam = "callbackParam";
     sptr<DScreenSourceLoadCallback> loadCallback(new DScreenSourceLoadCallback(callbackParam));
     loadCallback->OnLoadSystemAbilitySuccess(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID, nullptr);
-    std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
-    int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
+    std::shared_ptr<RegisterCallback> registerCallback = std::make_shared<RegisterCallbackTest>();
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = iface_cast<IDScreenSource>(remoteObject);
+    int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, registerCallback);
+    EXPECT_EQ(DH_SUCCESS, ret);
+
+    std::shared_ptr<UnregisterCallbackTest> unregisterCallback = std::make_shared<UnregisterCallbackTest>();
+    ret = DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, unregisterCallback);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
 
@@ -141,6 +167,9 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_003, TestSize.Lev
     param.sinkAttrs = "attrs";
     std::shared_ptr<RegisterCallback> callback = std::make_shared<RegisterCallbackTest>();
     DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = nullptr;
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = iface_cast<IDScreenSource>(remoteObject);
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
     EXPECT_EQ(ERR_DH_SCREEN_SA_SOURCEPCALLBACK_NOT_INIT, ret);
 }
@@ -205,6 +234,10 @@ HWTEST_F(DScreenSourceHandlerTest, RegisterDistributedHardware_006, TestSize.Lev
     if (DScreenSourceHandler::GetInstance().dScreenSourceCallback_ == nullptr) {
         DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = new (std::nothrow) DScreenSourceCallback();
     }
+    ASSERT_NE(DScreenSourceHandler::GetInstance().dScreenSourceCallback_, nullptr);
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = iface_cast<IDScreenSource>(remoteObject);
     int32_t ret = DScreenSourceHandler::GetInstance().RegisterDistributedHardware(devId, dhId, param, callback);
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 }
@@ -223,6 +256,10 @@ HWTEST_F(DScreenSourceHandlerTest, UnregisterDistributedHardware_001, TestSize.L
     if (DScreenSourceHandler::GetInstance().dScreenSourceCallback_ == nullptr) {
         DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = new (std::nothrow) DScreenSourceCallback();
     }
+    ASSERT_NE(DScreenSourceHandler::GetInstance().dScreenSourceCallback_, nullptr);
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = iface_cast<IDScreenSource>(remoteObject);
     int32_t ret = DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, callback);
     EXPECT_EQ(DH_SUCCESS, ret);
 }
@@ -274,6 +311,9 @@ HWTEST_F(DScreenSourceHandlerTest, UnregisterDistributedHardware_004, TestSize.L
     DScreenSourceHandler::GetInstance().InitSource("DScreenSourceHandlerTest");
     std::shared_ptr<UnregisterCallbackTest> callback = std::make_shared<UnregisterCallbackTest>();
     DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = nullptr;
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = iface_cast<IDScreenSource>(remoteObject);
 
     int32_t ret = DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, callback);
     EXPECT_EQ(ERR_DH_SCREEN_SA_SOURCEPCALLBACK_NOT_INIT, ret);
@@ -313,6 +353,11 @@ HWTEST_F(DScreenSourceHandlerTest, UnregisterDistributedHardware_006, TestSize.L
     if (DScreenSourceHandler::GetInstance().dScreenSourceCallback_ == nullptr) {
         DScreenSourceHandler::GetInstance().dScreenSourceCallback_ = new (std::nothrow) DScreenSourceCallback();
     }
+    ASSERT_NE(DScreenSourceHandler::GetInstance().dScreenSourceCallback_, nullptr);
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
+    DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = iface_cast<IDScreenSource>(remoteObject);
+
     int32_t ret = DScreenSourceHandler::GetInstance().UnregisterDistributedHardware(devId, dhId, callback);
     EXPECT_EQ(ERR_DH_SCREEN_INPUT_PARAM_INVALID, ret);
 }
@@ -355,14 +400,14 @@ HWTEST_F(DScreenSourceHandlerTest, ReleaseSource_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSourceHandlerTest, OnRemoteDied_001, TestSize.Level1)
 {
-    sptr<ISystemAbilityManager> samgr =
-            SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     sptr<IRemoteObject> remoteObject1 = nullptr;
     wptr<IRemoteObject> remote1(remoteObject1);
+    DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = nullptr;
     DScreenSourceHandler::GetInstance().sourceSvrRecipient_->OnRemoteDied(remote1);
-
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     sptr<IRemoteObject> remoteObject2 = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
     wptr<IRemoteObject> remote2(remoteObject2);
+    DScreenSourceHandler::GetInstance().dScreenSourceProxy_ = iface_cast<IDScreenSource>(remoteObject2);
     DScreenSourceHandler::GetInstance().sourceSvrRecipient_->OnRemoteDied(remote2);
     EXPECT_EQ(nullptr, DScreenSourceHandler::GetInstance().dScreenSourceProxy_);
 }
@@ -375,8 +420,7 @@ HWTEST_F(DScreenSourceHandlerTest, OnRemoteDied_001, TestSize.Level1)
  */
 HWTEST_F(DScreenSourceHandlerTest, OnRemoteSourceSvrDied_001, TestSize.Level1)
 {
-    sptr<ISystemAbilityManager> samgr =
-            SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    sptr<ISystemAbilityManager> samgr = SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
     sptr<IRemoteObject> remoteObject = samgr->GetSystemAbility(DISTRIBUTED_HARDWARE_SCREEN_SOURCE_SA_ID);
     wptr<IRemoteObject> remote(remoteObject);
     DScreenSourceHandler::GetInstance().OnRemoteSourceSvrDied(remote);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -31,6 +31,22 @@ public:
     static void TearDownTestCase(void);
     void SetUp();
     void TearDown();
+};
+
+class MockDScreenSourceCallback : public IDScreenSourceCallback {
+public:
+    ~MockDScreenSourceCallback() {}
+    MOCK_METHOD(int32_t, OnNotifyRegResult,
+        (const std::string &devId, const std::string &dhId, const std::string &reqId, int32_t status,
+        const std::string &data), (override));
+    MOCK_METHOD(int32_t, OnNotifyUnregResult,
+        (const std::string &devId, const std::string &dhId, const std::string &reqId, int32_t status,
+        const std::string &data), (override));
+
+    sptr<IRemoteObject> AsObject()
+    {
+        return nullptr;
+    }
 };
 } // namespace V1_0
 } // namespace DistributedHardware

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2024-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -65,7 +65,10 @@ void DscreenSinkStubFuzzTest(const uint8_t *data, size_t size)
     pdata.WriteString(reqId);
     pdata.WriteString(dataStr);
 
-    sptr<DScreenSinkStubFuzzTest> sourceStubPtr(new DScreenSinkStubFuzzTest());
+    sptr<DScreenSinkStubFuzzTest> sourceStubPtr(new (std::nothrow) DScreenSinkStubFuzzTest());
+    if (sourceStubPtr == nullptr) {
+        return;
+    }
     sourceStubPtr->OnRemoteRequest(code, pdata, reply, option);
     sourceStubPtr->InitSinkInner(pdata, reply, option);
     sourceStubPtr->ReleaseSinkInner(pdata, reply, option);

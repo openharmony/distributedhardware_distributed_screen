@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -102,21 +102,87 @@ HWTEST_F(DScreenTestV2, HandleTask_001, TestSize.Level1)
 
 /**
  * @tc.name: HandleEnable_001
- * @tc.desc: Verify the HandleEnable function failed.
+ * @tc.desc: Verify the HandleEnable function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
 HWTEST_F(DScreenTestV2, HandleEnable_001, TestSize.Level1)
 {
     dScreen_->dscreenCallback_ = nullptr;
-    std::string param = "param";
+    std::string param = "Invalid parameter";
     std::string taskId = "taskId";
     dScreen_->HandleEnable(param, taskId);
     dScreen_->dscreenCallback_ = std::make_shared<DScreenCallback>();
-    DScreenState state = ENABLING;
+    DScreenState state = ENABLED;
     dScreen_->SetState(state);
     dScreen_->HandleEnable(param, taskId);
     EXPECT_EQ(SCREEN_ID_INVALID, dScreen_->screenId_);
+
+    state = ENABLING;
+    dScreen_->SetState(state);
+    dScreen_->HandleEnable(param, taskId);
+    EXPECT_EQ(SCREEN_ID_INVALID, dScreen_->screenId_);
+
+    state = CONNECTING;
+    dScreen_->SetState(state);
+    dScreen_->HandleEnable(param, taskId);
+    EXPECT_EQ(SCREEN_ID_INVALID, dScreen_->screenId_);
+
+    state = CONNECTED;
+    dScreen_->SetState(state);
+    dScreen_->HandleEnable(param, taskId);
+    EXPECT_EQ(SCREEN_ID_INVALID, dScreen_->screenId_);
+
+    state = DISABLED;
+    dScreen_->SetState(state);
+    dScreen_->HandleEnable(param, taskId);
+    EXPECT_NE(SCREEN_ID_INVALID, dScreen_->screenId_);
+}
+
+/**
+* @tc.name: ParseInputScreenParam_001
+* @tc.desc: Verify the ParseInputScreenParam function.
+* @tc.type: FUNC
+* @tc.require: Issue Number
+*/
+HWTEST_F(DScreenTestV2, ParseInputScreenParam_001, TestSize.Level1)
+{
+    json attrJson;
+    uint32_t width = 100;
+    uint32_t heigth = 100;
+    attrJson[KEY_SCREEN_WIDTH] = width;
+    attrJson[KEY_SCREEN_HEIGHT] = heigth;
+    attrJson[KEY_CODECTYPE] = 0;
+    attrJson[KEY_HISTREAMER_VIDEO_DECODER] = "remoteCodecInfoStr";
+    std::string param = attrJson.dump();
+    std::string taskId = "taskId";
+
+    dScreen_->videoParam_ = nullptr;
+    dScreen_->ParseInputScreenParam(param, taskId);
+    EXPECT_EQ(dScreen_->videoParam_->GetScreenWidth(), 0);
+}
+
+/**
+* @tc.name: ParseInputScreenParam_002
+* @tc.desc: Verify the ParseInputScreenParam function.
+* @tc.type: FUNC
+* @tc.require: Issue Number
+*/
+HWTEST_F(DScreenTestV2, ParseInputScreenParam_002, TestSize.Level1)
+{
+    json attrJson;
+    uint32_t width = 100;
+    uint32_t heigth = 100;
+    attrJson[KEY_SCREEN_WIDTH] = width;
+    attrJson[KEY_SCREEN_HEIGHT] = heigth;
+    attrJson[KEY_CODECTYPE] = 0;
+    attrJson[KEY_HISTREAMER_VIDEO_DECODER] = "remoteCodecInfoStr";
+    std::string param = attrJson.dump();
+    std::string taskId = "taskId";
+
+    dScreen_->videoParam_ = std::make_shared<VideoParam>();
+    dScreen_->ParseInputScreenParam(param, taskId);
+    EXPECT_EQ(dScreen_->videoParam_->GetScreenWidth(), 0);
 }
 
 /**
@@ -271,6 +337,40 @@ HWTEST_F(DScreenTestV2, StopSenderEngine_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: ChooseParameter_001
+ * @tc.desc: Verify the ChooseParameter function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV2, ChooseParameter_001, TestSize.Level1)
+{
+    std::string codecType = "";
+    std::string pixelFormat = "";
+    dScreen_->senderAdapter_ = std::make_shared<AVTransSenderAdapter>();
+    dScreen_->videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H265);
+    dScreen_->videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_YUVI420);
+    dScreen_->ChooseParameter(codecType, pixelFormat);
+    EXPECT_EQ(codecType, MIME_VIDEO_H265);
+    EXPECT_EQ(pixelFormat, VIDEO_FORMAT_YUVI420);
+
+    dScreen_->videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_H264);
+    dScreen_->videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV12);
+    dScreen_->ChooseParameter(codecType, pixelFormat);
+    EXPECT_EQ(codecType, MIME_VIDEO_H264);
+    EXPECT_EQ(pixelFormat, VIDEO_FORMAT_NV12);
+
+    dScreen_->videoParam_->SetCodecType(VIDEO_CODEC_TYPE_VIDEO_MPEG4);
+    dScreen_->videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_NV21);
+    dScreen_->ChooseParameter(codecType, pixelFormat);
+    EXPECT_EQ(codecType, MIME_VIDEO_RAW);
+    EXPECT_EQ(pixelFormat, VIDEO_FORMAT_NV21);
+
+    dScreen_->videoParam_->SetVideoFormat(VIDEO_DATA_FORMAT_RGBA8888);
+    dScreen_->ChooseParameter(codecType, pixelFormat);
+    EXPECT_EQ(pixelFormat, VIDEO_FORMAT_RGBA8888);
+}
+
+/**
  * @tc.name: SetUp_001
  * @tc.desc: Verify the SetUp function failed.
  * @tc.type: FUNC
@@ -388,39 +488,33 @@ HWTEST_F(DScreenTestV2, NegotiateCodecType_002, TestSize.Level1)
 HWTEST_F(DScreenTestV2, CheckJsonData_001, TestSize.Level1)
 {
     json attrJson;
-    uint32_t width = 100;
-    uint32_t heigth = 100;
-    attrJson["screenWidth"] = width;
-    attrJson["screenHeight"] = heigth;
-    attrJson["codecType"] = 0;
-    EXPECT_EQ(true, dScreen_->CheckJsonData(attrJson));
+    EXPECT_FALSE(dScreen_->CheckJsonData(attrJson));
 }
 
 /**
  * @tc.name: CheckJsonData_002
- * @tc.desc: Verify the CheckJsonData function failed.
+ * @tc.desc: Verify the CheckJsonData function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
 HWTEST_F(DScreenTestV2, CheckJsonData_002, TestSize.Level1)
 {
     json attrJson;
-    std::string taskId = "taskId";
-    EXPECT_EQ(false, dScreen_->CheckJsonData(attrJson));
-}
+    uint32_t unsignedValue = 100;
+    int32_t signedValue = 100;
+    attrJson[KEY_SCREEN_WIDTH] = unsignedValue;
+    attrJson[KEY_SCREEN_HEIGHT] = unsignedValue;
+    attrJson[KEY_CODECTYPE] = 0;
+    EXPECT_TRUE(dScreen_->CheckJsonData(attrJson));
 
-/**
- * @tc.name: CheckJsonData_003
- * @tc.desc: Verify the CheckJsonData function failed.
- * @tc.type: FUNC
- * @tc.require: Issue Number
- */
-HWTEST_F(DScreenTestV2, CheckJsonData_003, TestSize.Level1)
-{
-    json attrJson;
-    attrJson["dhid"] = "dhid";
-    std::string taskId = "taskId";
-    EXPECT_EQ(false, dScreen_->CheckJsonData(attrJson));
+    attrJson.erase(KEY_CODECTYPE);
+    EXPECT_FALSE(dScreen_->CheckJsonData(attrJson));
+
+    attrJson[KEY_SCREEN_HEIGHT] = signedValue;
+    EXPECT_FALSE(dScreen_->CheckJsonData(attrJson));
+
+    attrJson[KEY_SCREEN_WIDTH] = signedValue;
+    EXPECT_FALSE(dScreen_->CheckJsonData(attrJson));
 }
 
 /**
@@ -438,6 +532,35 @@ HWTEST_F(DScreenTestV2, OnEngineEvent_001, TestSize.Level1)
     event = TRANS_CHANNEL_CLOSED;
     dScreen_->OnEngineEvent(event, content);
     EXPECT_EQ(SCREEN_ID_INVALID, dScreen_->screenId_);
+}
+
+/**
+ * @tc.name: OnEngineMessage_001
+ * @tc.desc: Verify the OnEngineMessage function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenTestV2, OnEngineMessage_001, TestSize.Level1)
+{
+    uint32_t type = 0;
+    std::string content = "content";
+    std::string dstDevId = "dstDevId";
+    std::shared_ptr<AVTransMessage> message = nullptr;
+    dScreen_->OnEngineMessage(message);
+    EXPECT_FALSE(dScreen_->sinkStartSuccess_);
+
+    message = std::make_shared<AVTransMessage>(type, content, dstDevId);
+    message->type_ = DScreenMsgType::START_MIRROR_SUCCESS;
+    dScreen_->OnEngineMessage(message);
+    EXPECT_TRUE(dScreen_->sinkStartSuccess_);
+
+    message->type_ = DScreenMsgType::START_MIRROR_FAIL;
+    dScreen_->OnEngineMessage(message);
+    EXPECT_FALSE(dScreen_->sinkStartSuccess_);
+
+    message->type_ = DScreenMsgType::START_MIRROR;
+    dScreen_->OnEngineMessage(message);
+    EXPECT_FALSE(dScreen_->sinkStartSuccess_);
 }
 
 /**

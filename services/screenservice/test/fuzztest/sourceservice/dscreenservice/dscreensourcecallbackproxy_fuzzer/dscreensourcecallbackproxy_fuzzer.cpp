@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -53,7 +53,6 @@ public:
     };
 };
 
-
 void DscreenSourceCallbackProxyFuzzTest(const uint8_t* data, size_t size)
 {
     if ((data == nullptr) || (size == 0)) {
@@ -67,8 +66,15 @@ void DscreenSourceCallbackProxyFuzzTest(const uint8_t* data, size_t size)
     std::string reqId(dataProvider.ConsumeRandomLengthString());
     std::string resultData(dataProvider.ConsumeRandomLengthString());
 
-    sptr<IRemoteObject> dscreenSourceStubPtr(new DScreenSourceStubFuzzTest());
-    sptr<DScreenSourceCallbackProxy> sourceCbkProxy(new DScreenSourceCallbackProxy(dscreenSourceStubPtr));
+    sptr<IRemoteObject> dscreenSourceStubPtr(new (std::nothrow) DScreenSourceStubFuzzTest());
+    if (dscreenSourceStubPtr == nullptr) {
+        return;
+    }
+    sptr<DScreenSourceCallbackProxy> sourceCbkProxy(
+        new (std::nothrow) DScreenSourceCallbackProxy(dscreenSourceStubPtr));
+    if (sourceCbkProxy == nullptr) {
+        return;
+    }
     sourceCbkProxy->OnNotifyRegResult(devId, dhId, reqId, status, resultData);
     sourceCbkProxy->OnNotifyUnregResult(devId, dhId, reqId, status, resultData);
     sourceCbkProxy->CheckParams(devId, dhId, reqId, resultData);

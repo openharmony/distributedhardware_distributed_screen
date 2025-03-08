@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -238,6 +238,47 @@ HWTEST_F(VideoParamTest, from_json_002, TestSize.Level1)
     j[KEY_COLOR_FORMAT] = videoFormat;
     from_json(j, jsonVideoParam);
     EXPECT_EQ(false, jsonVideoParam.isPartialRefresh_);
+}
+
+/**
+ * @tc.name: from_json_003
+ * @tc.desc: Verify the from_json function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(VideoParamTest, from_json_003, TestSize.Level1)
+{
+    json j;
+    uint32_t screenWidth = DSCREEN_MAX_SCREEN_DATA_WIDTH;
+    uint32_t screenHeight = DSCREEN_MAX_SCREEN_DATA_HEIGHT;
+    uint32_t videoWidth = DSCREEN_MAX_VIDEO_DATA_WIDTH;
+    uint32_t videoHeight = DSCREEN_MAX_VIDEO_DATA_HEIGHT + 1;
+    double fps = 30.0;
+    uint8_t codecType = DEFAULT_CODECTYPE;
+    uint8_t videoFormat = DEFAULT_VIDEO_FORMAT;
+    VideoParam jsonVideoParam;
+    jsonVideoParam.isPartialRefresh_ = true;
+    j[KEY_SCREEN_WIDTH] = screenWidth;
+    j[KEY_SCREEN_HEIGHT] = screenHeight;
+    j[KEY_VIDEO_WIDTH] = videoWidth;
+    j[KEY_VIDEO_HEIGHT] = videoHeight;
+    j[KEY_FPS] = fps;
+    j[KEY_CODECTYPE] = codecType;
+    j[KEY_COLOR_FORMAT] = videoFormat;
+    from_json(j, jsonVideoParam);
+    EXPECT_TRUE(jsonVideoParam.isPartialRefresh_);
+
+    j[KEY_VIDEO_WIDTH] = DSCREEN_MAX_VIDEO_DATA_WIDTH + 1;
+    from_json(j, jsonVideoParam);
+    EXPECT_TRUE(jsonVideoParam.isPartialRefresh_);
+
+    j[KEY_SCREEN_HEIGHT] = DSCREEN_MAX_SCREEN_DATA_HEIGHT + 1;
+    from_json(j, jsonVideoParam);
+    EXPECT_TRUE(jsonVideoParam.isPartialRefresh_);
+
+    j[KEY_SCREEN_WIDTH] = DSCREEN_MAX_SCREEN_DATA_WIDTH + 1;
+    from_json(j, jsonVideoParam);
+    EXPECT_TRUE(jsonVideoParam.isPartialRefresh_);
 }
 } // namespace DistributedHardware
 } // namespace OHOS
