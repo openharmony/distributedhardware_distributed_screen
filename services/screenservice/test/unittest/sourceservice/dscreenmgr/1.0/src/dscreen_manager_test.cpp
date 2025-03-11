@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -122,18 +122,27 @@ HWTEST_F(DScreenManagerTestV1, RemoveFromGroup_001, TestSize.Level1)
 
 /**
  * @tc.name: OnRegResult_001
- * @tc.desc: Verify the OnRegResult function failed.
+ * @tc.desc: Verify the OnRegResult function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
 HWTEST_F(DScreenManagerTestV1, OnRegResult_001, TestSize.Level1)
 {
+    std::string devId = "devId";
+    std::string dhId = "dhId";
     std::shared_ptr<IDScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
-    std::shared_ptr<DScreen> changedScreen = std::make_shared<DScreen>("devId000", "dhId000", dScreenCallback);
-    DScreenManager::GetInstance().OnRegResult(changedScreen, "taskId000", DH_SUCCESS, "dscreen enable success.");
+    std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>(devId, dhId, dScreenCallback);
+    std::string reqId;
+    int32_t status = 0;
+    std::string data;
+    DScreenManager::GetInstance().dScreenSourceCallbackProxy_ = nullptr;
+    DScreenManager::GetInstance().OnRegResult(dScreen, reqId, status, data);
 
-    int32_t ret = DScreenManager::GetInstance().Init();
-    EXPECT_EQ(DH_SUCCESS, ret);
+    sptr<MockDScreenSourceCallback> mockInstance(new MockDScreenSourceCallback());
+    DScreenManager::GetInstance().dScreenSourceCallbackProxy_ = mockInstance;
+    EXPECT_CALL(*mockInstance, OnNotifyRegResult(_, _, _, _, _)).Times(1);
+    DScreenManager::GetInstance().OnRegResult(dScreen, reqId, status, data);
+    DScreenManager::GetInstance().dScreenSourceCallbackProxy_ = nullptr;
 }
 
 /**
@@ -144,12 +153,21 @@ HWTEST_F(DScreenManagerTestV1, OnRegResult_001, TestSize.Level1)
  */
 HWTEST_F(DScreenManagerTestV1, OnUnregResult_001, TestSize.Level1)
 {
+    std::string devId = "devId";
+    std::string dhId = "dhId";
     std::shared_ptr<IDScreenCallback> dScreenCallback = std::make_shared<DScreenCallback>();
-    std::shared_ptr<DScreen> changedScreen = std::make_shared<DScreen>("devId000", "dhId000", dScreenCallback);
-    DScreenManager::GetInstance().OnUnregResult(changedScreen, "taskId000", DH_SUCCESS, "dscreen disable success.");
+    std::shared_ptr<DScreen> dScreen = std::make_shared<DScreen>(devId, dhId, dScreenCallback);
+    std::string reqId;
+    int32_t status = 0;
+    std::string data;
+    DScreenManager::GetInstance().dScreenSourceCallbackProxy_ = nullptr;
+    DScreenManager::GetInstance().OnUnregResult(dScreen, reqId, status, data);
 
-    int32_t ret = DScreenManager::GetInstance().Init();
-    EXPECT_EQ(DH_SUCCESS, ret);
+    sptr<MockDScreenSourceCallback> mockInstance(new MockDScreenSourceCallback());
+    DScreenManager::GetInstance().dScreenSourceCallbackProxy_ = mockInstance;
+    EXPECT_CALL(*mockInstance, OnNotifyUnregResult(_, _, _, _, _)).Times(1);
+    DScreenManager::GetInstance().OnUnregResult(dScreen, reqId, status, data);
+    DScreenManager::GetInstance().dScreenSourceCallbackProxy_ = nullptr;
 }
 
 /**

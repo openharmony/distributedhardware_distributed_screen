@@ -17,9 +17,7 @@
 #define OHOS_ENGINE_TEST_UTILS_H
 
 #include "i_av_receiver_engine.h"
-#include "i_av_sender_engine.h"
 #include "2.0/include/av_receiver_engine_adapter.h"
-#include "2.0/include/av_sender_engine_adapter.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -32,56 +30,18 @@ public:
     void OnEngineDataDone(const std::shared_ptr<AVTransBuffer> &buffer) override {}
 };
 
-class MockIAVReceiverEngine : public IAVReceiverEngine {
+class MockAVReceiverEngine : public IAVReceiverEngine {
 public:
-    explicit MockIAVReceiverEngine() {}
-    ~MockIAVReceiverEngine() {}
-
-    int32_t Initialize() override
-    {
-        return 0;
-    }
-
-    int32_t Start() override
-    {
-        return 0;
-    }
-
-    int32_t Stop() override
-    {
-        return 0;
-    }
-
-    int32_t Release() override
-    {
-        return 0;
-    }
-
-    int32_t SetParameter(AVTransTag tag, const std::string &value) override
-    {
-        (void) tag;
-        (void) value;
-        return 0;
-    }
-
-    int32_t SendMessage(const std::shared_ptr<AVTransMessage> &message) override
-    {
-        return 0;
-    }
-
-    int32_t CreateControlChannel(const std::vector<std::string> &dstDevIds,
-        const ChannelAttribute &attribution) override
-    {
-        (void) dstDevIds;
-        (void) attribution;
-        return 0;
-    }
-
-    int32_t RegisterReceiverCallback(const std::shared_ptr<IAVReceiverEngineCallback> &callback) override
-    {
-        (void) callback;
-        return 0;
-    }
+    MOCK_METHOD(int32_t, Initialize, (), (override));
+    MOCK_METHOD(int32_t, Release, (), (override));
+    MOCK_METHOD(int32_t, Start, (), (override));
+    MOCK_METHOD(int32_t, Stop, (), (override));
+    MOCK_METHOD(int32_t, SetParameter, (AVTransTag tag, const std::string &value), (override));
+    MOCK_METHOD(int32_t, SendMessage, (const std::shared_ptr<AVTransMessage> &message), (override));
+    MOCK_METHOD(int32_t, CreateControlChannel,
+        (const std::vector<std::string> &dstDevIds, const ChannelAttribute &attribution), (override));
+    MOCK_METHOD(int32_t, RegisterReceiverCallback, (const std::shared_ptr<IAVReceiverEngineCallback> &callback),
+        (override));
 
     bool StartDumpMediaData() override
     {

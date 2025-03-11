@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -34,13 +34,29 @@ void ScreenRegionManagerTestV2::TearDown(void)
 
 /**
  * @tc.name: Initialize_001
- * @tc.desc: Verify the Initialize function failed.
- * @tc.type: FUNC
+ * @tc.desc: Verify the Initialize function
  * @tc.require: Issue Number
  */
 HWTEST_F(ScreenRegionManagerTestV2, Initialize_001, TestSize.Level1)
 {
     EXPECT_EQ(DH_SUCCESS, ScreenRegionManager::GetInstance().Initialize());
+    EXPECT_EQ(DH_SUCCESS, ScreenRegionManager::GetInstance().Release());
+}
+
+/**
+ * @tc.name: Release_001
+ * @tc.desc: Verify the Release function
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionManagerTestV2, Release_001, TestSize.Level1)
+{
+    ScreenRegionManager::GetInstance().screenRegions_.clear();
+    std::shared_ptr<ScreenRegion> screenRegionOne = nullptr;
+    ScreenRegionManager::GetInstance().screenRegions_.push_back(screenRegionOne);
+    std::string peerDevId = "test";
+    std::shared_ptr<ScreenRegion> screenRegionTwo = std::make_shared<ScreenRegion>(peerDevId);
+    ScreenRegionManager::GetInstance().screenRegions_.push_back(screenRegionTwo);
     EXPECT_EQ(DH_SUCCESS, ScreenRegionManager::GetInstance().Release());
 }
 

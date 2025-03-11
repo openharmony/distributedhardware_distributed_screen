@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -110,7 +110,7 @@ HWTEST_F(ScreenRegionTestV2, Release_001, TestSize.Level1)
 
 /**
  * @tc.name: Release_002
- * @tc.desc: Verify the Release function failed.
+ * @tc.desc: Verify the Release function.
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
@@ -118,7 +118,28 @@ HWTEST_F(ScreenRegionTestV2, Release_002, TestSize.Level1)
 {
     screenRegion_->isRunning = true;
     screenRegion_->receiverAdapter_ = std::make_shared<AVTransReceiverAdapter>();
-    screenRegion_->receiverAdapter_->receiverEngine_ = std::make_shared<MockIAVReceiverEngine>();
+    std::shared_ptr<MockAVReceiverEngine> mockInstance = std::make_shared<MockAVReceiverEngine>();
+    screenRegion_->receiverAdapter_->receiverEngine_ = mockInstance;
+    EXPECT_CALL(*mockInstance, Release()).Times(1).WillOnce(testing::Return(0));
+    EXPECT_CALL(*mockInstance, Stop()).Times(1).WillOnce(testing::Return(0));
+    EXPECT_EQ(DH_SUCCESS, screenRegion_->Release());
+    EXPECT_EQ(false, screenRegion_->isRunning);
+}
+
+/**
+ * @tc.name: Release_003
+ * @tc.desc: Verify the Release function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(ScreenRegionTestV2, Release_003, TestSize.Level1)
+{
+    screenRegion_->isRunning = true;
+    screenRegion_->receiverAdapter_ = std::make_shared<AVTransReceiverAdapter>();
+    std::shared_ptr<MockAVReceiverEngine> mockInstance = std::make_shared<MockAVReceiverEngine>();
+    screenRegion_->receiverAdapter_->receiverEngine_ = mockInstance;
+    EXPECT_CALL(*mockInstance, Release()).Times(1).WillOnce(testing::Return(-1));
+    EXPECT_CALL(*mockInstance, Stop()).Times(1).WillOnce(testing::Return(-1));
     EXPECT_EQ(DH_SUCCESS, screenRegion_->Release());
     EXPECT_EQ(false, screenRegion_->isRunning);
 }
@@ -275,7 +296,11 @@ HWTEST_F(ScreenRegionTestV2, StartReceiverEngine_004, TestSize.Level1)
         \"screenRect\":{\"height\":1280, \"startX\":0, \"startY\":0, \"width\":720}}, \"screenId\":2, \
         \"videoParam\":{\"codecType\":2, \"colorFormat\":3, \"fps\":30, \"screenHeight\":1280, \
         \"screenWidth\":720, \"videoHeight\":1280, \"videoWidth\":720}}";
-    screenRegion_->receiverAdapter_->receiverEngine_ = std::make_shared<MockIAVReceiverEngine>();
+    std::shared_ptr<MockAVReceiverEngine> mockInstance = std::make_shared<MockAVReceiverEngine>();
+    screenRegion_->receiverAdapter_->receiverEngine_ = mockInstance;
+    EXPECT_CALL(*mockInstance, SetParameter(_, _)).WillRepeatedly(testing::Return(0));
+    EXPECT_CALL(*mockInstance, Start()).WillRepeatedly(testing::Return(0));
+    EXPECT_CALL(*mockInstance, Release()).WillRepeatedly(testing::Return(0));
     EXPECT_EQ(DH_SUCCESS, screenRegion_->StartReceiverEngine(content));
     EXPECT_EQ(true, screenRegion_->isRunning);
 }
@@ -303,7 +328,11 @@ HWTEST_F(ScreenRegionTestV2, StopReceiverEngine_002, TestSize.Level1)
     screenRegion_->receiverAdapter_ = std::make_shared<AVTransReceiverAdapter>();
     screenRegion_->receiverAdapter_->receiverEngine_ = nullptr;
     EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, screenRegion_->StopReceiverEngine());
-    screenRegion_->receiverAdapter_->receiverEngine_ = std::make_shared<MockIAVReceiverEngine>();
+
+    std::shared_ptr<MockAVReceiverEngine> mockInstance = std::make_shared<MockAVReceiverEngine>();
+    screenRegion_->receiverAdapter_->receiverEngine_ = mockInstance;
+    EXPECT_CALL(*mockInstance, Release()).Times(1).WillOnce(testing::Return(0));
+    EXPECT_CALL(*mockInstance, Stop()).Times(1).WillOnce(testing::Return(0));
     EXPECT_EQ(DH_SUCCESS, screenRegion_->StopReceiverEngine());
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -123,6 +123,25 @@ HWTEST_F(DScreenSinkHandlerTest, SubscribeLocalHardware_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: SubscribeLocalHardware_002
+ * @tc.desc: Verify the SubscribeLocalHardware function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(DScreenSinkHandlerTest, SubscribeLocalHardware_002, TestSize.Level1)
+{
+    const std::string dhId = "";
+    const std::string param = "DScreenSinkHandlerTest";
+    DScreenSinkHandler::GetInstance().dScreenSinkProxy_ = nullptr;
+    sptr<IRemoteObject> remoteObject = nullptr;
+    DScreenSinkHandler::GetInstance().OnRemoteSinkSvrDied(remoteObject);
+    ASSERT_NE(nullptr, DScreenSinkHandler::GetInstance().sinkSvrRecipient_);
+    DScreenSinkHandler::GetInstance().sinkSvrRecipient_->OnRemoteDied(remoteObject);
+    int32_t ret = DScreenSinkHandler::GetInstance().SubscribeLocalHardware(dhId, param);
+    EXPECT_EQ(ERR_DH_SCREEN_SA_SINKPROXY_NOT_INIT, ret);
+}
+
+/**
  * @tc.name: OnRemoteSinkSvrDied_001
  * @tc.desc: Verify the OnRemoteSinkSvrDied function.
  * @tc.type: FUNC
@@ -138,6 +157,7 @@ HWTEST_F(DScreenSinkHandlerTest, OnRemoteSinkSvrDied_001, TestSize.Level1)
 
     wptr<IRemoteObject> remote(remoteObject);
 
+    ASSERT_NE(DScreenSinkHandler::GetInstance().sinkSvrRecipient_, nullptr);
     DScreenSinkHandler::GetInstance().sinkSvrRecipient_->OnRemoteDied(remote);
     EXPECT_EQ(nullptr, DScreenSinkHandler::GetInstance().dScreenSinkProxy_);
 }

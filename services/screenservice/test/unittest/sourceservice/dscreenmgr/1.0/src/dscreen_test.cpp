@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -302,9 +302,9 @@ HWTEST_F(DScreenTestV1, CheckJsonData_003, TestSize.Level1)
     json attrJson;
     uint32_t width = 100;
     uint32_t heigth = 100;
-    attrJson["screenWidth"] = width;
-    attrJson["screenHeight"] = heigth;
-    attrJson["codecType"] = 0;
+    attrJson[KEY_SCREEN_WIDTH] = width;
+    attrJson[KEY_SCREEN_HEIGHT] = heigth;
+    attrJson[KEY_CODECTYPE] = 0;
 
     std::string devId = "devId";
     std::string dhId = "dhId";

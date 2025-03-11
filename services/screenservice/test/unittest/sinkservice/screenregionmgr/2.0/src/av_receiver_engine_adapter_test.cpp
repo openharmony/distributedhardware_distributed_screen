@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2024-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,6 +21,7 @@
 #include "engine_test_utils.h"
 #include "2.0/include/dscreen.h"
 
+using namespace testing;
 using namespace testing::ext;
 
 namespace OHOS {
@@ -63,10 +64,31 @@ HWTEST_F(AVReceiverEngineAdapterTest, Initialize_001, TestSize.Level1)
 HWTEST_F(AVReceiverEngineAdapterTest, Initialize_002, TestSize.Level1)
 {
     std::string peerDevId = "peerDevId";
-    receiverAdapter_->receiverEngine_ = std::make_shared<MockIAVReceiverEngine>();
+    std::shared_ptr<MockAVReceiverEngine> mockInstance = std::make_shared<MockAVReceiverEngine>();
+    receiverAdapter_->receiverEngine_ = mockInstance;
+    EXPECT_CALL(*mockInstance, Start()).Times(1).WillOnce(testing::Return(0));
+    EXPECT_CALL(*mockInstance, Stop()).Times(1).WillOnce(testing::Return(0));
+    EXPECT_CALL(*mockInstance, Release()).Times(1).WillOnce(testing::Return(0));
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->Start());
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->Stop());
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->Release());
+}
+
+/**
+ * @tc.name: Release_001
+ * @tc.desc: Verify the Release function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(AVReceiverEngineAdapterTest, Release_001, TestSize.Level1)
+{
+    std::string peerDevId = "peerDevId";
+    std::shared_ptr<MockAVReceiverEngine> mockInstance = std::make_shared<MockAVReceiverEngine>();
+    receiverAdapter_->receiverEngine_ = mockInstance;
+    EXPECT_CALL(*mockInstance, Release()).Times(1).WillOnce(testing::Return(0));
+    int32_t ret = receiverAdapter_->Release();
+    EXPECT_EQ(receiverAdapter_->receiverEngine_, nullptr);
+    EXPECT_EQ(ret, DH_SUCCESS);
 }
 
 /**
@@ -82,6 +104,38 @@ HWTEST_F(AVReceiverEngineAdapterTest, Start_001, TestSize.Level1)
 }
 
 /**
+ * @tc.name: Start_002
+ * @tc.desc: Verify the Start and Stop function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(AVReceiverEngineAdapterTest, Start_002, TestSize.Level1)
+{
+    std::shared_ptr<MockAVReceiverEngine> mockInstance = std::make_shared<MockAVReceiverEngine>();
+    receiverAdapter_->receiverEngine_ = mockInstance;
+    EXPECT_CALL(*mockInstance, Start()).Times(1).WillOnce(testing::Return(0));
+    EXPECT_CALL(*mockInstance, Stop()).Times(1).WillOnce(testing::Return(0));
+    EXPECT_EQ(DH_SUCCESS, receiverAdapter_->Start());
+    EXPECT_EQ(DH_SUCCESS, receiverAdapter_->Stop());
+}
+
+/**
+ * @tc.name: Start_003
+ * @tc.desc: Verify the Start and Stop function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(AVReceiverEngineAdapterTest, Start_003, TestSize.Level1)
+{
+    std::shared_ptr<MockAVReceiverEngine> mockInstance = std::make_shared<MockAVReceiverEngine>();
+    receiverAdapter_->receiverEngine_ = mockInstance;
+    EXPECT_CALL(*mockInstance, Start()).Times(1).WillOnce(testing::Return(0));
+    EXPECT_CALL(*mockInstance, Stop()).Times(1).WillOnce(testing::Return(-1));
+    EXPECT_EQ(DH_SUCCESS, receiverAdapter_->Start());
+    EXPECT_EQ(ERR_DH_AV_TRANS_STOP_FAILED, receiverAdapter_->Stop());
+}
+
+/**
  * @tc.name: SetParameter_001
  * @tc.desc: Verify the Start and SetParameter function.
  * @tc.type: FUNC
@@ -90,6 +144,7 @@ HWTEST_F(AVReceiverEngineAdapterTest, Start_001, TestSize.Level1)
 HWTEST_F(AVReceiverEngineAdapterTest, SetParameter_001, TestSize.Level1)
 {
     std::string param = "param";
+    receiverAdapter_->receiverEngine_ = nullptr;
     EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, receiverAdapter_->SetParameter(AVTransTag::VIDEO_FRAME_RATE, param));
 }
 
@@ -102,7 +157,9 @@ HWTEST_F(AVReceiverEngineAdapterTest, SetParameter_001, TestSize.Level1)
 HWTEST_F(AVReceiverEngineAdapterTest, SetParameter_002, TestSize.Level1)
 {
     std::string param = "param";
-    receiverAdapter_->receiverEngine_ = std::make_shared<MockIAVReceiverEngine>();
+    std::shared_ptr<MockAVReceiverEngine> mockInstance = std::make_shared<MockAVReceiverEngine>();
+    receiverAdapter_->receiverEngine_ = mockInstance;
+    EXPECT_CALL(*mockInstance, SetParameter(_, _)).Times(1).WillOnce(testing::Return(0));
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->SetParameter(AVTransTag::VIDEO_FRAME_RATE, param));
 }
 
@@ -119,7 +176,9 @@ HWTEST_F(AVReceiverEngineAdapterTest, SendMessageToRemote_001, TestSize.Level1)
     std::string dstDevId = "dstDevId";
     auto message = std::make_shared<AVTransMessage>(type, content, dstDevId);
     EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, receiverAdapter_->SendMessageToRemote(message));
-    receiverAdapter_->receiverEngine_ = std::make_shared<MockIAVReceiverEngine>();
+    std::shared_ptr<MockAVReceiverEngine> mockInstance = std::make_shared<MockAVReceiverEngine>();
+    receiverAdapter_->receiverEngine_ = mockInstance;
+    EXPECT_CALL(*mockInstance, SendMessage(_)).Times(1).WillOnce(testing::Return(0));
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->SendMessageToRemote(message));
 }
 
@@ -152,7 +211,9 @@ HWTEST_F(AVReceiverEngineAdapterTest, OnReceiverEvent_001, TestSize.Level1)
     std::shared_ptr<AVTransBuffer> buffer = nullptr;
     EXPECT_EQ(ERR_DH_AV_TRANS_NULL_VALUE, receiverAdapter_->OnDataAvailable(buffer));
     receiverAdapter_->adapterCallback_ = std::make_shared<MockAVReceiverAdapterCallback>();
-    receiverAdapter_->receiverEngine_ = std::make_shared<MockIAVReceiverEngine>();
+    std::shared_ptr<MockAVReceiverEngine> mockInstance = std::make_shared<MockAVReceiverEngine>();
+    receiverAdapter_->receiverEngine_ = mockInstance;
+    EXPECT_CALL(*mockInstance, Release()).Times(1).WillOnce(testing::Return(0));
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->OnReceiverEvent(event));
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->OnMessageReceived(message));
     EXPECT_EQ(DH_SUCCESS, receiverAdapter_->OnDataAvailable(buffer));
