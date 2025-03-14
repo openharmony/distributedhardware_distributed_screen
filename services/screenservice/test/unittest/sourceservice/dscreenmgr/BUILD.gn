@@ -15,7 +15,7 @@ import("//build/test.gni")
 import(
     "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
 
-module_out_path = "distributed_screen/DscreenMgrTest"
+module_out_path = "distributed_screen/distributed_screen/DscreenMgrTest"
 
 config("module_private_config") {
   visibility = [ ":*" ]
