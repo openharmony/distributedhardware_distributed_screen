@@ -20,7 +20,7 @@ module_out_path = "distributed_screen/distributed_screen/DscreenMgrTest"
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
-    "./include",
+    "include",
     "${common_path}/include",
     "${distributedscreen_path}/interfaces/innerkits/native_cpp/screen_sink/include",
     "${distributedscreen_path}/interfaces/innerkits/native_cpp/screen_sink/include/callback",

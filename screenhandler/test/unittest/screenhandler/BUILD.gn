@@ -20,7 +20,7 @@ module_out_path = "distributed_screen/distributed_screen/dscreen_handler_test"
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
-    "./include",
+    "include",
     "${common_path}/include",
     "${distributedscreen_path}/screenhandler/include",
   ]

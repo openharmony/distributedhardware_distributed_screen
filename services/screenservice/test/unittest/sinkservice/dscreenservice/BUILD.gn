@@ -21,7 +21,7 @@ module_out_path =
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
-    "./include",
+    "include",
     "${common_path}/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
