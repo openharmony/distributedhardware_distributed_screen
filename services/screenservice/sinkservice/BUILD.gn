@@ -27,7 +27,7 @@ ohos_shared_library("distributed_screen_sink") {
   }
   branch_protector_ret = "pac_ret"
   include_dirs = [
-    "./dscreenservice/include",
+    "dscreenservice/include",
     "${services_path}/screenservice/sinkservice/screenregionmgr",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
@@ -50,13 +50,13 @@ ohos_shared_library("distributed_screen_sink") {
     "${services_path}/common/utils/src/dscreen_hidumper.cpp",
     "${services_path}/common/utils/src/dscreen_maprelation.cpp",
     "${services_path}/common/utils/src/video_param.cpp",
-    "./dscreenservice/src/dscreen_sink_service.cpp",
-    "./dscreenservice/src/dscreen_sink_stub.cpp",
-    "./screenregionmgr/1.0/src/screenregion.cpp",
-    "./screenregionmgr/1.0/src/screenregionmgr.cpp",
-    "./screenregionmgr/2.0/src/av_receiver_engine_adapter.cpp",
-    "./screenregionmgr/2.0/src/screenregion.cpp",
-    "./screenregionmgr/2.0/src/screenregionmgr.cpp",
+    "dscreenservice/src/dscreen_sink_service.cpp",
+    "dscreenservice/src/dscreen_sink_stub.cpp",
+    "screenregionmgr/1.0/src/screenregion.cpp",
+    "screenregionmgr/1.0/src/screenregionmgr.cpp",
+    "screenregionmgr/2.0/src/av_receiver_engine_adapter.cpp",
+    "screenregionmgr/2.0/src/screenregion.cpp",
+    "screenregionmgr/2.0/src/screenregionmgr.cpp",
   ]
 
   deps = [

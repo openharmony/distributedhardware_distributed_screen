@@ -79,7 +79,7 @@ HWTEST_F(ScreenClientTest, AddWindow_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenClientTest, AddWindow_002, TestSize.Level1)
+HWTEST_F(ScreenClientTest, AddWindow_002, TestSize.Level0)
 {
     int32_t expectId = ScreenClient::GetInstance().AddWindow(windowProperty_);
     int32_t ret = ScreenClient::GetInstance().RemoveWindow(expectId);
@@ -104,7 +104,7 @@ HWTEST_F(ScreenClientTest, ShowWindow_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenClientTest, ShowWindow_002, TestSize.Level1)
+HWTEST_F(ScreenClientTest, ShowWindow_002, TestSize.Level0)
 {
     int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty_);
     int32_t ret = ScreenClient::GetInstance().ShowWindow(windowId);
@@ -147,7 +147,7 @@ HWTEST_F(ScreenClientTest, HideWindow_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenClientTest, HideWindow_002, TestSize.Level1)
+HWTEST_F(ScreenClientTest, HideWindow_002, TestSize.Level0)
 {
     int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty_);
     int32_t ret = ScreenClient::GetInstance().HideWindow(windowId);
@@ -190,7 +190,7 @@ HWTEST_F(ScreenClientTest, MoveWindow_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenClientTest, MoveWindow_002, TestSize.Level1)
+HWTEST_F(ScreenClientTest, MoveWindow_002, TestSize.Level0)
 {
     int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty_);
     int32_t ret = ScreenClient::GetInstance().MoveWindow(windowId, 0, 0);
@@ -233,7 +233,7 @@ HWTEST_F(ScreenClientTest, RemoveWindow_001, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenClientTest, RemoveWindow_002, TestSize.Level1)
+HWTEST_F(ScreenClientTest, RemoveWindow_002, TestSize.Level0)
 {
     int32_t windowId = ScreenClient::GetInstance().AddWindow(windowProperty_);
     int32_t ret = ScreenClient::GetInstance().RemoveWindow(windowId);
@@ -286,7 +286,7 @@ HWTEST_F(ScreenClientTest, GetSurface_002, TestSize.Level1)
  * @tc.type: FUNC
  * @tc.require: Issue Number
  */
-HWTEST_F(ScreenClientTest, DestroyAllWindow_001, TestSize.Level1)
+HWTEST_F(ScreenClientTest, DestroyAllWindow_001, TestSize.Level0)
 {
     ScreenClient::GetInstance().AddWindow(windowProperty_);
     int32_t ret = ScreenClient::GetInstance().DestroyAllWindow();

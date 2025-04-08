@@ -28,8 +28,7 @@ ohos_shared_library("distributed_screen_sourcetrans") {
   branch_protector_ret = "pac_ret"
 
   include_dirs = [
-    "${services_path}/common/utils/include",
-    "./include",
+    "include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",
     "${services_path}/common/screen_channel/include",
@@ -53,7 +52,7 @@ ohos_shared_library("distributed_screen_sourcetrans") {
     "${services_path}/screentransport/screensourceprocessor/encoder/src/image_source_encoder.cpp",
     "${services_path}/screentransport/screensourceprocessor/src/image_source_processor.cpp",
     "${services_path}/softbusadapter/src/softbus_adapter.cpp",
-    "./src/screen_source_trans.cpp",
+    "src/screen_source_trans.cpp",
   ]
 
   deps = [ "${common_path}:distributed_screen_utils" ]

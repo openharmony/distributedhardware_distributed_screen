@@ -20,7 +20,7 @@ module_out_path = "distributed_screen/distributed_screen/source_processor_test"
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
-    "./include",
+    "include",
     "${services_path}/screentransport/test/unittest/screentranstestutils/include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",

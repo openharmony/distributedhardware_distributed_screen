@@ -27,8 +27,8 @@ ohos_shared_library("distributed_screen_source") {
   }
   branch_protector_ret = "pac_ret"
   include_dirs = [
-    "./dscreenservice/include",
-    "./dscreenservice/include/callback",
+    "dscreenservice/include",
+    "dscreenservice/include/callback",
     "${services_path}/screenservice/sourceservice/dscreenmgr",
     "${services_path}/screenservice/sourceservice/dscreenmgr/common/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
@@ -53,15 +53,15 @@ ohos_shared_library("distributed_screen_source") {
     "${services_path}/common/utils/src/dscreen_hidumper.cpp",
     "${services_path}/common/utils/src/dscreen_maprelation.cpp",
     "${services_path}/common/utils/src/video_param.cpp",
-    "./dscreenmgr/1.0/src/dscreen.cpp",
-    "./dscreenmgr/1.0/src/dscreen_manager.cpp",
-    "./dscreenmgr/2.0/src/av_sender_engine_adapter.cpp",
-    "./dscreenmgr/2.0/src/dscreen.cpp",
-    "./dscreenmgr/2.0/src/dscreen_manager.cpp",
-    "./dscreenmgr/common/src/screen_manager_adapter.cpp",
-    "./dscreenservice/src/callback/dscreen_source_callback_proxy.cpp",
-    "./dscreenservice/src/dscreen_source_service.cpp",
-    "./dscreenservice/src/dscreen_source_stub.cpp",
+    "dscreenmgr/1.0/src/dscreen.cpp",
+    "dscreenmgr/1.0/src/dscreen_manager.cpp",
+    "dscreenmgr/2.0/src/av_sender_engine_adapter.cpp",
+    "dscreenmgr/2.0/src/dscreen.cpp",
+    "dscreenmgr/2.0/src/dscreen_manager.cpp",
+    "dscreenmgr/common/src/screen_manager_adapter.cpp",
+    "dscreenservice/src/callback/dscreen_source_callback_proxy.cpp",
+    "dscreenservice/src/dscreen_source_service.cpp",
+    "dscreenservice/src/dscreen_source_stub.cpp",
   ]
 
   deps = [

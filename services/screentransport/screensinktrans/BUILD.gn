@@ -28,7 +28,7 @@ ohos_shared_library("distributed_screen_sinktrans") {
   branch_protector_ret = "pac_ret"
 
   include_dirs = [
-    "./include",
+    "include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",
     "${services_path}/common/imageJpeg/include",
@@ -53,7 +53,7 @@ ohos_shared_library("distributed_screen_sinktrans") {
     "${services_path}/screentransport/screensinkprocessor/decoder/src/image_sink_decoder.cpp",
     "${services_path}/screentransport/screensinkprocessor/src/image_sink_processor.cpp",
     "${services_path}/softbusadapter/src/softbus_adapter.cpp",
-    "./src/screen_sink_trans.cpp",
+    "src/screen_sink_trans.cpp",
   ]
 
   deps = [ "${common_path}:distributed_screen_utils" ]

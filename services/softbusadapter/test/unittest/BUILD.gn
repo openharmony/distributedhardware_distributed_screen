@@ -20,7 +20,7 @@ module_out_path = "distributed_screen/distributed_screen/soft_bus_adapter_test"
 config("module_private_config") {
   visibility = [ ":*" ]
   include_dirs = [
-    "./include",
+    "include",
     "${common_path}/include",
     "${services_path}/common/databuffer/include",
     "${services_path}/common/screen_channel/include",

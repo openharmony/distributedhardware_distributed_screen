@@ -14,7 +14,8 @@
 #####################hydra-fuzz###################
 import("//build/config/features.gni")
 import("//build/test.gni")
-import("../../../../../../../distributedscreen.gni")
+import(
+    "//foundation/distributedhardware/distributed_screen/distributedscreen.gni")
 
 ##############################fuzztest##########################################
 ohos_fuzztest("DScreenManagerFuzzTest") {
@@ -23,7 +24,7 @@ ohos_fuzztest("DScreenManagerFuzzTest") {
   fuzz_config_file = "${services_path}/screenservice/test/fuzztest/sourceservice/dscreenmgr/dscreenmanager_fuzzer"
 
   include_dirs = [
-    "./dscreenservice/include/callback",
+    "dscreenservice/include/callback",
     "${common_path}/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include",
     "${interfaces_path}/innerkits/native_cpp/screen_sink/include/callback",
