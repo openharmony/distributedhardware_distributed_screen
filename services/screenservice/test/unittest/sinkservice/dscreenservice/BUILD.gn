@@ -68,6 +68,7 @@ ohos_unittest("DScreenSinkStubTest") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "googletest:gmock",
     "googletest:gtest_main",
+    "graphic_2d:librender_service_base",
     "graphic_2d:librender_service_client",
     "graphic_surface:surface",
     "ipc:ipc_core",

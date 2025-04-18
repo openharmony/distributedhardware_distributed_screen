@@ -56,6 +56,7 @@ ohos_fuzztest("DScreenManagerFuzzTest") {
     "distributed_hardware_fwk:distributedhardwareutils",
     "distributed_hardware_fwk:libdhfwk_sdk",
     "eventhandler:libeventhandler",
+    "graphic_2d:librender_service_base",
     "graphic_2d:librender_service_client",
     "graphic_surface:surface",
     "hilog:libhilog",

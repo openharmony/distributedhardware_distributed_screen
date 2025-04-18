@@ -74,6 +74,7 @@ ohos_unittest("DScreenSourceStubTest") {
     "eventhandler:libeventhandler",
     "googletest:gmock",
     "googletest:gtest_main",
+    "graphic_2d:librender_service_base",
     "graphic_2d:librender_service_client",
     "graphic_surface:surface",
     "hilog:libhilog",
