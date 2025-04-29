@@ -91,6 +91,7 @@ ohos_unittest("DscreenRegionMgrTest") {
     "graphic_surface:surface",
     "hilog:libhilog",
     "hisysevent:libhisysevent",
+    "ipc:ipc_single",
     "json:nlohmann_json_static",
     "media_foundation:media_foundation",
     "selinux_adapter:librestorecon",
