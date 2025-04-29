@@ -54,6 +54,7 @@ ohos_unittest("JpegImageProcessorTest") {
     "av_codec:av_codec_client",
     "c_utils:utils",
     "graphic_surface:surface",
+    "ipc:ipc_single",
     "json:nlohmann_json_static",
     "media_foundation:media_foundation",
   ]

@@ -64,6 +64,7 @@ ohos_unittest("ScreenClientTest") {
     "graphic_surface:surface",
     "hilog:libhilog",
     "input:libmmi-client",
+    "ipc:ipc_single",
     "selinux_adapter:librestorecon",
     "window_manager:libdm",
     "window_manager:libwm",

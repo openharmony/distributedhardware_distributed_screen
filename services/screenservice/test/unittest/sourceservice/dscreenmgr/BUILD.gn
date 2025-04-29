@@ -91,6 +91,7 @@ ohos_unittest("DscreenMgrTest") {
     "hdf_core:libhdi",
     "hicollie:libhicollie",
     "hilog:libhilog",
+    "ipc:ipc_single",
     "json:nlohmann_json_static",
     "media_foundation:media_foundation",
     "window_manager:libdm",
