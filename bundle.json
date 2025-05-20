@@ -43,6 +43,7 @@
                 "media_foundation",
                 "samgr",
                 "safwk",
+                "selinux_adapter",
                 "hicollie",
                 "hitrace",
                 "cJSON",
