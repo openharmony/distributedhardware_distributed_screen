@@ -21,6 +21,7 @@ ohos_executable("distributedScreenTest") {
     cfi_cross_dso = true
     debug = false
   }
+  branch_protector_ret = "pac_ret"
   install_enable = false
 
   include_dirs = [
