@@ -14,10 +14,16 @@
  */
 
 #include "softbus_adapter_test.h"
+#include "device_manager_impl_mock.h"
+#include "dscreen_errcode.h"
+#include "dscreen_util.h"
+#include "mock_other_method.h"
 #include "socket.h"
 #include "softbus_adapter.h"
+#include "softbus_permission_check.h"
 #include "token_setproc.h"
 
+using namespace testing;
 using namespace testing::ext;
 
 static int g_mockBindReturnIntValue = 0;
@@ -28,14 +34,50 @@ static int g_mockSocketReturnIntValue = 0;
 
 namespace OHOS {
 namespace DistributedHardware {
-    namespace {
+namespace {
     const std::string PEER_SESSION_NAME = "ohos.dhardware.dscreen.session8647073e02e7a78f09473aa125";
     const std::string REMOTE_DEV_ID = "f6d4c0864707aefte7a78f09473aa122ff57fc81c00981fcf5be989e7d112125";
     const std::string DSCREEN_PKG_NAME_TEST = "ohos.dhardware.dscreen";
 }
-void SoftbusAdapterTest::SetUpTestCase(void) {}
 
-void SoftbusAdapterTest::TearDownTestCase(void) {}
+static bool g_checkSrc = true;
+static bool g_checkSink = true;
+static bool g_setAccess = true;
+static bool g_transCaller = true;
+static bool g_fillLocal = true;
+
+bool SoftBusPermissionCheck::CheckSrcPermission(const std::string &sinkNetworkId)
+{
+    return g_checkSrc;
+}
+
+bool SoftBusPermissionCheck::CheckSinkPermission(const AccountInfo &callerAccountInfo)
+{
+    return g_checkSink;
+}
+
+bool SoftBusPermissionCheck::SetAccessInfoToSocket(const int32_t sessionId)
+{
+    return g_setAccess;
+}
+bool SoftBusPermissionCheck::TransCallerInfo(SocketAccessInfo *callerInfo,
+    AccountInfo &callerAccountInfo, const std::string &networkId)
+{
+    return g_transCaller;
+}
+
+bool SoftBusPermissionCheck::FillLocalInfo(SocketAccessInfo *localInfo)
+{
+    return g_fillLocal;
+}
+
+void SoftbusAdapterTest::SetUpTestCase(void)
+{
+}
+
+void SoftbusAdapterTest::TearDownTestCase(void)
+{
+}
 
 void SoftbusAdapterTest::SetUp(void)
 {
@@ -44,6 +86,11 @@ void SoftbusAdapterTest::SetUp(void)
     g_mockSendBytesReturnIntValue = 0;
     g_mockSendStreamReturnIntValue = 0;
     g_mockSocketReturnIntValue = 0;
+    g_checkSrc = true;
+    g_checkSink = true;
+    g_setAccess = true;
+    g_transCaller = true;
+    g_fillLocal = true;
     softbusAdapter_ = std::make_shared<SoftbusAdapter>();
 }
 
@@ -287,9 +334,20 @@ HWTEST_F(SoftbusAdapterTest, OpenSoftbusSession_001, TestSize.Level1)
     std::string mySessionName = DATA_SESSION_NAME;
     std::string peerSessionName = DATA_SESSION_NAME;
     std::string peerDevId = "testDevId";
+
     int32_t actual = softbusAdapter_->OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
     EXPECT_NE(DH_SUCCESS, actual);
 
+    g_setAccess = false;
+    actual = softbusAdapter_->OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
+    EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_CONTEXT, actual);
+
+    g_checkSrc = false;
+    actual = softbusAdapter_->OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
+    EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_PERMISSION_DENIED, actual);
+
+    g_checkSrc = true;
+    g_setAccess = true;
     g_mockBindReturnIntValue = -1;
     actual = softbusAdapter_->OpenSoftbusSession(mySessionName, peerSessionName, peerDevId);
     EXPECT_EQ(ERR_DH_SCREEN_ADAPTER_PARA_ERROR, actual);
@@ -535,6 +593,35 @@ HWTEST_F(SoftbusAdapterTest, GetSoftbusListenerById_002, TestSize.Level1)
     softbusAdapter_->mapListeners_["hello_world"] = listener;
     std::shared_ptr<ISoftbusListener> actual = softbusAdapter_->GetSoftbusListenerById(sessionId);
     EXPECT_EQ(nullptr, actual);
+}
+
+/**
+ * @tc.name: OnNegotiate2_001
+ * @tc.desc: Verify the GetSoftbusListenerById function.
+ * @tc.type: FUNC
+ * @tc.require: Issue Number
+ */
+HWTEST_F(SoftbusAdapterTest, OnNegotiate2_001, TestSize.Level1)
+{
+    PeerSocketInfo info;
+    EXPECT_TRUE(softbusAdapter_->OnNegotiate2(0, info, nullptr, nullptr));
+
+    char networkId[10] = "networkId";
+    SocketAccessInfo peerInfo;
+    info.networkId = networkId;
+    g_transCaller = false;
+    EXPECT_FALSE(softbusAdapter_->OnNegotiate2(0, info, &peerInfo, nullptr));
+
+    g_transCaller = true;
+    g_fillLocal = false;
+    EXPECT_FALSE(softbusAdapter_->OnNegotiate2(0, info, &peerInfo, nullptr));
+
+    g_fillLocal = true;
+    g_checkSink = false;
+    EXPECT_FALSE(softbusAdapter_->OnNegotiate2(0, info, &peerInfo, nullptr));
+
+    g_checkSink = true;
+    EXPECT_TRUE(softbusAdapter_->OnNegotiate2(0, info, &peerInfo, nullptr));
 }
 } // DistributedHardware
 } // OHOS

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,6 +20,7 @@
 
 #include "softbus_bus_center.h"
 #include "softbus_common.h"
+#include "softbus_permission_check.h"
 
 #include "dscreen_errcode.h"
 #include "dscreen_hisysevent.h"
@@ -54,6 +55,12 @@ static void ScreenOnMessageReceived(int sessionId, const void *data, unsigned in
     SoftbusAdapter::GetInstance().OnMessageReceived(sessionId, data, dataLen);
 }
 
+static bool ScreenOnNegotiate2(int32_t socket, PeerSocketInfo info, SocketAccessInfo *peerInfo,
+    SocketAccessInfo *localInfo)
+{
+    return SoftbusAdapter::GetInstance().OnNegotiate2(socket, info, peerInfo, localInfo);
+}
+
 SoftbusAdapter::SoftbusAdapter()
 {
     DHLOGI("SoftbusAdapter");
@@ -66,6 +73,7 @@ SoftbusAdapter::SoftbusAdapter()
     sessListener_.OnQos = nullptr;
     sessListener_.OnError = nullptr;
     sessListener_.OnNegotiate = nullptr;
+    sessListener_.OnNegotiate2 = ScreenOnNegotiate2;
 }
 
 SoftbusAdapter::~SoftbusAdapter()
@@ -182,6 +190,10 @@ int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, con
 {
     DHLOGI("%{public}s: OpenSoftbusSession mysess:%{public}s peersess:%{public}s id:%{public}s.", DSCREEN_LOG_TAG,
         mySessionName.c_str(), peerSessionName.c_str(), GetAnonyString(peerDevId).c_str());
+    if (!SoftBusPermissionCheck::CheckSrcPermission(peerDevId)) {
+        DHLOGE("Permission denied");
+        return ERR_DH_SCREEN_ADAPTER_PERMISSION_DENIED;
+    }
 
     QosTV qos[] = {
         {.qos = QOS_TYPE_MIN_BW,        .value = 40 * 1024 * 1024},
@@ -201,22 +213,33 @@ int32_t SoftbusAdapter::OpenSoftbusSession(const std::string &mySessionName, con
         DHLOGE("Create OpenSoftbusChannel Socket error");
         return ERR_DH_SCREEN_ADAPTER_PARA_ERROR;
     }
+    if (!SoftBusPermissionCheck::SetAccessInfoToSocket(socketId)) {
+        DHLOGW("Fill and set accessInfo failed");
+        Shutdown(socketId);
+        return ERR_DH_SCREEN_ADAPTER_CONTEXT;
+    }
     int32_t ret = Bind(socketId, qos, sizeof(qos) / sizeof(qos[0]), &sessListener_);
     if (ret != DH_SUCCESS) {
         DHLOGE("Bind SocketClient error");
+        Shutdown(socketId);
         return ERR_DH_SCREEN_ADAPTER_PARA_ERROR;
     }
     {
         std::lock_guard<std::mutex> lock(idMapMutex_);
         devId2SessIdMap_.insert(std::make_pair(socketId, mySessionName + "_" + peerDevId));
     }
+    return HandleAfterOpenSession(socketId);
+}
+
+int32_t SoftbusAdapter::HandleAfterOpenSession(const int32_t socketId)
+{
     std::shared_ptr<ISoftbusListener> &listener = GetSoftbusListenerByName(socketId);
     if (listener == nullptr) {
         DHLOGE("Get softbus listener failed.");
         return ERR_DH_SCREEN_TRANS_ERROR;
     }
     PeerSocketInfo info;
-    ret = OnSoftbusSessionOpened(socketId, info);
+    int32_t ret = OnSoftbusSessionOpened(socketId, info);
     if (ret != DH_SUCCESS) {
         return ret;
     }
@@ -390,6 +413,27 @@ void SoftbusAdapter::OnMessageReceived(int sessionId, const void *data, unsigned
     (void)data;
     (void)dataLen;
     DHLOGD("%{public}s OnMessageReceived, sessionId:%{public}" PRId32, DSCREEN_LOG_TAG, sessionId);
+}
+
+bool SoftbusAdapter::OnNegotiate2(int32_t socket, PeerSocketInfo info, SocketAccessInfo *peerInfo,
+    SocketAccessInfo *localInfo)
+{
+    if (peerInfo == nullptr) {
+        DHLOGE("peerInfo is nullptr. sink must be old version");
+        return true;
+    }
+
+    AccountInfo callerAccountInfo;
+    std::string networkId = info.networkId;
+    if (!SoftBusPermissionCheck::TransCallerInfo(peerInfo, callerAccountInfo, networkId)) {
+        DHLOGE("extraAccessInfo is nullptr.");
+        return false;
+    }
+    if (!SoftBusPermissionCheck::FillLocalInfo(localInfo)) {
+        DHLOGE("FillLocalInfo failed.");
+        return false;
+    }
+    return SoftBusPermissionCheck::CheckSinkPermission(callerAccountInfo);
 }
 } // namespace DistributedHardware
 } // namespace OHOS
