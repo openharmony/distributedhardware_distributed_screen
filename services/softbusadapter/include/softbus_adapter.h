@@ -58,13 +58,13 @@ public:
     void OnStreamReceived(int32_t sessionId, const StreamData *data, const StreamData *ext,
         const StreamFrameInfo *frameInfo);
     void OnMessageReceived(int sessionId, const void *data, unsigned int dataLen) const;
-
+    bool OnNegotiate2(int32_t socket, PeerSocketInfo info, SocketAccessInfo *peerInfo, SocketAccessInfo *localInfo);
 private:
     SoftbusAdapter();
     ~SoftbusAdapter();
     std::shared_ptr<ISoftbusListener> &GetSoftbusListenerByName(int32_t sessionId);
     std::shared_ptr<ISoftbusListener> &GetSoftbusListenerById(int32_t sessionId);
-
+    int32_t HandleAfterOpenSession(const int32_t socketId);
 private:
     static const constexpr char *DSCREEN_LOG_TAG = "SoftbusAdapter";
     std::mutex listenerMtx_;

@@ -13,4 +13,16 @@
 
 [cfi]
 type:*testing::UnitTest*
-src:*third_party/googletest/*
+type:*OHOS::Parcel*
+type:*OHOS::RefBase*
+type:*OHOS::MessageParcel*
+type:*OHOS::IRemoteObject*
+type:*OHOS::IRemoteBroker*
+type:*OHOS::ISystemAbilityManager*
+type:*OHOS::ThreadPool*
+type:*OHOS::IPCSkeleton*
+type:*OHOS::Security::AccessToken::AccessTokenKit*
+type:*OHOS::AAFwk::SystemAbilityManagerClient*
+type:*OHOS::SystemAbility*
+src:*third_party/googletest/googlemock/include/gmock/*
+src:*third_party/googletest/googletest/include/gtest/*

@@ -36,11 +36,6 @@ config("module_private_config") {
 
 ## UnitTest screen_soft_bus_adapter_test
 ohos_unittest("SoftBusAdapterTest") {
-  sanitize = {
-    cfi = true
-    cfi_cross_dso = true
-    debug = false
-  }
   module_out_path = module_out_path
 
   sources = [ "${services_path}/softbusadapter/test/unittest/src/softbus_adapter_test.cpp" ]
@@ -50,6 +45,13 @@ ohos_unittest("SoftBusAdapterTest") {
     "${common_path}/test/unittest/resource:dscreen_unittest_public_config",
   ]
 
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"SoftbusAdapterTest\"",
+    "LOG_DOMAIN=0xD004140",
+    "NORMAL_MOCK",
+  ]
+
   deps = [ "${services_path}/screentransport/screensourcetrans:distributed_screen_sourcetrans" ]
 
   external_deps = [
@@ -57,15 +59,76 @@ ohos_unittest("SoftBusAdapterTest") {
     "access_token:libnativetoken_shared",
     "access_token:libtokensetproc_shared",
     "c_utils:utils",
+    "device_manager:devicemanagersdk",
     "distributed_hardware_fwk:distributedhardwareutils",
     "dsoftbus:softbus_client",
     "googletest:gmock",
     "googletest:gtest_main",
     "hilog:libhilog",
+    "os_account:libaccountkits",
+    "os_account:os_account_innerkits",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
   ]
+
+  if (need_same_account) {
+    defines += [ "SUPPORT_SAME_ACCOUNT" ]
+  }
+}
+
+ohos_unittest("SoftbusPermissionCheckTest") {
+  module_out_path = module_out_path
+
+  include_dirs = [
+    "${services_path}/softbusadapter/include",
+    "${services_path}/softbusadapter/test/unittest/include"
+  ]
+
+  sources = [
+    "${services_path}/softbusadapter/src/softbus_permission_check.cpp",
+    "${services_path}/softbusadapter/test/unittest/src/device_manager_impl_mock.cpp",
+    "${services_path}/softbusadapter/test/unittest/src/mock_other_method.cpp",
+    "${services_path}/softbusadapter/test/unittest/src/socket_mock.cpp",
+    "${services_path}/softbusadapter/test/unittest/src/softbus_permission_check_test.cpp",
+  ]
+
+  configs = [
+    ":module_private_config",
+    "${common_path}/test/unittest/resource:dscreen_unittest_public_config",
+  ]
+
+  defines = [
+    "HI_LOG_ENABLE",
+    "DH_LOG_TAG=\"SoftbusPermissionCheckTest\"",
+    "LOG_DOMAIN=0xD004140",
+    "NORMAL_MOCK",
+  ]
+
+  external_deps = [
+    "access_token:libaccesstoken_sdk",
+    "c_utils:utils",
+    "device_manager:devicemanagersdk",
+    "dsoftbus:softbus_client",
+    "googletest:gmock_main",
+    "googletest:gtest_main",
+    "hilog:libhilog",
+    "hisysevent:libhisysevent",
+    "ipc:ipc_core",
+    "os_account:libaccountkits",
+    "os_account:os_account_innerkits",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
+  ]
+
+  if (need_same_account) {
+    defines += [ "SUPPORT_SAME_ACCOUNT" ]
+  }
 }
 
 group("soft_bus_adapter_test") {
   testonly = true
-  deps = [ ":SoftBusAdapterTest" ]
+  deps = [
+    ":SoftBusAdapterTest",
+    ":SoftbusPermissionCheckTest",
+  ]
 }

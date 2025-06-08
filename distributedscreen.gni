@@ -16,3 +16,11 @@ fuzz_test_path = "distributed_screen/distributed_screen"
 common_path = "${distributedscreen_path}/common"
 services_path = "${distributedscreen_path}/services"
 interfaces_path = "${distributedscreen_path}/interfaces"
+
+declare_args() {
+  need_same_account = true
+  if (!defined(global_parts_info) || !defined(
+          global_parts_info.distributedhardware_distributed_hardware_adapter)) {
+    need_same_account = false
+  }
+}
