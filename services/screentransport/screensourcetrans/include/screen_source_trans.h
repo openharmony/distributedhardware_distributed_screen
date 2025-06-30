@@ -67,6 +67,7 @@ private:
     static const constexpr char *DSCREEN_LOG_TAG = "ScreenSourceTrans";
 
     std::mutex sessionMtx_;
+    std::mutex channelMtx_;
     std::mutex dataMtx_;
     std::condition_variable sessionCond_;
     std::condition_variable dataCond_;
