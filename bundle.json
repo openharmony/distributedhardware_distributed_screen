@@ -76,9 +76,7 @@
                     "name": "//foundation/distributedhardware/distributed_screen/interfaces/innerkits/native_cpp/screen_sink:distributed_screen_sink_sdk",
                     "header": {
                         "header_base": "//foundation/distributedhardware/distributed_screen/interfaces/innerkits/native_cpp/screen_sink/include",
-                        "header_files": [
-                            "idscreen_sink.h"
-                        ]
+                        "header_files": [ "idscreen_sink.h" ]
                     }
                 },
                 {
@@ -86,9 +84,7 @@
                     "name": "//foundation/distributedhardware/distributed_screen/interfaces/innerkits/native_cpp/screen_source:distributed_screen_source_sdk",
                     "header": {
                         "header_base": "//foundation/distributedhardware/distributed_screen/interfaces/innerkits/native_cpp/screen_source/include",
-                        "header_files": [
-                            "idscreen_source.h"
-                        ]
+                        "header_files": [ "idscreen_source.h" ]
                     }
                 }
             ],
