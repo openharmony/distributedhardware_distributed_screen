@@ -59,6 +59,7 @@ ohos_unittest("UtilsTest") {
     "distributed_hardware_fwk:libdhfwk_sdk",
     "googletest:gmock",
     "googletest:gtest_main",
+    "hilog:libhilog",
     "ipc:ipc_core",
     "json:nlohmann_json_static",
   ]
