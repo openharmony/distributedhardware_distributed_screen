@@ -27,12 +27,12 @@
 #include "dscreen_source_callback.h"
 #include "idscreen_source.h"
 #include "idistributed_hardware_source.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 class DScreenSourceHandler : public IDistributedHardwareSource {
-DECLARE_SINGLE_INSTANCE_BASE(DScreenSourceHandler);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(DScreenSourceHandler);
 public:
     int32_t InitSource(const std::string &params) override;
     int32_t ReleaseSource() override;

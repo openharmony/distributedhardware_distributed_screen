@@ -18,7 +18,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-IMPLEMENT_SINGLE_INSTANCE(DScreenFwkKit);
+FWK_IMPLEMENT_SINGLE_INSTANCE(DScreenFwkKit);
 std::shared_ptr<DistributedHardwareFwkKit> DScreenFwkKit::GetDHFwkKit()
 {
     DHLOGI("GetDHFwkKit");

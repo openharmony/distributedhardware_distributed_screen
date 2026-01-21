@@ -24,7 +24,7 @@
 #include <mutex>
 #include <string>
 
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 #include "surface.h"
 
 #include "dscreen_constants.h"
@@ -33,7 +33,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 class ScreenClient {
-DECLARE_SINGLE_INSTANCE_BASE(ScreenClient);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(ScreenClient);
 public:
     int32_t AddWindow(std::shared_ptr<WindowProperty> &windowProperty);
     sptr<Surface> GetSurface(int32_t windowId);

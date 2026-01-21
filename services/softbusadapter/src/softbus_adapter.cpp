@@ -28,7 +28,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-IMPLEMENT_SINGLE_INSTANCE(SoftbusAdapter);
+AV_IMPLEMENT_SINGLE_INSTANCE(SoftbusAdapter);
 static void ScreenOnSoftbusSessionOpened(int32_t sessionId, PeerSocketInfo info)
 {
     SoftbusAdapter::GetInstance().OnSoftbusSessionOpened(sessionId, info);

@@ -35,7 +35,7 @@ using json = nlohmann::json;
 namespace OHOS {
 namespace DistributedHardware {
 namespace V1_0 {
-IMPLEMENT_SINGLE_INSTANCE(DScreenManager);
+FWK_IMPLEMENT_SINGLE_INSTANCE(DScreenManager);
 
 const std::map<DScreenState, std::string> stateMap = {
     { DISABLED, "disabled" },

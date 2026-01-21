@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 #include "dscreen_constants.h"
 
 namespace OHOS {
@@ -40,7 +40,7 @@ enum class HidumpFlag {
 };
 
 class DscreenHidumper {
-    DECLARE_SINGLE_INSTANCE_BASE(DscreenHidumper);
+    FWK_DECLARE_SINGLE_INSTANCE_BASE(DscreenHidumper);
 
 public:
     bool Dump(const std::vector<std::string> &args, std::string &result);

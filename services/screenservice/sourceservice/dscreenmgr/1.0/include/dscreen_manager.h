@@ -18,7 +18,7 @@
 
 #include "distributed_hardware_fwk_kit.h"
 #include "dm_common.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 #include "screen_manager.h"
 
 #include "dscreen.h"
@@ -45,7 +45,7 @@ public:
 };
 
 class DScreenManager {
-DECLARE_SINGLE_INSTANCE_BASE(DScreenManager);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(DScreenManager);
 public:
     void OnRegResult(const std::shared_ptr<DScreen> &dScreen, const std::string &reqId,
         const int32_t status, const std::string &data);

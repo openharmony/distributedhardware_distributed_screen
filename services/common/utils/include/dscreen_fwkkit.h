@@ -22,7 +22,7 @@
 #include "device_type.h"
 #include "distributed_hardware_fwk_kit.h"
 #include "nlohmann/json.hpp"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -35,7 +35,7 @@ const nlohmann::json DISABLE_LOW_LATENCY = {
     {LOW_LATENCY_ENABLE, false},
 };
 class DScreenFwkKit {
-DECLARE_SINGLE_INSTANCE_BASE(DScreenFwkKit);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(DScreenFwkKit);
 public:
     std::shared_ptr<DistributedHardwareFwkKit> GetDHFwkKit();
 private:

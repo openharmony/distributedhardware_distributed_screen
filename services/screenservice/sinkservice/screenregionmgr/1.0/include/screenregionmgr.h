@@ -20,7 +20,7 @@
 #include <mutex>
 
 #include "distributed_hardware_fwk_kit.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 
 #include "screenregion.h"
 #include "idscreen_source.h"
@@ -29,7 +29,7 @@ namespace OHOS {
 namespace DistributedHardware {
 namespace V1_0 {
 class ScreenRegionManager {
-DECLARE_SINGLE_INSTANCE_BASE(ScreenRegionManager);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(ScreenRegionManager);
 public:
     int32_t ReleaseAllRegions();
     void HandleDScreenNotify(const std::string &remoteDevId, int32_t eventCode, const std::string &eventContent);
