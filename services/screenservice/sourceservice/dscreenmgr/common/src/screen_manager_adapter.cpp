@@ -29,7 +29,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-IMPLEMENT_SINGLE_INSTANCE(ScreenMgrAdapter);
+FWK_IMPLEMENT_SINGLE_INSTANCE(ScreenMgrAdapter);
 ScreenMgrAdapter::~ScreenMgrAdapter()
 {
     screenIdMap_.clear();

@@ -19,7 +19,7 @@
 #include <map>
 #include <surface.h>
 
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 #include "screen_manager.h"
 
 #include "dscreen_maprelation.h"
@@ -29,7 +29,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 class ScreenMgrAdapter {
-DECLARE_SINGLE_INSTANCE_BASE(ScreenMgrAdapter);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(ScreenMgrAdapter);
 
 public:
     uint64_t CreateVirtualScreen(const std::string &devId, const std::string &dhId,

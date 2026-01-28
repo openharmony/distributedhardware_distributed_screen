@@ -19,7 +19,7 @@
 #include <map>
 #include <mutex>
 
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 #include "screenregion.h"
 #include "idscreen_source.h"
 
@@ -36,7 +36,7 @@ public:
 };
 
 class ScreenRegionManager {
-DECLARE_SINGLE_INSTANCE_BASE(ScreenRegionManager);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(ScreenRegionManager);
 public:
     ScreenRegionManager();
     ~ScreenRegionManager();

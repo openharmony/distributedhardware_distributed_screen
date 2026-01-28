@@ -21,7 +21,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-IMPLEMENT_SINGLE_INSTANCE(ScreenClient);
+FWK_IMPLEMENT_SINGLE_INSTANCE(ScreenClient);
 int32_t ScreenClient::AddWindow(std::shared_ptr<WindowProperty> &windowProperty)
 {
     if (windowProperty == nullptr) {

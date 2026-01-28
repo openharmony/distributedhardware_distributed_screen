@@ -25,7 +25,7 @@
 #include "axis_event.h"
 #include "key_event.h"
 #include "pointer_event.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 #include "surface.h"
 #include "window.h"
 #include "window_scene.h"
@@ -36,7 +36,7 @@
 namespace OHOS {
 namespace DistributedHardware {
 class ScreenClientWindowAdapter {
-DECLARE_SINGLE_INSTANCE_BASE(ScreenClientWindowAdapter);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(ScreenClientWindowAdapter);
 public:
     sptr<Surface> CreateWindow(std::shared_ptr<WindowProperty> &windowProperty, int32_t windowId);
     int32_t ShowWindow(int32_t windowId);

@@ -18,7 +18,7 @@
 
 #include "distributed_hardware_fwk_kit.h"
 #include "dm_common.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 #include "screen_manager.h"
 
 #include "av_sender_engine_adapter.h"
@@ -46,7 +46,7 @@ public:
 };
 
 class DScreenManager : public std::enable_shared_from_this<DScreenManager> {
-DECLARE_SINGLE_INSTANCE_BASE(DScreenManager);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(DScreenManager);
 
 public:
     DScreenManager();

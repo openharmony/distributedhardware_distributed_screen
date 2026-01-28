@@ -37,7 +37,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-IMPLEMENT_SINGLE_INSTANCE(DScreenSourceHandler);
+FWK_IMPLEMENT_SINGLE_INSTANCE(DScreenSourceHandler);
 
 DScreenSourceHandler::DScreenSourceHandler()
 {

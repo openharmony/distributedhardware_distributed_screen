@@ -23,14 +23,14 @@
 #include "idistributed_hardware_sink.h"
 #include "iremote_object.h"
 #include "refbase.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 
 #include "idscreen_sink.h"
 
 namespace OHOS {
 namespace DistributedHardware {
 class DScreenSinkHandler : public IDistributedHardwareSink {
-DECLARE_SINGLE_INSTANCE_BASE(DScreenSinkHandler);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(DScreenSinkHandler);
 public:
     int32_t InitSink(const std::string &params) override;
     int32_t ReleaseSink() override;

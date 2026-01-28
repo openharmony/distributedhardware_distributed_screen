@@ -19,7 +19,7 @@
 #include "screen_manager.h"
 
 #include "ihardware_handler.h"
-#include "single_instance.h"
+#include "dhfwk_single_instance.h"
 
 namespace OHOS {
 namespace DistributedHardware {
@@ -32,7 +32,7 @@ public:
 };
 
 class DScreenHandler : public IHardwareHandler {
-DECLARE_SINGLE_INSTANCE_BASE(DScreenHandler);
+FWK_DECLARE_SINGLE_INSTANCE_BASE(DScreenHandler);
 public:
     int32_t Initialize() override;
     std::vector<DHItem> QueryMeta() override;

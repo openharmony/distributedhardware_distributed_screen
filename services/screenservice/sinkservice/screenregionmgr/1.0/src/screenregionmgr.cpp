@@ -36,7 +36,7 @@ using json = nlohmann::json;
 namespace OHOS {
 namespace DistributedHardware {
 namespace V1_0 {
-IMPLEMENT_SINGLE_INSTANCE(ScreenRegionManager);
+FWK_IMPLEMENT_SINGLE_INSTANCE(ScreenRegionManager);
 ScreenRegionManager::ScreenRegionManager()
 {
     DHLOGI("ScreenRegionManager");

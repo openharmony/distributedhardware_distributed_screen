@@ -22,7 +22,7 @@
 
 #include "transport/socket.h"
 #include "transport/trans_type.h"
-#include "single_instance.h"
+#include "av_single_instance.h"
 
 #include "dscreen_constants.h"
 #include "dscreen_log.h"
@@ -36,7 +36,7 @@ typedef struct {
 } SessionInfo;
 
 class SoftbusAdapter {
-    DECLARE_SINGLE_INSTANCE_BASE(SoftbusAdapter);
+    AV_DECLARE_SINGLE_INSTANCE_BASE(SoftbusAdapter);
 public:
     int32_t CreateSoftbusSessionServer(const std::string &pkgname, const std::string &sessionName,
         const std::string &peerDevId);

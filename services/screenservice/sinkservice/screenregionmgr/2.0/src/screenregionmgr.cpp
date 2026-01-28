@@ -41,7 +41,7 @@ using json = nlohmann::json;
 namespace OHOS {
 namespace DistributedHardware {
 namespace V2_0 {
-IMPLEMENT_SINGLE_INSTANCE(ScreenRegionManager);
+FWK_IMPLEMENT_SINGLE_INSTANCE(ScreenRegionManager);
 
 using AVTransProviderClass = IAVEngineProvider *(*)(const std::string);
 

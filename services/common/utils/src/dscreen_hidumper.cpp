@@ -21,7 +21,7 @@
 
 namespace OHOS {
 namespace DistributedHardware {
-IMPLEMENT_SINGLE_INSTANCE(DscreenHidumper);
+FWK_IMPLEMENT_SINGLE_INSTANCE(DscreenHidumper);
 
 namespace {
 const std::string ARGS_HELP = "-h";
