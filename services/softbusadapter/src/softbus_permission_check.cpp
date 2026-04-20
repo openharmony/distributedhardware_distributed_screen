@@ -21,6 +21,7 @@
 #include "dscreen_log.h"
 #include "dscreen_util.h"
 #include "ipc_skeleton.h"
+#include "nlohmann/json.hpp"
 #include "ohos_account_kits.h"
 #include "os_account_manager.h"
 #include "transport/socket.h"
