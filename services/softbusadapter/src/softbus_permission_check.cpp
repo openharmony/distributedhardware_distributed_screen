@@ -15,6 +15,7 @@
 
 #include "softbus_permission_check.h"
 
+#include "nlohmann/json.hpp"
 #include "device_manager.h"
 #include "dm_device_info.h"
 #include "dscreen_errcode.h"
