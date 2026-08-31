@@ -14,6 +14,7 @@
  */
 
 #include "dscreen_util.h"
+#include "parse_param_int.h"
 
 #include <algorithm>
 #include <cstddef>
@@ -132,12 +133,22 @@ bool IsPartialRefreshEnabled()
         return false;
     }
     DHLOGI("get system parameter (dscreen.partial.refresh.enable) success, param value = %{public}s", tempValue);
-    return (std::atoi(tempValue) == PARTIAL_REFRESH_ENABLED_VALUE);
+    int32_t parsed = 0;
+    if (!ParseParamInt32(tempValue, parsed)) {
+        DHLOGE("invalid system parameter (dscreen.partial.refresh.enable): %{public}s", tempValue);
+        return false;
+    }
+    return (parsed == PARTIAL_REFRESH_ENABLED_VALUE);
 }
 
 bool IsSupportAVTransEngine(const std::string &version)
 {
-    return (std::atoi(version.c_str()) >= AV_TRANS_SUPPORTED_VERSION) && !IsPartialRefreshEnabled();
+    int32_t parsed = 0;
+    if (!ParseParamInt32(version, parsed)) {
+        DHLOGE("invalid av trans version: %{public}s", version.c_str());
+        return false;
+    }
+    return (parsed >= AV_TRANS_SUPPORTED_VERSION) && !IsPartialRefreshEnabled();
 }
 } // namespace DistributedHardware
 } // namespace OHOS
